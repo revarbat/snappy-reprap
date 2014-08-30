@@ -45,7 +45,7 @@ make
 
 
 ### Windows ###
-Under Windows, you'll probably have to open each `*_part.scad` and `*_parts.scad` file individually and manually export the STL files.
+Under Windows, you'll probably have to open and compile each `*_part.scad` and `*_parts.scad` file individually and manually export the STL files.
 
 You _might_ be able to run the makefile under CygWin, if you set $OPENSCAD to something like:
 ```
