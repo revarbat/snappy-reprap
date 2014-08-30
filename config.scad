@@ -1,3 +1,6 @@
+snappy_version = 0.90;
+
+
 platform_length = 100;
 platform_width  = 150;
 platform_height =  40;

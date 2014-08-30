@@ -1,6 +1,6 @@
 include <config.scad>
 use <GDMUtils.scad>
-use <joiners.scad>
+use <tslot.scad>
 
 
 module support_leg(h=30, l=100, wall=3)

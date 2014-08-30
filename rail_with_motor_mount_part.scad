@@ -1,6 +1,8 @@
 include <config.scad>
 use <GDMUtils.scad>
+use <NEMA.scad>
 use <joiners.scad>
+use <tslot.scad>
 use <motor_mount_plate_parts.scad>
 use <drive_gear_parts.scad>
 
