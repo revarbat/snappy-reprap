@@ -552,23 +552,40 @@ module narrowing_strut(w=10, l=100, wall=5, ang=30)
 //!narrowing_strut();
 
 
+
 // Makes a wall which thins to a smaller width in the center,
 // with angled supports to prevent critical overhangs.
 // Example:
 //   thinning_wall(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
-module thinning_wall(h=50, l=100, thick=4, ang=30, strut=5, wall=2)
+module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=3, bracing=true)
 {
+	ang = atan((h-2*strut)/(l-2*strut));
+	dlen = (h-2*strut)/sin(ang);
 	union() {
 		xrot_copies([0, 180]) {
 			translate([0, 0, -h/2])
 				narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
 			translate([0, -l/2, 0])
 				xrot(-90) narrowing_strut(w=thick, l=h, wall=strut, ang=ang);
+			if (bracing == true) {
+				intersection() {
+					cube(size=[thick, l, h], center=true);
+					xrot_copies([-ang,ang]) {
+						grid_of(za=[-strut/4, strut/4]) {
+							scale([1,1,1.5]) yrot(45) {
+								cube(size=[thick/sqrt(2), dlen, thick/sqrt(2)], center=true);
+							}
+						}
+						cube(size=[thick, dlen, strut/2], center=true);
+					}
+				}
+			}
 		}
 		cube(size=[wall, l-1, h-1], center=true);
 	}
 }
 //!thinning_wall();
+
 
 
 // Example:
@@ -823,7 +840,7 @@ module nema17_mount_holes(depth=5, len=5)
 			cylinder(h=depth, r=plinth_diam/2, center=true);
 	}
 }
-!nema17_mount_holes(depth=5, len=5);
+//!nema17_mount_holes(depth=5, len=5);
 
 
 

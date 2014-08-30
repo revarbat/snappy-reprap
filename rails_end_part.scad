@@ -17,7 +17,7 @@ module rails_end()
 
 					// Back.
 					translate([0, -joiner_length-rail_thick/2+0.05, base_height/2]) zrot(90)
-						thinning_wall(h=base_height, l=rail_width, thick=rail_thick, strut=5);
+						thinning_wall(h=base_height, l=rail_width, thick=rail_thick, strut=joiner_width);
 				}
 
 				// Clear space out near front clips.

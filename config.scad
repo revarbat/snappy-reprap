@@ -6,7 +6,7 @@ rack_tooth_size =   5;  // mm per tooth.
 
 rail_length  = 150;
 rail_height  =  50;
-rail_thick   =   5;
+rail_thick   =   7;
 
 motor_rail_length = 100;
 

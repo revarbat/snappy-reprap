@@ -6,6 +6,8 @@ use <joiners.scad>
 module rails_90deg_joint()
 {
 	joiner_length=10;
+	base_height = rail_height+roller_thick;
+	endstop_delta = platform_length - base_height;
 
 	difference() {
 		union() {
@@ -15,9 +17,14 @@ module rails_90deg_joint()
 					translate([0,platform_length/2,rail_thick/2]) yrot(90)
 						sparse_strut(h=rail_width, l=platform_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
 
-					// Back.
-					translate([0,rail_thick/2,platform_length/2]) zrot(90) {
-						thinning_wall(h=platform_length, l=rail_width, thick=rail_thick, strut=5);
+					// Lower Back.
+					translate([0,rail_thick/2,rail_height/2]) zrot(90) {
+						thinning_wall(h=rail_height, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick);
+					}
+
+					// Upper Back.
+					translate([0, rail_thick/2, rail_height+(platform_length-rail_height-rail_thick)/2]) zrot(90) {
+						thinning_wall(h=platform_length-rail_height+rail_thick, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick);
 					}
 
 					// Side Walls
@@ -27,7 +34,7 @@ module rails_90deg_joint()
 							ya=[rail_height/2],
 							za=[(platform_length-rail_height-joiner_length)/2+rail_height]
 						) {
-							thinning_wall(h=platform_length-joiner_length-rail_height+2*rail_thick, l=rail_height, thick=joiner_width, strut=rail_thick);
+							thinning_wall(h=platform_length-joiner_length-rail_height+2*rail_thick, l=rail_height, thick=joiner_width, strut=rail_thick, bracing=false);
 						}
 
 						// Lower Walls.
@@ -35,7 +42,7 @@ module rails_90deg_joint()
 							ya=[(platform_length-rail_height-joiner_length)/2+rail_height],
 							za=[rail_height/2]
 						) {
-							thinning_wall(l=platform_length-joiner_length-rail_height+2*rail_thick, h=rail_height, thick=joiner_width, strut=rail_thick);
+							thinning_wall(l=platform_length-joiner_length-rail_height+2*rail_thick, h=rail_height, thick=joiner_width, strut=rail_thick, bracing=false);
 						}
 
 						// Corner Walls.
@@ -43,7 +50,7 @@ module rails_90deg_joint()
 							ya=[rail_height/2],
 							za=[rail_height/2]
 						) {
-							thinning_wall(l=rail_height, h=rail_height, thick=joiner_width, strut=rail_thick);
+							thinning_wall(l=rail_height, h=rail_height, thick=joiner_width, strut=rail_thick, bracing=false);
 						}
 
 						// Rail tops.
@@ -95,12 +102,48 @@ module rails_90deg_joint()
 				}
 			}
 
+			// Motor clip mounts.
+			translate([0, rail_height+roller_thick/2-1, 0]) {
+				zrot_copies([90, 270]) {
+					translate([(43+joiner_width+10)/2, 0, 30]) {
+						xrot(90) {
+							joiner(h=rail_height, w=joiner_width, l=30, a=joiner_angle);
+							translate([0, -30+rail_thick/2, 0])
+								cube(size=[joiner_width, rail_thick, rail_width-joiner_width], center=true);
+						}
+					}
+				}
+			}
+
 			// Side mount slots.
 			translate([0, platform_width/3, 0]) {
 				grid_of(ya=[-platform_width/3/2, platform_width/3/2]) {
 					zrot_copies([0,180]) {
-						translate([rail_width/2-2.5, 0, 0]) {
-							zrot(-90) lock_slot(h=25, wall=3);
+						translate([rail_width/2-joiner_width/2, 0, 0]) {
+							zrot(-90) lock_slot(h=25, wall=3, backing=joiner_width/2-2);
+						}
+					}
+				}
+			}
+
+			// Y-axis endstop switch mount
+			translate([-(rail_width-4)/2, endstop_delta/2+base_height-0.05, endstop_delta/2+base_height-0.05]) {
+				difference() {
+					cube(size=[4, endstop_delta+0.05, endstop_delta+0.05], center=true);
+					translate([0, endstop_delta/2, endstop_delta/2]) xrot(45)
+						cube(size=15, center=true);
+					translate([0, endstop_delta/2-5, -endstop_delta/2+15]) {
+						grid_of(za=[-5, 5]) {
+							yrot(90) {
+								cylinder(h=10, r=2.5/2, center=true, $fn=12);
+							}
+						}
+					}
+					translate([0, -(endstop_delta/2-15), (endstop_delta/2-5)]) {
+						grid_of(ya=[-5, 5]) {
+							yrot(90) {
+								cylinder(h=10, r=2.5/2, center=true, $fn=12);
+							}
 						}
 					}
 				}
@@ -108,7 +151,7 @@ module rails_90deg_joint()
 		}
 	}
 }
-//!rails_90deg_joint();
+rails_90deg_joint();
 
 
 
