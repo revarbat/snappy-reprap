@@ -7,7 +7,7 @@ snappy-reprap
 A parametric design for a cheap self-replicating 3D printer (reprap) that snaps together to minimize screws and non-printed parts.
 
 
-Building the STL files
+Building the STL Files
 ----------------------
 
 The Makefile currently defines $OPENSCAD for building on OS X:
@@ -23,11 +23,11 @@ OPENSCAD=openscad
 Under Windows, you'll probably have to open each `*_part.scad` and `*_parts.scad` file individually and manually export the STL files.
 
 
-Printing the parts
+Printing the Parts
 ------------------
 You will need to print out the following parts:
 
-|Count| Part File
+| Qty | Part File
 |----:|----------------------
 |   1 | cap\_parts.stl
 |   1 | drive\_gear\_parts.stl
@@ -49,7 +49,7 @@ Required Vitamins
 -----------------
 You'll need the following un-printable parts:
 
-|Count| Description
+| Qty | Description
 |----:|----------------------------------------------------
 |   1 | RAMBo controller electronics.
 |   1 | 60 Watt 12v Power Supply
@@ -87,7 +87,7 @@ You will need the following tools to assemble this printer.
 - Possibly cyanoacrylate glue. (super-glue)
 
 
-Assembly instructions
+Assembly Instructions
 ---------------------
 TBD
 
