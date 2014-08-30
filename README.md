@@ -17,7 +17,7 @@ Under Linux, you can change that to:
 OPENSCAD=openscad
 ```
 
-Under Windows, you'll probably have to open each ```*_part.scad``` and ```*_parts.scad``` file individually and manually export the STL files.
+Under Windows, you'll probably have to open each `*_part.scad` and `*_parts.scad` file individually and manually export the STL files.
 
 
 Printing the parts
@@ -25,7 +25,7 @@ Printing the parts
 You will need to print out the following parts:
 
 |Count| Part File
-|-----|----------------------
+|----:|----------------------
 |   1 | cap\_parts.stl
 |   1 | drive\_gear\_parts.stl
 |   1 | motor\_mount\_plate\_parts.stl
@@ -47,7 +47,7 @@ Required Vitamins
 You'll need the following un-printable parts:
 
 |Count| Description
-|-----|----------------------------------------------------
+|----:|----------------------------------------------------
 |   1 | RAMBo controller electronics.
 |   1 | 60 Watt 12v Power Supply
 |   3 | End-stop micro-switches and wiring.
