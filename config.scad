@@ -23,6 +23,9 @@ joiner_angle =  30;    // degrees
 joiner_width =  10;    // mm
 joiner_slop  =   0.5;  // mm
 
+threaded_rod_diam   =   8;  // mm
+threaded_rod_length = 300;  // mm
+
 
 
 // Commonly used derived values.  Don't change these.

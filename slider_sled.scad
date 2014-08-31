@@ -33,11 +33,13 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 
 
 
-module slider_sled(show_rollers=false, with_rack=false)
+module slider_sled(show_rollers=false, with_rack=false, nut_size=undef)
 {
 	platform_length=with_rack? ceil(platform_length/rack_tooth_size)*rack_tooth_size : platform_length; // quantize to rack tooth size, if needed.
 	axle_rad = (roller_axle/2) - 0.5;
 	axle_len = roller_thick;
+	nut_thick = get_metric_nut_thickness(nut_size);
+	nut_diam = get_metric_nut_size(nut_size);
 
 	union() {
 		difference() {
@@ -77,7 +79,7 @@ module slider_sled(show_rollers=false, with_rack=false)
 			grid_of(ya=[-(platform_length/2)/2, (platform_length/2)/2]) {
 				// Roller pedestals
 				translate([0,0,roller_base/2]) {
-					cylinder(h=roller_base, r=axle_rad+2, center=true, $fn=32);
+					cylinder(h=roller_base, r=axle_rad+1.5, center=true, $fn=32);
 				}
 
 				// Roller axles
@@ -108,12 +110,34 @@ module slider_sled(show_rollers=false, with_rack=false)
 				zrot(-90) herringbone_rack(l=platform_length, h=10, tooth_size=rack_tooth_size, CA=30);
 			}
 		}
+
+		// Drive nut.
+		if (nut_size != undef) {
+			translate([0, -roller_spacing/2, 0]) difference() {
+				translate([0, 0, (nut_diam+roller_base)/2])
+					cube(size=[nut_diam+10, nut_thick+10, nut_diam+roller_base], center=true);
+				translate([0, -nut_thick/2, roller_base+roller_thick/2]) {
+					hull() {
+						grid_of(za=[0, 20]) {
+							scale([1.10, 1.10, 1.00]) zrot(90) yrot(90) metric_nut(size=nut_size, hole=false);
+						}
+					}
+				}
+				translate([0, -nut_thick*3/2, roller_base+roller_thick/2]) {
+					hull() {
+						grid_of(za=[0, 20]) {
+							scale([0.7, 3, 0.7]) zrot(90) yrot(90) metric_nut(size=nut_size, hole=false);
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
 
 
-slider_sled(show_rollers=true);
+slider_sled(show_rollers=false, nut_size=8);
 
 
 

@@ -8,12 +8,12 @@ module roller()
 	render(convexity=2) difference() {
 		union() {
 			translate([0,0,-roller_thick/4])
-				cylinder(h=roller_thick/2, r1=roller_diam/2, r2=roller_diam/2+(roller_thick/2)*tan(roller_angle), center=true, $fn=48);
-			cylinder(h=0.05, r=roller_diam/2+(roller_thick/2)*tan(roller_angle), center=true, $fn=48);
+				cylinder(h=roller_thick/2, r1=roller_diam/2, r2=roller_diam/2+(roller_thick/2)*tan(roller_angle), center=true, $fn=32);
 			translate([0,0,roller_thick/4])
-				cylinder(h=roller_thick/2, r2=roller_diam/2, r1=roller_diam/2+(roller_thick/2)*tan(roller_angle), center=true, $fn=48);
+				cylinder(h=roller_thick/2, r2=roller_diam/2, r1=roller_diam/2+(roller_thick/2)*tan(roller_angle), center=true, $fn=32);
 		}
-		cylinder(h=roller_thick+2.1, r=roller_axle/2, center=true, $fn=32);
+		cylinder(h=roller_thick+0.1, r=roller_axle/2, center=true, $fn=32);
+		cylinder(h=roller_thick*2/3, r=roller_axle/2+0.5, center=true, $fn=32);
 	}
 }
 //!roller();

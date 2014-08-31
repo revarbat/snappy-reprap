@@ -5,7 +5,7 @@ use <slider_sled.scad>
 
 
 module z_sled_part() { // make me
-	zrot(90) slider_sled(with_rack=false);
+	zrot(90) slider_sled(with_rack=false, nut_size=threaded_rod_diam);
 }
 
 

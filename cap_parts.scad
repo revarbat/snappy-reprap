@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 
 
 
-module cap(r=roller_axle/2-3, h=10, wall=3, cap=2, lip=2)
+module cap(r=roller_axle/2-3, h=10, wall=3, cap=2, lip=1.5)
 {
 	difference() {
 		union() {

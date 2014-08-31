@@ -1,6 +1,5 @@
 TODO:
 -----
-* Z-axis platform threaded screw nut holder.
 * Y-axis cable chain.
 * Z-axis cable chain.
 * X-axis endstop.
