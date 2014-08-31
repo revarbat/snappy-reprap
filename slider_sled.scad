@@ -69,7 +69,7 @@ module slider_sled(show_rollers=false, with_rack=false)
 
 			// Solid walls.
 			grid_of(xa=[-(platform_width-joiner_width)/2, (platform_width-joiner_width)/2]) {
-				thinning_wall(h=platform_height, l=platform_length-18, thick=joiner_width, strut=platform_thick, wall=3);
+				thinning_wall(h=platform_height, l=platform_length-18, thick=joiner_width, strut=platform_thick, wall=3, bracing=false);
 			}
 		}
 
@@ -98,8 +98,7 @@ module slider_sled(show_rollers=false, with_rack=false)
 				translate([-10, 0, 1])
 					cube(size=[14,platform_length,platform_thick+2], center=true);
 			} else {
-				translate([  0, 0, 1])
-					cube(size=[14,platform_length,platform_thick], center=true);
+				cube(size=[14,platform_length,platform_thick], center=true);
 			}
 		}
 

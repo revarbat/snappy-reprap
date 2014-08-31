@@ -1,9 +1,5 @@
 include <config.scad>
 use <GDMUtils.scad>
-use <publicDomainGearV1.1.scad>
-use <joiners.scad>
-use <roller_parts.scad>
-use <cap_parts.scad>
 use <slider_sled.scad>
 
 

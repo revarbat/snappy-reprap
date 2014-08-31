@@ -5,7 +5,7 @@ use <joiners.scad>
 
 module rails_end()
 {
-	joiner_length=10;
+	joiner_length=15;
 	base_height = rail_height+roller_thick;
 	difference() {
 		union() {
@@ -35,8 +35,8 @@ module rails_end()
 				xa=[-(rail_spacing+joiner_width)/2, (rail_spacing+joiner_width)/2],
 				za=[base_height]
 			) {
-				translate([0, -(base_height-rail_height)/2-0.05, -(base_height-rail_height)/2-0.05])
-					cube(size=[joiner_width, (base_height-rail_height-0.05), (base_height-rail_height+0.05)], center=true);
+				translate([0, -joiner_length/2-0.05, -(base_height-rail_height)/2-0.05])
+					cube(size=[joiner_width, joiner_length+0.05, (base_height-rail_height-0.05)], center=true);
 			}
 
 			// Joiner clips.

@@ -538,15 +538,16 @@ module tube(h=1, r=1, r1=undef, r2=undef, wall=0.5, center=false, $fn=undef)
 //   narrowing_strut(w=10, l=100, wall=3, ang=30);
 module narrowing_strut(w=10, l=100, wall=5, ang=30)
 {
-	difference() {
-		translate([0, 0, wall]) union () {
-			translate([0, 0, -wall/2])
-				cube(size=[w, l, wall], center=true);
-			scale([1, 1, 1/tan(ang)]) yrot(45)
-				cube(size=[w/sqrt(2), l, w/sqrt(2)], center=true);
+	union() {
+		translate([0, 0, wall/2])
+			cube(size=[w, l, wall], center=true);
+		difference() {
+			translate([0, 0, wall])
+				scale([1, 1, 1/tan(ang)]) yrot(45)
+					cube(size=[w/sqrt(2), l, w/sqrt(2)], center=true);
+			translate([0, 0, -w+0.05])
+				cube(size=[w+1, l+1, w*2], center=true);
 		}
-		translate([0, 0, -w])
-			cube(size=[w+1, l+1, w*2], center=true);
 	}
 }
 //!narrowing_strut();
@@ -559,18 +560,18 @@ module narrowing_strut(w=10, l=100, wall=5, ang=30)
 //   thinning_wall(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
 module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=3, bracing=true)
 {
-	ang = atan((h-2*strut)/(l-2*strut));
-	dlen = (h-2*strut)/sin(ang);
+	dang = atan((h-2*strut)/(l-2*strut));
+	dlen = (h-2*strut)/sin(dang);
 	union() {
 		xrot_copies([0, 180]) {
 			translate([0, 0, -h/2])
 				narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
 			translate([0, -l/2, 0])
-				xrot(-90) narrowing_strut(w=thick, l=h, wall=strut, ang=ang);
+				xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
 			if (bracing == true) {
 				intersection() {
 					cube(size=[thick, l, h], center=true);
-					xrot_copies([-ang,ang]) {
+					xrot_copies([-dang,dang]) {
 						grid_of(za=[-strut/4, strut/4]) {
 							scale([1,1,1.5]) yrot(45) {
 								cube(size=[thick/sqrt(2), dlen, thick/sqrt(2)], center=true);
@@ -581,10 +582,10 @@ module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=3, bracing=true
 				}
 			}
 		}
-		cube(size=[wall, l-1, h-1], center=true);
+		cube(size=[wall, l-0.1, h-0.1], center=true);
 	}
 }
-//!thinning_wall();
+//!thinning_wall(, bracing=false);
 
 
 

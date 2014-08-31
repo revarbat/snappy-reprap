@@ -2,7 +2,7 @@ include <config.scad>
 use <GDMUtils.scad>
 
 
-module joiner(h=40, w=9, l=10, a=30, screwsize=undef, guides=true)
+module joiner(h=40, w=10, l=10, a=30, screwsize=3, guides=true)
 {
 	dmnd_height = h/2;
 	dmnd_width = dmnd_height*tan(a);

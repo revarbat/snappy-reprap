@@ -13,7 +13,7 @@ module drive_gear() {
 						mm_per_tooth    = 5,
 						number_of_teeth = 9,
 						thickness       = h/2,
-						hole_diameter   = 5,
+						hole_diameter   = 5.2,
 						twist           = 15,
 						teeth_to_hide   = 0,
 						pressure_angle  = 20
@@ -28,7 +28,7 @@ module drive_gear() {
 				translate([0, 0, -(h+7)/2])
 					cylinder(h=7, r=9, center=true);
 			}
-			cylinder(h=(h+5)*3, r=5.1/2, center=true, $fn=16);
+			cylinder(h=(h+5)*3, r=5.2/2, center=true, $fn=16);
 			translate([5/2+1, 0, -(h/2+12)/2]) {
 				yrot(90) {
 					scale([1.1, 1.1, 1.1]) hull() {
@@ -43,7 +43,7 @@ module drive_gear() {
 		}
 	}
 }
-//!drive_gear();
+!drive_gear();
 
 
 module drive_gear_parts() { // make me

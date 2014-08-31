@@ -54,7 +54,7 @@ module xy_joiner()
 		}
 		// Back Wall
 		translate([0, -joiner_length*2+platform_thick/2, 7]) {
-			zrot(90) thinning_wall(l=platform_width-joiner_width, h=30, thick=platform_thick, maxang=45, strut=5, max_bridge=999);
+			zrot(90) thinning_wall(l=platform_width-joiner_width, h=30, thick=platform_thick, maxang=45, strut=5, max_bridge=999, bracing=false);
 		}
 	}
 }
