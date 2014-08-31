@@ -19,7 +19,7 @@ roller_axle  =  15;    // mm
 roller_base  =  12;    // mm
 roller_angle =  30;    // degrees
 
-joiner_angle =  35;    // degrees
+joiner_angle =  30;    // degrees
 joiner_width =  10;    // mm
 joiner_slop  =   0.5;  // mm
 
