@@ -62,7 +62,7 @@ module drive_gear() {
 		}
 	}
 }
-!drive_gear();
+//!drive_gear();
 
 
 module drive_gear_parts() { // make me

@@ -36,9 +36,12 @@ module joiner(h=40, w=10, l=10, a=30, screwsize=3, guides=true)
 				if (guides == true) {
 					translate([0,0,dmnd_height/2]) {
 						grid_of(xa=[-(w/6-joiner_slop/2), (w/6-joiner_slop/2)]) {
+							// Guide ridge.
 							scale([0.75, 1, 2]) yrot(45)
 								cube(size=[guide_size/sqrt(2), dmnd_width, guide_size/sqrt(2)], center=true);
-							scale([0.5, 0.5, 1]) zrot(45)
+
+							// Snap ridge.
+							scale([0.25, 0.5, 1]) zrot(45)
 								cube(size=[guide_size/sqrt(2), guide_size/sqrt(2), dmnd_width], center=true);
 						}
 					}
@@ -68,9 +71,12 @@ module joiner(h=40, w=10, l=10, a=30, screwsize=3, guides=true)
 			if (guides == true) {
 				translate([0,0,-dmnd_height/2]) {
 					grid_of(xa=[-(w/6),(w/6)]) {
+						// Guide slot
 						scale([0.75, 1, 2]) yrot(45)
 							cube(size=[guide_size/sqrt(2), dmnd_width*1.1, guide_size/sqrt(2)], center=true);
-						scale([0.5, 0.5, 1]) zrot(45)
+
+						// Snap hole
+						scale([0.25, 0.5, 1]) zrot(45)
 							cube(size=[guide_size/sqrt(2), guide_size/sqrt(2), dmnd_width], center=true);
 					}
 				}
@@ -82,7 +88,7 @@ module joiner(h=40, w=10, l=10, a=30, screwsize=3, guides=true)
 			cube(size=[w,4,h], center=true);
 	}
 }
-//!joiner(screwsize=3);
+joiner(screwsize=3);
 
 
 
