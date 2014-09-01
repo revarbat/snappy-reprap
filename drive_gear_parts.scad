@@ -6,7 +6,7 @@ use <publicDomainGearV1.1.scad>
 module drive_gear() {
 	h = 10;
 	shaft = 5.4;
-	render(convexity=10) union() {
+	color("Salmon") render(convexity=10) union() {
 		difference() {
 			// Herringbone gear
 			mirror_copy([0, 0, 1]) {

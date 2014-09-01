@@ -8,7 +8,7 @@ module xy_joiner()
 {
 	joiner_length=10;
 	hoff = (platform_length*2-rail_width)/2-3*3+1;
-	union() {
+	color("Sienna") union() {
 		// Joiners
 		translate([0, 0, -platform_height/2]) {
 			yrot_copies([0, 180]) {

@@ -8,7 +8,7 @@ module rail_with_motor_mount()
 {
 	joiner_length = 10;
 
-	difference() {
+	color("SpringGreen") difference() {
 		union() {
 			difference() {
 				union() {

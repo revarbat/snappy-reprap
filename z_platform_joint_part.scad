@@ -6,7 +6,7 @@ use <joiners.scad>
 module z_platform_joint()
 {
 	joiner_length=15;
-	xrot(-90) union() {
+	color("Chocolate") xrot(-90) union() {
 		translate([0, 0, platform_height/2]) {
 			yrot_copies([0, 180]) {
 				translate([-(platform_width-joiner_width)/2, 0, 0]) {

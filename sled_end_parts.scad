@@ -6,7 +6,7 @@ use <joiners.scad>
 module sled_end()
 {
 	snap_width = 15;
-	union() {
+	color("DodgerBlue") union() {
 		difference() {
 			union() {
 				// Base.

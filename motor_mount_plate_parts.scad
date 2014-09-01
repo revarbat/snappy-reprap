@@ -6,7 +6,7 @@ use <joiners.scad>
 
 module motor_mount_plate(thick=4, l=15)
 {
-	union() {
+	color("Teal") union() {
 		translate([0, 0, l-thick/2]) {
 			difference() {
 				cube(size=[43+joiner_width+10, rail_height, 4], center=true);

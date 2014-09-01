@@ -7,7 +7,7 @@ module rails_end()
 {
 	joiner_length=15;
 	base_height = rail_height+roller_thick;
-	difference() {
+	color("YellowGreen") difference() {
 		union() {
 			difference() {
 				union() {

@@ -5,7 +5,7 @@ use <GDMUtils.scad>
 
 module cap(r=roller_axle/2-3, h=10, wall=3, cap=2, lip=1.5)
 {
-	difference() {
+	color("Pink") difference() {
 		union() {
 			translate([0,0,-cap/2])
 				cylinder(r=r+lip+wall, h=cap, center=true, $fn=32);

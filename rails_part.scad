@@ -5,7 +5,7 @@ use <joiners.scad>
 
 module rail_structure()
 {
-	difference() {
+	color("Lavender") difference() {
 		union() {
 			difference() {
 				union() {

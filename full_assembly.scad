@@ -16,6 +16,7 @@ use <xy_joiner_parts.scad>
 use <xy_sled_part.scad>
 use <z_platform_joint_part.scad>
 use <z_sled_part.scad>
+use <extruder_mount_part.scad>
 
 
 
@@ -30,16 +31,8 @@ module full_assembly()
 	joiner_length=15;
 	platform_vert_off = rail_height+roller_base+roller_thick/2+5;
 
-	x_rail_color = [1.0, 0.6, 0.6];
-	x_sled_color = [1.0, 0.4, 0.4];
-	y_rail_color = [0.6, 1.0, 0.6];
-	y_sled_color = [0.4, 0.8, 0.4];
-	z_rail_color = [0.6, 0.6, 1.0];
-	z_sled_color = [0.4, 0.4, 1.0];
-	e_color = [0.8, 0.6, 0.9];
-
 	// Y-axis to Z-axis corner joiner.
-	color((y_rail_color+z_rail_color)/2) rails_90deg_joint();
+	rails_90deg_joint();
 
 	// Z-Axis Stepper Motor
 	translate([0, rail_height+roller_thick/2-1, 0]) {
@@ -47,9 +40,10 @@ module full_assembly()
 			zrot(90) motor_mount_plate();
 			translate([0, 0, 5.9+rail_thick]) {
 				nema17_stepper(h=34, shaft_len=20.05);
-				translate([0, 0, lifter_rod_length/2+40])
+				translate([0, 0, lifter_rod_length/2+40]) {
 					color("silver")
 						cylinder(h=lifter_rod_length, r=lifter_rod_diam/2, center=true);
+				}
 			}
 		}
 	}
@@ -66,15 +60,13 @@ module full_assembly()
 	translate([0, platform_length, 0]) {
 		// Y-axis rails.
 		translate([0, rail_length/2, 0]) {
-			color(y_rail_color) rail_structure();
+			rail_structure();
 			translate([0, rail_length/2+motor_rail_length/2, 0]) {
-				color(y_rail_color) {
-					rail_with_motor_mount();
-					translate([0, motor_rail_length/2+rail_length/2, 0]) {
-						rail_structure();
-						translate([0, rail_length/2, 0]) {
-							zrot(180) rails_end();
-						}
+				rail_with_motor_mount();
+				translate([0, motor_rail_length/2+rail_length/2, 0]) {
+					rail_structure();
+					translate([0, rail_length/2, 0]) {
+						zrot(180) rails_end();
 					}
 				}
 
@@ -93,9 +85,12 @@ module full_assembly()
 
 		translate([0, rail_length+motor_rail_length/2, 0]) {
 			// Y-axis slider platform.
-			color(y_sled_color) translate([0, 0, platform_vert_off]) {
+			translate([0, 0, platform_vert_off]) {
 				grid_of(ya=[-platform_length/2, platform_length/2]) {
-					yrot(180) xy_sled(show_rollers=true);
+					yrot(180) {
+						xy_sled();
+						xy_sled_rollers();
+					}
 				}
 			}
 
@@ -109,16 +104,14 @@ module full_assembly()
 			}
 
 			zrot(90) translate([0, 0, platform_vert_off]) {
-				color(x_rail_color) {
-					// Horizontal X-axis rails.
-					grid_of(ya=[-(rail_length+motor_rail_length)/2, (rail_length+motor_rail_length)/2]) {
-						rail_structure();
-					}
-					rail_with_motor_mount();
-					zrot_copies([0, 180]) {
-						translate([0, rail_length+motor_rail_length/2, 0]) {
-							zrot(180) rails_end();
-						}
+				// Horizontal X-axis rails.
+				grid_of(ya=[-(rail_length+motor_rail_length)/2, (rail_length+motor_rail_length)/2]) {
+					rail_structure();
+				}
+				rail_with_motor_mount();
+				zrot_copies([0, 180]) {
+					translate([0, rail_length+motor_rail_length/2, 0]) {
+						zrot(180) rails_end();
 					}
 				}
 
@@ -133,9 +126,12 @@ module full_assembly()
 				}
 
 				// X-axis slider platform.
-				color(x_sled_color) translate([0, 0, platform_vert_off]) {
+				translate([0, 0, platform_vert_off]) {
 					grid_of(ya=[-platform_length/2, platform_length/2]) {
-						yrot(180) xy_sled(show_rollers=true);
+						yrot(180) {
+							xy_sled();
+							xy_sled_rollers();
+						}
 					}
 					zrot_copies([0, 180]) {
 						translate([0, -platform_length, 0]) {
@@ -148,21 +144,20 @@ module full_assembly()
 	}
 
 	translate([0, 0, platform_length]) {
-		color(z_rail_color) {
-			// Vertical Z-axis slider rails.
-			for(i = [0:1]) {
-				translate([0, 0, (i+0.5)*rail_length])
-					xrot(-90) rail_structure();
-			}
-			translate([0, 0, 2*rail_length]) {
-				xrot(-90) rails_end();
-			}
+		// Vertical Z-axis slider rails.
+		for(i = [0:1]) {
+			translate([0, 0, (i+0.5)*rail_length])
+				xrot(-90) rail_structure();
+		}
+		translate([0, 0, 2*rail_length]) {
+			xrot(-90) rails_end();
 		}
 
 		translate([0, platform_vert_off, rail_length]) {
-			color(z_sled_color) {
-				// Vertical Z-axis platform.
-				xrot(-90) yrot(180) z_sled(show_rollers=true);
+			// Vertical Z-axis platform.
+			xrot(-90) yrot(180) {
+				z_sled();
+				z_sled_rollers();
 			}
 
 			translate([0, 0, platform_length/2]) {
@@ -172,10 +167,10 @@ module full_assembly()
 				// Extruder cantilever.
 				translate([0, joiner_length, -rail_height]) {
 					translate([0, 0.5*rail_length, 0]) {
-						color(e_color) rail_structure();
+						rail_structure();
 					}
 					translate([0, 1.5*rail_length, 0]) {
-						color(e_color) rail_structure();
+						extruder_mount();
 					}
 				}
 			}

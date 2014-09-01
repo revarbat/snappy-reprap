@@ -585,7 +585,42 @@ module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=3, bracing=true
 		cube(size=[wall, l-0.1, h-0.1], center=true);
 	}
 }
-//!thinning_wall(, bracing=false);
+//!thinning_wall(bracing=false);
+
+
+
+// Makes a triangular wall which thins to a smaller width in the center,
+// with angled supports to prevent critical overhangs.
+// Example:
+//   thinning_triangle(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
+module thinning_triangle(h=50, l=100, thick=5, ang=30, strut=5, wall=3)
+{
+	dang = atan((h-strut)/(l-strut));
+	dlen = (h-strut)/sin(dang);
+	difference() {
+		union() {
+			translate([0, 0, -h/2])
+				narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
+			translate([0, -l/2, 0])
+				xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
+			intersection() {
+				cube(size=[thick, l, h], center=true);
+				translate([0, 0, 0]) {
+					xrot(-dang) yrot(180) {
+						narrowing_strut(w=thick, l=dlen, wall=strut, ang=ang);
+					}
+				}
+			}
+			cube(size=[wall, l-0.1, h-0.1], center=true);
+		}
+		xrot(-dang) {
+			translate([0, 0, h/2]) {
+				cube(size=[thick+0.1, l*2, h], center=true);
+			}
+		}
+	}
+}
+//!thinning_triangle(bracing=false);
 
 
 

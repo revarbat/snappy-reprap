@@ -20,3 +20,9 @@ include $(wildcard *.deps)
 clean:
 	rm -f ${TARGETS} *.deps
 
+rendering:
+	${OPENSCAD} -o wiki/snappy_full.png --imgsize=3200,3200 --projection=p --csglimit=100000 --camera=0,-225,200,63,0,307,3500 full_assembly.scad
+	cp wiki/snappy_full.png wiki/snappy_small.png
+	sips -Z 800 wiki/snappy_full.png
+	sips -Z 200 wiki/snappy_small.png
+

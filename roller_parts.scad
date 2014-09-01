@@ -5,7 +5,7 @@ use <joiners.scad>
 
 module roller()
 {
-	render(convexity=2) difference() {
+	color("Tan") render(convexity=2) difference() {
 		union() {
 			translate([0,0,-roller_thick/4])
 				cylinder(h=roller_thick/2, r1=roller_diam/2, r2=roller_diam/2+(roller_thick/2)*tan(roller_angle), center=true, $fn=32);

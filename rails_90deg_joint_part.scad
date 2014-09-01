@@ -10,7 +10,7 @@ module rails_90deg_joint()
 	base_height = rail_height+roller_thick;
 	endstop_delta = platform_length - base_height;
 
-	difference() {
+	color("Turquoise") difference() {
 		union() {
 			difference() {
 				union() {
