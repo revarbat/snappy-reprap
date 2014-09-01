@@ -29,8 +29,9 @@ module motor_mount_plate(thick=4, l=15)
 
 
 module motor_mount_plate_parts() { // make me
+	n = 3;
 	spacing = 55;
-	grid_of(ya=[-spacing/2, spacing/2])
+	grid_of(ya=[-((n-1)*spacing)/2 : spacing : ((n-1)*spacing)/2])
 		yrot(180) motor_mount_plate();
 }
 
