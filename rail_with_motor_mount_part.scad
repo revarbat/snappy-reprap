@@ -1,13 +1,10 @@
 include <config.scad>
 use <GDMUtils.scad>
-use <NEMA.scad>
 use <joiners.scad>
 use <tslot.scad>
-use <motor_mount_plate_parts.scad>
-use <drive_gear_parts.scad>
 
 
-module rail_with_motor_mount(show_motor=false)
+module rail_with_motor_mount()
 {
 	joiner_length = 10;
 
@@ -86,17 +83,8 @@ module rail_with_motor_mount(show_motor=false)
 			}
 		}
 	}
-	if (show_motor == true) {
-		translate([0, 0, 30])
-			motor_mount_plate();
-		translate([0, 0, 35.9+rail_thick]) {
-			nema17_stepper(h=34, shaft_len=20.05);
-			translate([0, 0, 18])
-				drive_gear();
-		}
-	}
 }
-//!rail_with_motor_mount(show_motor=true);
+//!rail_with_motor_mount();
 
 
 

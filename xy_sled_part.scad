@@ -3,8 +3,15 @@ use <GDMUtils.scad>
 use <slider_sled.scad>
 
 
+module xy_sled(show_rollers=false)
+{
+	slider_sled(show_rollers=show_rollers, with_rack=true);
+}
+
+
+
 module xy_sled_part() { // make me
-	zrot(90) slider_sled(with_rack=true);
+	zrot(90) xy_sled();
 }
 
 

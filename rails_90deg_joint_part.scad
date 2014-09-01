@@ -106,9 +106,9 @@ module rails_90deg_joint()
 			// Motor clip mounts.
 			translate([0, rail_height+roller_thick/2-1, 0]) {
 				zrot_copies([90, 270]) {
-					translate([(43+joiner_width+10)/2, 0, 30]) {
+					translate([(43+joiner_width+10)/2, 0, 50]) {
 						xrot(90) {
-							joiner(h=rail_height, w=joiner_width, l=30, a=joiner_angle);
+							joiner(h=rail_height, w=joiner_width, l=50, a=joiner_angle);
 							translate([0, -30+rail_thick/2, 0])
 								cube(size=[joiner_width, rail_thick, rail_width-joiner_width], center=true);
 						}

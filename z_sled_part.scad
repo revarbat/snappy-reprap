@@ -4,8 +4,15 @@ use <slider_sled.scad>
 
 
 
+module z_sled(show_rollers=false)
+{
+	slider_sled(show_rollers=show_rollers, with_rack=false, nut_size=lifter_nut_size, nut_thick=lifter_nut_thick);
+}
+
+
+
 module z_sled_part() { // make me
-	zrot(90) slider_sled(with_rack=false, nut_size=lifter_nut_size, nut_thick=lifter_nut_thick);
+	zrot(90) z_sled();
 }
 
 
