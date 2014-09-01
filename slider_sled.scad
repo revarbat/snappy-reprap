@@ -8,7 +8,7 @@ use <cap_parts.scad>
 
 module slider_sled(show_rollers=false)
 {
-	axle_rad = (roller_axle/2) - 0.5;
+	axle_rad = (roller_axle/2) - 0.2;
 	axle_len = roller_thick;
 
 	union() {
