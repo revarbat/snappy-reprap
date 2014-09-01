@@ -17,6 +17,7 @@ use <xy_sled_part.scad>
 use <z_platform_joint_part.scad>
 use <z_sled_part.scad>
 use <extruder_mount_part.scad>
+use <z_rod_coupler.scad>
 
 
 
@@ -40,9 +41,13 @@ module full_assembly()
 			zrot(90) motor_mount_plate();
 			translate([0, 0, 5.9+rail_thick]) {
 				nema17_stepper(h=34, shaft_len=20.05);
-				translate([0, 0, lifter_rod_length/2+40]) {
-					color("silver")
-						cylinder(h=lifter_rod_length, r=lifter_rod_diam/2, center=true);
+				translate([0, 0, 30]) {
+					color("DimGray")
+						z_rod_coupler();
+					translate([0, 0, lifter_rod_length/2]) {
+						color("silver")
+							cylinder(h=lifter_rod_length, r=lifter_rod_diam/2, center=true);
+					}
 				}
 			}
 		}
