@@ -114,12 +114,12 @@ module slider_sled(show_rollers=false, with_rack=false, nut_size=undef, nut_thic
 			grid_of(ya=[-roller_spacing/2, roller_spacing/2]) {
 				difference() {
 					translate([0, 0, (nut_size+roller_base)/2])
-						cube(size=[nut_size+6, nut_thick+10, nut_size+roller_base], center=true);
+						cube(size=[nut_size+10, nut_thick+10, nut_size+roller_base], center=true);
 					translate([0, 0, roller_base+roller_thick/2]) {
 						hull() {
 							grid_of(za=[0, 20]) {
 								scale([1.05, 1.05, 1.00]) zrot(90) yrot(90)
-									cylinder(h=nut_thick, r=nut_size/2, center=true, $fn=6);
+									cylinder(h=nut_thick, r=(nut_size/2)/cos(30), center=true, $fn=6);
 							}
 						}
 					}
