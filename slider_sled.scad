@@ -33,13 +33,11 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 
 
 
-module slider_sled(show_rollers=false, with_rack=false, nut_size=undef)
+module slider_sled(show_rollers=false, with_rack=false, nut_size=undef, nut_thick=undef)
 {
 	platform_length=with_rack? ceil(platform_length/rack_tooth_size)*rack_tooth_size : platform_length; // quantize to rack tooth size, if needed.
 	axle_rad = (roller_axle/2) - 0.5;
 	axle_len = roller_thick;
-	nut_thick = get_metric_nut_thickness(nut_size);
-	nut_diam = get_metric_nut_size(nut_size);
 
 	union() {
 		difference() {
@@ -113,20 +111,24 @@ module slider_sled(show_rollers=false, with_rack=false, nut_size=undef)
 
 		// Drive nut.
 		if (nut_size != undef) {
-			translate([0, -roller_spacing/2, 0]) difference() {
-				translate([0, 0, (nut_diam+roller_base)/2])
-					cube(size=[nut_diam+10, nut_thick+10, nut_diam+roller_base], center=true);
-				translate([0, -nut_thick/2, roller_base+roller_thick/2]) {
-					hull() {
-						grid_of(za=[0, 20]) {
-							scale([1.10, 1.10, 1.00]) zrot(90) yrot(90) metric_nut(size=nut_size, hole=false);
+			grid_of(ya=[-roller_spacing/2, roller_spacing/2]) {
+				difference() {
+					translate([0, 0, (nut_size+roller_base)/2])
+						cube(size=[nut_size+6, nut_thick+10, nut_size+roller_base], center=true);
+					translate([0, 0, roller_base+roller_thick/2]) {
+						hull() {
+							grid_of(za=[0, 20]) {
+								scale([1.05, 1.05, 1.00]) zrot(90) yrot(90)
+									cylinder(h=nut_thick, r=nut_size/2, center=true, $fn=6);
+							}
 						}
 					}
-				}
-				translate([0, -nut_thick*3/2, roller_base+roller_thick/2]) {
-					hull() {
-						grid_of(za=[0, 20]) {
-							scale([0.7, 3, 0.7]) zrot(90) yrot(90) metric_nut(size=nut_size, hole=false);
+					translate([0, 0, roller_base+roller_thick/2]) {
+						hull() {
+							grid_of(za=[0, 20]) {
+								scale([0.65, 3, 0.65]) zrot(90) yrot(90)
+									cylinder(h=nut_thick, r=nut_size/2, center=true, $fn=24);
+							}
 						}
 					}
 				}
@@ -137,7 +139,7 @@ module slider_sled(show_rollers=false, with_rack=false, nut_size=undef)
 
 
 
-slider_sled(show_rollers=false, nut_size=8);
+slider_sled(show_rollers=true, nut_size=17.5, nut_thick=9.2);
 
 
 

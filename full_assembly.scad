@@ -125,7 +125,7 @@ module full_assembly()
 		translate([0, platform_vert_off, rail_length]) {
 			color(z_sled_color) {
 				// Vertical Z-axis platform.
-				xrot(-90) yrot(180) slider_sled(show_rollers=true, with_rack=false, nut_size=threaded_rod_diam);
+				xrot(-90) yrot(180) slider_sled(show_rollers=true, with_rack=false, nut_size=lifter_nut_size, nut_thick=lifter_nut_thick);
 			}
 
 			// Z-axis platform to extruder cantilever joint.

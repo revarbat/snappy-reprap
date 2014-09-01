@@ -1,7 +1,7 @@
 snappy_version = 0.90;
 
 
-platform_length = 100; // mm
+platform_length = 110; // mm
 platform_width  = 150; // mm
 platform_height =  40; // mm
 platform_thick  =   7; // mm
@@ -23,8 +23,12 @@ joiner_angle =  30;    // degrees
 joiner_width =  10;    // mm
 joiner_slop  =   0.5;  // mm
 
-threaded_rod_diam   =   8;  // mm
-threaded_rod_length = 300;  // mm
+// Currently configured for 3/8" ACME threaded rod and matching 11/16" nut
+lifter_rod_diam   =   9.5; // mm
+lifter_rod_length = 300.0; // mm
+lifter_nut_size   =  17.4; // mm
+lifter_nut_thick  =   9.3; // mm
+
 
 
 
