@@ -7,10 +7,15 @@ module support_leg(h=30, l=100, wall=3)
 {
 	ang = atan((h-10)/l);
 	color("SandyBrown") union() {
+		// Back wall.
 		translate([0, 5/2, h/2])
 			cube(size=[platform_length/2+6*wall, 5, h], center=true);
+
+		// T-slot tabs.
 		grid_of(xa=[-platform_length/4, platform_length/4]) {
 			lock_tab(h=h, wall=wall);
+
+			// Legs.
 			translate([0, 0, h]) {
 				difference() {
 					translate([-wall, 0, -h])

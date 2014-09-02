@@ -117,11 +117,11 @@ module rails_90deg_joint()
 			}
 
 			// Side mount slots.
-			translate([0, platform_width/3, 0]) {
-				grid_of(ya=[-platform_width/3/2, platform_width/3/2]) {
+			translate([0, platform_length/2, 0]) {
+				grid_of(ya=[-platform_length/4, platform_length/4]) {
 					zrot_copies([0,180]) {
 						translate([rail_width/2-joiner_width/2, 0, 0]) {
-							zrot(-90) lock_slot(h=25, wall=3, backing=joiner_width/2-2);
+							zrot(-90) lock_slot(h=30, wall=3, backing=joiner_width/2-2);
 						}
 					}
 				}

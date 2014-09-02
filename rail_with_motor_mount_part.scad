@@ -50,10 +50,10 @@ module rail_with_motor_mount()
 			}
 
 			// Side mount slots.
-			grid_of(ya=[-(motor_rail_length/2-joiner_length-5), (motor_rail_length/2-joiner_length-5)]) {
+			grid_of(ya=[-platform_length/4, platform_length/4]) {
 				zrot_copies([0,180]) {
 					translate([rail_width/2-5, 0, 0]) {
-						zrot(-90) lock_slot(h=25, wall=3, backing=2.5);
+						zrot(-90) lock_slot(h=30, wall=3, backing=2.5);
 					}
 				}
 			}

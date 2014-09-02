@@ -34,9 +34,7 @@ module xy_joiner()
 			}
 
 			// Lock tabs
-			grid_of(
-				xa=[-(motor_rail_length/2-joiner_length-5), (motor_rail_length/2-joiner_length-5)]
-			) {
+			grid_of(xa=[-platform_length/4, platform_length/4]) {
 				zrot(180) lock_tab(h=25, wall=3);
 			}
 		}
