@@ -5,7 +5,7 @@ use <joiners.scad>
 
 module rail_structure()
 {
-	color("Lavender") difference() {
+	color([0.9, 0.7, 1.0]) difference() {
 		union() {
 			difference() {
 				union() {
@@ -15,7 +15,7 @@ module rail_structure()
 
 					// Walls.
 					grid_of(xa=[-(rail_spacing/2+joiner_width/2), (rail_spacing/2+joiner_width/2)], za=[(rail_height+3)/2]) {
-						thinning_wall(h=rail_height+3, l=rail_length-10*2, thick=joiner_width, strut=rail_thick);
+						thinning_wall(h=rail_height+3, l=rail_length-10*2, thick=joiner_width, strut=rail_thick, bracing=false);
 					}
 				}
 
@@ -50,11 +50,11 @@ module rail_structure()
 				translate([0, rail_length/2-8, rail_height/4]) {
 					difference() {
 						// Side supports.
-						cube(size=[rail_width, 4, rail_height/2], center=true);
+						cube(size=[rail_width, 3, rail_height/2], center=true);
 
 						// Wiring access holes.
 						grid_of(xa=[-rail_width/4, rail_width/4])
-							teardrop(r=5, h=5, center=true);
+							cube(size=[8, 5, 10], center=true);
 					}
 				}
 			}

@@ -21,7 +21,7 @@ clean:
 	rm -f ${TARGETS} *.deps
 
 rendering:
-	${OPENSCAD} -o wiki/snappy_full.png --imgsize=3200,3200 --projection=p --csglimit=100000 --camera=-120,-120,100,60,0,45,3333 full_assembly.scad
+	${OPENSCAD} -o wiki/snappy_full.png --imgsize=3200,3200 --projection=p --csglimit=100000 --camera=45,-225,165,65,0,300,3500 full_assembly.scad
 	cp wiki/snappy_full.png wiki/snappy_small.png
 	sips -Z 800 wiki/snappy_full.png
 	sips -Z 200 wiki/snappy_small.png
