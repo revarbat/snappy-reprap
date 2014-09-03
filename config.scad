@@ -28,6 +28,7 @@ lifter_rod_diam   =   9.5; // mm
 lifter_rod_length = 300.0; // mm
 lifter_nut_size   =  17.4; // mm
 lifter_nut_thick  =   9.3; // mm
+lifter_thread_size =  3.175; // mm lift per revolution
 
 
 
