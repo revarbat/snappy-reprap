@@ -30,7 +30,7 @@ module z_sled()
 					hull() {
 						grid_of(za=[0, 20]) {
 							zrot(90) yrot(90) {
-								cylinder(h=nut_thick, r=(0.125+nut_size/2)/cos(30), center=true, $fn=6);
+								cylinder(h=nut_thick+1, r=(0.5+nut_size/2)/cos(30), center=true, $fn=6);
 							}
 						}
 					}
@@ -40,12 +40,16 @@ module z_sled()
 				translate([0, 0, roller_base+roller_thick/2]) {
 					hull() {
 						grid_of(za=[0, 20]) {
-							scale([0.8, 3, 0.8]) zrot(90) yrot(90) {
-								cylinder(h=nut_thick, r=nut_size/2, center=true, $fn=24);
+							zrot(90) yrot(90) {
+								cylinder(h=nut_thick*3, r=(nut_size/2-2)/cos(30), center=true, $fn=24);
 							}
 						}
 					}
 				}
+
+				// snap hole.
+				translate([0, 0, nut_size+roller_thick-3])
+					cube(size=[nut_size+10, 5, 1.5], center=true);
 			}
 		}
 	}
