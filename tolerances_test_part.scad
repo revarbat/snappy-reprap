@@ -1,6 +1,6 @@
 include <config.scad>
 use <GDMUtils.scad>
-use <z_nut_cap_part.scad>
+use <lifter_nut_cap_part.scad>
 use <nut_capture.scad>
 
 
@@ -74,7 +74,7 @@ module tolerances_test_part() { // make me
 					}
 				}
 	}
-	translate([ 20, 0, 2]) yrot(180) zrot(90) z_nut_cap();
+	translate([ 20, 0, 2]) yrot(180) zrot(90) lifter_nut_cap();
 }
 
 

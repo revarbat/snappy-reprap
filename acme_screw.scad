@@ -39,8 +39,8 @@ module acme_threaded_nut(
 ) {
 	difference() {
 		cylinder(r=od/2/cos(30), h=h, center=true, $fn=6);
-		grid_of(za=[0,slop]) {
-			acme_threaded_rod(d=id, l=h+1, threading=threading, thread_depth=thread_depth+slop);
+		grid_of(za=[-slop/2,slop/2]) {
+			acme_threaded_rod(d=id+2*slop, l=h+1, threading=threading, thread_depth=thread_depth);
 		}
 	}
 }
