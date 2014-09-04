@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-module z_rod_coupler()
+module lifter_rod_coupler()
 {
 	h = 50;
 	shaft = 5.2;
@@ -62,17 +62,17 @@ module z_rod_coupler()
 		}
 	}
 }
-//!z_rod_coupler();
+//!lifter_rod_coupler();
 
 
 
-module z_rod_couple_part() { // make me
-	z_rod_coupler();
+module lifter_rod_couple_part() { // make me
+	lifter_rod_coupler();
 }
 
 
 
-z_rod_couple_part();
+lifter_rod_couple_part();
 
 
 
