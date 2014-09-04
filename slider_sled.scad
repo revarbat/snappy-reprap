@@ -2,7 +2,7 @@ include <config.scad>
 use <GDMUtils.scad>
 use <joiners.scad>
 use <roller_parts.scad>
-use <cap_parts.scad>
+use <roller_cap_parts.scad>
 
 
 
@@ -74,7 +74,7 @@ module slider_rollers()
 
 				// Caps
 				translate([0,0,axle_len/2]) xrot(180)
-					cap(r=roller_axle/2-3, h=10, lip=2, wall=3);
+					roller_cap(r=roller_axle/2-3, h=10, lip=2, wall=3);
 			}
 		}
 	}

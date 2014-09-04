@@ -2,22 +2,24 @@ include <config.scad>
 use <GDMUtils.scad>
 use <NEMA.scad>
 
-use <cap_parts.scad>
 use <drive_gear_parts.scad>
+use <extruder_mount_part.scad>
+use <lifter_nut_cap_part.scad>
+use <lifter_nut_part.scad>
+use <lifter_rod_coupler_part.scad>
 use <motor_mount_plate_parts.scad>
-use <sled_end_parts.scad>
 use <rail_with_motor_mount_part.scad>
-use <rails_90deg_joint_part.scad>
 use <rails_end_part.scad>
 use <rails_part.scad>
+use <roller_cap_parts.scad>
 use <roller_parts.scad>
+use <sled_end_parts.scad>
 use <support_leg_part.scad>
 use <xy_joiner_parts.scad>
 use <xy_sled_part.scad>
+use <yz_joiner_part.scad>
 use <z_platform_joint_part.scad>
 use <z_sled_part.scad>
-use <extruder_mount_part.scad>
-use <z_rod_coupler.scad>
 
 
 
@@ -33,7 +35,7 @@ module full_assembly()
 	platform_vert_off = rail_height+roller_base+roller_thick/2+5;
 
 	// Y-axis to Z-axis corner joiner.
-	rails_90deg_joint();
+	yz_joiner();
 
 	// Z-Axis Stepper Motor
 	translate([0, rail_height+roller_thick/2-1, 0]) {
@@ -43,7 +45,7 @@ module full_assembly()
 				nema17_stepper(h=34, shaft_len=20.05);
 				translate([0, 0, 30]) {
 					color("DimGray")
-						z_rod_coupler();
+						lifter_rod_coupler();
 					translate([0, 0, lifter_rod_length/2]) {
 						color("silver")
 							cylinder(h=lifter_rod_length, r=lifter_rod_diam/2, center=true);
