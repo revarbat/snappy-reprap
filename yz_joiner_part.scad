@@ -110,7 +110,7 @@ module yz_joiner()
 						xrot(90) {
 							joiner(h=rail_height, w=joiner_width, l=50, a=joiner_angle);
 							translate([0, -50+rail_thick/2, 0])
-								cube(size=[joiner_width, rail_thick, rail_width-joiner_width], center=true);
+								cube(size=[joiner_width, rail_thick, rail_width*3/5], center=true);
 						}
 					}
 				}
