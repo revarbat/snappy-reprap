@@ -58,10 +58,17 @@ module rail_with_motor_mount()
 				}
 			}
 
-			// Side supports.
 			zrot_copies([0, 180]) {
-				translate([0, motor_rail_length/2-8, rail_height/4])
-					cube(size=[rail_width, 3, rail_height/2], center=true);
+				translate([0, motor_rail_length/2-8, rail_height/4]) {
+					difference() {
+						// Side supports.
+						cube(size=[rail_width, 3, rail_height/2], center=true);
+
+						// Wiring access holes.
+						grid_of(xa=[-rail_width/4, rail_width/4])
+							cube(size=[8, 5, 10], center=true);
+					}
+				}
 			}
 
 			// Motor clip mounts.

@@ -109,7 +109,7 @@ module yz_joiner()
 					translate([(43+joiner_width+10)/2, 0, 50]) {
 						xrot(90) {
 							joiner(h=rail_height, w=joiner_width, l=50, a=joiner_angle);
-							translate([0, -30+rail_thick/2, 0])
+							translate([0, -50+rail_thick/2, 0])
 								cube(size=[joiner_width, rail_thick, rail_width-joiner_width], center=true);
 						}
 					}
@@ -124,6 +124,17 @@ module yz_joiner()
 							zrot(-90) lock_slot(h=30, wall=3, backing=joiner_width/2-2);
 						}
 					}
+				}
+			}
+
+			translate([0, motor_rail_length+2, rail_height/4]) {
+				difference() {
+					// Side supports.
+					cube(size=[rail_width, 3, rail_height/2], center=true);
+
+					// Wiring access holes.
+					grid_of(xa=[-rail_width/4, rail_width/4])
+						cube(size=[8, 5, 10], center=true);
 				}
 			}
 
