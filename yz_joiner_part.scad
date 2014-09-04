@@ -4,7 +4,7 @@ use <joiners.scad>
 use <tslot.scad>
 
 
-module rails_90deg_joint()
+module yz_joiner()
 {
 	joiner_length=10;
 	base_height = rail_height+roller_thick;
@@ -152,17 +152,17 @@ module rails_90deg_joint()
 		}
 	}
 }
-rails_90deg_joint();
+//yz_joiner();
 
 
 
-module rails_90deg_joint_point() { // make me
-	rails_90deg_joint();
+module yz_joiner_part() { // make me
+	yz_joiner();
 }
 
 
 
-rails_90deg_joint_point();
+yz_joiner_part();
 
 
 
