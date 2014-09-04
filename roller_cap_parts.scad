@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 
 
 
-module cap(r=roller_axle/2-3, h=10, wall=3, cap=2, lip=1.5)
+module roller_cap(r=roller_axle/2-3, h=10, wall=3, cap=2, lip=1.5)
 {
 	color("Pink") difference() {
 		union() {
@@ -20,11 +20,11 @@ module cap(r=roller_axle/2-3, h=10, wall=3, cap=2, lip=1.5)
 			cube(size=[1,r*2,h],center=true);
 	}
 }
-//cap();
+//roller_cap();
 
 
 
-module cap_parts() { // make me
+module roller_cap_parts() { // make me
 	num_x = 4;
 	num_y = 5;
 	spacing = 25;
@@ -32,11 +32,11 @@ module cap_parts() { // make me
 		xa=[-spacing*(num_x-1)/2:spacing:spacing*(num_x-1)/2],
 		ya=[-spacing*(num_y-1)/2:spacing:spacing*(num_y-1)/2],
 		za=[2]
-	) cap(r=roller_axle/2-3, h=10, lip=2, wall=3);
+	) roller_cap(r=roller_axle/2-3, h=10, lip=2, wall=3);
 }
 
 
-cap_parts();
+roller_cap_parts();
 
 
 

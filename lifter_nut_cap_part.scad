@@ -4,7 +4,7 @@ use <nut_capture.scad>
 
 
 
-module z_nut_cap()
+module lifter_nut_cap()
 {
 	color("DeepSkyBlue") {
 		nut_capture_cap(
@@ -18,16 +18,17 @@ module z_nut_cap()
 
 
 
-module z_nut_cap_part() { // make me
+module lifter_nut_cap_part() { // make me
 	grid_of(ya=[-15, 15]) {
-		translate([0, 0, 2])
-			yrot(180) z_nut_cap();
+		translate([0, 0, 2]) {
+			yrot(180) lifter_nut_cap();
+		}
 	}
 }
 
 
 
-z_nut_cap_part();
+lifter_nut_cap_part();
 
 
 
