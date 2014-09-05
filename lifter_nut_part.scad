@@ -33,8 +33,8 @@ module lifter_nut()
 			xa=[nut_rad-3],
 			ya=[-lifter_nut_size/2, lifter_nut_size/2]
 		) {
-			scale([2.0, 1.0, lifter_nut_thick/2])
-				zrot(45) cube(size=1/sqrt(2), center=true);
+			scale([3.0, 2.0, lifter_nut_thick/2-1])
+				zrot(45) cube(size=[1/sqrt(2), 1/sqrt(2), 1], center=true);
 		}
 	}
 }

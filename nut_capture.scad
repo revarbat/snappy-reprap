@@ -83,8 +83,8 @@ module nut_capture_cap(nut_size=17.4, nut_thick=9.5, wall=3, cap_thick=2)
 			xa=[-nut_size/2, nut_size/2],
 			za=[-3]
 		) {
-			scale([1.0, nut_thick/2, 2.0])
-				yrot(45) cube(size=1/sqrt(2), center=true);
+			scale([2.0, nut_thick/2-1, 3.0])
+				yrot(45) cube(size=[1/sqrt(2), 1, 1/sqrt(2)], center=true);
 		}
 	}
 }
