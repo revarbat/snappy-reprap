@@ -10,6 +10,8 @@ module slider_sled(show_rollers=false)
 {
 	axle_rad = (roller_axle/2) - 0.2;
 	axle_len = roller_thick;
+	pedestal_lip = 1.5;
+	cap_snap_len = 10*3/4;
 
 	union() {
 		difference() {
@@ -49,12 +51,17 @@ module slider_sled(show_rollers=false)
 			grid_of(ya=[-(platform_length/2)/2, (platform_length/2)/2]) {
 				// Roller pedestals
 				translate([0,0,roller_base/2]) {
-					cylinder(h=roller_base, r=axle_rad+1.5, center=true, $fn=32);
+					cylinder(h=roller_base, r=axle_rad+pedestal_lip, center=true, $fn=32);
 				}
 
 				// Roller axles
 				translate([0,0,axle_len/2+roller_base]) {
-					tube(h=axle_len+0.05, r=axle_rad, wall=2.5, center=true, $fn=32);
+					difference() {
+						cylinder(h=axle_len, r=axle_rad, center=true, $fn=32);
+						cylinder(h=axle_len+0.05, r=axle_rad-2.5, center=true, $fn=16);
+						translate([0, 0, -axle_len/2+(axle_len-cap_snap_len)/2])
+							cylinder(h=axle_len-cap_snap_len+0.05, r=axle_rad-2.0, center=true, $fn=16);
+					}
 				}
 			}
 		}

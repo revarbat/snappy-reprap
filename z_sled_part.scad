@@ -2,6 +2,7 @@ include <config.scad>
 use <GDMUtils.scad>
 use <slider_sled.scad>
 use <nut_capture.scad>
+use <lifter_nut_part.scad>
 
 
 
@@ -35,6 +36,22 @@ module z_sled()
 module z_sled_rollers()
 {
 	slider_rollers();
+}
+
+
+
+module z_sled_nuts()
+{
+	// Quantize nut housing spacing to the thread lift size.
+	nut_spacing = floor((platform_length-20)/lifter_thread_size) * lifter_thread_size;
+
+	// Drive nut capture
+	grid_of(
+		ya=[-nut_spacing/2, nut_spacing/2],
+		za=[(roller_base+roller_thick/2)]
+	) {
+		zrot(90) yrot(-90) lifter_nut();
+	}
 }
 
 

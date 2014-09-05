@@ -165,6 +165,7 @@ module full_assembly()
 			xrot(-90) yrot(180) {
 				z_sled();
 				z_sled_rollers();
+				z_sled_nuts();
 			}
 
 			translate([0, 0, platform_length/2]) {
