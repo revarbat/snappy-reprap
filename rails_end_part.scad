@@ -20,13 +20,9 @@ module rails_end()
 						thinning_wall(h=base_height, l=rail_width, thick=rail_thick, strut=joiner_width, bracing=false);
 				}
 
-				// Clear space out near front clips.
-				grid_of(
-					xa=[-(rail_spacing+joiner_width)/2, (rail_spacing+joiner_width)/2],
-					za=[(base_height)/4, (base_height)*3/4]
-				) {
-					scale([1, tan(joiner_angle), 1]) xrot(45)
-						cube(size=base_height/2/sqrt(2), center=true);
+				// Clear space for joiners.
+				translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
+					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, a=joiner_angle);
 				}
 			}
 
@@ -35,17 +31,13 @@ module rails_end()
 				xa=[-(rail_spacing+joiner_width)/2, (rail_spacing+joiner_width)/2],
 				za=[base_height]
 			) {
-				translate([0, -joiner_length/2-0.05, -(base_height-rail_height)/2-0.05])
-					cube(size=[joiner_width, joiner_length+0.05, (base_height-rail_height-0.05)], center=true);
+				translate([0, -joiner_length/2, -(base_height-rail_height)/2])
+					cube(size=[joiner_width, joiner_length, (base_height-rail_height)], center=true);
 			}
 
 			// Joiner clips.
 			translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
-				yrot_copies([0,180]) {
-					translate([rail_spacing/2+joiner_width/2, 0, 0]) {
-						joiner(h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
-					}
-				}
+				joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 			}
 		}
 	}

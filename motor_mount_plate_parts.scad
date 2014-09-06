@@ -15,13 +15,7 @@ module motor_mount_plate(thick=4, l=15)
 		}
 
 		// Joiners
-		zrot_copies([0, 180]) {
-			translate([(43+joiner_width+10)/2, 0, 0]) {
-				xrot(-90) {
-					joiner(h=rail_height, w=joiner_width, l=l, a=joiner_angle);
-				}
-			}
-		}
+		xrot(-90) joiner_pair(spacing=43+joiner_width+10, h=rail_height, w=joiner_width, l=l, a=joiner_angle);
 	}
 }
 //!motor_mount_plate();

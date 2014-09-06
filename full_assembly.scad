@@ -38,7 +38,7 @@ module full_assembly()
 	yz_joiner();
 
 	// Z-Axis Stepper Motor
-	translate([0, rail_height+roller_thick/2-1, 0]) {
+	translate([0, rail_height+roller_thick/2, 0]) {
 		translate([0, 0, 50]) {
 			zrot(90) motor_mount_plate();
 			translate([0, 0, 5.9+rail_thick]) {
@@ -188,7 +188,7 @@ module full_assembly()
 
 
 
-zrot(180) full_assembly();
+full_assembly();
 
 
 

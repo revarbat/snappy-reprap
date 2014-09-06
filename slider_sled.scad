@@ -15,36 +15,28 @@ module slider_sled(show_rollers=false)
 
 	union() {
 		difference() {
-			// Bottom strut.
-			translate([0,0,platform_thick/2])
-				yrot(90) sparse_strut(h=platform_width, l=platform_length, thick=platform_thick, maxang=45, strut=12, max_bridge=999);
+			union() {
+				// Bottom strut.
+				translate([0,0,platform_thick/2])
+					yrot(90) sparse_strut(h=platform_width, l=platform_length, thick=platform_thick, maxang=45, strut=12, max_bridge=999);
 
-			// Remove bits from platform so snap tabs have freedom.
-			zrot_copies([0,180]) {
-				grid_of(
-					xa=[-(platform_width-joiner_width/2-5)/2, (platform_width-joiner_width/2-5)/2],
-					ya=[platform_length/2]
-				) {
-					xrot(joiner_angle) translate([-(joiner_width+10)/2,0,-1])
-						cube(size=[joiner_width+10,platform_thick,platform_thick*3], center=false);
-				}
-			}
-		}
-
-		translate([0,0,platform_height/2]) {
-			// Snap-tab joiners.
-			zrot_copies([0,180]) {
-				yrot_copies([0,180]) {
-					translate([platform_width/2-joiner_width/2, platform_length/2, 0]) {
-						joiner(h=platform_height, w=joiner_width, l=10, a=joiner_angle);
+				// Solid walls.
+				zrot_copies([0, 180]) {
+					translate([(platform_width-joiner_width)/2, 0, platform_height/2]) {
+						thinning_wall(h=platform_height, l=platform_length-10, thick=joiner_width, strut=platform_thick, wall=3, bracing=false);
 					}
 				}
 			}
 
-			// Solid walls.
-			grid_of(xa=[-(platform_width-joiner_width)/2, (platform_width-joiner_width)/2]) {
-				thinning_wall(h=platform_height, l=platform_length-18, thick=joiner_width, strut=platform_thick, wall=3, bracing=false);
+			// Clear space for joiners.
+			translate([0,0,platform_height/2]) {
+				joiner_quad_clear(xspacing=platform_width-joiner_width, yspacing=platform_length, h=platform_height, w=joiner_width, a=joiner_angle);
 			}
+		}
+
+		// Snap-tab joiners.
+		translate([0,0,platform_height/2]) {
+			joiner_quad(xspacing=platform_width-joiner_width, yspacing=platform_length, h=platform_height, w=joiner_width, l=5, a=joiner_angle);
 		}
 
 		grid_of(xa=[-roller_spacing/2,roller_spacing/2]) {

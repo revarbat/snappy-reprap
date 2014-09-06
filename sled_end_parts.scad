@@ -5,45 +5,38 @@ use <joiners.scad>
 
 module sled_end()
 {
-	snap_width = 15;
+	joiner_length = 15;
 	color("DodgerBlue") union() {
 		difference() {
 			union() {
 				// Base.
-				translate([0,-(snap_width/2),platform_thick/2])
-					cube(size=[platform_width, snap_width, platform_thick], center=true);
+				translate([0,-(joiner_length/2),platform_thick/2])
+					cube(size=[platform_width, joiner_length, platform_thick], center=true);
 
 				// Back wall.
-				translate([0,-(snap_width-platform_thick/2),platform_height/2])
+				translate([0,-(joiner_length-platform_thick/2),platform_height/2])
 					cube(size=[platform_width, platform_thick, platform_height], center=true);
 			}
 
 			// Remove bits of back wall that would hit rails.
-			translate([0, -snap_width/2, platform_height/2+roller_base-2]) {
-				cube(size=[rail_spacing+joiner_width*2+5, snap_width+platform_thick+10, platform_height], center=true);
+			translate([0, -joiner_length/2, platform_height/2+roller_base-2]) {
+				cube(size=[rail_spacing+joiner_width*2+5, joiner_length+platform_thick+10, platform_height], center=true);
 			}
 
-			// Remove bits from platform so snap tabs have freedom.
-			grid_of(
-				xa=[-(platform_width-joiner_width/2-5)/2, (platform_width-joiner_width/2-5)/2]
-			) {
-				xrot(joiner_angle) translate([-(joiner_width+10)/2,0,-1])
-					cube(size=[joiner_width+10,platform_thick,platform_thick*1.5], center=false);
+			// Clear space for joiners.
+			translate([0,0,platform_height/2]) {
+				joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, a=joiner_angle);
 			}
 		}
 
-		// Joiner tabs.
+		// Snap-tab joiners.
 		translate([0,0,platform_height/2]) {
-			yrot_copies([0,180]) {
-				translate([platform_width/2-joiner_width/2, 0, 0]) {
-					joiner(h=platform_height, w=joiner_width, l=10, a=joiner_angle);
-				}
-			}
+			joiner_pair(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 		}
 
 		// Rack endstop block.
-		translate([0, -snap_width/2, (platform_thick+3+10)/2])
-			cube(size=[15,snap_width,(platform_thick+3+10)], center=true);
+		translate([0, -joiner_length/2, (platform_thick+3+10)/2])
+			cube(size=[15,joiner_length,(platform_thick+3+10)], center=true);
 	}
 }
 //!sled_end();
