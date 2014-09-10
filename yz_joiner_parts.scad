@@ -152,13 +152,13 @@ module yz_joiner()
 
 
 
-module yz_joiner_part() { // make me
+module yz_joiner_parts() { // make me
 	translate([0, -platform_length/2, 0]) yz_joiner();
 }
 
 
 
-yz_joiner_part();
+yz_joiner_parts();
 
 
 

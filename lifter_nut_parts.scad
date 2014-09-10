@@ -42,7 +42,7 @@ module lifter_nut()
 
 
 
-module lifter_nut_part() { // make me
+module lifter_nut_parts() { // make me
 	grid_of(
 		ya=[-15, 15],
 		za=[lifter_nut_thick/2]
@@ -53,7 +53,7 @@ module lifter_nut_part() { // make me
 
 
 
-lifter_nut_part();
+lifter_nut_parts();
 
 
 

@@ -4,7 +4,7 @@ use <joiners.scad>
 use <tslot.scad>
 
 
-module rail_with_motor_mount()
+module rail_motor_segment()
 {
 	joiner_length = 10;
 
@@ -84,16 +84,16 @@ module rail_with_motor_mount()
 		}
 	}
 }
-//!rail_with_motor_mount();
+//!rail_motor_segment();
 
 
 
-module rail_with_motor_mount_part() { // make me
-	rail_with_motor_mount();
+module rail_motor_segment_parts() { // make me
+	rail_motor_segment();
 }
 
 
-rail_with_motor_mount_part();
+rail_motor_segment_parts();
 
 
 

@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-module sled_end()
+module sled_endcap()
 {
 	joiner_length = 15;
 	color("DodgerBlue") union() {
@@ -39,16 +39,16 @@ module sled_end()
 			cube(size=[15,joiner_length,(platform_thick+3+10)], center=true);
 	}
 }
-//!sled_end();
+//!sled_endcap();
 
 
 
-module sled_end_part() { // make me
-	zrot_copies([90,270]) translate([0,20,0]) sled_end();
+module sled_endcap_parts() { // make me
+	zrot_copies([90,270]) translate([0,20,0]) sled_endcap();
 }
 
 
-sled_end_part();
+sled_endcap_parts();
 
 
 

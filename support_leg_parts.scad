@@ -31,13 +31,13 @@ module support_leg(h=30, l=100, wall=3)
 
 
 
-module support_leg_part() { // make me
+module support_leg_parts() { // make me
 	translate([0, -50, 0]) support_leg();
 }
 
 
 
-support_leg_part();
+support_leg_parts();
 
 
 

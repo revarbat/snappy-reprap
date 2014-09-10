@@ -68,13 +68,13 @@ module lifter_rod_coupler()
 
 
 
-module lifter_rod_couple_part() { // make me
+module lifter_rod_couple_parts() { // make me
 	lifter_rod_coupler();
 }
 
 
 
-lifter_rod_couple_part();
+lifter_rod_couple_parts();
 
 
 

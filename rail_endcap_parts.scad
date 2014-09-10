@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-module rails_end()
+module rail_endcap()
 {
 	joiner_length=15;
 	base_height = rail_height+roller_thick;
@@ -42,16 +42,16 @@ module rails_end()
 		}
 	}
 }
-//!rails_end();
+//!rail_endcap();
 
 
 
-module rails_end_part() { // make me
-	zrot(90) rails_end();
+module rail_endcap_parts() { // make me
+	zrot(90) rail_endcap();
 }
 
 
-rails_end_part();
+rail_endcap_parts();
 
 
 

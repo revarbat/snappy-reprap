@@ -2,31 +2,31 @@ include <config.scad>
 use <GDMUtils.scad>
 use <NEMA.scad>
 
+use <cantilever_joint_parts.scad>
 use <drive_gear_parts.scad>
-use <extruder_mount_part.scad>
-use <lifter_nut_cap_part.scad>
-use <lifter_nut_part.scad>
-use <lifter_rod_coupler_part.scad>
+use <extruder_platform_parts.scad>
+use <lifter_nut_cap_parts.scad>
+use <lifter_nut_parts.scad>
+use <lifter_rod_coupler_parts.scad>
 use <motor_mount_plate_parts.scad>
-use <rail_with_motor_mount_part.scad>
-use <rails_end_part.scad>
-use <rails_part.scad>
+use <rail_endcap_parts.scad>
+use <rail_motor_segment_parts.scad>
+use <rail_segment_parts.scad>
 use <roller_cap_parts.scad>
 use <roller_parts.scad>
-use <sled_end_parts.scad>
-use <support_leg_part.scad>
+use <sled_endcap_parts.scad>
+use <support_leg_parts.scad>
 use <xy_joiner_parts.scad>
-use <xy_sled_part.scad>
-use <yz_joiner_part.scad>
-use <z_platform_joint_part.scad>
-use <z_sled_part.scad>
+use <xy_sled_parts.scad>
+use <yz_joiner_parts.scad>
+use <z_sled_parts.scad>
 
 
 
 // Set default camera position.
-$vpd = 650;
-$vpt = [45, -165, 165];
-$vpr = [68, 0, 315];
+$vpd = 3500;
+$vpt = [0, 0, 160];
+$vpr = [65, 0, 120];
 
 
 module full_assembly()
@@ -67,13 +67,13 @@ module full_assembly()
 	translate([0, platform_length, 0]) {
 		// Y-axis rails.
 		translate([0, rail_length/2, 0]) {
-			rail_structure();
+			rail_segment();
 			translate([0, rail_length/2+motor_rail_length/2, 0]) {
-				rail_with_motor_mount();
+				rail_motor_segment();
 				translate([0, motor_rail_length/2+rail_length/2, 0]) {
-					rail_structure();
+					rail_segment();
 					translate([0, rail_length/2, 0]) {
-						zrot(180) rails_end();
+						zrot(180) rail_endcap();
 					}
 				}
 
@@ -113,12 +113,12 @@ module full_assembly()
 			zrot(90) translate([0, 0, platform_vert_off]) {
 				// Horizontal X-axis rails.
 				grid_of(ya=[-(rail_length+motor_rail_length)/2, (rail_length+motor_rail_length)/2]) {
-					rail_structure();
+					rail_segment();
 				}
-				rail_with_motor_mount();
+				rail_motor_segment();
 				zrot_copies([0, 180]) {
 					translate([0, rail_length+motor_rail_length/2, 0]) {
-						zrot(180) rails_end();
+						zrot(180) rail_endcap();
 					}
 				}
 
@@ -142,7 +142,7 @@ module full_assembly()
 					}
 					zrot_copies([0, 180]) {
 						translate([0, -platform_length, 0]) {
-							yrot(180) sled_end();
+							yrot(180) sled_endcap();
 						}
 					}
 				}
@@ -154,10 +154,10 @@ module full_assembly()
 		// Vertical Z-axis slider rails.
 		for(i = [0:1]) {
 			translate([0, 0, (i+0.5)*rail_length])
-				xrot(-90) rail_structure();
+				xrot(-90) rail_segment();
 		}
 		translate([0, 0, 2*rail_length]) {
-			xrot(-90) rails_end();
+			xrot(-90) rail_endcap();
 		}
 
 		translate([0, platform_vert_off, rail_length]) {
@@ -170,15 +170,15 @@ module full_assembly()
 
 			translate([0, 0, platform_length/2]) {
 				// Z-axis platform to extruder cantilever joint.
-				zrot(180) z_platform_joint();
+				zrot(180) cantilever_joint();
 
 				// Extruder cantilever.
 				translate([0, joiner_length, -rail_height]) {
 					translate([0, 0.5*rail_length, 0]) {
-						rail_structure();
+						rail_segment();
 					}
 					translate([0, 1.5*rail_length, 0]) {
-						extruder_mount();
+						extruder_platform();
 					}
 				}
 			}

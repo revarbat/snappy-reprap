@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-module extruder_mount()
+module extruder_platform()
 {
 	color("LightSteelBlue") difference() {
 		union() {
@@ -72,13 +72,13 @@ module extruder_mount()
 
 
 
-module extruder_mount_part() { // make me
-	extruder_mount();
+module extruder_platform_parts() { // make me
+	extruder_platform();
 }
 
 
 
-extruder_mount_part();
+extruder_platform_parts();
 
 
 

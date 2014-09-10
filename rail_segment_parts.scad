@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-module rail_structure()
+module rail_segment()
 {
 	color([0.9, 0.7, 1.0]) difference() {
 		union() {
@@ -61,17 +61,17 @@ module rail_structure()
 		}
 	}
 }
-//!rail_structure();
+//!rail_segment();
 
 
 
-module rails_part() { // make me
-	rail_structure();
+module rails_segment_parts() { // make me
+	rail_segment();
 }
 
 
 
-rails_part();
+rails_segment_parts();
 
 
 

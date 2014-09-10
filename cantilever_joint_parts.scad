@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-module z_platform_joint()
+module cantilever_joint()
 {
 	joiner_length=15;
 	color("Chocolate") xrot(-90) union() {
@@ -26,19 +26,19 @@ module z_platform_joint()
 		}
 	}
 }
-//!z_platform_joint();
+//!cantilever_joint();
 
 
 
-module z_platform_joint_part() { // make me
+module cantilever_joint_parts() { // make me
 	translate([0, 0, 15]) zrot(90) xrot(180) {
-		z_platform_joint();
+		cantilever_joint();
 	}
 }
 
 
 
-z_platform_joint_part();
+cantilever_joint_parts();
 
 
 

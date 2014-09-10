@@ -1,7 +1,7 @@
 OPENSCAD=/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD
 
 # match files containing "// make me"
-TARGETS=$(subst .scad,.stl,$(shell grep -l '// make me' *.scad | sort))
+TARGETS=$(subst .scad,.stl,$(shell ls -1 *_parts.scad | sort))
 
 all: ${TARGETS}
 
@@ -36,10 +36,10 @@ renderparts: $(subst .stl,.png,${TARGETS})
 ROTFILES=$(shell seq -f 'snappy_rot%03g.png' 0 15 359.99)
 
 ${ROTFILES}: full_assembly.scad
-	${OPENSCAD} -o $@ --imgsize=1280,1280 --projection=p --csglimit=100000 \
+	${OPENSCAD} -o $@ --imgsize=800,800 --projection=p --csglimit=100000 \
 	    --camera=0,0,160,65,0,$(subst snappy_rot,,$(subst .png,,$@)),3500 \
 	    full_assembly.scad
-	sips --deleteColorManagementProperties -Z 640 $@
+	sips --deleteColorManagementProperties -Z 400 $@
 
 wiki/snappy_animated.gif: ${ROTFILES}
 	convert -delay 33 -loop 0 ${ROTFILES} wiki/snappy_animated.gif

@@ -18,7 +18,7 @@ module lifter_nut_cap()
 
 
 
-module lifter_nut_cap_part() { // make me
+module lifter_nut_cap_parts() { // make me
 	grid_of(ya=[-15, 15]) {
 		translate([0, 0, 2]) {
 			yrot(180) lifter_nut_cap();
@@ -28,7 +28,7 @@ module lifter_nut_cap_part() { // make me
 
 
 
-lifter_nut_cap_part();
+lifter_nut_cap_parts();
 
 
 

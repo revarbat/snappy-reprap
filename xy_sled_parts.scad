@@ -58,12 +58,12 @@ module xy_sled_rollers()
 
 
 
-module xy_sled_part() { // make me
+module xy_sled_parts() { // make me
 	zrot(90) xy_sled();
 }
 
 
-xy_sled_part();
+xy_sled_parts();
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap

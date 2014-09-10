@@ -2,7 +2,7 @@ include <config.scad>
 use <GDMUtils.scad>
 use <slider_sled.scad>
 use <nut_capture.scad>
-use <lifter_nut_part.scad>
+use <lifter_nut_parts.scad>
 
 
 
@@ -56,13 +56,13 @@ module z_sled_nuts()
 
 
 
-module z_sled_part() { // make me
+module z_sled_parts() { // make me
 	zrot(90) z_sled();
 }
 
 
 
-z_sled_part();
+z_sled_parts();
 
 
 

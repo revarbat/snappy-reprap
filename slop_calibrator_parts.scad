@@ -1,7 +1,4 @@
-include <config.scad>
 use <GDMUtils.scad>
-use <lifter_nut_cap_part.scad>
-use <nut_capture.scad>
 
 
 
@@ -57,7 +54,7 @@ module float_seven_segment(val=0.0, decim=2, size=10, h=1, suppress=false)
 
 
 
-module slop_calibration_parts() { // make me
+module slop_calibrator_parts() { // make me
 	rows = 5;
 	cols = 2;
 	r = 10;
@@ -89,7 +86,7 @@ module slop_calibration_parts() { // make me
 
 
 
-slop_calibration_parts();
+slop_calibrator_parts();
 
 
 
