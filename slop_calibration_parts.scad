@@ -43,7 +43,7 @@ module float_seven_segment(val=0.0, decim=2, size=10, h=1, suppress=false)
 	}
 	for (p = [mag:-1:-decim]) {
 		translate([-0.8*size*(p+0.5), 0, 0]) {
-			assign(d = floor(abs(val)/pow(10, p)) % 10) {
+			assign(d = floor(abs(val)/pow(10, p)+0.000001) % 10) {
 				if (p == -1) {
 					translate([-0.8*size/2, -size/2, 0])
 						cube(size=[size*0.1, size*0.1, h], center=true);
@@ -57,29 +57,39 @@ module float_seven_segment(val=0.0, decim=2, size=10, h=1, suppress=false)
 
 
 
-module tolerances_test_part() { // make me
-	for (i = [0:5]) {
-		translate([-20*i, 0, 0])
-			zrot(90)
-				difference() {
-					nut_capture(
-						nut_size=lifter_nut_size,
-						nut_thick=lifter_nut_thick,
-						offset=lifter_nut_size/2+5,
-						wall=3,
-						slop=0.05*i
-					);
-					translate([lifter_nut_size/2+3, -6, 10]) {
-						zrot(90) xrot(90) float_seven_segment(val=0.05*i, decim=2, size=8, h=1, suppress=true);
+module slop_calibration_parts() { // make me
+	rows = 5;
+	cols = 2;
+	r = 10;
+	h = 15;
+	step = 0.05;
+	spacing = r*2+10;
+	for (col = [0:cols-1]) {
+		translate([-col*spacing*1.25+(cols-1)*spacing*1.25/2, 0, h/2]) {
+			difference() {
+				cube(size=[spacing, rows*spacing, h], center=true);
+				for (row = [0:rows-1]) {
+					assign(slop = (step*rows*col)+step*row) {
+						translate([0, spacing*row-(rows-1)*spacing/2, 0]) {
+							cylinder(r=r+slop, h=h+1, center=true);
+							translate([spacing/2, -7, 0]) {
+								zrot(90) xrot(90) float_seven_segment(val=slop, decim=2, size=8, h=1, suppress=true);
+							}
+						}
 					}
 				}
+			}
+		}
 	}
-	translate([ 20, 0, 2]) yrot(180) zrot(90) lifter_nut_cap();
+	translate([(cols+1)*1.25*spacing/2, 0, h/2]) {
+		cylinder(r=r, h=h, center=true);
+		translate([0,0,-h/4]) cylinder(r=r+2, h=h/2, center=true);
+	}
 }
 
 
 
-tolerances_test_part();
+slop_calibration_parts();
 
 
 

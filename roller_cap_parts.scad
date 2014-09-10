@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 
 
 
-module roller_cap(r=5.0, h=10, wall=3, cap=2, lip=1.5, shelf=2.4, slop=0.25)
+module roller_cap(r=5.0, h=10, wall=3, cap=2, lip=1.5, shelf=2.4, slop=printer_slop)
 {
 	$fn = 16;
 	color("Pink") difference() {

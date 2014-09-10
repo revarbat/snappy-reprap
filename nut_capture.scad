@@ -1,6 +1,7 @@
+include <config.scad>
 use <GDMUtils.scad>
 
-module nut_capture(nut_size=17.4, nut_thick=9.5, offset=18, slop=0.25, wall=3)
+module nut_capture(nut_size=17.4, nut_thick=9.5, offset=18, slop=printer_slop, wall=3)
 {
 	nut_rad = nut_size/cos(30)/2;
 	base = (offset - nut_rad);

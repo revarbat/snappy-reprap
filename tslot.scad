@@ -25,7 +25,7 @@ module lock_tab(h=30, wall=3, slop=0.0)
 
 
 
-module lock_slot(h=30, wall=3, backing=0, slop=0.3)
+module lock_slot(h=30, wall=3, backing=0, slop=printer_slop)
 {
 	s1 = 2*wall+slop/2;
 	s2 = wall+slop/2;

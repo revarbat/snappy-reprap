@@ -6,8 +6,8 @@ use <joiners.scad>
 module lifter_rod_coupler()
 {
 	h = 50;
-	shaft = 5.2;
-	setscrew = 3.2;
+	set_screw_rad = set_screw_size/2 + printer_slop;
+	shaft = motor_shaft_size + printer_slop;
 
 	color("Lavender") difference() {
 		// Coupler cylinder.
@@ -18,9 +18,11 @@ module lifter_rod_coupler()
 				// Stepper shaft hole
 				cylinder(h=h/2, r=shaft/2, center=true, $fn=16);
 
-				// Shaft flat side.
-				translate([1.4*shaft, 0, 0])
-					cube(size=[shaft*2, shaft*2, h/2+1], center=true);
+				if (motor_shaft_flatted == true) {
+					// Shaft flat side.
+					translate([1.4*shaft, 0, 0])
+						cube(size=[shaft*2, shaft*2, h/2+1], center=true);
+				}
 			}
 
 			//Stepper set screw
@@ -28,14 +30,14 @@ module lifter_rod_coupler()
 				yrot(90) {
 					// Nut Slot
 					translate([0, 0, 1]) scale([1.1, 1.1, 1.1]) hull() {
-						metric_nut(size=3, hole=false);
+						metric_nut(size=set_screw_size, hole=false);
 						translate([10, 0, 0])
-							metric_nut(size=3, hole=false);
+							metric_nut(size=set_screw_size, hole=false);
 					}
 
 					// Set screw hole.
 					translate([0, 0, 2.5])
-						cylinder(r=setscrew/2, h=12, center=true, $fn=8);
+						cylinder(r=set_screw_rad, h=12, center=true, $fn=8);
 				}
 			}
 		}
@@ -49,14 +51,14 @@ module lifter_rod_coupler()
 				yrot(90) {
 					// Nut Slot
 					translate([0, 0, 1]) scale([1.1, 1.1, 1.1]) hull() {
-						metric_nut(size=3, hole=false);
+						metric_nut(size=set_screw_size, hole=false);
 						translate([-10, 0, 0])
-							metric_nut(size=3, hole=false);
+							metric_nut(size=set_screw_size, hole=false);
 					}
 
 					// Set screw hole.
 					translate([0, 0, 2.5])
-						cylinder(r=setscrew/2, h=10, center=true, $fn=8);
+						cylinder(r=set_screw_rad, h=10, center=true, $fn=8);
 				}
 			}
 		}

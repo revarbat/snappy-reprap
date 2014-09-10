@@ -188,7 +188,7 @@ module full_assembly()
 
 
 
-full_assembly();
+translate([0,-1.5*rail_length,0]) full_assembly();
 
 
 

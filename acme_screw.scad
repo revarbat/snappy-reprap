@@ -1,3 +1,4 @@
+include <config.scad>
 use <GDMUtils.scad>
 
 
@@ -35,7 +36,7 @@ module acme_threaded_nut(
 	h=10,
 	threading=3.175,
 	thread_depth=1,
-	slop=0.25
+	slop=printer_slop
 ) {
 	difference() {
 		cylinder(r=od/2/cos(30), h=h, center=true, $fn=6);
