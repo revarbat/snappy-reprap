@@ -32,7 +32,7 @@ module support_leg(h=30, l=100, wall=3)
 
 
 module support_leg_part() { // make me
-	support_leg();
+	translate([0, -50, 0]) support_leg();
 }
 
 

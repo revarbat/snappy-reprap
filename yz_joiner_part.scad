@@ -153,7 +153,7 @@ module yz_joiner()
 
 
 module yz_joiner_part() { // make me
-	yz_joiner();
+	translate([0, -platform_length/2, 0]) yz_joiner();
 }
 
 

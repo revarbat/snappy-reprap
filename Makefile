@@ -15,6 +15,11 @@ include $(wildcard *.deps)
 %.stl: %.scad config.scad GDMUtils.scad joiners.scad publicDomainGearV1.1.scad
 	${OPENSCAD} -m make -o $@ -d $@.deps $<
 
+%.png: %.scad config.scad GDMUtils.scad joiners.scad publicDomainGearV1.1.scad
+	${OPENSCAD} -o wiki/$@ --imgsize=800,800 --projection=p --csglimit=100000 \
+	    --camera=0,0,50,65,0,120,1100 $<
+	sips -Z 200 wiki/$@
+
 clean:
 	rm -f ${TARGETS} *.deps snappy_rot*.png
 
@@ -25,6 +30,8 @@ rendering:
 	sips -Z 800 wiki/snappy_full.png
 	sips -Z 200 wiki/snappy_small.png
 
+
+renderparts: $(subst .stl,.png,${TARGETS})
 
 ROTFILES=$(shell seq -f 'snappy_rot%03g.png' 0 15 359.99)
 
