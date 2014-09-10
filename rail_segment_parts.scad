@@ -65,13 +65,13 @@ module rail_segment()
 
 
 
-module rails_segment_parts() { // make me
+module rail_segment_parts() { // make me
 	rail_segment();
 }
 
 
 
-rails_segment_parts();
+rail_segment_parts();
 
 
 

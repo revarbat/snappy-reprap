@@ -1,53 +1,67 @@
 OPENSCAD=/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD
+CONVERT=convert
 
 # match files containing "// make me"
 TARGETS=$(subst .scad,.stl,$(shell ls -1 *_parts.scad | sort))
 
 all: ${TARGETS}
 
-# auto-generated .scad files with .deps make make re-build always. keeping the
-# scad files solves this problem. (explanations are welcome.)
-.SECONDARY: $(shell echo "${TARGETS}" | sed 's/\.stl/.scad/g')
+%.stl: %.scad config.scad GDMUtils.scad
+	${OPENSCAD} -m make -o $@ $<
 
-# explicit wildcard expansion suppresses errors when no files are found
-include $(wildcard *.deps)
-
-%.stl: %.scad config.scad GDMUtils.scad joiners.scad publicDomainGearV1.1.scad
-	${OPENSCAD} -m make -o $@ -d $@.deps $<
-
-%.png: %.scad config.scad GDMUtils.scad joiners.scad publicDomainGearV1.1.scad
-	${OPENSCAD} -o wiki/$@ --imgsize=800,800 --projection=p --csglimit=100000 \
-	    --camera=0,0,50,65,0,120,1100 $<
-	sips -Z 200 wiki/$@
+wiki/%.png: %.scad config.scad GDMUtils.scad
+	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=1600,1600 --projection=p --csglimit=100000 \
+	    --camera=0,0,50,65,0,120,1500 $<
+	${CONVERT} -trim -resize 200x200 -border 5x5 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
+	rm -f $(subst wiki/,tmp_,$@)
 
 clean:
-	rm -f ${TARGETS} *.deps snappy_rot*.png
+	rm -f ${TARGETS} snappy_rot*.png render_*_parts.scad
 
 rendering:
-	${OPENSCAD} -o wiki/snappy_full.png --imgsize=3200,3200 --projection=p --csglimit=100000 \
+	${OPENSCAD} -o tmp_snappy_full.png --imgsize=3200,3200 --projection=p --csglimit=100000 \
 	    --camera=0,0,160,65,0,120,3500 full_assembly.scad
-	cp wiki/snappy_full.png wiki/snappy_small.png
-	sips -Z 800 wiki/snappy_full.png
-	sips -Z 200 wiki/snappy_small.png
+	${CONVERT} -trim -resize 800x800 -border 5x5 -bordercolor '#ffffe5' tmp_snappy_full.png wiki/snappy_full.png
+	${CONVERT} -trim -resize 200x200 -border 5x5 -bordercolor '#ffffe5' tmp_snappy_full.png wiki/snappy_small.png
+	rm -f tmp_snappy_full.png
 
 
-renderparts: $(subst .stl,.png,${TARGETS})
+renderparts: $(patsubst %.stl,wiki/%.png,${TARGETS})
 
 ROTFILES=$(shell seq -f 'snappy_rot%03g.png' 0 15 359.99)
 
 ${ROTFILES}: full_assembly.scad
-	${OPENSCAD} -o $@ --imgsize=800,800 --projection=p --csglimit=100000 \
+	${OPENSCAD} -o tmp_$@ --imgsize=800,800 --projection=p --csglimit=100000 \
 	    --camera=0,0,160,65,0,$(subst snappy_rot,,$(subst .png,,$@)),3500 \
 	    full_assembly.scad
-	sips --deleteColorManagementProperties -Z 400 $@
+	${CONVERT} -strip -resize 400x400 tmp_$@ $@
+	rm -f tmp_$@
 
 wiki/snappy_animated.gif: ${ROTFILES}
-	convert -delay 33 -loop 0 ${ROTFILES} wiki/snappy_animated.gif
+	${CONVERT} -delay 33 -loop 0 ${ROTFILES} wiki/snappy_animated.gif
 
 wiki/snappy_anim_small.gif: ${ROTFILES}
-	convert -resize 200x200 -delay 33 -loop 0 ${ROTFILES} wiki/snappy_anim_small.gif
+	${CONVERT} -resize 200x200 -delay 33 -loop 0 ${ROTFILES} wiki/snappy_anim_small.gif
 
 animation: wiki/snappy_animated.gif wiki/snappy_anim_small.gif
 
 
+# Dependencies follow.
+cantilever_joint_parts.stl: joiners.scad
+drive_gear_parts.stl: publicDomainGearV1.1.scad
+extruder_platform_parts.stl: joiners.scad
+lifter_nut_cap_parts.stl: nut_capture.scad
+lifter_nut_parts.stl: acme_screw.scad
+lifter_rod_coupler_parts.stl: joiners.scad
+motor_mount_plate_parts.stl: joiners.scad NEMA.scad
+rail_endcap_parts.stl: joiners.scad
+rail_motor_segment_parts.stl: tslot.scad joiners.scad
+rail_segment_parts.stl: joiners.scad
+roller_parts.stl: joiners.scad
+sled_endcap_parts.stl: joiners.scad
+support_leg_parts.stl: tslot.scad
+xy_joiner_parts.stl: tslot.scad joiners.scad
+xy_sled_parts.stl: roller_cap_parts.scad roller_parts.scad slider_sled.scad joiners.scad publicDomainGearV1.1.scad
+yz_joiner_parts.stl: tslot.scad joiners.scad
+z_sled_parts.stl: roller_cap_parts.scad joiners.scad acme_screw.scad lifter_nut_parts.scad nut_capture.scad slider_sled.scad roller_parts.scad
 
