@@ -1,32 +1,35 @@
 OPENSCAD=/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD
 CONVERT=convert
 
-# match files containing "// make me"
-TARGETS=$(subst .scad,.stl,$(shell ls -1 *_parts.scad | sort))
+PARTFILES=$(sort $(wildcard *_parts.scad))
+TARGETS=$(patsubst %.scad,STLs/%.stl,${PARTFILES})
 
 all: ${TARGETS}
 
-%.stl: %.scad config.scad GDMUtils.scad
+STLs/%.stl: %.scad config.scad GDMUtils.scad
 	${OPENSCAD} -m make -o $@ $<
 
 wiki/%.png: %.scad config.scad GDMUtils.scad
 	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=1600,1600 --projection=p --csglimit=100000 \
 	    --camera=0,0,50,65,0,120,1500 $<
-	${CONVERT} -trim -resize 200x200 -border 5x5 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
+	${CONVERT} -trim -resize 200x200 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
 	rm -f $(subst wiki/,tmp_,$@)
 
 clean:
-	rm -f ${TARGETS} snappy_rot*.png render_*_parts.scad
+	rm -f tmp_*.png snappy_rot*.png render_*_parts.scad
+
+cleaner: clean
+	rm -f ${TARGETS}
 
 rendering:
 	${OPENSCAD} -o tmp_snappy_full.png --imgsize=3200,3200 --projection=p --csglimit=100000 \
 	    --camera=0,0,160,65,0,120,3500 full_assembly.scad
-	${CONVERT} -trim -resize 800x800 -border 5x5 -bordercolor '#ffffe5' tmp_snappy_full.png wiki/snappy_full.png
-	${CONVERT} -trim -resize 200x200 -border 5x5 -bordercolor '#ffffe5' tmp_snappy_full.png wiki/snappy_small.png
+	${CONVERT} -trim -resize 800x800 -border 10x10 -bordercolor '#ffffe5' tmp_snappy_full.png wiki/snappy_full.png
+	${CONVERT} -trim -resize 200x200 -border 10x10 -bordercolor '#ffffe5' tmp_snappy_full.png wiki/snappy_small.png
 	rm -f tmp_snappy_full.png
 
 
-renderparts: $(patsubst %.stl,wiki/%.png,${TARGETS})
+renderparts: $(patsubst %.scad,wiki/%.png,${PARTFILES})
 
 ROTFILES=$(shell seq -f 'snappy_rot%03g.png' 0 15 359.99)
 
@@ -47,21 +50,21 @@ animation: wiki/snappy_animated.gif wiki/snappy_anim_small.gif
 
 
 # Dependencies follow.
-cantilever_joint_parts.stl: joiners.scad
-drive_gear_parts.stl: publicDomainGearV1.1.scad
-extruder_platform_parts.stl: joiners.scad
-lifter_nut_cap_parts.stl: nut_capture.scad
-lifter_nut_parts.stl: acme_screw.scad
-lifter_rod_coupler_parts.stl: joiners.scad
-motor_mount_plate_parts.stl: joiners.scad NEMA.scad
-rail_endcap_parts.stl: joiners.scad
-rail_motor_segment_parts.stl: tslot.scad joiners.scad
-rail_segment_parts.stl: joiners.scad
-roller_parts.stl: joiners.scad
-sled_endcap_parts.stl: joiners.scad
-support_leg_parts.stl: tslot.scad
-xy_joiner_parts.stl: tslot.scad joiners.scad
-xy_sled_parts.stl: roller_cap_parts.scad roller_parts.scad slider_sled.scad joiners.scad publicDomainGearV1.1.scad
-yz_joiner_parts.stl: tslot.scad joiners.scad
-z_sled_parts.stl: roller_cap_parts.scad joiners.scad acme_screw.scad lifter_nut_parts.scad nut_capture.scad slider_sled.scad roller_parts.scad
+STLs/cantilever_joint_parts.stl: joiners.scad
+STLs/drive_gear_parts.stl: publicDomainGearV1.1.scad
+STLs/extruder_platform_parts.stl: joiners.scad
+STLs/lifter_nut_cap_parts.stl: nut_capture.scad
+STLs/lifter_nut_parts.stl: acme_screw.scad
+STLs/lifter_rod_coupler_parts.stl: joiners.scad
+STLs/motor_mount_plate_parts.stl: joiners.scad NEMA.scad
+STLs/rail_endcap_parts.stl: joiners.scad
+STLs/rail_motor_segment_parts.stl: tslot.scad joiners.scad
+STLs/rail_segment_parts.stl: joiners.scad
+STLs/roller_parts.stl: joiners.scad
+STLs/sled_endcap_parts.stl: joiners.scad
+STLs/support_leg_parts.stl: tslot.scad
+STLs/xy_joiner_parts.stl: tslot.scad joiners.scad
+STLs/xy_sled_parts.stl: roller_cap_parts.scad roller_parts.scad slider_sled.scad joiners.scad publicDomainGearV1.1.scad
+STLs/yz_joiner_parts.stl: tslot.scad joiners.scad
+STLs/z_sled_parts.stl: roller_cap_parts.scad joiners.scad acme_screw.scad lifter_nut_parts.scad nut_capture.scad slider_sled.scad roller_parts.scad
 
