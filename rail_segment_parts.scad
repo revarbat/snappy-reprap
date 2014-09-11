@@ -16,6 +16,7 @@ module rail_segment()
 					// Walls.
 					zrot_copies([0, 180]) {
 						translate([(rail_spacing+joiner_width)/2, 0, (rail_height+3)/2]) {
+							//sparse_strut(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=rail_thick);
 							thinning_wall(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=rail_thick, bracing=false);
 						}
 					}
@@ -24,6 +25,14 @@ module rail_segment()
 				// Clear space for joiners.
 				translate([0,0,rail_height/2]) {
 					joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=rail_length, h=rail_height, w=joiner_width, a=joiner_angle);
+				}
+
+				// Crosshatch bottom to relieve shrinkage stress in early build.
+				line_of([0, -(rail_length/2-20), 0], [0, (rail_length/2-20), 0], n=4) {
+					cube(size=[rail_width+10, 1, 2], center=true);
+				}
+				line_of([-(rail_width/2-20), 0, 0], [(rail_width/2-20), 0, 0], n=4) {
+					cube(size=[1, rail_length+10, 2], center=true);
 				}
 			}
 
@@ -41,7 +50,8 @@ module rail_segment()
 				translate([0, rail_length/2-8, rail_height/4]) {
 					difference() {
 						// Side supports.
-						cube(size=[rail_width, 3, rail_height/2], center=true);
+						translate([0, 0, 5/2])
+							cube(size=[rail_width, 3, rail_height/2-5], center=true);
 
 						// Wiring access holes.
 						grid_of(xa=[-rail_width/4, rail_width/4])

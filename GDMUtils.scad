@@ -219,7 +219,7 @@ module line_of(p1=[0,0,0], p2=[10,0,0], n=6)
 {
 	delta = (p2 - p1) / (n-1);
 	for (i = [0:n-1])
-		translate([delta[0]*i,delta[1]*i,delta[2]*i])
+		translate([p1[0]+delta[0]*i, p1[1]+delta[1]*i, p1[2]+delta[2]*i])
 			children();
 }
 
@@ -621,6 +621,37 @@ module thinning_triangle(h=50, l=100, thick=5, ang=30, strut=5, wall=3)
 	}
 }
 //!thinning_triangle(bracing=false);
+
+
+
+// Makes a triangular wall which thins to a smaller width in the center,
+// with angled supports to prevent critical overhangs.
+// Example:
+//   thinning_brace(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
+module thinning_brace(h=50, l=100, thick=5, ang=30, strut=5, wall=3)
+{
+	dang = atan((h)/(l));
+	dlen = (h)/sin(dang);
+	difference() {
+		union() {
+			intersection() {
+				cube(size=[thick, l, h], center=true);
+				translate([0, 0, 0]) {
+					xrot(-dang) yrot(180) {
+						narrowing_strut(w=thick, l=dlen, wall=strut, ang=ang);
+					}
+				}
+			}
+			cube(size=[wall, l-0.1, h-0.1], center=true);
+		}
+		xrot(-dang) {
+			translate([0, 0, h/2]) {
+				cube(size=[thick+0.1, l*2, h], center=true);
+			}
+		}
+	}
+}
+//!thinning_brace(bracing=false);
 
 
 

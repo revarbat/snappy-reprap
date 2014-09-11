@@ -33,6 +33,9 @@ lifter_nut_size   =  17.4; // mm
 lifter_nut_thick  =   9.3; // mm
 lifter_thread_size =  3.175; // mm lift per revolution
 
+endstop_hole_spacing = 19; // mm
+endstop_screw_size   =  3; // mm
+
 // This is the slop needed to make parts fit more exactly, and may be
 // printer dependant.  Printing a slop calibration plate should help
 // dial this setting in for your printer.

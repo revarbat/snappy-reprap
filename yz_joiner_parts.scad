@@ -9,50 +9,50 @@ module yz_joiner()
 	joiner_length=10;
 	base_height = rail_height+roller_thick;
 	endstop_delta = platform_length - base_height;
+	motor_mount_spacing=43+joiner_width+10;
 
 	color("Turquoise") difference() {
 		union() {
 			difference() {
 				union() {
 					// Bottom.
-					translate([0,platform_length/2,rail_thick/2]) yrot(90)
-						sparse_strut(h=rail_width, l=platform_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
-
-					// Lower Back.
-					translate([0,rail_thick/2,rail_height/2]) zrot(90) {
-						thinning_wall(h=rail_height, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick);
+					difference() {
+						union() {
+							translate([0, platform_length/2, rail_thick/2]) {
+								yrot(90)
+									sparse_strut(h=rail_width, l=platform_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
+							}
+							translate([0, rail_height+roller_thick/2, rail_thick/2]) {
+								cube(size=[45+20, motor_mount_spacing+joiner_width, rail_thick], center=true);
+							}
+						}
+						translate([0, rail_height+roller_thick/2, rail_thick/2]) {
+							cube(size=[45, motor_mount_spacing-joiner_width, rail_thick+1], center=true);
+						}
 					}
 
-					// Upper Back.
-					translate([0, rail_thick/2, rail_height+(platform_length-rail_height-rail_thick)/2]) zrot(90) {
-						thinning_wall(h=platform_length-rail_height+rail_thick, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick);
+					// Lower Back.
+					translate([0, rail_thick/2, platform_length/2]) zrot(90) {
+						sparse_strut(h=platform_length, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick);
 					}
 
 					// Side Walls
 					mirror_copy([1, 0, 0]) {
 						translate([(rail_spacing+joiner_width)/2, 0, 0]) {
-							// Upper Walls.
+							// Upper Wall.
 							grid_of(
-								ya=[rail_height/2],
-								za=[(platform_length-rail_height-joiner_length)/2+rail_height]
+								ya=[(rail_height+5)/2],
+								za=[(platform_length-rail_height-roller_thick-5)/2+rail_height+roller_thick]
 							) {
-								thinning_wall(h=platform_length-joiner_length-rail_height+2*rail_thick, l=rail_height, thick=joiner_width, strut=rail_thick, bracing=false);
+								sparse_strut(h=platform_length-rail_height-roller_thick+5, l=rail_height+5, thick=joiner_width, strut=rail_thick);
 							}
 
-							// Lower Walls.
+							// Lower Wall.
 							grid_of(
-								ya=[(platform_length-rail_height-joiner_length)/2+rail_height],
-								za=[rail_height/2]
+								ya=[(platform_length-joiner_length+1)/2],
+								za=[(rail_height+roller_thick)/2]
 							) {
-								thinning_wall(l=platform_length-joiner_length-rail_height+2*rail_thick, h=rail_height, thick=joiner_width, strut=rail_thick, bracing=false);
-							}
-
-							// Corner Walls.
-							grid_of(
-								ya=[rail_height/2],
-								za=[rail_height/2]
-							) {
-								thinning_wall(l=rail_height, h=rail_height, thick=joiner_width, strut=rail_thick, bracing=false);
+								sparse_strut(l=platform_length-joiner_length+1, h=rail_height+roller_thick, thick=joiner_width, strut=rail_thick);
 							}
 
 							// Rail tops.
@@ -92,13 +92,6 @@ module yz_joiner()
 				translate([0, 0, 50]) {
 					zrot(90) xrot(90) joiner_pair(spacing=43+joiner_width+10, h=rail_height, w=joiner_width, l=50, a=joiner_angle);
 				}
-
-				// Motor mount support struts
-				zrot_copies([0, 180]) {
-					translate([0, (43+joiner_width+10)/2, rail_thick/2]){
-						cube(size=[rail_width, joiner_width, rail_thick], center=true);
-					}
-				}
 			}
 
 			// Side mount slots.
@@ -123,27 +116,23 @@ module yz_joiner()
 				}
 			}
 
-			// Y-axis endstop switch mount
-			translate([-(rail_width-4)/2, endstop_delta/2+base_height-0.05, endstop_delta/2+base_height-0.05]) {
-				difference() {
-					cube(size=[4, endstop_delta+0.05, endstop_delta+0.05], center=true);
-					translate([0, endstop_delta/2, endstop_delta/2]) xrot(45)
-						cube(size=15, center=true);
-					translate([0, endstop_delta/2-5, -endstop_delta/2+15]) {
-						grid_of(za=[-5, 5]) {
-							yrot(90) {
-								cylinder(h=10, r=2.5/2, center=true, $fn=12);
-							}
-						}
-					}
-					translate([0, -(endstop_delta/2-15), (endstop_delta/2-5)]) {
-						grid_of(ya=[-5, 5]) {
-							yrot(90) {
-								cylinder(h=10, r=2.5/2, center=true, $fn=12);
-							}
-						}
-					}
+			// corner brace
+			grid_of(
+				xa=[-(rail_width-joiner_width)/2, (rail_width-joiner_width)/2]
+			) {
+				translate([0, endstop_delta/2+base_height-0.05, endstop_delta/2+base_height-0.05]) {
+					thinning_brace(h=endstop_delta+0.05, l=endstop_delta+0.05, thick=joiner_width, strut=5);
 				}
+			}
+		}
+
+		// Endstop mount holes
+		grid_of(
+			xa=[-(rail_spacing+joiner_width)/2, (rail_spacing+joiner_width)/2],
+			za=[-endstop_hole_spacing/2, endstop_hole_spacing/2]
+		) {
+			translate([0, platform_length-10, rail_height-endstop_hole_spacing/2+roller_thick/2]) {
+				yrot(90) cylinder(r=(endstop_screw_size+printer_slop)/2, h=joiner_width+1, center=true, $fn=12);
 			}
 		}
 	}

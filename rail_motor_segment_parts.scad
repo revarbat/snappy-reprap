@@ -1,24 +1,35 @@
 include <config.scad>
 use <GDMUtils.scad>
 use <joiners.scad>
+use <NEMA.scad>
 use <tslot.scad>
 
 
 module rail_motor_segment()
 {
 	joiner_length = 10;
+	motor_mount_spacing=43+joiner_width+10;
 
 	color("SpringGreen") difference() {
 		union() {
 			difference() {
 				union() {
 					// Bottom.
-					translate([0,0,rail_thick/2]) yrot(90)
-						sparse_strut(h=rail_width, l=motor_rail_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
+					translate([0,0,rail_thick/2]) {
+						difference() {
+							union() {
+								yrot(90)
+									sparse_strut(h=rail_width, l=motor_rail_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
+								cube(size=[motor_mount_spacing+joiner_width, 45+20, rail_thick], center=true);
+							}
+							cube(size=[motor_mount_spacing-joiner_width, 45, rail_thick+1], center=true);
+						}
+					}
 
 					// Walls.
 					grid_of(xa=[-(rail_spacing/2+joiner_width/2), (rail_spacing/2+joiner_width/2)], za=[(rail_height+3)/2]) {
-						thinning_wall(h=rail_height+3, l=motor_rail_length-joiner_length, thick=joiner_width, strut=rail_thick, bracing=false);
+						//thinning_wall(h=rail_height+3, l=motor_rail_length-joiner_length, thick=joiner_width, strut=rail_thick, bracing=false);
+						sparse_strut(h=rail_height+3, l=motor_rail_length-joiner_length, thick=joiner_width, strut=rail_thick);
 					}
 				}
 
@@ -62,16 +73,8 @@ module rail_motor_segment()
 
 			// Motor mount joiners.
 			translate([0, 0, 30]) {
-				xrot(90) joiner_pair(spacing=43+joiner_width+10, h=rail_height, w=joiner_width, l=30, a=joiner_angle);
+				xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=30, a=joiner_angle);
 			}
-
-			// Motor mount support struts
-			zrot_copies([0, 180]) {
-				translate([(43+joiner_width+10)/2, 0, rail_thick/2]){
-					cube(size=[joiner_width, motor_rail_length, rail_thick], center=true);
-				}
-			}
-
 		}
 
 		// Rail grooves.
