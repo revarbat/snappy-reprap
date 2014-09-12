@@ -7,7 +7,7 @@ module lifter_rod_coupler()
 {
 	h = 50;
 	set_screw_rad = set_screw_size/2 + printer_slop;
-	shaft = motor_shaft_size + printer_slop;
+	shaft = motor_shaft_size + 2*printer_slop;
 
 	color("Lavender") difference() {
 		// Coupler cylinder.

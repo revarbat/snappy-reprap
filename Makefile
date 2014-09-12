@@ -3,17 +3,12 @@ CONVERT=convert
 
 PARTFILES=$(sort $(wildcard *_parts.scad))
 TARGETS=$(patsubst %.scad,STLs/%.stl,${PARTFILES})
+ROTFILES=$(shell seq -f 'wiki/snappy_rot%03g.png' 0 15 359.99)
 
 all: ${TARGETS}
 
 STLs/%.stl: %.scad config.scad GDMUtils.scad
 	${OPENSCAD} -m make -o $@ $<
-
-wiki/%.png: %.scad config.scad GDMUtils.scad
-	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=1600,1600 --projection=p --csglimit=100000 \
-	    --camera=0,0,50,65,0,120,1500 $<
-	${CONVERT} -trim -resize 200x200 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
-	rm -f $(subst wiki/,tmp_,$@)
 
 clean:
 	rm -f tmp_*.png snappy_rot*.png render_*_parts.scad
@@ -21,32 +16,39 @@ clean:
 cleaner: clean
 	rm -f ${TARGETS}
 
-rendering:
-	${OPENSCAD} -o tmp_snappy_full.png --imgsize=3200,3200 --projection=p --csglimit=100000 \
-	    --camera=0,0,160,65,0,120,3500 full_assembly.scad
-	${CONVERT} -trim -resize 800x800 -border 10x10 -bordercolor '#ffffe5' tmp_snappy_full.png wiki/snappy_full.png
-	${CONVERT} -trim -resize 200x200 -border 10x10 -bordercolor '#ffffe5' tmp_snappy_full.png wiki/snappy_small.png
-	rm -f tmp_snappy_full.png
-
-
-renderparts: $(patsubst %.scad,wiki/%.png,${PARTFILES})
-
-ROTFILES=$(shell seq -f 'snappy_rot%03g.png' 0 15 359.99)
+cleanwiki:
+	rm -f wiki/snappy_*.gif wiki/snappy_*.png wiki/*_parts.png
 
 ${ROTFILES}: full_assembly.scad
-	${OPENSCAD} -o tmp_$@ --imgsize=800,800 --projection=p --csglimit=100000 \
-	    --camera=0,0,160,65,0,$(subst snappy_rot,,$(subst .png,,$@)),3500 \
-	    full_assembly.scad
-	${CONVERT} -strip -resize 400x400 tmp_$@ $@
-	rm -f tmp_$@
+	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=800,800 --projection=p --csglimit=100000 \
+	    --camera=0,0,160,65,0,$(patsubst wiki/snappy_rot%.png,%,$@),3500 $<
+	${CONVERT} -strip -resize 400x400 $(subst wiki/,tmp_,$@) $@
+	rm -f  $(subst wiki/,tmp_,$@)
+
+wiki/%.png: %.scad config.scad GDMUtils.scad
+	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=1600,1600 --projection=p --csglimit=100000 --camera=0,0,50,65,0,120,1500 $<
+	${CONVERT} -trim -resize 200x200 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
+	rm -f $(subst wiki/,tmp_,$@)
+
+wiki/snappy_full.png: full_assembly.scad
+	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=3200,3200 --projection=p --csglimit=100000 --camera=0,0,160,65,0,120,3500 $<
+	${CONVERT} -trim -resize 800x800 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
+	rm -f $(subst wiki/,tmp_,$@)
+
+wiki/snappy_small.png: wiki/snappy_full.png
+	${CONVERT} -trim -resize 200x200 -border 10x10 -bordercolor '#ffffe5' $< $@
 
 wiki/snappy_animated.gif: ${ROTFILES}
-	${CONVERT} -delay 33 -loop 0 ${ROTFILES} wiki/snappy_animated.gif
+	${CONVERT} -delay 33 -loop 0 $< $@
 
-wiki/snappy_anim_small.gif: ${ROTFILES}
-	${CONVERT} -resize 200x200 -delay 33 -loop 0 ${ROTFILES} wiki/snappy_anim_small.gif
+wiki/snappy_anim_small.gif: wiki/snappy_animated.gif
+	${CONVERT} -resize 200x200 $< $@
 
+renderparts: $(patsubst %.scad,wiki/%.png,${PARTFILES})
+rendering: wiki/snappy_full.png wiki/snappy_small.png
 animation: wiki/snappy_animated.gif wiki/snappy_anim_small.gif
+wiki: renderparts rendering animation
+
 
 
 # Dependencies follow.

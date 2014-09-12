@@ -59,7 +59,7 @@ module drive_gear() {
 
 					// Set screw hole.
 					translate([0, 0, 2])
-						cylinder(r=(set_screw_size+printer_slop)/2, h=9, center=true, $fn=8);
+						cylinder(r=set_screw_size/2+printer_slop, h=9, center=true, $fn=8);
 				}
 			}
 		}
