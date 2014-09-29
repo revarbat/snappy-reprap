@@ -35,7 +35,7 @@ module rail_motor_segment()
 
 				// Clear space for joiners.
 				translate([0,0,rail_height/2]) {
-					joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length, h=rail_height, w=joiner_width, a=joiner_angle);
+					joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length, h=rail_height, w=joiner_width+5, a=joiner_angle);
 				}
 			}
 

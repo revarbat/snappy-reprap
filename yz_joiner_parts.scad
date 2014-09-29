@@ -68,12 +68,12 @@ module yz_joiner()
 
 				// Clear space for front joiners.
 				translate([0, platform_length, rail_height/2]) {
-					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, a=joiner_angle);
+					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+5, a=joiner_angle);
 				}
 
 				// Clear space for top joiners.
 				translate([0, rail_height/2, platform_length]) {
-					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, a=joiner_angle);
+					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+5, a=joiner_angle);
 				}
 			}
 
@@ -89,8 +89,8 @@ module yz_joiner()
 
 			translate([0, rail_height+groove_height/2, 0]) {
 				// Motor mount joiners.
-				translate([0, 0, 50]) {
-					zrot(90) xrot(90) joiner_pair(spacing=43+joiner_width+10, h=rail_height, w=joiner_width, l=50, a=joiner_angle);
+				translate([0, 0, 40]) {
+					zrot(90) xrot(90) joiner_pair(spacing=43+joiner_width+10, h=rail_height, w=joiner_width, l=40, a=joiner_angle);
 				}
 			}
 
@@ -105,7 +105,7 @@ module yz_joiner()
 				}
 			}
 
-			translate([0, motor_rail_length+2, rail_height/4]) {
+			translate([0, platform_length-joiner_length, rail_height/4]) {
 				difference() {
 					// Side supports.
 					cube(size=[rail_width, 3, rail_height/2], center=true);
@@ -121,7 +121,7 @@ module yz_joiner()
 				xa=[-(rail_width-joiner_width)/2, (rail_width-joiner_width)/2]
 			) {
 				translate([0, endstop_delta/2+base_height-0.05, endstop_delta/2+base_height-0.05]) {
-					thinning_brace(h=endstop_delta+0.05, l=endstop_delta+0.05, thick=joiner_width, strut=5);
+					*thinning_brace(h=endstop_delta+0.05, l=endstop_delta+0.05, thick=joiner_width, strut=5);
 				}
 			}
 		}

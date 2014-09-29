@@ -37,7 +37,7 @@ module full_assembly(hide_endcaps=true)
 
 	// Z-Axis Stepper Motor
 	translate([0, rail_height+groove_height/2, 0]) {
-		translate([0, 0, 50]) {
+		translate([0, 0, 40]) {
 			zrot(90) motor_mount_plate();
 			translate([0, 0, 5.9+rail_thick]) {
 				nema17_stepper(h=34, shaft_len=20.05);

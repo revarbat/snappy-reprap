@@ -23,7 +23,7 @@ module slider_sled()
 
 			// Clear space for joiners.
 			translate([0,0,platform_height/2]) {
-				joiner_quad_clear(xspacing=platform_width-joiner_width, yspacing=platform_length, h=platform_height, w=joiner_width, a=joiner_angle);
+				joiner_quad_clear(xspacing=platform_width-joiner_width, yspacing=platform_length, h=platform_height, w=joiner_width+5, a=joiner_angle);
 			}
 		}
 

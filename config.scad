@@ -1,7 +1,7 @@
 snappy_version = 0.90;
 
 
-platform_length = 110; // mm.  Must be a multiple of rack_tooth_size.
+platform_length = 100; // mm.  Must be a multiple of rack_tooth_size.
 platform_width  = 150; // mm
 platform_height =  40; // mm
 platform_thick  =   7; // mm
