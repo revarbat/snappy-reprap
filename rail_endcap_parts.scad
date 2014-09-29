@@ -6,7 +6,7 @@ use <joiners.scad>
 module rail_endcap()
 {
 	joiner_length=15;
-	base_height = rail_height+roller_thick;
+	base_height = rail_height+groove_height;
 	color("YellowGreen") difference() {
 		union() {
 			difference() {

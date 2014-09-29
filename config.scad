@@ -6,20 +6,18 @@ platform_width  = 150; // mm
 platform_height =  40; // mm
 platform_thick  =   7; // mm
 
-rail_length  = 150;    // mm
-rail_height  =  50;    // mm
-rail_thick   =   7;    // mm
+rail_length   = 150;    // mm
+rail_height   =  50;    // mm
+rail_thick    =   7;    // mm
+rail_offset   =  12;    // mm
 
 motor_rail_length = 100; // mm
 
-roller_thick =  12;    // mm
-roller_diam  =  30;    // mm
-roller_axle  =  15;    // mm
-roller_base  =  12;    // mm
-roller_angle =  30;    // degrees
+groove_angle  =  30;    // degrees
+groove_height =  12;    // mm
 
-joiner_angle =  30;    // degrees
-joiner_width =  10;    // mm
+joiner_angle  =  30;    // degrees
+joiner_width  =  10;    // mm
 
 rack_tooth_size  =  5; // mm per tooth.
 set_screw_size   =  3; // mm size of set screw in drive gears, couplers, etc
@@ -45,7 +43,6 @@ printer_slop =   0.25; // mm
 
 // Commonly used derived values.  Don't change these.
 rail_spacing = platform_width - joiner_width*4 - 10;
-roller_spacing = rail_spacing-roller_diam+0.5;
 rail_width = rail_spacing + joiner_width*2;
 
 

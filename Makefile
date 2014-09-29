@@ -39,7 +39,7 @@ wiki/snappy_small.png: wiki/snappy_full.png
 	${CONVERT} -trim -resize 200x200 -border 10x10 -bordercolor '#ffffe5' $< $@
 
 wiki/snappy_animated.gif: ${ROTFILES}
-	${CONVERT} -delay 33 -loop 0 $< $@
+	${CONVERT} -delay 33 -loop 0 ${ROTFILES} $@
 
 wiki/snappy_anim_small.gif: wiki/snappy_animated.gif
 	${CONVERT} -resize 200x200 $< $@
@@ -62,11 +62,10 @@ STLs/motor_mount_plate_parts.stl: joiners.scad NEMA.scad
 STLs/rail_endcap_parts.stl: joiners.scad
 STLs/rail_motor_segment_parts.stl: tslot.scad joiners.scad
 STLs/rail_segment_parts.stl: joiners.scad
-STLs/roller_parts.stl: joiners.scad
 STLs/sled_endcap_parts.stl: joiners.scad
 STLs/support_leg_parts.stl: tslot.scad
 STLs/xy_joiner_parts.stl: tslot.scad joiners.scad
-STLs/xy_sled_parts.stl: roller_cap_parts.scad roller_parts.scad slider_sled.scad joiners.scad publicDomainGearV1.1.scad
+STLs/xy_sled_parts.stl: slider_sled.scad joiners.scad publicDomainGearV1.1.scad
 STLs/yz_joiner_parts.stl: tslot.scad joiners.scad
-STLs/z_sled_parts.stl: roller_cap_parts.scad joiners.scad acme_screw.scad lifter_nut_parts.scad nut_capture.scad slider_sled.scad roller_parts.scad
+STLs/z_sled_parts.stl: joiners.scad acme_screw.scad lifter_nut_parts.scad nut_capture.scad slider_sled.scad
 

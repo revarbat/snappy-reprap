@@ -33,8 +33,8 @@ module drive_gear() {
 				cylinder(h=h, r=shaft, center=true);
 
 				// Base
-				translate([0, 0, -(h+11)/2])
-					cylinder(h=11, r=9, center=true);
+				translate([0, 0, -(h+10)/2])
+					cylinder(h=10, r=9, center=true);
 			}
 
 			difference() {

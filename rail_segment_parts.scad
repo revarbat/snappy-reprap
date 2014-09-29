@@ -38,8 +38,8 @@ module rail_segment()
 
 			// Rail backing.
 			grid_of([-(rail_spacing/2+joiner_width/2), (rail_spacing/2+joiner_width/2)])
-				translate([0,0,rail_height+roller_thick/2])
-					cube(size=[joiner_width, rail_length, roller_thick], center=true);
+				translate([0,0,rail_height+groove_height/2])
+					cube(size=[joiner_width, rail_length, groove_height], center=true);
 
 			// Snap-tab joiners.
 			translate([0,0,rail_height/2]) {
@@ -62,10 +62,10 @@ module rail_segment()
 		}
 
 		// Rail grooves.
-		translate([0,0,rail_height+roller_thick/2]) {
+		translate([0,0,rail_height+groove_height/2]) {
 			grid_of([-(rail_spacing/2), (rail_spacing/2)]) {
-				scale([tan(roller_angle),1,1]) yrot(45) {
-					cube(size=[roller_thick*sqrt(2)/2,rail_length+1,roller_thick*sqrt(2)/2], center=true);
+				scale([tan(groove_angle),1,1]) yrot(45) {
+					cube(size=[groove_height*sqrt(2)/2,rail_length+1,groove_height*sqrt(2)/2], center=true);
 				}
 			}
 		}

@@ -16,9 +16,9 @@ module extruder_platform()
 					// Walls.
 					grid_of(
 						xa=[-(rail_spacing/2+joiner_width/2), (rail_spacing/2+joiner_width/2)],
-						za=[(rail_height+roller_thick)/2]
+						za=[(rail_height+groove_height)/2]
 					) {
-						thinning_triangle(h=rail_height+roller_thick, l=rail_length-2*12, thick=joiner_width, strut=rail_thick);
+						thinning_triangle(h=rail_height+groove_height, l=rail_length-2*12, thick=joiner_width, strut=rail_thick);
 					}
 				}
 
@@ -51,8 +51,8 @@ module extruder_platform()
 
 			// Rail backing.
 			grid_of([-(rail_spacing+joiner_width)/2, (rail_spacing+joiner_width)/2])
-				translate([0,-(rail_length-12)/2,rail_height+roller_thick/2])
-					cube(size=[joiner_width, 12, roller_thick], center=true);
+				translate([0,-(rail_length-12)/2,rail_height+groove_height/2])
+					cube(size=[joiner_width, 12, groove_height], center=true);
 
 
 			// Joiner clips.

@@ -12,8 +12,6 @@ use <motor_mount_plate_parts.scad>
 use <rail_endcap_parts.scad>
 use <rail_motor_segment_parts.scad>
 use <rail_segment_parts.scad>
-use <roller_cap_parts.scad>
-use <roller_parts.scad>
 use <sled_endcap_parts.scad>
 use <support_leg_parts.scad>
 use <xy_joiner_parts.scad>
@@ -29,16 +27,16 @@ $vpt = [0, 0, 160];
 $vpr = [65, 0, 120];
 
 
-module full_assembly()
+module full_assembly(hide_endcaps=true)
 {
 	joiner_length=15;
-	platform_vert_off = rail_height+roller_base+roller_thick/2+5;
+	platform_vert_off = rail_height+groove_height+rail_offset;
 
 	// Y-axis to Z-axis corner joiner.
 	yz_joiner();
 
 	// Z-Axis Stepper Motor
-	translate([0, rail_height+roller_thick/2, 0]) {
+	translate([0, rail_height+groove_height/2, 0]) {
 		translate([0, 0, 50]) {
 			zrot(90) motor_mount_plate();
 			translate([0, 0, 5.9+rail_thick]) {
@@ -72,8 +70,10 @@ module full_assembly()
 				rail_motor_segment();
 				translate([0, motor_rail_length/2+rail_length/2, 0]) {
 					rail_segment();
-					translate([0, rail_length/2, 0]) {
-						zrot(180) rail_endcap();
+					if (hide_endcaps == false) {
+						translate([0, rail_length/2, 0]) {
+							zrot(180) rail_endcap();
+						}
 					}
 				}
 
@@ -82,8 +82,9 @@ module full_assembly()
 					motor_mount_plate();
 					translate([0, 0, 5.9+rail_thick]) {
 						nema17_stepper(h=34, shaft_len=20.05);
-						translate([0, 0, 18])
+						translate([0, 0, 17]) {
 							drive_gear();
+						}
 					}
 				}
 			}
@@ -96,7 +97,6 @@ module full_assembly()
 				grid_of(ya=[-platform_length/2, platform_length/2]) {
 					yrot(180) {
 						xy_sled();
-						xy_sled_rollers();
 					}
 				}
 			}
@@ -116,9 +116,11 @@ module full_assembly()
 					rail_segment();
 				}
 				rail_motor_segment();
-				zrot_copies([0, 180]) {
-					translate([0, rail_length+motor_rail_length/2, 0]) {
-						zrot(180) rail_endcap();
+				if (hide_endcaps == false) {
+					zrot_copies([0, 180]) {
+						translate([0, rail_length+motor_rail_length/2, 0]) {
+							zrot(180) rail_endcap();
+						}
 					}
 				}
 
@@ -127,8 +129,9 @@ module full_assembly()
 					motor_mount_plate();
 					translate([0, 0, 5.9+rail_thick]) {
 						nema17_stepper(h=34, shaft_len=20.05);
-						translate([0, 0, 18])
+						translate([0, 0, 17]) {
 							drive_gear();
+						}
 					}
 				}
 
@@ -137,12 +140,13 @@ module full_assembly()
 					grid_of(ya=[-platform_length/2, platform_length/2]) {
 						yrot(180) {
 							xy_sled();
-							xy_sled_rollers();
 						}
 					}
-					zrot_copies([0, 180]) {
-						translate([0, -platform_length, 0]) {
-							yrot(180) sled_endcap();
+					if (hide_endcaps == false) {
+						zrot_copies([0, 180]) {
+							translate([0, -platform_length, 0]) {
+								yrot(180) sled_endcap();
+							}
 						}
 					}
 				}
@@ -156,15 +160,16 @@ module full_assembly()
 			translate([0, 0, (i+0.5)*rail_length])
 				xrot(-90) rail_segment();
 		}
-		translate([0, 0, 2*rail_length]) {
-			xrot(-90) rail_endcap();
+		if (hide_endcaps == false) {
+			translate([0, 0, 2*rail_length]) {
+				xrot(-90) rail_endcap();
+			}
 		}
 
 		translate([0, platform_vert_off, rail_length]) {
 			// Vertical Z-axis platform.
 			xrot(-90) yrot(180) {
 				z_sled();
-				z_sled_rollers();
 				z_sled_nuts();
 			}
 

@@ -25,17 +25,10 @@ module z_sled()
 			nut_capture(
 				nut_size=lifter_nut_size,
 				nut_thick=lifter_nut_thick,
-				offset=roller_base+roller_thick/2
+				offset=rail_offset+groove_height/2
 			);
 		}
 	}
-}
-
-
-
-module z_sled_rollers()
-{
-	slider_rollers();
 }
 
 
@@ -48,7 +41,7 @@ module z_sled_nuts()
 	// Drive nut capture
 	grid_of(
 		ya=[-nut_spacing/2, nut_spacing/2],
-		za=[(roller_base+roller_thick/2)]
+		za=[(rail_offset+groove_height/2)]
 	) {
 		zrot(90) yrot(-90) lifter_nut();
 	}

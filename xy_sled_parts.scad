@@ -51,13 +51,6 @@ module xy_sled()
 
 
 
-module xy_sled_rollers()
-{
-	slider_rollers();
-}
-
-
-
 module xy_sled_parts() { // make me
 	zrot(90) xy_sled();
 }

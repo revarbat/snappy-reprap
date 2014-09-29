@@ -288,7 +288,8 @@ module rrect(size=[1,1,1], r=0.25, center=false, $fn=undef)
 //   chamfer = chamfer inset along axis.  (Default: 0.25)
 module chamfcube(
 		size=[1,1,1],
-		chamfer=0.25
+		chamfer=0.25,
+		chamfaxes=[1,1,1]
 ) {
 	ch_width = sqrt(2)*chamfer;
 	ch_offset = 1;
@@ -296,17 +297,23 @@ module chamfcube(
 		cube(size=size, center=true);
 		for (xs = [-1,1]) {
 			for (ys = [-1,1]) {
-				translate([0,xs*size[1]/2,ys*size[2]/2]) {
-					rotate(a=[45,0,0])
-					 cube(size=[size[0]+0.1,ch_width,ch_width], center=true);
+				if (chamfaxes[0] == 1) {
+					translate([0,xs*size[1]/2,ys*size[2]/2]) {
+						rotate(a=[45,0,0])
+						 cube(size=[size[0]+0.1,ch_width,ch_width], center=true);
+					}
 				}
-				translate([xs*size[0]/2,0,ys*size[2]/2]) {
-					rotate(a=[0,45,0])
-					 cube(size=[ch_width,size[1]+0.1,ch_width], center=true);
+				if (chamfaxes[1] == 1) {
+					translate([xs*size[0]/2,0,ys*size[2]/2]) {
+						rotate(a=[0,45,0])
+						 cube(size=[ch_width,size[1]+0.1,ch_width], center=true);
+					}
 				}
-				translate([xs*size[0]/2,ys*size[1]/2],0) {
-					rotate(a=[0,0,45])
-					 cube(size=[ch_width,ch_width,size[2]+0.1], center=true);
+				if (chamfaxes[2] == 1) {
+					translate([xs*size[0]/2,ys*size[1]/2],0) {
+						rotate(a=[0,0,45])
+						 cube(size=[ch_width,ch_width,size[2]+0.1], center=true);
+					}
 				}
 			}
 		}
@@ -319,13 +326,23 @@ module chamfcube(
 //   r = radius of circular part of teardrop.  (Default: 1)
 //   h = thickness of teardrop. (Default: 1)
 // Example:
-//   teardrop(r=3,h=2);
-module teardrop(r=1, h=1, $fn=undef)
+//   teardrop(r=3, h=2, ang=30);
+module teardrop(r=1, h=1, ang=45, $fn=undef)
 {
 	$fn = ($fn==undef)?max(12,floor(180/asin(1/r)/2)*2):$fn;
-	rotate([90,0,0]) rotate([0,0,45]) union() {
-		translate([r/2,r/2,0])
-			cube(size=[r,r,h], center=true);
+	xrot(90) union() {
+		translate([0, r*sin(ang), 0]) {
+			scale([1, 1/tan(ang), 1]) {
+				difference() {
+					zrot(45) {
+						cube(size=[2*r*cos(ang)/sqrt(2), 2*r*cos(ang)/sqrt(2), h], center=true);
+					}
+					translate([0, -r/2, 0]) {
+						cube(size=[2*r, r, h+1], center=true);
+					}
+				}
+			}
+		}
 		cylinder(h=h, r=r, center=true);
 	}
 }

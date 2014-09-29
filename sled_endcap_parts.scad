@@ -19,7 +19,7 @@ module sled_endcap()
 			}
 
 			// Remove bits of back wall that would hit rails.
-			translate([0, -joiner_length/2, platform_height/2+roller_base-2]) {
+			translate([0, -joiner_length/2, platform_height/2+rail_offset-2]) {
 				cube(size=[rail_spacing+joiner_width*2+5, joiner_length+platform_thick+10, platform_height], center=true);
 			}
 

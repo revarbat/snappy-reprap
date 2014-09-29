@@ -7,7 +7,7 @@ use <tslot.scad>
 module yz_joiner()
 {
 	joiner_length=10;
-	base_height = rail_height+roller_thick;
+	base_height = rail_height+groove_height;
 	endstop_delta = platform_length - base_height;
 	motor_mount_spacing=43+joiner_width+10;
 
@@ -22,11 +22,11 @@ module yz_joiner()
 								yrot(90)
 									sparse_strut(h=rail_width, l=platform_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
 							}
-							translate([0, rail_height+roller_thick/2, rail_thick/2]) {
+							translate([0, rail_height+groove_height/2, rail_thick/2]) {
 								cube(size=[45+20, motor_mount_spacing+joiner_width, rail_thick], center=true);
 							}
 						}
-						translate([0, rail_height+roller_thick/2, rail_thick/2]) {
+						translate([0, rail_height+groove_height/2, rail_thick/2]) {
 							cube(size=[45, motor_mount_spacing-joiner_width, rail_thick+1], center=true);
 						}
 					}
@@ -42,25 +42,25 @@ module yz_joiner()
 							// Upper Wall.
 							grid_of(
 								ya=[(rail_height+5)/2],
-								za=[(platform_length-rail_height-roller_thick-5)/2+rail_height+roller_thick]
+								za=[(platform_length-rail_height-groove_height-5)/2+rail_height+groove_height]
 							) {
-								sparse_strut(h=platform_length-rail_height-roller_thick+5, l=rail_height+5, thick=joiner_width, strut=rail_thick);
+								sparse_strut(h=platform_length-rail_height-groove_height+5, l=rail_height+5, thick=joiner_width, strut=rail_thick);
 							}
 
 							// Lower Wall.
 							grid_of(
 								ya=[(platform_length-joiner_length+1)/2],
-								za=[(rail_height+roller_thick)/2]
+								za=[(rail_height+groove_height)/2]
 							) {
-								sparse_strut(l=platform_length-joiner_length+1, h=rail_height+roller_thick, thick=joiner_width, strut=rail_thick);
+								sparse_strut(l=platform_length-joiner_length+1, h=rail_height+groove_height, thick=joiner_width, strut=rail_thick);
 							}
 
 							// Rail tops.
 							translate([0, rail_height, rail_height]) {
-								translate([0, (platform_length-rail_height)/2, roller_thick/2])
-									cube(size=[joiner_width, platform_length-rail_height, roller_thick], center=true);
-								translate([0, roller_thick/2, (platform_length-rail_height)/2])
-									cube(size=[joiner_width, roller_thick, platform_length-rail_height], center=true);
+								translate([0, (platform_length-rail_height)/2, groove_height/2])
+									cube(size=[joiner_width, platform_length-rail_height, groove_height], center=true);
+								translate([0, groove_height/2, (platform_length-rail_height)/2])
+									cube(size=[joiner_width, groove_height, platform_length-rail_height], center=true);
 							}
 						}
 					}
@@ -87,7 +87,7 @@ module yz_joiner()
 				xrot(90) joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 			}
 
-			translate([0, rail_height+roller_thick/2, 0]) {
+			translate([0, rail_height+groove_height/2, 0]) {
 				// Motor mount joiners.
 				translate([0, 0, 50]) {
 					zrot(90) xrot(90) joiner_pair(spacing=43+joiner_width+10, h=rail_height, w=joiner_width, l=50, a=joiner_angle);
@@ -131,7 +131,7 @@ module yz_joiner()
 			xa=[-(rail_spacing+joiner_width)/2, (rail_spacing+joiner_width)/2],
 			za=[-endstop_hole_spacing/2, endstop_hole_spacing/2]
 		) {
-			translate([0, platform_length-10, rail_height-endstop_hole_spacing/2+roller_thick/2]) {
+			translate([0, platform_length-10, rail_height-endstop_hole_spacing/2+groove_height/2]) {
 				yrot(90) cylinder(r=(endstop_screw_size+printer_slop)/2, h=joiner_width+1, center=true, $fn=12);
 			}
 		}
