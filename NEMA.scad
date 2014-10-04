@@ -212,5 +212,5 @@ module nema17_mount_holes(depth=5, len=5)
 
 
 
-// vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 nowrap
+// vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
 

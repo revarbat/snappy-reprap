@@ -9,14 +9,19 @@ module slider_sled()
 	union() {
 		difference() {
 			union() {
-				// Bottom strut.
+				// Bottom
 				translate([0,0,platform_thick/2])
 					yrot(90) sparse_strut(h=platform_width, l=platform_length, thick=platform_thick, maxang=45, strut=12, max_bridge=999);
 
-				// Solid walls.
+				// Walls.
 				zrot_copies([0, 180]) {
 					translate([(platform_width-joiner_width)/2, 0, platform_height/2]) {
-						thinning_wall(h=platform_height, l=platform_length-10, thick=joiner_width, strut=platform_thick, wall=3, bracing=false);
+						if (wall_style == "crossbeams")
+							sparse_strut(h=platform_height, l=platform_length-10, thick=joiner_width, strut=5);
+						if (wall_style == "thinwall")
+							thinning_wall(h=platform_height, l=platform_length-10, thick=joiner_width, strut=platform_thick, wall=3, bracing=false);
+						if (wall_style == "corrugated")
+							corrugated_wall(h=platform_height, l=platform_length-10, thick=joiner_width, strut=platform_thick, wall=3);
 					}
 				}
 			}

@@ -610,22 +610,22 @@ module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=3, bracing=true
 // with angled supports to prevent critical overhangs.
 // Example:
 //   thinning_triangle(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
-module thinning_triangle(h=50, l=100, thick=5, ang=30, strut=5, wall=3)
+module thinning_triangle(h=50, l=100, thick=5, ang=30, strut=5, wall=3, diagonly=false)
 {
 	dang = atan((h-strut)/(l-strut));
 	dlen = (h-strut)/sin(dang);
 	difference() {
 		union() {
-			translate([0, 0, -h/2])
-				narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
-			translate([0, -l/2, 0])
-				xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
+			if (!diagonly) {
+				translate([0, 0, -h/2])
+					narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
+				translate([0, -l/2, 0])
+					xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
+			}
 			intersection() {
 				cube(size=[thick, l, h], center=true);
-				translate([0, 0, 0]) {
-					xrot(-dang) yrot(180) {
-						narrowing_strut(w=thick, l=dlen, wall=strut, ang=ang);
-					}
+				xrot(-dang) yrot(180) {
+					narrowing_strut(w=thick, l=dlen*1.2, wall=strut, ang=ang);
 				}
 			}
 			cube(size=[wall, l-0.1, h-0.1], center=true);
@@ -708,6 +708,46 @@ module sparse_strut(h=50, l=100, thick=4, maxang=30, strut=5, max_bridge = 20)
 }
 
 
+// Makes a corrugated wall which relieved contraction stress while
+// still providing support strength.
+// Example:
+//   corrugated_wall(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
+module corrugated_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2)
+{
+	innerlen = l - strut*2;
+	inner_height = h - wall*2;
+	spacing = thick*sqrt(3);
+	corr_count = floor(innerlen/spacing/2)*2;
+
+	grid_of(ya=[-(l-strut)/2, (l-strut)/2]) {
+		cube(size=[thick, strut, h], center=true);
+	}
+	grid_of(za=[-(h-wall)/2, (h-wall)/2]) {
+		cube(size=[thick, l, wall], center=true);
+	}
+
+	render(convexity=corr_count*4+4)
+	difference() {
+		for (ypos = [-innerlen/2:spacing:innerlen/2]) {
+			translate([0, ypos, 0]) {
+				translate([0, spacing/4, 0])
+					zrot(-45) cube(size=[wall, thick*sqrt(2), inner_height], center=true);
+				translate([0, spacing*3/4, 0])
+					zrot(45) cube(size=[wall, thick*sqrt(2), inner_height], center=true);
+			}
+		}
+		grid_of(xa=[-thick, thick]) {
+			cube(size=[thick, l, h], center=true);
+		}
+		grid_of(ya=[-l, l]) {
+			cube(size=[thick*2, l, h], center=true);
+		}
+	}
+}
+//!corrugated_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2);
+
+
+
 module torus(or=1, ir=0.5)
 {
 	rotate_extrude(convexity = 10)
@@ -718,5 +758,5 @@ module torus(or=1, ir=0.5)
 
 
 
-// vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 nowrap
+// vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
 

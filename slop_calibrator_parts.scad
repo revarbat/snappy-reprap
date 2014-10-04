@@ -4,7 +4,7 @@ use <GDMUtils.scad>
 
 module digit_seven_segment(digit=0, size=10, h=1)
 {
-    segs = [
+	segs = [
 		[1, 1, 1, 1, 1, 0, 0, 1, 1, 1],
 		[1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
 		[1, 0, 1, 1, 0, 1, 1, 0, 1, 1],
@@ -57,7 +57,7 @@ module float_seven_segment(val=0.0, decim=2, size=10, h=1, suppress=false)
 module slop_calibrator_parts() { // make me
 	rows = 5;
 	cols = 2;
-	r = 10;
+	r = 5;
 	h = 15;
 	step = 0.05;
 	spacing = r*2+10;
@@ -68,7 +68,7 @@ module slop_calibrator_parts() { // make me
 				for (row = [0:rows-1]) {
 					assign(slop = (step*rows*col)+step*row) {
 						translate([0, spacing*row-(rows-1)*spacing/2, 0]) {
-							cylinder(r=r+slop, h=h+1, center=true);
+							cube(size=[(r+slop)*2, (r+slop)*2, h+1], center=true);
 							translate([spacing/2, -7, 0]) {
 								zrot(90) xrot(90) float_seven_segment(val=slop, decim=2, size=8, h=1, suppress=true);
 							}
@@ -79,8 +79,9 @@ module slop_calibrator_parts() { // make me
 		}
 	}
 	translate([(cols+1)*1.25*spacing/2, 0, h/2]) {
-		cylinder(r=r, h=h, center=true);
-		translate([0,0,-h/4]) cylinder(r=r+2, h=h/2, center=true);
+		cube(size=[r*2, r*2, h], center=true);
+		translate([0,0,-h/4])
+			cube(size=[(r+2)*2, (r+2)*2, h/2], center=true);
 	}
 }
 

@@ -11,7 +11,9 @@ module yz_joiner()
 	endstop_delta = platform_length - base_height;
 	motor_mount_spacing=43+joiner_width+10;
 
-	color("Turquoise") difference() {
+	color("Turquoise")
+	render(convexity=10)
+	difference() {
 		union() {
 			difference() {
 				union() {
@@ -31,9 +33,14 @@ module yz_joiner()
 						}
 					}
 
-					// Lower Back.
+					// Back.
 					translate([0, rail_thick/2, platform_length/2]) zrot(90) {
-						sparse_strut(h=platform_length, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick);
+						if (wall_style == "crossbeams")
+							sparse_strut(h=platform_length, l=rail_width-joiner_width, thick=rail_thick, strut=5);
+						if (wall_style == "thinwall")
+							thinning_wall(h=platform_length, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick, bracing=true);
+						if (wall_style == "corrugated")
+							corrugated_wall(h=platform_length, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick, wall=3);
 					}
 
 					// Side Walls
@@ -42,17 +49,32 @@ module yz_joiner()
 							// Upper Wall.
 							grid_of(
 								ya=[(rail_height+5)/2],
-								za=[(platform_length-rail_height-groove_height-5)/2+rail_height+groove_height]
+								za=[rail_height+groove_height]
 							) {
-								sparse_strut(h=platform_length-rail_height-groove_height+5, l=rail_height+5, thick=joiner_width, strut=rail_thick);
+								if (wall_style == "crossbeams")
+									translate([0, 0, (platform_length-rail_height)/2-groove_height])
+										sparse_strut(h=platform_length-rail_height, l=rail_height+5, thick=joiner_width, strut=5);
+								if (wall_style == "thinwall")
+									translate([0, 0, (platform_length-rail_height)/2-groove_height])
+										thinning_wall(h=platform_length-rail_height, l=rail_height+5, thick=joiner_width, strut=rail_thick, bracing=false);
+								if (wall_style == "corrugated")
+									translate([0, 0, (platform_length-rail_height)/2-groove_height])
+										corrugated_wall(h=platform_length-rail_height, l=rail_height+5, thick=joiner_width, strut=rail_thick, wall=3);
 							}
 
 							// Lower Wall.
 							grid_of(
-								ya=[(platform_length-joiner_length+1)/2],
-								za=[(rail_height+groove_height)/2]
+								ya=[(platform_length-joiner_length+1)/2]
 							) {
-								sparse_strut(l=platform_length-joiner_length+1, h=rail_height+groove_height, thick=joiner_width, strut=rail_thick);
+								if (wall_style == "crossbeams")
+									translate([0, 0, (rail_height+rail_thick)/2])
+										sparse_strut(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=5);
+								if (wall_style == "thinwall")
+									translate([0, 0, (rail_height+rail_thick)/2])
+										thinning_wall(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=rail_thick, bracing=true);
+								if (wall_style == "corrugated")
+									translate([0, 0, (rail_height)/2])
+										corrugated_wall(l=platform_length-joiner_length+1, h=rail_height, thick=joiner_width, strut=rail_thick, wall=3);
 							}
 
 							// Rail tops.
@@ -114,25 +136,6 @@ module yz_joiner()
 					grid_of(xa=[-rail_width/4, rail_width/4])
 						cube(size=[8, 5, 10], center=true);
 				}
-			}
-
-			// corner brace
-			grid_of(
-				xa=[-(rail_width-joiner_width)/2, (rail_width-joiner_width)/2]
-			) {
-				translate([0, endstop_delta/2+base_height-0.05, endstop_delta/2+base_height-0.05]) {
-					*thinning_brace(h=endstop_delta+0.05, l=endstop_delta+0.05, thick=joiner_width, strut=5);
-				}
-			}
-		}
-
-		// Endstop mount holes
-		grid_of(
-			xa=[-(rail_spacing+joiner_width)/2, (rail_spacing+joiner_width)/2],
-			za=[-endstop_hole_spacing/2, endstop_hole_spacing/2]
-		) {
-			translate([0, platform_length-10, rail_height-endstop_hole_spacing/2+groove_height/2]) {
-				yrot(90) cylinder(r=(endstop_screw_size+printer_slop)/2, h=joiner_width+1, center=true, $fn=12);
 			}
 		}
 	}

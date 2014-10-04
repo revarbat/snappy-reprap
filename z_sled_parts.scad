@@ -11,7 +11,9 @@ module z_sled()
 	// Quantize nut housing spacing to the thread lift size.
 	nut_spacing = floor((platform_length-20)/lifter_thread_size) * lifter_thread_size;
 
-	color("DeepSkyBlue") union() {
+	color("DeepSkyBlue")
+	render(convexity=10)
+	union() {
 		// Base slider sled.
 		slider_sled(with_rack=false);
 

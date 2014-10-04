@@ -27,7 +27,7 @@ $vpt = [0, 0, 160];
 $vpr = [65, 0, 120];
 
 
-module full_assembly(hide_endcaps=true)
+module full_assembly(hide_endcaps=false)
 {
 	joiner_length=15;
 	platform_vert_off = rail_height+groove_height+rail_offset;
@@ -91,7 +91,7 @@ module full_assembly(hide_endcaps=true)
 		}
 
 
-		translate([0, rail_length+motor_rail_length/2, 0]) {
+		translate([0, rail_length+motor_rail_length/2-100, 0]) {
 			// Y-axis slider platform.
 			translate([0, 0, platform_vert_off]) {
 				grid_of(ya=[-platform_length/2, platform_length/2]) {
@@ -136,7 +136,7 @@ module full_assembly(hide_endcaps=true)
 				}
 
 				// X-axis slider platform.
-				translate([0, 0, platform_vert_off]) {
+				translate([0, 100, platform_vert_off]) {
 					grid_of(ya=[-platform_length/2, platform_length/2]) {
 						yrot(180) {
 							xy_sled();
@@ -145,7 +145,7 @@ module full_assembly(hide_endcaps=true)
 					if (hide_endcaps == false) {
 						zrot_copies([0, 180]) {
 							translate([0, -platform_length, 0]) {
-								yrot(180) sled_endcap();
+								sled_endcap();
 							}
 						}
 					}
@@ -175,15 +175,15 @@ module full_assembly(hide_endcaps=true)
 
 			translate([0, 0, platform_length/2]) {
 				// Z-axis platform to extruder cantilever joint.
-				zrot(180) cantilever_joint();
+				cantilever_joint();
 
 				// Extruder cantilever.
-				translate([0, joiner_length, -rail_height]) {
-					translate([0, 0.5*rail_length, 0]) {
+				translate([0, joiner_length, -(platform_length+rail_height)/2]) {
+					translate([0, rail_length/2, 0]) {
 						rail_segment();
-					}
-					translate([0, 1.5*rail_length, 0]) {
-						extruder_platform();
+						translate([0, rail_length/2, 0]) {
+							extruder_platform();
+						}
 					}
 				}
 			}
@@ -193,10 +193,10 @@ module full_assembly(hide_endcaps=true)
 
 
 
-translate([0,-1.5*rail_length,0]) full_assembly();
+translate([0,-1.5*rail_length,0])
+	full_assembly(hide_endcaps=false);
 
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
-
 

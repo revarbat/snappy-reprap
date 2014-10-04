@@ -89,7 +89,7 @@ module nut_capture_cap(nut_size=17.4, nut_thick=9.5, wall=3, cap_thick=2)
 		}
 	}
 }
-!nut_capture_cap(nut_size=17.4, nut_thick=9.5);
+//!nut_capture_cap(nut_size=17.4, nut_thick=9.5);
 
 
 

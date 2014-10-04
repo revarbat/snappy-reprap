@@ -6,54 +6,64 @@ use <tslot.scad>
 
 module xy_joiner()
 {
-	joiner_height=30;
-	joiner_length=10;
-	hoff = (platform_length*2-rail_width)/2-3*3+1;
+	joiner_length=15;
+	hardstop_offset=8;
+
+	hoff = (platform_length*2-rail_width-20)/2;
 	color("Sienna") union() {
-		// Back Wall
-		translate([0, -joiner_length*2+platform_thick/2, 10]) {
-			zrot(90) thinning_wall(l=platform_width-joiner_width, h=joiner_height+3, thick=platform_thick, maxang=45, strut=5, max_bridge=999, bracing=false);
-		}
-
-		// Side walls
-		grid_of(xa=[-(platform_width-joiner_width)/2, (platform_width-joiner_width)/2]) {
-			translate([0, hoff/2-joiner_length/2-5, (joiner_height-3)/2]) {
-				cube(size=[joiner_width, hoff+joiner_length+10, (joiner_height-3)], center=true);
+		difference() {
+			// Bottom
+			translate([0, -joiner_length/2, -platform_thick/2]) {
+				cube(size=[platform_width, joiner_length, platform_thick], center=true);
 			}
-		}
 
-		// Bottom
-		translate([0, hoff/2-joiner_length/2-5, (joiner_height-3)-5/2]) {
-			xrot(90) zrot(90) sparse_strut(l=platform_width, h=hoff+joiner_length+10, thick=5, maxang=45, strut=platform_thick, max_bridge=999);
+			// Snap-tab joiners.
+			translate([0,0,-platform_height/2]) {
+				joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, a=joiner_angle);
+			}
 		}
 
 		// Snap-tab joiners.
 		translate([0,0,-platform_height/2]) {
-			joiner_pair(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, l=joiner_length*2, a=joiner_angle);
+			joiner_pair(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 		}
 
 		translate([0, hoff, 0]) {
-			// tabs connector.
-			translate([0, -platform_thick/2, (joiner_height-3)/2]) {
-				cube(size=[(platform_width-joiner_width), platform_thick, (joiner_height-3)], center=true);
-			}
-
 			// Lock tabs
-			grid_of(xa=[-platform_length/4, platform_length/4]) {
-				zrot(180) lock_tab(h=joiner_height, wall=3);
+			translate([0, 0, rail_height/2/2]) {
+				translate([platform_length/4, 0, 0]) {
+					half_joiner(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle);
+				}
+				translate([-platform_length/4, 0, 0]) {
+					half_joiner2(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle, slop=printer_slop);
+				}
+			}
+		}
+
+		// Rack and pinion hard stop.
+		translate([0, -joiner_length+(joiner_length-hardstop_offset)/2, -platform_thick-rail_offset/2]) {
+			cube(size=[motor_mount_spacing+joiner_width+5, joiner_length-hardstop_offset, rail_offset], center=true);
+		}
+
+		// endstop trigger
+		translate([0, -15/2, 0]) {
+			mirror_copy([1, 0, 0]) {
+				translate([motor_mount_spacing/2+joiner_width/2+2, 0, -platform_thick]) {
+					translate([10/2, 0, -(rail_offset+groove_height/2+4)/2]) {
+						cube(size=[10, 15, rail_offset+groove_height/2+4], center=true);
+					}
+				}
 			}
 		}
 	}
 }
-//!xy_joiner();
+!xy_joiner();
 
 
 
 module xy_joiner_parts() { // make me
-	joiner_height=30;
-
-	translate([0, 0, (joiner_height-3)]) {
-		zrot(90) xrot(180) xy_joiner();
+	translate([0, 0, platform_height]) {
+		zrot(90) xrot(90) xy_joiner();
 	}
 }
 

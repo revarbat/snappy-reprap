@@ -5,7 +5,9 @@ use <joiners.scad>
 
 module rail_segment()
 {
-	color([0.9, 0.7, 1.0]) difference() {
+	color([0.9, 0.7, 1.0])
+	render(convexity=20)
+	difference() {
 		union() {
 			difference() {
 				union() {
@@ -16,8 +18,12 @@ module rail_segment()
 					// Walls.
 					zrot_copies([0, 180]) {
 						translate([(rail_spacing+joiner_width)/2, 0, (rail_height+3)/2]) {
-							//sparse_strut(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=rail_thick);
-							thinning_wall(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=rail_thick, bracing=false);
+							if (wall_style == "crossbeams")
+								sparse_strut(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=5);
+							if (wall_style == "thinwall")
+								thinning_wall(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=rail_thick, bracing=false);
+							if (wall_style == "corrugated")
+								corrugated_wall(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=rail_thick);
 						}
 					}
 				}
@@ -25,14 +31,6 @@ module rail_segment()
 				// Clear space for joiners.
 				translate([0,0,rail_height/2]) {
 					joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=rail_length, h=rail_height, w=joiner_width+5, a=joiner_angle);
-				}
-
-				// Crosshatch bottom to relieve shrinkage stress in early build.
-				line_of([0, -(rail_length/2-20), 0], [0, (rail_length/2-20), 0], n=4) {
-					cube(size=[rail_width+10, 1, 2], center=true);
-				}
-				line_of([-(rail_width/2-20), 0, 0], [(rail_width/2-20), 0, 0], n=4) {
-					cube(size=[1, rail_length+10, 2], center=true);
 				}
 			}
 

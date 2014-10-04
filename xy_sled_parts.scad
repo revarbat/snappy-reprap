@@ -6,7 +6,7 @@ use <slider_sled.scad>
 
 module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 {
-	render(convexity=10) translate([-(rack_tooth_size/2), 0, 0]) {
+	translate([-(rack_tooth_size/2), 0, 0]) {
 		mirror_copy([0,0,1]) {
 			skew_along_z(xang=CA) {
 				intersection() {
@@ -32,7 +32,9 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 
 module xy_sled()
 {
-	color("MediumSlateBlue") union() {
+	color("MediumSlateBlue")
+	render(convexity=10)
+	union() {
 		// Base slider sled.
 		slider_sled();
 

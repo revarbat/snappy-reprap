@@ -6,16 +6,35 @@ use <joiners.scad>
 
 module motor_mount_plate(thick=4, l=15)
 {
-	color("Teal") union() {
-		translate([0, 0, l-thick/2]) {
-			difference() {
-				cube(size=[43+joiner_width+10, rail_height, 4], center=true);
-				zrot(90) nema17_mount_holes(depth=thick+1, l=5);
+	color("Teal")
+	difference() {
+		union() {
+			translate([0, 0, l-thick/2]) {
+				difference() {
+					cube(size=[motor_mount_spacing, rail_height, 4], center=true);
+					zrot(90) nema17_mount_holes(depth=thick+1, l=5);
+				}
+			}
+
+			// Joiners
+			xrot(-90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=l, a=joiner_angle);
+		}
+		zrot_copies([0, 180]) {
+			grid_of(
+				xa=[motor_mount_spacing/2],
+				ya=[-endstop_hole_spacing/2-endstop_hole_hoff, endstop_hole_spacing/2-endstop_hole_hoff],
+				za=[l-endstop_hole_inset]
+			) {
+				yrot(90) cylinder(r=endstop_screw_size*1.2/2, h=joiner_width+0.05, center=true, $fn=12);
+				scale([1.2, 1.2, 1.2]) {
+					hull() {
+						yrot(90) metric_nut(size=endstop_screw_size);
+						translate([0, 0, endstop_hole_inset])
+							yrot(90) metric_nut(size=endstop_screw_size);
+					}
+				}
 			}
 		}
-
-		// Joiners
-		xrot(-90) joiner_pair(spacing=43+joiner_width+10, h=rail_height, w=joiner_width, l=l, a=joiner_angle);
 	}
 }
 //!motor_mount_plate();

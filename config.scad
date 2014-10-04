@@ -1,4 +1,10 @@
-snappy_version = 0.90;
+snappy_version = 0.91;
+
+
+// 0 = Thinning Walls (Thin in the middle, thick at edges.  Prettier smooth walls.)
+// 1 = Corrugated walls. (Zig-zagged walls. Less shrinkage stress. Closed walls.)
+// 2 = Crossbeam walls. (Open sparse struts. Far less shrinkage stress.)
+wall_styling = 2;
 
 
 platform_length = 100; // mm.  Must be a multiple of rack_tooth_size.
@@ -22,17 +28,19 @@ joiner_width  =  10;    // mm
 rack_tooth_size  =  5; // mm per tooth.
 set_screw_size   =  3; // mm size of set screw in drive gears, couplers, etc
 motor_shaft_size =  5; // mm
-motor_shaft_flatted = false;  // boolean
+motor_shaft_flatted = false;  // boolean. Set true if motor shaft has a flattened side.
 
 // Currently configured for 3/8" ACME threaded rod and matching 11/16" nut
-lifter_rod_diam   =   9.5; // mm
-lifter_rod_length = 300.0; // mm
-lifter_nut_size   =  17.4; // mm
-lifter_nut_thick  =   9.3; // mm
-lifter_thread_size =  3.175; // mm lift per revolution
+lifter_rod_diam    =   9.5; // mm
+lifter_rod_length  = 300.0; // mm
+lifter_nut_size    =  17.4; // mm
+lifter_nut_thick   =   9.3; // mm
+lifter_thread_size =   3.175; // mm lift per revolution
 
-endstop_hole_spacing = 19; // mm
-endstop_screw_size   =  3; // mm
+endstop_hole_spacing = 19;   // mm
+endstop_hole_inset   =  3.2; // mm
+endstop_hole_hoff    = 10;   // mm
+endstop_screw_size   =  3;   // mm
 
 // This is the slop needed to make parts fit more exactly, and may be
 // printer dependant.  Printing a slop calibration plate should help
@@ -44,7 +52,10 @@ printer_slop =   0.25; // mm
 // Commonly used derived values.  Don't change these.
 rail_spacing = platform_width - joiner_width*4 - 10;
 rail_width = rail_spacing + joiner_width*2;
+motor_mount_spacing=43+joiner_width+10;
 
+wall_styles = ["thinwall", "corrugated", "crossbeams"];
+wall_style = wall_styles[wall_styling];
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap

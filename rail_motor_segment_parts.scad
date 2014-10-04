@@ -8,9 +8,11 @@ use <tslot.scad>
 module rail_motor_segment()
 {
 	joiner_length = 10;
-	motor_mount_spacing=43+joiner_width+10;
+	side_joiner_len = 10;
 
-	color("SpringGreen") difference() {
+	color("SpringGreen")
+	render(convexity=20)
+	difference() {
 		union() {
 			difference() {
 				union() {
@@ -50,10 +52,15 @@ module rail_motor_segment()
 			}
 
 			// Side mount slots.
-			grid_of(ya=[-platform_length/4, platform_length/4]) {
-				zrot_copies([0,180]) {
-					translate([rail_width/2-5, 0, 0]) {
-						zrot(-90) lock_slot(h=30, wall=3, backing=2.5);
+			zrot_copies([0,180]) {
+				translate([rail_width/2-5, 0, 0]) {
+					translate([side_joiner_len+joiner_width/2, 0, rail_height/2/2]) {
+						translate([0, -platform_length/4, 0]) {
+							zrot(-90) half_joiner(h=rail_height/2, w=joiner_width, l=side_joiner_len, a=joiner_angle);
+						}
+						translate([0, platform_length/4, 0]) {
+							zrot(-90) half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len, a=joiner_angle, slop=printer_slop);
+						}
 					}
 				}
 			}
@@ -72,8 +79,8 @@ module rail_motor_segment()
 			}
 
 			// Motor mount joiners.
-			translate([0, 0, 30]) {
-				xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=30, a=joiner_angle);
+			translate([0, 0, rail_height-5-15]) {
+				xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=rail_height-5-15, a=joiner_angle);
 			}
 		}
 
@@ -92,7 +99,7 @@ module rail_motor_segment()
 
 
 module rail_motor_segment_parts() { // make me
-	rail_motor_segment();
+	zrot(90) rail_motor_segment();
 }
 
 

@@ -174,4 +174,3 @@ translate([(-floor(n5/2)-floor(n1/2)+$t+n1/2-1/2)*9, -d1+0.0, 0]) rotate([0,0,0]
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
 
-

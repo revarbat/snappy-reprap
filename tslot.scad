@@ -42,8 +42,14 @@ module lock_slot(h=30, wall=3, backing=0, slop=printer_slop)
 				translate([0, 0, h/2])
 					cube(size=[w, d+backing, h], center=true);
 			}
-			translate([0, (d+backing)/2+0.05, -0.05])
+			translate([0, (d+backing)/2+0.05, -0.05]) {
 				lock_tab(h=h, wall=wall, slop=-slop);
+			}
+			translate([0, (d+backing-wall*0.75)/2, 0]) {
+				scale([1,1,2]) {
+					yrot(45) cube(size=[wall*3, wall*1.1, wall*3], center=true);
+				}
+			}
 		}
 	}
 }
