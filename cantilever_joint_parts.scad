@@ -21,7 +21,7 @@ module cantilever_joint()
 
 		// Front struts
 		grid_of(
-			xa=[-(rail_width-joiner_width)/2, (rail_width-joiner_width)/2],
+			xa=[-(platform_width-joiner_width)/2, (platform_width-joiner_width)/2],
 			ya=[joiner_length/2],
 			za=[-(platform_length-rail_height)/4]
 		) {
@@ -30,7 +30,7 @@ module cantilever_joint()
 
 		// Front joiners.
 		translate([0, joiner_length, -platform_length/2]) {
-			joiner_pair(spacing=rail_width-joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+			joiner_pair(spacing=platform_width-joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 		}
 	}
 }

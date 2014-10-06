@@ -3,6 +3,7 @@ use <GDMUtils.scad>
 use <NEMA.scad>
 
 use <cantilever_joint_parts.scad>
+use <cantilever_arm_parts.scad>
 use <drive_gear_parts.scad>
 use <extruder_platform_parts.scad>
 use <lifter_nut_cap_parts.scad>
@@ -180,7 +181,7 @@ module full_assembly(hide_endcaps=false)
 				// Extruder cantilever.
 				translate([0, joiner_length, -(platform_length+rail_height)/2]) {
 					translate([0, rail_length/2, 0]) {
-						rail_segment();
+						cantilever_arm();
 						translate([0, rail_length/2, 0]) {
 							extruder_platform();
 						}
