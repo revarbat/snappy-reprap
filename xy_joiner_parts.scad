@@ -57,13 +57,15 @@ module xy_joiner()
 		}
 	}
 }
-!xy_joiner();
+//!xy_joiner();
 
 
 
 module xy_joiner_parts() { // make me
-	translate([0, 0, platform_height]) {
-		zrot(90) xrot(90) xy_joiner();
+	zrot_copies([0, 180]) {
+		translate([-15, 8, 15]) {
+			zrot(90) xrot(90) xy_joiner();
+		}
 	}
 }
 
