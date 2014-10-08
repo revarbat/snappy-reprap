@@ -61,7 +61,7 @@ module cantilever_arm()
 				// Chamfer front corners.
 				translate([0, l/2, h/2]) {
 					grid_of(xa=[-w/2, w/2]) {
-						zrot(45) cube(size=[10, 10, h+1], center=true);
+						zrot(45) cube(size=[5*sqrt(2), 5*sqrt(2), h+1], center=true);
 					}
 				}
 			}
