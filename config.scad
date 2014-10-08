@@ -18,6 +18,7 @@ rail_thick    =   7;    // mm
 rail_offset   =  12;    // mm
 
 motor_rail_length = 100; // mm
+cantilever_length = 125; // mm
 
 groove_angle  =  30;    // degrees
 groove_height =  12;    // mm
@@ -40,6 +41,7 @@ lifter_thread_size =   3.175; // mm lift per revolution
 endstop_hole_spacing = 19;   // mm
 endstop_hole_inset   =  3.2; // mm
 endstop_hole_hoff    = 10;   // mm
+endstop_click_voff   =  4;   // mm
 endstop_screw_size   =  3;   // mm
 
 // This is the slop needed to make parts fit more exactly, and may be

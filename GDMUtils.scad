@@ -424,12 +424,13 @@ function get_metric_nut_thickness(size) = lookup(size, [
 // Example:
 //   metric_nut(size=8, hole=true);
 //   metric_nut(size=3, hole=false);
-module metric_nut(size=3, hole=true, $fn=undef)
+module metric_nut(size=3, hole=true, $fn=undef, center=false)
 {
 	$fn = ($fn==undef)?max(8,floor(180/asin(2/size)/2)*2):$fn;
 	radius = get_metric_nut_size(size)/2/cos(30);
 	thick = get_metric_nut_thickness(size);
-	translate([0,0,thick/2]) difference() {
+	offset = (center == true)? 0 : thick/2;
+	translate([0,0,offset]) difference() {
 		cylinder(r=radius, h=thick, center=true, $fn=6);
 		if (hole == true)
 			cylinder(r=size/2, h=thick+0.5, center=true, $fn=$fn);

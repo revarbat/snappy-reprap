@@ -5,7 +5,7 @@ use <joiners.scad>
 
 module cantilever_arm()
 {
-	l = rail_length;
+	l = cantilever_length;
 	w = platform_width;
 	h = rail_height;
 
@@ -82,7 +82,7 @@ module cantilever_arm()
 
 
 module cantilever_arm_parts() { // make me
-	cantilever_arm();
+	zrot(90) cantilever_arm();
 }
 
 

@@ -6,7 +6,7 @@ use <joiners.scad>
 module extruder_platform()
 {
 	platform_vert_off = rail_height+groove_height+rail_offset;
-	l = motor_rail_length*0.5+platform_length-platform_vert_off-15;
+	l = motor_rail_length*0.5+cantilever_length-platform_vert_off-15;
 	w = platform_width;
 	h = rail_height;
 
@@ -18,7 +18,7 @@ module extruder_platform()
 			union() {
 				// Bottom.
 				translate([0, -(0.4*l), rail_thick/2])
-					rrect(r=joiner_width, size=[platform_width, 1.2*l, rail_thick], center=true);
+					rrect(r=joiner_width, size=[w, 1.2*l, rail_thick], center=true);
 
 				// Walls.
 				grid_of(
@@ -39,7 +39,7 @@ module extruder_platform()
 
 			// Blunt off end of platform.
 			translate([0, l+rail_thick*2, 0])
-				cube(size=[platform_width+1, l, h*3], center=true);
+				cube(size=[w+1, l, h*3], center=true);
 
 			// Extruder mount holes.
 			circle_of(r=25, n=2) {
@@ -48,6 +48,19 @@ module extruder_platform()
 
 			// Extruder hole.
 			rrect(r=10, size=[40, 60, 20], center=true);
+
+			// Chamfer extruder hole corners.
+			translate([0, 30, 0]) {
+				zrot(45) cube(size=[75/sqrt(2), 75/sqrt(2), 20], center=true);
+			}
+
+			// Wiring acess holes.
+			grid_of(
+				xa=[-w/4, w/4],
+				ya=[-l*0.6]
+			) {
+				cylinder(h=20, r=w/8, center=true);
+			}
 		}
 
 		// Pivot backings
@@ -78,9 +91,23 @@ module extruder_platform()
 			}
 		}
 
-		// Z endstop block.
-		translate([0, -l+10/2, 15/2]) {
-			cube(size=[20, 10, 15], center=true);
+		translate([0, -l+10/2+2, (rail_thick+endstop_click_voff+set_screw_size)/2]) {
+			difference() {
+				// Z endstop block.
+				cube(size=[20, 10, (rail_thick+endstop_click_voff+set_screw_size)], center=true);
+
+				// Z endstop adjustment screw nut slot.
+				translate([0, 0, (rail_thick+endstop_click_voff-set_screw_size)/2]) {
+					xrot(90) {
+						cylinder(h=11, r=set_screw_size*1.1/2, center=true, $fn=12);
+						hull() {
+							grid_of(ya=[0, 5]) {
+								zrot(90) metric_nut(size=set_screw_size, hole=false, center=true);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

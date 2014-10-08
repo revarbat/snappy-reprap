@@ -92,7 +92,7 @@ module full_assembly(hide_endcaps=false)
 		}
 
 
-		translate([0, rail_length+motor_rail_length/2-100, 0]) {
+		translate([0, rail_length+motor_rail_length/2, 0]) {
 			// Y-axis slider platform.
 			translate([0, 0, platform_vert_off]) {
 				grid_of(ya=[-platform_length/2, platform_length/2]) {
@@ -137,7 +137,7 @@ module full_assembly(hide_endcaps=false)
 				}
 
 				// X-axis slider platform.
-				translate([0, 100, platform_vert_off]) {
+				translate([0, 0, platform_vert_off]) {
 					grid_of(ya=[-platform_length/2, platform_length/2]) {
 						yrot(180) {
 							xy_sled();
@@ -180,9 +180,9 @@ module full_assembly(hide_endcaps=false)
 
 				// Extruder cantilever.
 				translate([0, joiner_length, -(platform_length+rail_height)/2]) {
-					translate([0, rail_length/2, 0]) {
+					translate([0, cantilever_length/2, 0]) {
 						cantilever_arm();
-						translate([0, rail_length/2, 0]) {
+						translate([0, cantilever_length/2, 0]) {
 							extruder_platform();
 						}
 					}
