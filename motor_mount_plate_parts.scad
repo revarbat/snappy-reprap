@@ -11,7 +11,7 @@ module motor_mount_plate(thick=4, l=15)
 		union() {
 			translate([0, 0, l-thick/2]) {
 				difference() {
-					cube(size=[motor_mount_spacing, rail_height, 4], center=true);
+					rrect(size=[motor_mount_spacing+joiner_width, rail_height+10, 4], r=5, center=true);
 					zrot(90) nema17_mount_holes(depth=thick+1, l=5);
 				}
 			}
@@ -42,7 +42,7 @@ module motor_mount_plate(thick=4, l=15)
 
 
 module motor_mount_plate_parts() { // make me
-	n = 3;
+	n = 1;
 	spacing = 55;
 	grid_of(ya=[-((n-1)*spacing)/2 : spacing : ((n-1)*spacing)/2])
 		yrot(180) motor_mount_plate();

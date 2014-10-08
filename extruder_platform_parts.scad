@@ -23,7 +23,7 @@ module extruder_platform()
 				// Walls.
 				grid_of(
 					xa=[-(w-joiner_width)/2, (w-joiner_width)/2],
-					ya=[-(l-l*0.75/2-10)],
+					ya=[-(l-l*0.75/2-9)],
 					za=[(h-12)/2]
 				) {
 					thinning_triangle(h=h-12, l=l*0.75, thick=joiner_width, strut=rail_thick, diagonly=true);
@@ -50,8 +50,17 @@ module extruder_platform()
 			rrect(r=10, size=[40, 60, 20], center=true);
 
 			// Chamfer extruder hole corners.
-			translate([0, 30, 0]) {
-				zrot(45) cube(size=[75/sqrt(2), 75/sqrt(2), 20], center=true);
+			translate([0, l*0.2, h/2]) {
+				grid_of(xa=[-40/2, 40/2]) {
+					zrot(45) cube(size=[10/sqrt(2), 10/sqrt(2), h+1], center=true);
+				}
+			}
+
+			// Chamfer back corners.
+			translate([0, -l, h/2]) {
+				grid_of(xa=[-w/2, w/2]) {
+					zrot(45) cube(size=[10/sqrt(2), 10/sqrt(2), h+1], center=true);
+				}
 			}
 
 			// Wiring acess holes.
