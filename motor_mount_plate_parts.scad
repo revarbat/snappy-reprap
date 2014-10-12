@@ -25,8 +25,8 @@ module motor_mount_plate(thick=4, l=15)
 				ya=[-endstop_hole_spacing/2-endstop_hole_hoff, endstop_hole_spacing/2-endstop_hole_hoff],
 				za=[l-endstop_hole_inset]
 			) {
-				yrot(90) cylinder(r=endstop_screw_size*1.2/2, h=joiner_width+0.05, center=true, $fn=12);
-				scale([1.2, 1.2, 1.2]) {
+				yrot(90) cylinder(r=endstop_screw_size*1.1/2, h=joiner_width+0.05, center=true, $fn=12);
+				scale([1.1, 1.1, 1.1]) {
 					hull() {
 						yrot(90) metric_nut(size=endstop_screw_size);
 						translate([0, 0, endstop_hole_inset])

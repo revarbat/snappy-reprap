@@ -19,6 +19,20 @@ module cantilever_arm()
 					translate([0,0,rail_thick/2]) yrot(90)
 						sparse_strut(h=w, l=l, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
 
+					// Flanges on sides to reduce peeling.
+					grid_of(
+						xa=[-(w/2), (w/2)]
+					) {
+						hull() {
+							grid_of(
+								ya=[-(l/2-joiner_width/3), (l/2-joiner_width/3)],
+								za=[2/2]
+							) {
+								cylinder(h=2, r=joiner_width/3, center=true, $fn=12);
+							}
+						}
+					}
+
 					mirror_copy([1, 0, 0]) {
 						// Walls.
 						translate([(w-joiner_width)/2, 0, h/2]) {
@@ -34,6 +48,7 @@ module cantilever_arm()
 						translate([(w-joiner_width)/2, l/2-2.5, h/2]) {
 							cube(size=[joiner_width, 5, h], center=true);
 						}
+
 					}
 				}
 
@@ -42,14 +57,7 @@ module cantilever_arm()
 					zrot(180) joiner_pair_clear(spacing=w-joiner_width, h=h, w=joiner_width+5, a=joiner_angle);
 				}
 
-				// Pivot
-				mirror_copy([1,0,0]) {
-					translate([w/2-joiner_width, l/2-6, h-6]) {
-						yrot(90) cylinder(h=2, r1=6, r2=4, center=true);
-					}
-				}
-
-				// endstop screw holes.
+				// Endstop screw holes.
 				grid_of(
 					xa=[-endstop_hole_spacing/2, endstop_hole_spacing/2],
 					ya=[l/2-endstop_hole_inset],
@@ -58,11 +66,13 @@ module cantilever_arm()
 					cylinder(h=rail_thick+0.05, r=endstop_screw_size*1.2/2, center=true, $fn=8);
 				}
 
-				// Chamfer front corners.
-				translate([0, l/2, h/2]) {
-					grid_of(xa=[-w/2, w/2]) {
-						zrot(45) cube(size=[5*sqrt(2), 5*sqrt(2), h+1], center=true);
-					}
+				// Trim corners behind pivot.
+				grid_of(
+					xa=[-(w-joiner_width)/2, (w-joiner_width)/2],
+					ya=[l/2],
+					za=[h]
+				) {
+					xrot(45) cube(size=[joiner_width+1, 6*sqrt(2), 6*sqrt(2)], center=true);
 				}
 			}
 
@@ -72,22 +82,42 @@ module cantilever_arm()
 			}
 
 			zrot_copies([0, 180]) {
-				translate([0, l/2-19, h/4]) {
+				translate([0, l/2-18.5, h/4]) {
 					difference() {
 						// Side supports.
 						cube(size=[w, 5, h/2], center=true);
 
 						// Wiring access holes.
-						grid_of(xa=[-w/4, w/4])
+						grid_of(xa=[-w/4, w/4]) {
 							cube(size=[8, 6, 10], center=true);
+						}
 					}
+				}
+			}
+
+			// Pivot backing
+			mirror_copy([1, 0, 0]) {
+				translate([(w-joiner_width)/2, l/2-6, h-6]) {
+					yrot(90) cylinder(h=joiner_width, r=7.5, center=true, $fn=32);
 				}
 			}
 		}
 
-		// Chamfer sharp joiner corner.
-		translate([w/2, -l/2, 0]) {
-			zrot(45) cube(size=[joiner_width/3*sqrt(2), joiner_width/3*sqrt(2), 10], center=true);
+		// Pivot
+		mirror_copy([1, 0, 0]) {
+			translate([w/2-joiner_width, l/2-6, h-6]) {
+				translate([2/2-0.05, 0, 0]) {
+					yrot(90) {
+						cylinder(h=2, r1=6, r2=4, center=true, $fn=32);
+						cylinder(h=20, r=set_screw_size*1.1/2, center=true, $fn=12);
+						translate([0,0,0.75]) {
+							zrot(90) scale([1.1, 1.1, 1.2]) {
+								metric_nut(size=set_screw_size, hole=false);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

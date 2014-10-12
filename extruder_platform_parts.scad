@@ -35,6 +35,55 @@ module extruder_platform()
 						cube(size=[joiner_width+5, 10, h-12], center=true);
 					}
 				}
+
+				// Pivot backings
+				mirror_copy([1,0,0]) {
+					translate([(w-joiner_width-4.5)/2-5.5, -l-6, h-6]) {
+						difference() {
+							xrot(joiner_angle) {
+								translate([0, 0, -12/sin(joiner_angle)/2]) {
+									cube(size=[4.5, 12, 12/sin(joiner_angle)], center=true);
+								}
+							}
+							translate([0, 12+10, -12*2*sin(joiner_angle)])
+								cube(size=[4.5, 12, 12/sin(joiner_angle)], center=true);
+						}
+					}
+					translate([(w-joiner_width-4.5)/2-5.5, -l-6, h-6]) {
+						yrot(90) cylinder(h=4.5, r=6, center=true, $fn=32);
+					}
+				}
+
+				// Pivot
+				mirror_copy([1,0,0]) {
+					translate([w/2-joiner_width, -l-6, h-6]) {
+						translate([2/2-0.5, 0, 0]) {
+							yrot(90) intersection() {
+								cylinder(h=2, r1=6, r2=4, center=true, $fn=32);
+								cylinder(h=20, r=6, center=true, $fn=32);
+							}
+						}
+					}
+				}
+
+				translate([0, -l+10/2+2, (rail_thick+endstop_click_voff+set_screw_size)/2]) {
+					difference() {
+						// Z endstop block.
+						cube(size=[20, 10, (rail_thick+endstop_click_voff+set_screw_size)], center=true);
+
+						// Z endstop adjustment screw nut slot.
+						translate([0, 0, (rail_thick+endstop_click_voff-set_screw_size)/2]) {
+							xrot(90) {
+								cylinder(h=11, r=set_screw_size*1.1/2, center=true, $fn=12);
+								hull() {
+									grid_of(ya=[0, 5]) {
+										zrot(90) metric_nut(size=set_screw_size, hole=false, center=true);
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
 			// Blunt off end of platform.
@@ -70,50 +119,12 @@ module extruder_platform()
 			) {
 				cylinder(h=20, r=w/8, center=true);
 			}
-		}
 
-		// Pivot backings
-		mirror_copy([1,0,0]) {
-			translate([(w-joiner_width-4.5)/2-5.5, -l-6, h-6]) {
-				difference() {
-					xrot(joiner_angle) {
-						translate([0, 0, -12/sin(joiner_angle)/2]) {
-							cube(size=[4.5, 12, 12/sin(joiner_angle)], center=true);
-						}
-					}
-					translate([0, 12+10, -12*2*sin(joiner_angle)])
-						cube(size=[4.5, 12, 12/sin(joiner_angle)], center=true);
-				}
-			}
-			translate([(w-joiner_width-4.5)/2-5.5, -l-6, h-6]) {
-				yrot(90) cylinder(h=4.5, r=6, center=true);
-			}
-		}
-
-		// Pivot
-		mirror_copy([1,0,0]) {
-			translate([w/2-joiner_width, -l-6, h-6]) {
-				yrot(90) intersection() {
-					cylinder(h=2, r1=6, r2=4, center=true);
-					cylinder(h=2, r=6, center=true);
-				}
-			}
-		}
-
-		translate([0, -l+10/2+2, (rail_thick+endstop_click_voff+set_screw_size)/2]) {
-			difference() {
-				// Z endstop block.
-				cube(size=[20, 10, (rail_thick+endstop_click_voff+set_screw_size)], center=true);
-
-				// Z endstop adjustment screw nut slot.
-				translate([0, 0, (rail_thick+endstop_click_voff-set_screw_size)/2]) {
-					xrot(90) {
-						cylinder(h=11, r=set_screw_size*1.1/2, center=true, $fn=12);
-						hull() {
-							grid_of(ya=[0, 5]) {
-								zrot(90) metric_nut(size=set_screw_size, hole=false, center=true);
-							}
-						}
+			// Pivot screw hole.
+			mirror_copy([1,0,0]) {
+				translate([w/2-joiner_width, -l-6, h-6]) {
+					yrot(90) {
+						cylinder(h=20, r=set_screw_size*1.1/2, center=true, $fn=12);
 					}
 				}
 			}
