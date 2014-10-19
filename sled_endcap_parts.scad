@@ -9,7 +9,7 @@ module sled_endcap()
 	hardstop_offset=8;
 
 	color("DodgerBlue")
-	render(convexity=10)
+	prerender(convexity=10)
 	difference() {
 		union() {
 			difference() {

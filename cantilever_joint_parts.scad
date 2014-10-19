@@ -8,7 +8,7 @@ module cantilever_joint()
 	joiner_length=15;
 
 	color("Chocolate")
-	render(convexity=10)
+	prerender(convexity=10)
 	union() {
 		// Top hanger joiners.
 		translate([0, -platform_height/2, 0]) {

@@ -9,7 +9,7 @@ module rail_endcap()
 	base_height = rail_height+groove_height;
 
 	color("YellowGreen")
-	render(convexity=10)
+	prerender(convexity=10)
 	difference() {
 		union() {
 			difference() {

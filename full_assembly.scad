@@ -21,7 +21,6 @@ use <yz_joiner_parts.scad>
 use <z_sled_parts.scad>
 
 
-
 // Set default camera position.
 $vpd = 3500;
 $vpt = [0, 0, 160];
@@ -195,7 +194,7 @@ module full_assembly(hide_endcaps=false)
 
 
 translate([0,-1.5*rail_length,0])
-	full_assembly(hide_endcaps=false);
+	full_assembly(hide_endcaps=true);
 
 
 

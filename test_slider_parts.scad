@@ -5,7 +5,8 @@ use <GDMUtils.scad>
 module vee_rail(w=10, l=100, h=15, rail=10, ang=30)
 {
 	ang2 = 75.0;
-	render(convexity=4) difference() {
+	prerender(convexity=4)
+	difference() {
 		translate([0, 0, (h-rail)/2])
 			cube(size=[w, l, h], center=true);
 		grid_of(xa=[-w/2, w/2]) {
@@ -33,7 +34,7 @@ module vee_rail(w=10, l=100, h=15, rail=10, ang=30)
 module vee_slider(w=10, l=100, h=20, rail=10, ang=30, wall=4, slop=0.25)
 {
 	ang2 = 75.0;
-	render(convexity=4)
+	prerender(convexity=4)
 	union() {
 		difference() {
 			translate([0,0,-(rail/2+wall)/2+(rail*tan(ang)*tan(90-ang2))/4])

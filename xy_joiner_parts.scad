@@ -11,7 +11,7 @@ module xy_joiner()
 
 	hoff = (platform_length*2-rail_width-20)/2;
 	color("Sienna")
-	render(convexity=10)
+	prerender(convexity=10)
 	union() {
 		difference() {
 			// Bottom
@@ -74,8 +74,8 @@ module xy_joiner()
 		translate([0, -joiner_length/2, 0]) {
 			mirror_copy([1, 0, 0]) {
 				translate([motor_mount_spacing/2+joiner_width/2+2, 0, 0]) {
-					translate([10/2, 0, -(platform_thick+rail_offset+groove_height/2+2)/2]) {
-						xrot(90) rrect(r=10/3, size=[10, platform_thick+rail_offset+groove_height/2+2, joiner_length], center=true);
+					translate([10/2, 0, -(platform_thick+rail_offset+groove_height/2+3)/2]) {
+						xrot(90) rrect(r=10/3, size=[10, platform_thick+rail_offset+groove_height/2+3, joiner_length], center=true);
 					}
 				}
 			}

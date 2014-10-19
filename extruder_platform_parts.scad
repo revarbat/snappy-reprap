@@ -11,7 +11,7 @@ module extruder_platform()
 	h = rail_height;
 
 	color("LightSteelBlue")
-	render(convexity=10)
+	prerender(convexity=10)
 	translate([0, l, 0])
 	union() {
 		difference() {
@@ -66,13 +66,13 @@ module extruder_platform()
 					}
 				}
 
-				translate([0, -l+10/2+2, (rail_thick+endstop_click_voff+set_screw_size)/2]) {
+				translate([0, -l+10/2+2, (rail_thick+endstop_click_voff+set_screw_size+endstop_standoff)/2]) {
 					difference() {
 						// Z endstop block.
-						cube(size=[20, 10, (rail_thick+endstop_click_voff+set_screw_size)], center=true);
+						cube(size=[w-joiner_width, 10, (rail_thick+endstop_click_voff+set_screw_size+endstop_standoff)], center=true);
 
 						// Z endstop adjustment screw nut slot.
-						translate([0, 0, (rail_thick+endstop_click_voff-set_screw_size)/2]) {
+						translate([0, 0, (rail_thick+endstop_click_voff-set_screw_size+endstop_standoff)/2]) {
 							xrot(90) {
 								cylinder(h=11, r=set_screw_size*1.1/2, center=true, $fn=12);
 								hull() {

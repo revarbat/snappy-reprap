@@ -11,7 +11,7 @@ module rail_motor_segment()
 	side_joiner_len = 10;
 
 	color("SpringGreen")
-	render(convexity=20)
+	prerender(convexity=20)
 	difference() {
 		union() {
 			difference() {
@@ -69,11 +69,11 @@ module rail_motor_segment()
 				translate([0, motor_rail_length/2-8, rail_height/4]) {
 					difference() {
 						// Side supports.
-						cube(size=[rail_width, 3, rail_height/2], center=true);
+						cube(size=[rail_width, 5, rail_height/2], center=true);
 
 						// Wiring access holes.
-						grid_of(xa=[-rail_width/4, rail_width/4])
-							cube(size=[8, 5, 10], center=true);
+						grid_of(xa=[-rail_width/4, 0, rail_width/4])
+							cube(size=[10, 10, 10], center=true);
 					}
 				}
 			}

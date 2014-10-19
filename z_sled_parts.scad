@@ -12,7 +12,7 @@ module z_sled()
 	nut_spacing = floor((platform_length-20)/lifter_thread_size) * lifter_thread_size;
 
 	color("DeepSkyBlue")
-	render(convexity=10)
+	prerender(convexity=10)
 	union() {
 		// Base slider sled.
 		slider_sled(with_rack=false);

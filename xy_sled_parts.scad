@@ -33,7 +33,7 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 module xy_sled()
 {
 	color("MediumSlateBlue")
-	render(convexity=10)
+	prerender(convexity=10)
 	union() {
 		// Base slider sled.
 		slider_sled();

@@ -12,7 +12,7 @@ module yz_joiner()
 	motor_mount_spacing=43+joiner_width+10;
 
 	color("Turquoise")
-	render(convexity=10)
+	prerender(convexity=10)
 	difference() {
 		union() {
 			difference() {

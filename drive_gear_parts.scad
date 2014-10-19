@@ -7,7 +7,9 @@ module drive_gear() {
 	h = 10;
 	shaft = motor_shaft_size + 2 * printer_slop;
 
-	color("Salmon") render(convexity=10) union() {
+	color("Salmon")
+	prerender(convexity=10)
+	union() {
 		difference() {
 			// Herringbone gear
 			mirror_copy([0, 0, 1]) {

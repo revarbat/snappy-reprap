@@ -6,7 +6,7 @@ use <joiners.scad>
 module rail_segment()
 {
 	color([0.9, 0.7, 1.0])
-	render(convexity=20)
+	prerender(convexity=20)
 	difference() {
 		union() {
 			difference() {
@@ -59,15 +59,14 @@ module rail_segment()
 			}
 
 			zrot_copies([0, 180]) {
-				translate([0, rail_length/2-8, rail_height/4]) {
+				translate([0, rail_length/2-19, rail_height/4]) {
 					difference() {
 						// Side supports.
-						translate([0, 0, 5/2])
-							cube(size=[rail_width, 3, rail_height/2-5], center=true);
+						cube(size=[rail_width, 5, rail_height/2], center=true);
 
 						// Wiring access holes.
-						grid_of(xa=[-rail_width/4, rail_width/4])
-							cube(size=[8, 5, 10], center=true);
+						grid_of(xa=[-rail_width/4, 0, rail_width/4])
+							cube(size=[10, 10, 10], center=true);
 					}
 				}
 			}

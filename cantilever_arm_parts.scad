@@ -10,7 +10,7 @@ module cantilever_arm()
 	h = rail_height;
 
 	color([0.9, 0.7, 1.0])
-	render(convexity=20)
+	prerender(convexity=20)
 	difference() {
 		union() {
 			difference() {
@@ -48,7 +48,15 @@ module cantilever_arm()
 						translate([(w-joiner_width)/2, l/2-2.5, h/2]) {
 							cube(size=[joiner_width, 5, h], center=true);
 						}
+					}
 
+					// Endstop standoffs
+					grid_of(
+						xa=[-endstop_hole_spacing/2, endstop_hole_spacing/2],
+						ya=[l/2-endstop_hole_inset],
+						za=[(rail_thick+endstop_standoff)/2]
+					) {
+						cylinder(h=rail_thick+endstop_standoff, r=2+endstop_screw_size*1.2/2, center=true, $fn=16);
 					}
 				}
 
@@ -61,9 +69,9 @@ module cantilever_arm()
 				grid_of(
 					xa=[-endstop_hole_spacing/2, endstop_hole_spacing/2],
 					ya=[l/2-endstop_hole_inset],
-					za=[rail_thick/2]
+					za=[(rail_thick+endstop_standoff)/2]
 				) {
-					cylinder(h=rail_thick+0.05, r=endstop_screw_size*1.2/2, center=true, $fn=8);
+					cylinder(h=rail_thick+endstop_standoff+1, r=endstop_screw_size*1.2/2, center=true, $fn=8);
 				}
 
 				// Trim corners behind pivot.
@@ -82,14 +90,14 @@ module cantilever_arm()
 			}
 
 			zrot_copies([0, 180]) {
-				translate([0, l/2-18.5, h/4]) {
+				translate([0, l/2-20, h/4]) {
 					difference() {
 						// Side supports.
 						cube(size=[w, 5, h/2], center=true);
 
 						// Wiring access holes.
-						grid_of(xa=[-w/4, w/4]) {
-							cube(size=[8, 6, 10], center=true);
+						grid_of(xa=[-w/4, 0, w/4]) {
+							cube(size=[10, 10, 10], center=true);
 						}
 					}
 				}

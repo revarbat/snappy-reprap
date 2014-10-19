@@ -1,6 +1,19 @@
 // Convenience modules.
 
 
+// Optionally pre-render if someone sets do_prerender=true
+do_prerender = true;
+module prerender(convexity=10) {
+	if (do_prerender == true) {
+		render(convexity=convexity) {
+			children();
+		}
+	} else {
+		children();
+	}
+}
+
+
 // Rotates children around the Z axis by the given number of degrees.
 // Example:
 //   xrot(90) cylinder(h=10, r=2, center=true);
@@ -727,7 +740,7 @@ module corrugated_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2)
 		cube(size=[thick, l, wall], center=true);
 	}
 
-	render(convexity=corr_count*4+4)
+	prerender(convexity=corr_count*4+4)
 	difference() {
 		for (ypos = [-innerlen/2:spacing:innerlen/2]) {
 			translate([0, ypos, 0]) {
