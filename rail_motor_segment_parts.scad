@@ -2,7 +2,6 @@ include <config.scad>
 use <GDMUtils.scad>
 use <joiners.scad>
 use <NEMA.scad>
-use <tslot.scad>
 
 
 module rail_motor_segment()

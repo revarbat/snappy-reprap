@@ -1,7 +1,6 @@
 include <config.scad>
 use <GDMUtils.scad>
 use <joiners.scad>
-use <tslot.scad>
 
 
 module yz_joiner()
@@ -32,6 +31,23 @@ module yz_joiner()
 							cube(size=[45, motor_mount_spacing-joiner_width, rail_thick+1], center=true);
 						}
 					}
+
+					// Flanges on sides to reduce peeling.
+					grid_of(
+						xa=[-(rail_spacing/2+joiner_width), (rail_spacing/2+joiner_width)]
+					) {
+						hull() {
+							grid_of(
+								ya=[-5+5, (platform_length-5)],
+								za=[1/2]
+							) {
+								cylinder(h=1, r=5, center=true, $fn=24);
+							}
+						}
+					}
+					translate([0, -5/2, 1/2])
+					cube(size=[rail_width, 5, 1], center=true);
+
 
 					// Back.
 					translate([0, rail_thick/2, platform_length/2]) zrot(90) {
@@ -90,18 +106,38 @@ module yz_joiner()
 
 				// Clear space for front joiners.
 				translate([0, platform_length, rail_height/2]) {
-					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+5, a=joiner_angle);
+					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+0.05, a=joiner_angle);
+				}
+
+				// Clear space for back joiners.
+				translate([0, -5, rail_height/2]) {
+					zrot(180) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+0.05, a=joiner_angle);
+				}
+
+				// Clear space for side joiners.
+				translate([0, platform_length/2, rail_height/2]) {
+					zrot(90) joiner_quad_clear(xspacing=platform_length/2, yspacing=rail_width+2*5, h=rail_height, w=joiner_width+0.05, a=joiner_angle);
 				}
 
 				// Clear space for top joiners.
 				translate([0, rail_height/2, platform_length]) {
-					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+5, a=joiner_angle);
+					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+0.05, a=joiner_angle);
 				}
 			}
 
 			// Front joiners.
 			translate([0, platform_length, rail_height/2]) {
 				joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+			}
+
+			// Back joiners.
+			translate([0, -5, rail_height/2]) {
+				zrot(180) joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+			}
+
+			// Side joiners.
+			translate([0, platform_length/2, rail_height/2]) {
+				zrot(90) joiner_quad(xspacing=platform_length/2, yspacing=rail_width+2*5, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 			}
 
 			// Top joiners.
@@ -116,25 +152,14 @@ module yz_joiner()
 				}
 			}
 
-			// Side mount slots.
-			translate([0, platform_length/2, 0]) {
-				grid_of(ya=[-platform_length/4, platform_length/4]) {
-					zrot_copies([0,180]) {
-						translate([rail_width/2-joiner_width/2, 0, 0]) {
-							zrot(-90) lock_slot(h=30, wall=3, backing=joiner_width/2-2);
-						}
-					}
-				}
-			}
-
 			translate([0, platform_length-joiner_length, rail_height/4]) {
 				difference() {
 					// Side supports.
-					cube(size=[rail_width, 3, rail_height/2], center=true);
+					cube(size=[rail_width, 5, rail_height/2], center=true);
 
 					// Wiring access holes.
 					grid_of(xa=[-rail_width/4, rail_width/4])
-						cube(size=[8, 5, 10], center=true);
+						cube(size=[10, 10, 10], center=true);
 				}
 			}
 		}

@@ -56,7 +56,7 @@ module full_assembly(hide_endcaps=false)
 	// Support legs.
 	translate([0, platform_length/2, 0]) {
 		zrot_copies([0,180]) {
-			translate([rail_spacing/2+joiner_width+7, 0, 0]) {
+			translate([rail_spacing/2+joiner_width+10, 0, 0]) {
 				zrot(-90) support_leg();
 			}
 		}
@@ -194,7 +194,7 @@ module full_assembly(hide_endcaps=false)
 
 
 translate([0,-1.5*rail_length,0])
-	full_assembly(hide_endcaps=true);
+	full_assembly(hide_endcaps=false);
 
 
 

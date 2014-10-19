@@ -60,12 +60,12 @@ STLs/lifter_nut_parts.stl: acme_screw.scad
 STLs/lifter_rod_coupler_parts.stl: joiners.scad
 STLs/motor_mount_plate_parts.stl: joiners.scad NEMA.scad
 STLs/rail_endcap_parts.stl: joiners.scad
-STLs/rail_motor_segment_parts.stl: tslot.scad joiners.scad
+STLs/rail_motor_segment_parts.stl: joiners.scad
 STLs/rail_segment_parts.stl: joiners.scad
 STLs/sled_endcap_parts.stl: joiners.scad
-STLs/support_leg_parts.stl: tslot.scad
-STLs/xy_joiner_parts.stl: tslot.scad joiners.scad
+STLs/support_leg_parts.stl: joiners.scad
+STLs/xy_joiner_parts.stl: joiners.scad
 STLs/xy_sled_parts.stl: slider_sled.scad joiners.scad publicDomainGearV1.1.scad
-STLs/yz_joiner_parts.stl: tslot.scad joiners.scad
+STLs/yz_joiner_parts.stl: joiners.scad
 STLs/z_sled_parts.stl: joiners.scad acme_screw.scad lifter_nut_parts.scad nut_capture.scad slider_sled.scad
 

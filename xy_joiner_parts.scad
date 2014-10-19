@@ -1,7 +1,6 @@
 include <config.scad>
 use <GDMUtils.scad>
 use <joiners.scad>
-use <tslot.scad>
 
 
 module xy_joiner()

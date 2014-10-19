@@ -5,7 +5,7 @@ use <joiners.scad>
 
 module rail_endcap()
 {
-	joiner_length=15;
+	joiner_length=20;
 	base_height = rail_height+groove_height;
 
 	color("YellowGreen")
@@ -15,15 +15,15 @@ module rail_endcap()
 			difference() {
 				union() {
 					// Bottom.
-					translate([0, -(joiner_length+rail_thick)/2, rail_thick/2])
-						cube(size=[rail_width, joiner_length+rail_thick, rail_thick], center=true);
+					translate([0, -joiner_length/2, rail_thick/2])
+						cube(size=[rail_width, joiner_length, rail_thick], center=true);
 
 					// Back.
-					translate([0, -joiner_length-rail_thick/2+0.05, base_height/2]) zrot(90) {
+					translate([0, -joiner_length+rail_thick/2, base_height/2]) zrot(90) {
 						if (wall_style == "crossbeams")
-							sparse_strut(h=base_height, l=rail_width, thick=rail_thick, strut=5);
+							sparse_strut(h=base_height, l=rail_width-2*5, thick=rail_thick, strut=5);
 						if (wall_style == "thinwall")
-							thinning_wall(h=base_height, l=rail_width, thick=rail_thick, strut=joiner_width, bracing=false);
+							thinning_wall(h=base_height, l=rail_width-joiner_width, thick=rail_thick, strut=joiner_width, bracing=false);
 						if (wall_style == "corrugated")
 							corrugated_wall(h=base_height, l=rail_width, thick=rail_thick, strut=joiner_width);
 					}

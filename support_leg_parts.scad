@@ -1,29 +1,37 @@
 include <config.scad>
 use <GDMUtils.scad>
-use <tslot.scad>
+use <joiners.scad>
 
-
-module support_leg(h=30, l=100, wall=3)
+module support_leg(h=rail_height, l=75)
 {
 	ang = atan((h-10)/l);
-	color("SandyBrown") union() {
-		// Back wall.
-		translate([0, 5/2, h/2])
-			cube(size=[platform_length/2+6*wall, 5, h], center=true);
+	joiner_length=5;
 
-		// T-slot tabs.
-		grid_of(xa=[-platform_length/4, platform_length/4]) {
-			lock_tab(h=h, wall=wall);
+	color("SandyBrown")
+	union() {
+		difference() {
+			union() {
+				// Back wall.
+				translate([0, platform_thick/2, h/2]) {
+					cube(size=[platform_length/2+joiner_width, platform_thick, h], center=true);
+				}
 
-			// Legs.
-			translate([0, 0, h]) {
-				difference() {
-					translate([-wall, 0, -h])
-						cube(size=[2*wall, l, h], center=false);
-					xrot(-ang) translate([-wall*1.5, 0, 0])
-						cube(size=[3*wall, l*sqrt(2), h], center=false);
+				// Legs.
+				grid_of(xa=[-platform_length/4, platform_length/4]) {
+					translate([0, l/2, 0.75*h/2]) {
+						thinning_triangle(h=0.75*h, l=l, thick=platform_thick);
+					}
 				}
 			}
+			// Clear for side joiners.
+			translate([0, -joiner_length, rail_height/2]) {
+				zrot(180) joiner_pair_clear(spacing=platform_length/2, h=rail_height, w=joiner_width, a=joiner_angle);
+			}
+		}
+
+		// Side joiners.
+		translate([0, -joiner_length, rail_height/2]) {
+			zrot(180) joiner_pair(spacing=platform_length/2, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 		}
 	}
 }
@@ -32,7 +40,7 @@ module support_leg(h=30, l=100, wall=3)
 
 
 module support_leg_parts() { // make me
-	translate([0, -50, 0]) support_leg();
+	translate([0, -75/2, 0]) support_leg();
 }
 
 
