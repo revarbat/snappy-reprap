@@ -20,7 +20,7 @@ module xy_joiner()
 
 			// Clear for joiners.
 			translate([0,0,-platform_height/2]) {
-				joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, a=joiner_angle);
+				joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, clearance=5, a=joiner_angle);
 			}
 		}
 

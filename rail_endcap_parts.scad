@@ -31,7 +31,7 @@ module rail_endcap()
 
 				// Clear space for joiners.
 				translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
-					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+5, a=joiner_angle);
+					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, a=joiner_angle, clearance=5);
 				}
 			}
 

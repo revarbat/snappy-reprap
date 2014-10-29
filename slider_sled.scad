@@ -28,7 +28,7 @@ module slider_sled()
 
 			// Clear space for joiners.
 			translate([0,0,platform_height/2]) {
-				joiner_quad_clear(xspacing=platform_width-joiner_width, yspacing=platform_length, h=platform_height, w=joiner_width+5, a=joiner_angle);
+				joiner_quad_clear(xspacing=platform_width-joiner_width, yspacing=platform_length, h=platform_height, w=joiner_width, clearance=5, a=joiner_angle);
 			}
 		}
 
@@ -37,17 +37,59 @@ module slider_sled()
 			joiner_quad(xspacing=platform_width-joiner_width, yspacing=platform_length, h=platform_height, w=joiner_width, l=5, a=joiner_angle);
 		}
 
+		// sliders
 		mirror_copy([1,0,0]) {
-			// slider ridges.
 			translate([-(rail_spacing)/2, 0, 0]) {
-				translate([6/2,0,rail_offset/2])
-					cube(size=[6, platform_length, rail_offset], center=true);
+				// bottom strut
+				translate([6/2,0,rail_offset/2]) {
+					difference() {
+						cube(size=[6, platform_length, rail_offset], center=true);
+						grid_of(
+							ya=[-(platform_length/2), (platform_length/2)],
+							za=[groove_height/2]
+						) {
+							xrot(45) cube(size=[11, 2*sqrt(2), 2*sqrt(2)], center=true);
+						}
+						grid_of(
+							ya=[-(platform_length/2), (platform_length/2)],
+							xa=[-6/2]
+						) {
+							zrot(45) cube(size=[2*sqrt(2), 2*sqrt(2), rail_offset+1], center=true);
+						}
+					}
+				}
+
 				grid_of(
-					ya=[-platform_length*7/16, 0, platform_length*7/16],
+					ya=[-platform_length*6/16, 0, platform_length*6/16],
 					za=[rail_offset+groove_height/2]
 				) {
-					translate([6/2,0,0])
-						cube(size=[6, platform_length/8, groove_height], center=true);
+					// Slider base
+					translate([10/2-4, 0, -groove_height]) {
+						difference() {
+							cube(size=[10, platform_length/8, groove_height], center=true);
+							grid_of(
+								ya=[-(platform_length/8/2), (platform_length/8/2)],
+								za=[groove_height/2]
+							) {
+								xrot(45) cube(size=[11, 2*sqrt(2), 2*sqrt(2)], center=true);
+							}
+						}
+					}
+
+					// Slider backing
+					translate([6/2, 0, 0]) {
+						difference() {
+							cube(size=[6, platform_length/8, groove_height], center=true);
+							grid_of(
+								ya=[-(platform_length/8/2), (platform_length/8/2)],
+								za=[groove_height/2]
+							) {
+								xrot(45) cube(size=[11, 2*sqrt(2), 2*sqrt(2)], center=true);
+							}
+						}
+					}
+
+					// Slider ridge
 					scale([tan(groove_angle),1,1]) {
 						yrot(45) {
 							chamfcube(size=[groove_height/sqrt(2), platform_length/8, groove_height/sqrt(2)], chamfer=2, chamfaxes=[1,0,1], center=true);

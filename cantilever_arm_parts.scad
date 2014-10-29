@@ -62,7 +62,7 @@ module cantilever_arm()
 
 				// Clear space for joiners.
 				translate([0, -l/2, h/2]) {
-					zrot(180) joiner_pair_clear(spacing=w-joiner_width, h=h, w=joiner_width+5, a=joiner_angle);
+					zrot(180) joiner_pair_clear(spacing=w-joiner_width, h=h, w=joiner_width, a=joiner_angle, clearance=5);
 				}
 
 				// Endstop screw holes.

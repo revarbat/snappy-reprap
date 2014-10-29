@@ -44,7 +44,7 @@ module rail_segment()
 
 				// Clear space for joiners.
 				translate([0,0,rail_height/2]) {
-					joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=rail_length, h=rail_height, w=joiner_width+5, a=joiner_angle);
+					joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=rail_length, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
 				}
 			}
 
@@ -74,9 +74,18 @@ module rail_segment()
 
 		// Rail grooves.
 		translate([0,0,rail_height+groove_height/2]) {
-			grid_of([-(rail_spacing/2), (rail_spacing/2)]) {
-				scale([tan(groove_angle),1,1]) yrot(45) {
-					cube(size=[groove_height*sqrt(2)/2,rail_length+1,groove_height*sqrt(2)/2], center=true);
+			mirror_copy([1,0,0]) {
+				translate([-(rail_spacing/2), 0, 0]) {
+					scale([tan(groove_angle),1,1]) yrot(45) {
+						cube(size=[groove_height*sqrt(2)/2,rail_length+1,groove_height*sqrt(2)/2], center=true);
+					}
+					grid_of(
+						xa=[-joiner_width/2],
+						ya=[-rail_length/2, rail_length/2],
+						za=[groove_height/2]
+					){
+						xrot(45) cube(size=[joiner_width+1, 2*sqrt(2), 2*sqrt(2)], center=true);
+					}
 				}
 			}
 		}

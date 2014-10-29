@@ -5,7 +5,7 @@ use <joiners.scad>
 module support_leg(h=rail_height, l=75)
 {
 	ang = atan((h-10)/l);
-	joiner_length=5;
+	joiner_length=8;
 
 	color("SandyBrown")
 	union() {
@@ -25,7 +25,7 @@ module support_leg(h=rail_height, l=75)
 			}
 			// Clear for side joiners.
 			translate([0, -joiner_length, rail_height/2]) {
-				zrot(180) joiner_pair_clear(spacing=platform_length/2, h=rail_height, w=joiner_width, a=joiner_angle);
+				zrot(180) joiner_pair_clear(spacing=platform_length/2, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
 			}
 		}
 

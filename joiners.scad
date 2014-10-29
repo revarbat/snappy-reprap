@@ -2,7 +2,7 @@ include <config.scad>
 use <GDMUtils.scad>
 
 
-module half_joiner_clear(h=20, w=10, a=30)
+module half_joiner_clear(h=20, w=10, a=30, clearance=0)
 {
 	dmnd_height = h*1.0;
 	dmnd_width = dmnd_height*tan(a);
@@ -11,12 +11,12 @@ module half_joiner_clear(h=20, w=10, a=30)
 
 	difference() {
 		// Diamonds.
-		scale([w, dmnd_width/2, dmnd_height/2]) {
+		scale([w+clearance, dmnd_width/2, dmnd_height/2]) {
 			xrot(45) cube(size=[1,sqrt(2),sqrt(2)], center=true);
 		}
 		// Blunt point of tab.
 		grid_of(ya=[-(guide_width/2+2), (guide_width/2+2)]) {
-			cube(size=[w*1.05, 4, guide_size*2], center=true);
+			cube(size=[(w+clearance)*1.05, 4, guide_size*2], center=true);
 		}
 	}
 }
@@ -114,10 +114,10 @@ module joiner(h=40, w=10, l=10, a=30, screwsize=3, guides=true, slop=printer_slo
 
 
 
-module joiner_clear(h=40, w=10, a=30)
+module joiner_clear(h=40, w=10, a=30, clearance=0)
 {
 	grid_of(za=[-h/4,h/4]) {
-		half_joiner_clear(h=h/2.0, w=w, a=a);
+		half_joiner_clear(h=h/2.0, w=w, a=a, clearance=clearance);
 	}
 }
 //joiner_clear();
@@ -136,11 +136,11 @@ module joiner_pair(spacing=100, h=40, w=10, l=10, a=30, screwsize=3, guides=true
 
 
 
-module joiner_pair_clear(spacing=100, h=40, w=10, a=30)
+module joiner_pair_clear(spacing=100, h=40, w=10, a=30, clearance=0)
 {
 	yrot_copies([0,180]) {
 		translate([spacing/2, 0, 0]) {
-			joiner_clear(h=h, w=w, a=a);
+			joiner_clear(h=h, w=w, a=a, clearance=clearance);
 		}
 	}
 }
@@ -160,11 +160,11 @@ module joiner_quad(xspacing=100, yspacing=50, h=40, w=10, l=10, a=30, screwsize=
 
 
 
-module joiner_quad_clear(xspacing=100, yspacing=50, h=40, w=10, a=30)
+module joiner_quad_clear(xspacing=100, yspacing=50, h=40, w=10, a=30, clearance=0)
 {
 	zrot_copies([0,180]) {
 		translate([0, yspacing/2, 0]) {
-			joiner_pair_clear(spacing=xspacing, h=h, w=w, a=a);
+			joiner_pair_clear(spacing=xspacing, h=h, w=w, a=a, clearance=clearance);
 		}
 	}
 }
