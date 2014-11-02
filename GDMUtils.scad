@@ -2,7 +2,7 @@
 
 
 // Optionally pre-render if someone sets do_prerender=true
-do_prerender = true;
+do_prerender = false;
 module prerender(convexity=10) {
 	if (do_prerender == true) {
 		render(convexity=convexity) {
@@ -159,18 +159,48 @@ module translate_copies(offsets=[[0,0,0]])
 //   xa = array or range of X-axis values to offset by. (Default: [0])
 //   ya = array or range of Y-axis values to offset by. (Default: [0])
 //   za = array or range of Z-axis values to offset by. (Default: [0])
+//   count = number of copies to have per axis. (Default: none)
+//   spacing = spacing of copies per axis. Use with count. (Default: 0)
 // Examples:
-//   grid_of(xa=[0,2,3,5],ya=[3:5],za=[-4:2:6])
-//     sphere(r=1,center=true);
-//   grid_of(ya=[-6:3:6],za=[4,7])
-//     sphere(r=1,center=true);
-module grid_of(xa=[0], ya=[0], za=[0])
+//   grid_of(xa=[0,2,3,5],ya=[3:5],za=[-4:2:6]) sphere(r=0.5,center=true);
+//   grid_of(ya=[-6:3:6],za=[4,7]) sphere(r=1,center=true);
+//   grid_of(count=3, spacing=10) sphere(r=1,center=true);
+//   grid_of(count=[3, 1, 2], spacing=10) sphere(r=1,center=true);
+//   grid_of(count=[3, 4], spacing=[10, 8]) sphere(r=1,center=true);
+//   grid_of(count=[3, 4, 2], spacing=[10, 8, 5]) sphere(r=1,center=true, $fn=24);
+module grid_of(xa=[0], ya=[0], za=[0], count=[], spacing=[])
 {
-	for (xoff = xa)
-		for (yoff = ya)
-			for (zoff = za)
-				translate([xoff,yoff,zoff])
-					children();
+	count = (len(count) == undef)? [count,1,1] :
+			((len(count) == 1)? [count[0], 1, 1] :
+			((len(count) == 2)? [count[0], count[1], 1] :
+			((len(count) == 3)? count : undef)));
+
+	spacing = (len(spacing) == undef)? [spacing,spacing,spacing] :
+			((len(spacing) == 1)? [spacing[0], 0, 0] :
+			((len(spacing) == 2)? [spacing[0], spacing[1], 0] :
+			((len(spacing) == 3)? spacing : undef)));
+
+	if (count != undef && spacing != undef) {
+		for (x = [-(count[0]-1)/2 : (count[0]-1)/2 + 0.1]) {
+			for (y = [-(count[1]-1)/2 : (count[1]-1)/2 + 0.1]) {
+				for (z = [-(count[2]-1)/2 : (count[2]-1)/2 + 0.1]) {
+					translate([x*spacing[0], y*spacing[1], z*spacing[2]]) {
+						children();
+					}
+				}
+			}
+		}
+	} else {
+		for (xoff = xa) {
+			for (yoff = ya) {
+				for (zoff = za) {
+					translate([xoff,yoff,zoff]) {
+						children();
+					}
+				}
+			}
+		}
+	}
 }
 
 
@@ -770,6 +800,59 @@ module torus(or=1, ir=0.5)
 }
 //!torus(or=30, ir=10);
 
+
+
+module chamfer(chamfer=1, size=[1,1,1], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]])
+{
+	difference() {
+		union() {
+			children();
+		}
+		union() {
+			if (edges[0][0] != 0)
+				translate([0,  size[1]/2,  size[2]/2])
+					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+			if (edges[0][1] != 0)
+				translate([0, -size[1]/2,  size[2]/2])
+					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+			if (edges[0][2] != 0)
+				translate([0,  size[1]/2, -size[2]/2])
+					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+			if (edges[0][3] != 0)
+				translate([0, -size[1]/2, -size[2]/2])
+					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+
+			if (edges[1][0] != 0)
+				translate([ size[0]/2, 0,  size[2]/2])
+					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+			if (edges[1][1] != 0)
+				translate([-size[0]/2, 0,  size[2]/2])
+					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+			if (edges[1][2] != 0)
+				translate([ size[0]/2, 0, -size[2]/2])
+					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+			if (edges[1][3] != 0)
+				translate([-size[0]/2, 0, -size[2]/2])
+					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+
+			if (edges[2][0] != 0)
+				translate([ size[0]/2,  size[1]/2, 0])
+					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+			if (edges[2][1] != 0)
+				translate([-size[0]/2,  size[1]/2, 0])
+					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+			if (edges[2][2] != 0)
+				translate([ size[0]/2, -size[1]/2, 0])
+					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+			if (edges[2][3] != 0)
+				translate([-size[0]/2, -size[1]/2, 0])
+					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+		}
+	}
+}
+//!chamfer(chamfer=2, size=[10,40,90], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+//	cube(size=[10,40,90], center=true);
+//}
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap

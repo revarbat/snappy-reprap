@@ -28,9 +28,15 @@ module rail_motor_segment()
 					}
 
 					// Walls.
-					grid_of(xa=[-(rail_spacing/2+joiner_width/2), (rail_spacing/2+joiner_width/2)], za=[(rail_height+3)/2]) {
-						//thinning_wall(h=rail_height+3, l=motor_rail_length-joiner_length, thick=joiner_width, strut=rail_thick, bracing=false);
-						sparse_strut(h=rail_height+3, l=motor_rail_length-joiner_length, thick=joiner_width, strut=rail_thick);
+					zrot_copies([0, 180]) {
+						translate([(rail_spacing/2+joiner_width/2), 0, (rail_height+3)/2]) {
+							if (wall_style == "crossbeams")
+								sparse_strut(h=rail_height+3, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5);
+							if (wall_style == "thinwall")
+								thinning_wall(h=rail_height+3, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5, bracing=false);
+							if (wall_style == "corrugated")
+								corrugated_wall(h=rail_height+3, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5);
+						}
 					}
 				}
 
@@ -95,7 +101,7 @@ module rail_motor_segment()
 						ya=[-motor_rail_length/2, motor_rail_length/2],
 						za=[groove_height/2]
 					){
-						xrot(45) cube(size=[joiner_width+1, 2*sqrt(2), 2*sqrt(2)], center=true);
+						xrot(45) cube(size=[joiner_width+1, 1.5*sqrt(2), 1.5*sqrt(2)], center=true);
 					}
 				}
 			}

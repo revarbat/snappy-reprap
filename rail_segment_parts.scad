@@ -35,9 +35,9 @@ module rail_segment()
 							if (wall_style == "crossbeams")
 								sparse_strut(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=5);
 							if (wall_style == "thinwall")
-								thinning_wall(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=rail_thick, bracing=false);
+								thinning_wall(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=5, bracing=false);
 							if (wall_style == "corrugated")
-								corrugated_wall(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=rail_thick);
+								corrugated_wall(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=5);
 						}
 					}
 				}
@@ -84,7 +84,7 @@ module rail_segment()
 						ya=[-rail_length/2, rail_length/2],
 						za=[groove_height/2]
 					){
-						xrot(45) cube(size=[joiner_width+1, 2*sqrt(2), 2*sqrt(2)], center=true);
+						xrot(45) cube(size=[joiner_width+1, 1.5*sqrt(2), 1.5*sqrt(2)], center=true);
 					}
 				}
 			}

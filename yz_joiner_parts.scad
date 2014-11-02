@@ -17,19 +17,9 @@ module yz_joiner()
 			difference() {
 				union() {
 					// Bottom.
-					difference() {
-						union() {
-							translate([0, platform_length/2, rail_thick/2]) {
-								yrot(90)
-									sparse_strut(h=rail_width, l=platform_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
-							}
-							translate([0, rail_height+groove_height/2, rail_thick/2]) {
-								cube(size=[45+20, motor_mount_spacing+joiner_width, rail_thick], center=true);
-							}
-						}
-						translate([0, rail_height+groove_height/2, rail_thick/2]) {
-							cube(size=[45, motor_mount_spacing-joiner_width, rail_thick+1], center=true);
-						}
+					translate([0, platform_length/2, rail_thick/2]) {
+						yrot(90)
+							sparse_strut(h=rail_width, l=platform_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
 					}
 
 					// Flanges on sides to reduce peeling.
@@ -143,13 +133,6 @@ module yz_joiner()
 			// Top joiners.
 			translate([0, rail_height/2, platform_length]) {
 				xrot(90) joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
-			}
-
-			translate([0, rail_height+groove_height/2, 0]) {
-				// Motor mount joiners.
-				translate([0, 0, 40]) {
-					zrot(90) xrot(90) joiner_pair(spacing=43+joiner_width+10, h=rail_height, w=joiner_width, l=40, a=joiner_angle);
-				}
 			}
 
 			translate([0, platform_length-joiner_length, rail_height/4]) {
