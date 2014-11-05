@@ -80,11 +80,11 @@ module rail_segment()
 
 			// Shrinkage stress relief
 			translate([0, 0, rail_thick/2]) {
-				grid_of(count=[1, 11], spacing=[0, 12]) {
+				grid_of(count=[1, 7], spacing=[0, 30]) {
 					cube(size=[rail_width+1, 1, rail_thick-2], center=true);
 				}
-				grid_of(count=[9, 2], spacing=[12, rail_length-10]) {
-					cube(size=[1, 11, rail_thick-2], center=true);
+				grid_of(count=[5, 2], spacing=[24, rail_length-10]) {
+					cube(size=[1, 60, rail_thick-2], center=true);
 				}
 			}
 		}
