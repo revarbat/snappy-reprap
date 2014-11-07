@@ -102,7 +102,7 @@ module half_joiner2(h=20, w=10, l=10, a=30, screwsize=3, guides=true)
 
 module joiner(h=40, w=10, l=10, a=30, screwsize=3, guides=true, slop=printer_slop)
 {
-	prerender(convexity=10)
+	render(convexity=10)
 	union() {
 		translate([0,0,h/4])
 			half_joiner(h=h/2, w=w, l=l, a=a, screwsize=screwsize, guides=guides, slop=slop);

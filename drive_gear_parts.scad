@@ -71,9 +71,10 @@ module drive_gear() {
 
 
 module drive_gear_parts() { // make me
-	translate([0, 0, 5+7])
-		circle_of(r=15, n=2)
-			drive_gear();
+	zrot(30)
+		translate([0, 0, 5+7])
+			circle_of(r=25, n=3)
+				drive_gear();
 }
 
 

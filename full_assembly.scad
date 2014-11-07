@@ -1,5 +1,7 @@
+$do_prerender=true;
+
 include <config.scad>
-use <GDMUtils.scad>
+include <GDMUtils.scad>
 use <NEMA.scad>
 
 use <cantilever_joint_parts.scad>
@@ -26,7 +28,7 @@ $vpr = [65, 0, 120];
 platform_vert_off = rail_height+groove_height+rail_offset;
 
 
-module axis_slider_assembly()
+module axis_slider_assembly(slidepos=0)
 {
 	translate([0, -motor_rail_length/2, 0]) {
 		translate([0, -rail_length/2, 0]) {
@@ -52,8 +54,8 @@ module axis_slider_assembly()
 	}
 
 	// Sleds
-	translate([0, 0, platform_vert_off]) {
-		grid_of(ya=[-platform_length/2, platform_length/2]) {
+	translate([0, slidepos, platform_vert_off]) {
+		grid_of(count=[1,2], spacing=platform_length) {
 			yrot(180) {
 				sled();
 			}
@@ -65,6 +67,8 @@ module axis_slider_assembly()
 module full_assembly(hide_endcaps=false)
 {
 	joiner_length=15;
+	xpos = 90*cos(360*$t);
+	ypos = 90*sin(360*$t);
 
 	// Y-axis to Z-axis corner joiner.
 	yz_joiner();
@@ -80,7 +84,7 @@ module full_assembly(hide_endcaps=false)
 
 	translate([0, platform_length + rail_length + motor_rail_length/2, 0]) {
 		// Y-axis rails.
-		axis_slider_assembly();
+		axis_slider_assembly(ypos);
 		if (hide_endcaps == false) {
 			translate([0, motor_rail_length/2 + rail_length, 0]) {
 				zrot(180) rail_endcap();
@@ -88,7 +92,7 @@ module full_assembly(hide_endcaps=false)
 		}
 
 		// X-axis to Y-axis joiners.
-		translate([0, 0, platform_vert_off]) {
+		translate([0, ypos, platform_vert_off]) {
 			zrot_copies([0, 180]) {
 				translate([0, -platform_length, 0]) {
 					xy_joiner();
@@ -96,12 +100,15 @@ module full_assembly(hide_endcaps=false)
 			}
 			zrot(90) {
 				// X-axis rails.
-				axis_slider_assembly();
+				axis_slider_assembly(xpos);
 				if (hide_endcaps == false) {
 					zrot_copies([0, 180]) {
 						translate([0, -(rail_length + motor_rail_length/2), 0]) {
 							rail_endcap();
 						}
+					}
+					translate([0,xpos,0])
+					zrot_copies([0, 180]) {
 						translate([0, -platform_length, platform_vert_off]) {
 							sled_endcap();
 						}
@@ -116,7 +123,7 @@ module full_assembly(hide_endcaps=false)
 			// Z-axis rails.
 			axis_slider_assembly();
 			if (hide_endcaps == false) {
-				translate([0, -(motor_rail_length/2 + rail_length), 0]) {
+				translate([0, -(motor_rail_length/2 + rail_length+0.1), 0]) {
 					rail_endcap();
 				}
 			}
@@ -141,7 +148,6 @@ module full_assembly(hide_endcaps=false)
 		}
 	}
 }
-
 
 
 translate([0,-1.5*rail_length,0])

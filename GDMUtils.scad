@@ -1,10 +1,10 @@
 // Convenience modules.
 
 
-// Optionally pre-render if someone sets do_prerender=true
-do_prerender = false;
+// Optionally pre-render if someone sets $do_prerender=true
+//$do_prerender = true;
 module prerender(convexity=10) {
-	if (do_prerender == true) {
+	if ($do_prerender == true) {
 		render(convexity=convexity) {
 			children();
 		}
