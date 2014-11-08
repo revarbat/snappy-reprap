@@ -49,9 +49,10 @@ hbp_width       = 215;   // mm
 hbp_length      = 215;   // mm
 hbp_hole_width  = 208.5; // mm
 hbp_hole_length = 208.5; // mm
+hbp_screwsize   =   3;   // mm
 
-glass_width     = 200;   // mm
-glass_length    = 214;   // mm
+glass_width     = 214;   // mm
+glass_length    = 200;   // mm
 glass_thick     =   3;   // mm
 
 // This is the slop needed to make parts fit more exactly, and may be

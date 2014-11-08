@@ -4,6 +4,7 @@ include <config.scad>
 include <GDMUtils.scad>
 use <NEMA.scad>
 
+use <build_platform_support_parts.scad>
 use <cantilever_joint_parts.scad>
 use <cantilever_arm_parts.scad>
 use <drive_gear_parts.scad>
@@ -115,9 +116,17 @@ module full_assembly(hide_endcaps=false)
 					zrot_copies([0, 180]) {
 						translate([0, -platform_length, 0]) {
 							sled_endcap();
+							translate([0, -(20-joiner_width/2), 0]) {
+								translate([platform_width/2, 0, 0]) {
+									zrot(90) build_platform_support2();
+								}
+								translate([-platform_width/2, 0, 0]) {
+									zrot(270) build_platform_support1();
+								}
+							}
 						}
 					}
-					translate([0, 0, glass_thick/2]) {
+					translate([0, 0, 3+glass_thick/2]) {
 						// Borosilicate Glass
 						color([0.75, 1.0, 1.0, 0.5]) {
 							cube(size=[glass_width, glass_length, glass_thick], center=true);
