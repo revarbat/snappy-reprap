@@ -20,8 +20,8 @@ use <yz_joiner_parts.scad>
 
 
 // Set default camera position.
-$vpd = 3500;
-$vpt = [0, 0, 160];
+$vpd = 700;
+$vpt = [0, 0, 255];
 $vpr = [65, 0, 120];
 
 
@@ -60,6 +60,7 @@ module axis_slider_assembly(slidepos=0)
 				sled();
 			}
 		}
+		children();
 	}
 }
 
@@ -69,6 +70,7 @@ module full_assembly(hide_endcaps=false)
 	joiner_length=15;
 	xpos = 90*cos(360*$t);
 	ypos = 90*sin(360*$t);
+	zpos = 90*cos(240+360*$t);
 
 	// Y-axis to Z-axis corner joiner.
 	yz_joiner();
@@ -83,34 +85,42 @@ module full_assembly(hide_endcaps=false)
 	}
 
 	translate([0, platform_length + rail_length + motor_rail_length/2, 0]) {
-		// Y-axis rails.
-		axis_slider_assembly(ypos);
+		// Y-axis rail endcaps.
 		if (hide_endcaps == false) {
 			translate([0, motor_rail_length/2 + rail_length, 0]) {
 				zrot(180) rail_endcap();
 			}
 		}
 
-		// X-axis to Y-axis joiners.
-		translate([0, ypos, platform_vert_off]) {
+		// Y-axis rails.
+		axis_slider_assembly(ypos) {
+			// X-axis to Y-axis joiners.
 			zrot_copies([0, 180]) {
 				translate([0, -platform_length, 0]) {
 					xy_joiner();
 				}
 			}
 			zrot(90) {
-				// X-axis rails.
-				axis_slider_assembly(xpos);
+				// X-axis rail endcaps.
 				if (hide_endcaps == false) {
 					zrot_copies([0, 180]) {
 						translate([0, -(rail_length + motor_rail_length/2), 0]) {
 							rail_endcap();
 						}
 					}
-					translate([0,xpos,0])
+				}
+
+				// X-axis rails.
+				axis_slider_assembly(xpos) {
 					zrot_copies([0, 180]) {
-						translate([0, -platform_length, platform_vert_off]) {
+						translate([0, -platform_length, 0]) {
 							sled_endcap();
+						}
+					}
+					translate([0, 0, glass_thick/2]) {
+						// Borosilicate Glass
+						color([0.75, 1.0, 1.0, 0.5]) {
+							cube(size=[glass_width, glass_length, glass_thick], center=true);
 						}
 					}
 				}
@@ -120,14 +130,14 @@ module full_assembly(hide_endcaps=false)
 
 	translate([0, 0, platform_length + rail_length + motor_rail_length/2]) {
 		xrot(-90) {
-			// Z-axis rails.
-			axis_slider_assembly();
+			// Z-axis rail endcaps.
 			if (hide_endcaps == false) {
 				translate([0, -(motor_rail_length/2 + rail_length+0.1), 0]) {
 					rail_endcap();
 				}
 			}
-			translate([0, 0, platform_vert_off]) {
+			// Z-axis rails.
+			axis_slider_assembly(zpos) {
 				translate([0, -platform_length, 0]) {
 					xrot(90) {
 						// Z-axis platform to extruder cantilever joint.

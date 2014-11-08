@@ -3,7 +3,7 @@ snappy_version = 0.91;
 
 // 0 = Thinning Walls (Thin in the middle, thick at edges.  Prettier smooth walls.)
 // 1 = Corrugated walls. (Zig-zagged walls. Less shrinkage stress. Closed walls.)
-// 2 = Crossbeam walls. (Open sparse struts. Far less shrinkage stress.)
+// 2 = Crossbeam walls. (Open sparse struts. Far less shrinkage stress. Recommended.)
 wall_styling = 2;
 
 
@@ -44,6 +44,15 @@ endstop_hole_hoff    = 10; // mm
 endstop_click_voff   =  4; // mm
 endstop_screw_size   =  3; // mm
 endstop_standoff     =  2; // mm
+
+hbp_width       = 215;   // mm
+hbp_length      = 215;   // mm
+hbp_hole_width  = 208.5; // mm
+hbp_hole_length = 208.5; // mm
+
+glass_width     = 200;   // mm
+glass_length    = 214;   // mm
+glass_thick     =   3;   // mm
 
 // This is the slop needed to make parts fit more exactly, and may be
 // printer dependant.  Printing a slop calibration plate should help
