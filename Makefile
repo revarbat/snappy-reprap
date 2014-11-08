@@ -27,7 +27,7 @@ ${ROTFILES}: full_assembly.scad $(wildcard *.scad)
 	rm -f  $(subst wiki/,tmp_,$@)
 
 wiki/%.png: %.scad config.scad GDMUtils.scad
-	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=1600,1600 --projection=p --csglimit=1000000 --camera=0,0,50,65,0,120,1500 $<
+	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=3200,3200 --projection=p --csglimit=1000000 --camera=0,0,50,65,0,120,800 $<
 	${CONVERT} -trim -resize 200x200 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
 	rm -f $(subst wiki/,tmp_,$@)
 
@@ -48,7 +48,7 @@ wiki/snappy_anim_small.gif: wiki/snappy_animated.gif
 renderparts: $(patsubst %.scad,wiki/%.png,${PARTFILES})
 rendering: wiki/snappy_full.png wiki/snappy_small.png
 animation: wiki/snappy_animated.gif wiki/snappy_anim_small.gif
-wiki: renderparts rendering animation
+wiki: rendering renderparts animation
 
 
 

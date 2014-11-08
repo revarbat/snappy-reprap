@@ -16,7 +16,7 @@ module half_joiner_clear(h=20, w=10, a=30, clearance=0)
 		}
 		// Blunt point of tab.
 		grid_of(ya=[-(guide_width/2+2), (guide_width/2+2)]) {
-			cube(size=[(w+clearance)*1.05, 4, guide_size*2], center=true);
+			cube(size=[(w+clearance)*1.05, 4, h*0.99], center=true);
 		}
 	}
 }
@@ -40,7 +40,9 @@ module half_joiner(h=20, w=10, l=10, a=30, screwsize=3, guides=true, slop=printe
 					cube(size=[w, l, h], center=true);
 
 				// Clear diamond for tab
-				half_joiner_clear(h=h, w=w+0.05, a=a);
+				grid_of(xa=[-(w*2/3), (w*2/3)]) {
+					half_joiner_clear(h=h+0.01, w=w, clearance=slop*2, a=a);
+				}
 			}
 
 			difference() {

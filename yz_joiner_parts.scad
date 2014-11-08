@@ -96,22 +96,22 @@ module yz_joiner()
 
 				// Clear space for front joiners.
 				translate([0, platform_length, rail_height/2]) {
-					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
+					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height+0.001, w=joiner_width, clearance=5, a=joiner_angle);
 				}
 
 				// Clear space for back joiners.
 				translate([0, -6, rail_height/2]) {
-					zrot(180) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, a=joiner_angle);
+					zrot(180) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height+0.001, w=joiner_width, a=joiner_angle);
 				}
 
 				// Clear space for side joiners.
 				translate([0, platform_length/2, rail_height/2]) {
-					zrot(90) joiner_quad_clear(xspacing=platform_length/2, yspacing=rail_width+2*6, h=rail_height, w=joiner_width, a=joiner_angle);
+					zrot(90) joiner_quad_clear(xspacing=platform_length/2, yspacing=rail_width+2*6, h=rail_height+0.001, w=joiner_width, a=joiner_angle);
 				}
 
 				// Clear space for top joiners.
 				translate([0, rail_height/2, platform_length]) {
-					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
+					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+0.001, clearance=5, a=joiner_angle);
 				}
 			}
 

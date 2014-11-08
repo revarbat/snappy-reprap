@@ -22,7 +22,7 @@ module sled_endcap()
 
 						// Clear for joiners.
 						translate([0,0,-platform_height/2]) {
-							joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height, clearance=5, w=joiner_width, a=joiner_angle);
+							joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height+0.001, clearance=5, w=joiner_width, a=joiner_angle);
 						}
 					}
 
@@ -36,7 +36,7 @@ module sled_endcap()
 				translate([0, -(joiner_length-joiner_width/2), -platform_height/2]) {
 					yrot_copies([0,180]) {
 						translate([platform_width/2, 0, 0]) {
-							zrot(-90) joiner_clear(h=platform_height, w=joiner_width, clearance=5, l=joiner_width, a=joiner_angle);
+							zrot(-90) joiner_clear(h=platform_height+0.001, w=joiner_width, clearance=5, l=joiner_width, a=joiner_angle);
 						}
 					}
 				}

@@ -75,7 +75,7 @@ module rail_segment()
 
 			// Clear space for joiners.
 			translate([0,0,rail_height/2]) {
-				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=rail_length, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
+				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=rail_length, h=rail_height+0.001, w=joiner_width, clearance=5, a=joiner_angle);
 			}
 
 			// Shrinkage stress relief

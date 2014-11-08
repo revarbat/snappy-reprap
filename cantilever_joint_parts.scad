@@ -11,7 +11,7 @@ module cantilever_joint()
 	prerender(convexity=10)
 	union() {
 		// Top hanger joiners.
-		translate([0, -platform_height/2, 0]) {
+		translate([0, -platform_height/2+0.001, 0]) {
 			xrot(-90) joiner_pair(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 		}
 
