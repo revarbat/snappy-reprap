@@ -69,9 +69,9 @@ module axis_slider_assembly(slidepos=0)
 module full_assembly(hide_endcaps=false)
 {
 	joiner_length=15;
-	xpos = 90*cos(360*$t);
-	ypos = 90*sin(360*$t);
-	zpos = 90*cos(240+360*$t);
+	xpos = 100*cos(360*$t);
+	ypos = 100*sin(360*$t);
+	zpos = 100*cos(240+360*$t);
 
 	// Y-axis to Z-axis corner joiner.
 	yz_joiner();
@@ -129,7 +129,7 @@ module full_assembly(hide_endcaps=false)
 					translate([0, 0, 3+glass_thick/2]) {
 						// Borosilicate Glass
 						color([0.75, 1.0, 1.0, 0.5]) {
-							cube(size=[glass_width, glass_length, glass_thick], center=true);
+							cube(size=[glass_length, glass_width, glass_thick], center=true);
 						}
 					}
 				}
@@ -153,7 +153,7 @@ module full_assembly(hide_endcaps=false)
 						cantilever_joint();
 
 						// Extruder cantilever.
-						translate([0, joiner_length, -(platform_length+rail_height)/2]) {
+						translate([0, joiner_length, -platform_length]) {
 							translate([0, cantilever_length/2, 0]) {
 								cantilever_arm();
 								translate([0, cantilever_length/2, 0]) {

@@ -5,7 +5,8 @@ use <joiners.scad>
 
 module cantilever_joint()
 {
-	joiner_length=15;
+	joiner_length = 15;
+	hanger_strut = rail_height*2;
 
 	color("Chocolate")
 	prerender(convexity=10)
@@ -23,14 +24,16 @@ module cantilever_joint()
 		grid_of(
 			xa=[-(platform_width-joiner_width)/2, (platform_width-joiner_width)/2],
 			ya=[joiner_length/2],
-			za=[-(platform_length-rail_height)/4]
+			za=[-(hanger_strut-2*rail_height)/2]
 		) {
-			cube(size=[joiner_width, joiner_length, (platform_length-rail_height)/2], center=true);
+			cube(size=[joiner_width, joiner_length, (hanger_strut-2*rail_height)], center=true);
 		}
 
 		// Front joiners.
-		translate([0, joiner_length, -platform_length/2]) {
-			joiner_pair(spacing=platform_width-joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+		translate([0, joiner_length, -(hanger_strut-rail_height)]) {
+			grid_of(count=[1,1,2], spacing=[1,1,rail_height]) {
+				joiner_pair(spacing=platform_width-joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+			}
 		}
 	}
 }

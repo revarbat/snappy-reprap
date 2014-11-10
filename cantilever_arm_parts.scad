@@ -85,8 +85,15 @@ module cantilever_arm()
 			}
 
 			// Snap-tab joiners.
-			translate([0, -l/2, h/2]) {
-				zrot(180) joiner_pair(spacing=w-joiner_width, h=h, w=joiner_width, l=5, a=joiner_angle);
+			translate([0, -l/2, h]) {
+				grid_of(count=[1,1,2], spacing=h) {
+					zrot(180) joiner_pair(spacing=w-joiner_width, h=h, w=joiner_width, l=10, a=joiner_angle);
+				}
+			}
+			translate([0, -l/2+10+h/2, h*3/2]) {
+				grid_of(count=2, spacing=w-joiner_width) {
+					thinning_triangle(h=h, l=h, thick=joiner_width, diagonly=true);
+				}
 			}
 
 			zrot_copies([0, 180]) {

@@ -5,7 +5,7 @@ use <joiners.scad>
 
 module rail_endcap()
 {
-	joiner_length=20;
+	joiner_length=30;
 	base_height = rail_height+groove_height;
 
 	color("YellowGreen")

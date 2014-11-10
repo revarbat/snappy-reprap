@@ -7,24 +7,36 @@ use <joiners.scad>
 module build_platform_support1()
 {
 	joiner_length=10;
-	w=40;
+	w=20;
 	l=(max(glass_width,hbp_width)-platform_width)/2;
 	h=3;
-	hole_xoff = (hbp_hole_length/2 - platform_length - 20 + joiner_width/2);
+	hole_xoff = (hbp_hole_length/2 - platform_length - 20.5 + joiner_width/2);
 	hole_yoff = -(hbp_hole_width - platform_width)/2;
 
 	color("Chocolate")
 	prerender(convexity=10)
 	difference() {
 		union() {
+			// Side support strut
+			translate([-(w+joiner_width-0.1)/2, -joiner_length*3/4, h-20/2]) {
+				zrot(90) yrot(180) thinning_triangle(h=20, l=w, thick=joiner_length/2, ang=30, strut=5, wall=joiner_length/2, diagonly=true);
+			}
+
+			// Side strut
+			translate([-(w-joiner_width)/2, -joiner_length/2, h/2]) {
+				cube(size=[w, joiner_length, h], center=true);
+			}
+
 			// Clip platform
-			translate([-(w-joiner_width)/2, -l/2, h/2]) {
+			translate([(hole_xoff+3-w/2), -l/2, h/2]) {
 				cube(size=[w, l, h], center=true);
 			}
 
 			// joiners.
 			translate([0, 0, -platform_height/2]) {
-				joiner(h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+				chamfer(chamfer=joiner_width/3, size=[joiner_width, 2*joiner_length, platform_height], edges=[[0,0,0,0], [0,0,1,1], [0,0,0,0]]) {
+					joiner(h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+				}
 			}
 		}
 		translate([hole_xoff, hole_yoff, 0])
@@ -38,7 +50,7 @@ module build_platform_support1()
 module build_platform_support2()
 {
 	joiner_length=10;
-	w=40;
+	w=20;
 	l=(max(glass_width,hbp_width)-platform_width)/2;
 	h=3;
 	hole_xoff = -(hbp_hole_length/2 - platform_length - 20 + joiner_width/2);
@@ -48,14 +60,26 @@ module build_platform_support2()
 	prerender(convexity=10)
 	difference() {
 		union() {
+			// Side support strut
+			translate([(w+joiner_width-0.1)/2, -joiner_length*3/4, h-20/2]) {
+				zrot(-90) yrot(180) thinning_triangle(h=20, l=w, thick=joiner_length/2, ang=30, strut=5, wall=joiner_length/2, diagonly=true);
+			}
+
+			// Side strut
+			translate([(w-joiner_width)/2, -joiner_length/2, h/2]) {
+				cube(size=[w, joiner_length, h], center=true);
+			}
+
 			// Clip platform
-			translate([(w-joiner_width)/2, -l/2, h/2]) {
+			translate([(hole_xoff-3+w/2), -l/2, h/2]) {
 				cube(size=[w, l, h], center=true);
 			}
 
-			// Front joiners.
+			// joiners.
 			translate([0, 0, -platform_height/2]) {
-				yrot(180) joiner(h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+				chamfer(chamfer=joiner_width/3, size=[joiner_width, 2*joiner_length, platform_height], edges=[[0,0,0,0], [0,0,1,1], [0,0,0,0]]) {
+					yrot(180) joiner(h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+				}
 			}
 		}
 		translate([hole_xoff, hole_yoff, 0])
