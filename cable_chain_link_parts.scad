@@ -39,7 +39,7 @@ module cable_chain_link()
 			// Chamfer top back
 			translate([0, l/2, h]) {
 				xrot(45) cube(size=[w+2, h/3*sqrt(2), h/3*sqrt(2)], center=true);
-				scale([1, tan(22.5), 1]) xrot(45) cube(size=[w+2, h/2*sqrt(2), h/2*sqrt(2)], center=true);
+				scale([1, tan(20), 1]) xrot(45) cube(size=[w+2, h/2*sqrt(2), h/2*sqrt(2)], center=true);
 			}
 
 			// Chamfer Bottom Front
@@ -60,7 +60,7 @@ module cable_chain_link()
 			// Pivot Divot
 			mirror_copy([1,0,0]) {
 				translate([(w-thick)/2, 0, h/2]) {
-					translate([-thick/2-bump/2, -l/2+r+2, 0]) {
+					translate([-thick/2-bump/2, -l/2+r+2.75, 0]) {
 						yrot(90) cylinder(h=bump+0.05, r1=r, r2=r+bump, center=true, $fn=32);
 					}
 				}
