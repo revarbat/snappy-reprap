@@ -11,7 +11,7 @@ STLs/%.stl: %.scad config.scad GDMUtils.scad
 	${OPENSCAD} -m make -o $@ $<
 
 clean:
-	rm -f tmp_*.png snappy_rot*.png render_*_parts.scad
+	rm -f tmp_*.png wiki/snappy_rot*.png render_*_parts.scad
 
 cleaner: clean
 	rm -f ${TARGETS}

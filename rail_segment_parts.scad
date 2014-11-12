@@ -39,7 +39,7 @@ module rail_segment()
 				// Rail backing.
 				grid_of(count=2, spacing=rail_spacing+joiner_width)
 					translate([0,0,rail_height+groove_height/2])
-						chamfer(size=[joiner_width, rail_length, groove_height], chamfer=1.5, edges=[[1,1,0,0], [1,1,0,0], [0,0,0,0]])
+						chamfer(size=[joiner_width, rail_length, groove_height], chamfer=1, edges=[[1,1,0,0], [1,1,0,0], [0,0,0,0]])
 							cube(size=[joiner_width, rail_length, groove_height], center=true);
 
 				// Side Supports
@@ -53,14 +53,27 @@ module rail_segment()
 			// Rail grooves.
 			translate([0,0,rail_height+groove_height/2]) {
 				mirror_copy([1,0,0]) {
-					translate([-(rail_spacing/2), 0, 0]) {
-						scale([tan(groove_angle),1,1]) yrot(45) {
-							cube(size=[groove_height*sqrt(2)/2,rail_length+1,groove_height*sqrt(2)/2], center=true);
-						}
-					}
-					translate([-(rail_width/2), 0, 0]) {
-						scale([tan(groove_angle),1,1]) yrot(45) {
-							cube(size=[groove_height*sqrt(2)/2,rail_length+1,groove_height*sqrt(2)/2], center=true);
+					translate([-(rail_width/2-joiner_width/2), 0, 0]) {
+						mirror_copy([1,0,0]) {
+							translate([(joiner_width/2), 0, 0]) {
+								// main groove
+								scale([tan(groove_angle),1,1]) yrot(45) {
+									cube(size=[groove_height*sqrt(2)/2,rail_length+1,groove_height*sqrt(2)/2], center=true);
+								}
+
+								// chamfers
+								mirror_copy([0,1,0]) {
+									translate([0, rail_length/2, 0]) {
+										hull() {
+											grid_of(count=[1,2], spacing=2) {
+												zrot(45) scale([tan(groove_angle)*sin(45),1.01,1.01]) yrot(45) {
+													cube(size=[groove_height*sqrt(2)/2, 10, groove_height*sqrt(2)/2], center=true);
+												}
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
