@@ -8,6 +8,7 @@ module support_leg(h=rail_height, l=75)
 	joiner_length=8;
 
 	color("SandyBrown")
+	prerender(convexity=10)
 	union() {
 		difference() {
 			union() {
