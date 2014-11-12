@@ -22,17 +22,17 @@ cleanwiki:
 ${ROTFILES}: full_assembly.scad $(wildcard *.scad)
 	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=800,800 --projection=p --csglimit=1000000 \
 	    -D '$$t=$(shell echo $(patsubst wiki/snappy_rot%.png,%/360.0,$@) | bc -l)' \
-	    -D '$$do_prerender=false' --camera=0,0,255,65,0,120,1000 $<
+	    -D '$$do_prerender=false' --camera=0,0,255,65,0,120,3500 $<
 	${CONVERT} -strip -resize 400x400 $(subst wiki/,tmp_,$@) $@
 	rm -f  $(subst wiki/,tmp_,$@)
 
 wiki/%.png: %.scad config.scad GDMUtils.scad
-	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=3200,3200 --projection=p --csglimit=1000000 --camera=0,0,50,65,0,120,800 $<
+	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=3200,3200 --projection=p --csglimit=1000000 --camera=0,0,50,65,0,120,1500 $<
 	${CONVERT} -trim -resize 200x200 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
 	rm -f $(subst wiki/,tmp_,$@)
 
 wiki/snappy_full.png: full_assembly.scad $(wildcard *.scad)
-	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=3200,3200 --projection=p --csglimit=1000000 --camera=0,0,160,65,0,120,1500 $<
+	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=3200,3200 --projection=p --csglimit=1000000 --camera=0,0,160,65,0,120,3500 $<
 	${CONVERT} -trim -resize 800x800 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
 	rm -f $(subst wiki/,tmp_,$@)
 
