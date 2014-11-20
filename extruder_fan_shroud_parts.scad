@@ -126,6 +126,8 @@ module fanAssembly(size=40, wall=3, plateh=3, screwsize=3, ang=45)
 
 module extruder_fan_shroud()
 {
+	color("yellow")
+	prerender(convexity=10)
 	yrot(180) {
 		translate([-(fan_size/2+15-5), 0, -5]) {
 			zrot(90) {
