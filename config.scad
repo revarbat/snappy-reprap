@@ -38,6 +38,7 @@ lifter_nut_size    =  17.4; // mm
 lifter_nut_thick   =   9.3; // mm
 lifter_thread_size =   3.175; // mm lift per revolution
 
+// Mechanical endstop boards.
 endstop_hole_spacing = 19; // mm
 endstop_hole_inset   =  4; // mm
 endstop_hole_hoff    = 10; // mm
@@ -45,15 +46,25 @@ endstop_click_voff   =  4; // mm
 endstop_screw_size   =  3; // mm
 endstop_standoff     =  2; // mm
 
+// Standard Mk2b Heated Build Platform from RepRapDiscount.com
 hbp_width       = 215;   // mm
 hbp_length      = 215;   // mm
 hbp_hole_width  = 208.5; // mm
 hbp_hole_length = 208.5; // mm
 hbp_screwsize   =   3;   // mm
 
+// Standard 200mm square borosilicate glass build platform
 glass_width     = 214;   // mm
 glass_length    = 200;   // mm
 glass_thick     =   3;   // mm
+
+// Fan shroud dimensions
+fan_size         = 60;  // mm
+fan_screw_size   =  4;  // mm
+fan_mount_length = 15;  // mm
+fan_mount_width  = 10;  // mm
+fan_mount_screw  =  3;  // mm
+fan_shroud_angle = 60;  // degrees
 
 // This is the slop needed to make parts fit more exactly, and may be
 // printer dependant.  Printing a slop calibration plate should help

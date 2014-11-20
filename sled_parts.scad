@@ -93,9 +93,9 @@ module sled()
 							translate([-joiner_width/2, 0, 0]) {
 							    circle_of(n=2, r=joiner_width/2+printer_slop, rot=true) {
 									// Slider base
-									translate([15/2-9, 0, -groove_height]) {
+									translate([15/2-9, 0, -groove_height-printer_slop]) {
 										difference() {
-											cube(size=[15, platform_length/8, groove_height], center=true);
+											cube(size=[15, platform_length/8, groove_height-printer_slop*2], center=true);
 											grid_of(
 												ya=[-(platform_length/8/2), (platform_length/8/2)],
 												za=[groove_height/2]
@@ -138,10 +138,10 @@ module sled()
 
 			// Shrinkage stress relief
 			translate([0, 0, platform_thick/2]) {
-				grid_of(count=[1, 3], spacing=[0, 32]) {
+				grid_of(count=[1, 9], spacing=[0,9]) {
 					cube(size=[platform_width+1, 1, platform_thick-2], center=true);
 				}
-				grid_of(count=[5, 2], spacing=[30, platform_length-10]) {
+				grid_of(count=[9, 2], spacing=[14, platform_length-10]) {
 					cube(size=[1, 20, platform_thick-2], center=true);
 				}
 			}

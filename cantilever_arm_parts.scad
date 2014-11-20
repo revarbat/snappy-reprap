@@ -19,20 +19,6 @@ module cantilever_arm()
 					translate([0,0,rail_thick/2]) yrot(90)
 						sparse_strut(h=w, l=l, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
 
-					// Flanges on sides to reduce peeling.
-					grid_of(
-						xa=[-(w/2), (w/2)]
-					) {
-						hull() {
-							grid_of(
-								ya=[-(l/2-joiner_width/3), (l/2-joiner_width/3)],
-								za=[2/2]
-							) {
-								cylinder(h=2, r=joiner_width/3, center=true, $fn=12);
-							}
-						}
-					}
-
 					mirror_copy([1, 0, 0]) {
 						// Walls.
 						translate([(w-joiner_width)/2, 0, h/2]) {
@@ -50,13 +36,25 @@ module cantilever_arm()
 						}
 					}
 
+					zrot_copies([0, 180]) {
+						translate([0, l/2-20, h/4]) {
+							difference() {
+								// Side supports.
+								cube(size=[w, 5, h/2], center=true);
+
+								// Wiring access holes.
+								grid_of(count=3, spacing=w/3) {
+									cube(size=11, center=true);
+								}
+							}
+						}
+					}
+
 					// Endstop standoffs
-					grid_of(
-						xa=[-endstop_hole_spacing/2, endstop_hole_spacing/2],
-						ya=[l/2-endstop_hole_inset],
-						za=[(rail_thick+endstop_standoff)/2]
-					) {
-						cylinder(h=rail_thick+endstop_standoff, r=2+endstop_screw_size*1.2/2, center=true, $fn=16);
+					translate([0, l/2-endstop_hole_inset, (rail_thick+endstop_standoff)/2]) {
+						grid_of(count=2, spacing=endstop_hole_spacing) {
+							cylinder(h=rail_thick+endstop_standoff, r=2+endstop_screw_size*1.2/2, center=true, $fn=16);
+						}
 					}
 				}
 
@@ -66,21 +64,27 @@ module cantilever_arm()
 				}
 
 				// Endstop screw holes.
-				grid_of(
-					xa=[-endstop_hole_spacing/2, endstop_hole_spacing/2],
-					ya=[l/2-endstop_hole_inset],
-					za=[(rail_thick+endstop_standoff)/2]
-				) {
-					cylinder(h=rail_thick+endstop_standoff+1, r=endstop_screw_size*1.2/2, center=true, $fn=8);
+				translate([0, l/2-endstop_hole_inset, (rail_thick+endstop_standoff)/2]) {
+					grid_of(count=2, spacing=endstop_hole_spacing) {
+						cylinder(h=rail_thick+endstop_standoff+1, r=endstop_screw_size*1.2/2, center=true, $fn=8);
+					}
 				}
 
 				// Trim corners behind pivot.
-				grid_of(
-					xa=[-(w-joiner_width)/2, (w-joiner_width)/2],
-					ya=[l/2],
-					za=[h]
-				) {
-					xrot(45) cube(size=[joiner_width+1, 6*sqrt(2), 6*sqrt(2)], center=true);
+				translate([0, l/2, h]) {
+					grid_of(count=2, spacing=w-joiner_width) {
+						xrot(45) cube(size=[joiner_width+1, 6*sqrt(2), 6*sqrt(2)], center=true);
+					}
+				}
+
+				// Shrinkage stress relief
+				translate([0, 0, rail_thick/2]) {
+					grid_of(count=[1, 9], spacing=[0, 12]) {
+						cube(size=[w+1, 1, rail_thick-2], center=true);
+					}
+					grid_of(count=[11, 2], spacing=[12.7, l-10]) {
+						cube(size=[1, 36, rail_thick-2], center=true);
+					}
 				}
 			}
 
@@ -93,20 +97,6 @@ module cantilever_arm()
 			translate([0, -l/2+10+h/2, h*3/2]) {
 				grid_of(count=2, spacing=w-joiner_width) {
 					thinning_triangle(h=h, l=h, thick=joiner_width, diagonly=true);
-				}
-			}
-
-			zrot_copies([0, 180]) {
-				translate([0, l/2-20, h/4]) {
-					difference() {
-						// Side supports.
-						cube(size=[w, 5, h/2], center=true);
-
-						// Wiring access holes.
-						grid_of(xa=[-w/4, 0, w/4]) {
-							cube(size=[10, 10, 10], center=true);
-						}
-					}
 				}
 			}
 

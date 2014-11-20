@@ -31,26 +31,26 @@ module extruder_platform()
 
 				// Triangle Backing
 				mirror_copy([1,0,0]) {
-					translate([(w-joiner_width-5)/2, -l+10/2, (h-12)/2]) {
-						cube(size=[joiner_width+5, 10, h-12], center=true);
+					translate([(w-joiner_width-10)/2, -l+10/2, (h-12)/2]) {
+						cube(size=[joiner_width+10, 10, h-12], center=true);
 					}
 				}
 
 				// Pivot backings
 				mirror_copy([1,0,0]) {
-					translate([(w-joiner_width-4.5)/2-5.5, -l-6, h-6]) {
+					translate([(w-joiner_width-9.5)/2-5.5, -l-6, h-6]) {
 						difference() {
 							xrot(joiner_angle) {
 								translate([0, 0, -12/sin(joiner_angle)/2]) {
-									cube(size=[4.5, 12, 12/sin(joiner_angle)], center=true);
+									cube(size=[9.5, 12, 12/sin(joiner_angle)], center=true);
 								}
 							}
 							translate([0, 12+10, -12*2*sin(joiner_angle)])
-								cube(size=[4.5, 12, 12/sin(joiner_angle)], center=true);
+								cube(size=[10, 12, 12/sin(joiner_angle)], center=true);
 						}
 					}
-					translate([(w-joiner_width-4.5)/2-5.5, -l-6, h-6]) {
-						yrot(90) cylinder(h=4.5, r=6, center=true, $fn=32);
+					translate([(w-joiner_width-9.5)/2-5.5, -l-6, h-6]) {
+						yrot(90) cylinder(h=9.5, r=6, center=true, $fn=32);
 					}
 				}
 
@@ -60,7 +60,7 @@ module extruder_platform()
 						translate([2/2-0.5, 0, 0]) {
 							yrot(90) intersection() {
 								cylinder(h=2, r1=6, r2=4, center=true, $fn=32);
-								cylinder(h=20, r=6, center=true, $fn=32);
+								cylinder(h=30, r=6, center=true, $fn=32);
 							}
 						}
 					}
@@ -124,14 +124,37 @@ module extruder_platform()
 			mirror_copy([1,0,0]) {
 				translate([w/2-joiner_width, -l-6, h-6]) {
 					yrot(90) {
-						cylinder(h=20, r=set_screw_size*1.1/2, center=true, $fn=12);
+						cylinder(h=30, r=set_screw_size*1.1/2, center=true, $fn=12);
 					}
+				}
+			}
+
+			// Shrinkage stress relief
+			translate([0, -l/2+12, rail_thick/2]) {
+				grid_of(count=9, spacing=15) {
+					cube(size=[1, l+41, rail_thick-2], center=true);
+				}
+				grid_of(count=[1,6], spacing=15) {
+					cube(size=[w+1, 1, rail_thick-2], center=true);
+				}
+			}
+		}
+
+		// Fan shroud mounts
+		grid_of(count=2, spacing=w+10-0.05) {
+			translate([0, 0, 10/2]) {
+				difference() {
+					union() {
+						translate([0, 0, -fan_mount_width/4]) cube(size=[fan_mount_width, fan_mount_length, fan_mount_width/2], center=true);
+						xrot(90) cylinder(h=fan_mount_length, r=fan_mount_width/2, center=true);
+					}
+					xrot(90) cylinder(h=fan_mount_length+1, r=fan_mount_screw*1.1/2, center=true);
 				}
 			}
 		}
 	}
 }
-//!rail_structure();
+//!extruder_platform();
 
 
 

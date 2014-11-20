@@ -8,6 +8,7 @@ use <build_platform_support_parts.scad>
 use <cantilever_joint_parts.scad>
 use <cantilever_arm_parts.scad>
 use <drive_gear_parts.scad>
+use <extruder_fan_shroud_parts.scad>
 use <extruder_platform_parts.scad>
 use <motor_mount_plate_parts.scad>
 use <rail_endcap_parts.scad>
@@ -26,11 +27,11 @@ $vpt = [0, 0, 255];
 $vpr = [65, 0, 120];
 
 
-platform_vert_off = rail_height+groove_height+rail_offset;
-
 
 module axis_slider_assembly(slidepos=0)
 {
+	platform_vert_off = rail_height+groove_height+rail_offset;
+
 	translate([0, -motor_rail_length/2, 0]) {
 		translate([0, -rail_length/2, 0]) {
 			rail_segment();
@@ -158,6 +159,9 @@ module full_assembly(hide_endcaps=false)
 								cantilever_arm();
 								translate([0, cantilever_length/2, 0]) {
 									extruder_platform();
+									translate([platform_width/2+5, 86, 5]) {
+										yrot(30) extruder_fan_shroud();
+									}
 								}
 							}
 						}
