@@ -124,7 +124,7 @@ module fanAssembly(size=40, wall=3, plateh=3, screwsize=3, ang=45)
 
 
 
-module extruder_fan_shroud()
+module fan_shroud()
 {
 	color("yellow")
 	prerender(convexity=10)
@@ -145,15 +145,15 @@ module extruder_fan_shroud()
 
 
 
-module extruder_fan_shroud_parts() { // make me
+module fan_shroud_parts() { // make me
 	translate([0, 0, 5]) {
 		yrot(180) {
-			extruder_fan_shroud();
+			fan_shroud();
 		}
 	}
 }
 
-extruder_fan_shroud_parts();
+fan_shroud_parts();
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap

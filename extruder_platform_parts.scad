@@ -6,7 +6,7 @@ use <joiners.scad>
 module extruder_platform()
 {
 	platform_vert_off = rail_height+groove_height+rail_offset;
-	l = motor_rail_length*0.5+cantilever_length-platform_vert_off-15;
+	l = motor_rail_length*0.5+cantilever_length-platform_vert_off-20;
 	w = platform_width;
 	h = rail_height;
 

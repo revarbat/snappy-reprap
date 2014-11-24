@@ -1,7 +1,6 @@
 include <config.scad>
 use <GDMUtils.scad>
 use <joiners.scad>
-use <NEMA.scad>
 
 
 module rail_motor_segment()
@@ -157,8 +156,8 @@ module rail_motor_segment()
 		}
 
 		// Motor mount joiners.
-		translate([0, 0, rail_height-5-15]) {
-			xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=rail_height-5-15, a=joiner_angle);
+		translate([0, 0, rail_height-5-20]) {
+			xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=rail_height-5-20, a=joiner_angle);
 		}
 	}
 }

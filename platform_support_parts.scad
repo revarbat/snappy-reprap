@@ -4,7 +4,7 @@ use <joiners.scad>
 
 
 
-module build_platform_support1()
+module platform_support1()
 {
 	joiner_length=10;
 	w=20;
@@ -43,11 +43,11 @@ module build_platform_support1()
 			cylinder(h=h*3, d=hbp_screwsize*1.1, center=true, $fn=8);
 	}
 }
-//!build_platform_support1();
+//!platform_support1();
 
 
 
-module build_platform_support2()
+module platform_support2()
 {
 	joiner_length=10;
 	w=20;
@@ -86,24 +86,24 @@ module build_platform_support2()
 			cylinder(h=h*3, d=hbp_screwsize*1.1, center=true, $fn=8);
 	}
 }
-//!build_platform_support2();
+//!platform_support2();
 
 
 
-module build_platform_support_parts() { // make me
+module platform_support_parts() { // make me
 	zrot_copies([0, 180]) {
 		translate([0, 10, 3]) {
 			translate([-10, 0, 0])
-				xrot(180) build_platform_support1();
+				xrot(180) platform_support1();
 			translate([10, 0, 0])
-				xrot(180) build_platform_support2();
+				xrot(180) platform_support2();
 		}
 	}
 }
 
 
 
-build_platform_support_parts();
+platform_support_parts();
 
 
 

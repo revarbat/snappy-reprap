@@ -44,10 +44,15 @@ module cantilever_arm()
 
 								// Wiring access holes.
 								grid_of(count=3, spacing=w/3) {
-									cube(size=11, center=true);
+									cube(size=[20,11,8], center=true);
 								}
 							}
 						}
+					}
+
+					// Endstop standoff backing
+					translate([0, l/2-10, rail_thick/2]) {
+						cube(size=[endstop_hole_spacing + endstop_screw_size*2 + 6, 20, rail_thick], center=true);
 					}
 
 					// Endstop standoffs

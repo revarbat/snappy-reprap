@@ -38,12 +38,22 @@ lifter_nut_size    =  17.4; // mm
 lifter_nut_thick   =   9.3; // mm
 lifter_thread_size =   3.175; // mm lift per revolution
 
+/*
 // Mechanical endstop boards.
 endstop_hole_spacing = 19; // mm
 endstop_hole_inset   =  4; // mm
 endstop_hole_hoff    = 10; // mm
 endstop_click_voff   =  4; // mm
 endstop_screw_size   =  3; // mm
+endstop_standoff     =  2; // mm
+*/
+
+// Mechanical endstop bare microswitch.
+endstop_hole_spacing =  9.5; // mm
+endstop_hole_inset   =  9; // mm
+endstop_hole_hoff    = 10; // mm
+endstop_click_voff   =  3; // mm
+endstop_screw_size   =  2.5; // mm
 endstop_standoff     =  2; // mm
 
 // Standard Mk2b Heated Build Platform from RepRapDiscount.com

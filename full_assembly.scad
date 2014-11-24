@@ -4,11 +4,11 @@ include <config.scad>
 include <GDMUtils.scad>
 use <NEMA.scad>
 
-use <build_platform_support_parts.scad>
+use <platform_support_parts.scad>
 use <cantilever_joint_parts.scad>
 use <cantilever_arm_parts.scad>
 use <drive_gear_parts.scad>
-use <extruder_fan_shroud_parts.scad>
+use <fan_shroud_parts.scad>
 use <extruder_platform_parts.scad>
 use <motor_mount_plate_parts.scad>
 use <rail_endcap_parts.scad>
@@ -45,11 +45,11 @@ module axis_slider_assembly(slidepos=0)
 	}
 
 	// Stepper Motor
-	translate([0, 0, 30]) {
+	translate([0, 0, rail_height-5-20]) {
 		motor_mount_plate();
-		translate([0, 0, 5.9+rail_thick]) {
+		translate([0, 0, 20-4-0.2]) {
 			nema17_stepper(h=34, shaft_len=20.05);
-			translate([0, 0, 17]) {
+			translate([0, 0, 19]) {
 				drive_gear();
 			}
 		}
@@ -119,10 +119,10 @@ module full_assembly(hide_endcaps=false)
 							sled_endcap();
 							translate([0, -(20-joiner_width/2), 0]) {
 								translate([platform_width/2, 0, 0]) {
-									zrot(90) build_platform_support2();
+									zrot(90) platform_support2();
 								}
 								translate([-platform_width/2, 0, 0]) {
-									zrot(270) build_platform_support1();
+									zrot(270) platform_support1();
 								}
 							}
 						}
@@ -160,7 +160,7 @@ module full_assembly(hide_endcaps=false)
 								translate([0, cantilever_length/2, 0]) {
 									extruder_platform();
 									translate([platform_width/2+5, 86, 5]) {
-										yrot(30) extruder_fan_shroud();
+										yrot(30) fan_shroud();
 									}
 								}
 							}

@@ -4,9 +4,10 @@ use <NEMA.scad>
 use <joiners.scad>
 
 
-module motor_mount_plate(thick=4, l=15)
+module motor_mount_plate(thick=4, l=20)
 {
 	color("Teal")
+	prerender(convexity=10)
 	difference() {
 		union() {
 			translate([0, 0, l-thick/2]) {
@@ -19,15 +20,30 @@ module motor_mount_plate(thick=4, l=15)
 			// Joiners
 			xrot(-90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=l, a=joiner_angle);
 
+			// Standoff
 			zrot_copies([0, 180]) {
 				grid_of(
 					xa=[motor_mount_spacing/2+joiner_width/2+endstop_standoff/2],
 					ya=[-endstop_hole_spacing/2-endstop_hole_hoff, endstop_hole_spacing/2-endstop_hole_hoff],
 					za=[l-endstop_hole_inset]
 				) {
-					yrot(90) zrot(30) cylinder(r1=endstop_hole_inset/cos(30), r2=endstop_screw_size*1.1/2/cos(30)+0.5, h=endstop_standoff, center=true, $fn=6);
-					translate([0, 0, endstop_hole_inset/2]) {
-						cube(size=[endstop_standoff, endstop_screw_size*1.1/cos(30)+1, endstop_hole_inset], center=true);
+					difference() {
+						hull() {
+							grid_of(za=[0, endstop_hole_inset]) {
+								yrot(90) {
+									cylinder(
+										r1=endstop_screw_size*1.1/2/cos(30)+0.5+endstop_standoff,
+										r2=endstop_screw_size*1.1/2/cos(30)+0.5,
+										h=endstop_standoff,
+										center=true,
+										$fn=24
+									);
+								}
+							}
+						}
+						translate([0, 0, (endstop_hole_inset+endstop_screw_size)]) {
+							cube(size=[endstop_standoff+2, endstop_screw_size*4, endstop_screw_size*2], center=true);
+						}
 					}
 				}
 			}
@@ -56,10 +72,9 @@ module motor_mount_plate(thick=4, l=15)
 
 
 module motor_mount_plate_parts() { // make me
-	n = 1;
-	spacing = 55;
-	grid_of(ya=[-((n-1)*spacing)/2 : spacing : ((n-1)*spacing)/2])
+	grid_of(count=[1,1], spacing=65) {
 		yrot(180) motor_mount_plate();
+	}
 }
 
 
