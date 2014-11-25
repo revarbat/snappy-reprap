@@ -25,11 +25,20 @@ module xy_joiner()
 		}
 
 		// Snap-tab joiners.
-		translate([0,0,-platform_height/2]) {
-			intersection() {
-				joiner_pair(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
-				grid_of(xa=[-(platform_width-joiner_width)/2, (platform_width-joiner_width)/2]) {
-					xrot(90) rrect(r=joiner_width/3, size=[joiner_width, platform_height, joiner_length*2], center=true);
+		intersection() {
+			union() {
+				translate([0,0,-platform_height/2]) {
+					joiner_pair(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+				}
+				translate([0,0,rail_height/4]) {
+					grid_of(count=2, spacing=platform_width-joiner_width) {
+						half_joiner2(h=rail_height/2, w=joiner_width, l=joiner_length, a=joiner_angle);
+					}
+				}
+			}
+			translate([0, 0, -(platform_height+rail_height/2)/2+rail_height/2]) {
+				grid_of(count=2, spacing=platform_width-joiner_width) {
+					chamfcube(chamfer=3, size=[joiner_width, 90, platform_height+rail_height/2], chamfaxes=[1,1,1]);
 				}
 			}
 		}

@@ -25,17 +25,6 @@ module rail_motor_segment()
 					}
 				}
 
-				// Flanges on sides to reduce peeling.
-				grid_of(count=2, spacing=rail_width) {
-					hull() {
-						grid_of(count=[1,2], spacing=[0, motor_rail_length-2*joiner_width/3]) {
-							translate([0, 0, 1/2]) {
-								cylinder(h=1, r=joiner_width/3, center=true, $fs=1);
-							}
-						}
-					}
-				}
-
 				// Walls.
 				zrot_copies([0, 180]) {
 					translate([(rail_spacing/2+joiner_width/2), 0, (rail_height+3)/2]) {
@@ -59,6 +48,11 @@ module rail_motor_segment()
 					grid_of(count=[1,2], spacing=[0, motor_rail_length-20]) {
 						cube(size=[rail_width, 5, rail_height/2], center=true);
 					}
+				}
+
+				// Motor mount joiners.
+				translate([0, 0, rail_height-5-20]) {
+					xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=rail_height-5-20, a=joiner_angle);
 				}
 			}
 
@@ -105,10 +99,10 @@ module rail_motor_segment()
 
 			// Shrinkage stress relief
 			translate([0, 0, rail_thick/2]) {
-				grid_of(count=[1, 3], spacing=[0, 33]) {
+				grid_of(count=[1, 5], spacing=[0, 16]) {
 					cube(size=[rail_width+1, 1, rail_thick-2], center=true);
 				}
-				grid_of(count=[5, 2], spacing=[24, motor_rail_length-10]) {
+				grid_of(count=[7, 2], spacing=[15, motor_rail_length-10]) {
 					cube(size=[1, 60, rail_thick-2], center=true);
 				}
 			}
@@ -153,11 +147,6 @@ module rail_motor_segment()
 					}
 				}
 			}
-		}
-
-		// Motor mount joiners.
-		translate([0, 0, rail_height-5-20]) {
-			xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=rail_height-5-20, a=joiner_angle);
 		}
 	}
 }

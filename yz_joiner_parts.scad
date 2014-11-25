@@ -22,23 +22,6 @@ module yz_joiner()
 							sparse_strut(h=rail_width, l=platform_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
 					}
 
-					// Flanges on sides to reduce peeling.
-					grid_of(
-						xa=[-(rail_spacing/2+joiner_width), (rail_spacing/2+joiner_width)]
-					) {
-						hull() {
-							grid_of(
-								ya=[-6+6, (platform_length-6)],
-								za=[1/2]
-							) {
-								cylinder(h=1, r=6, center=true, $fn=24);
-							}
-						}
-					}
-					translate([0, -6/2, 1/2])
-					cube(size=[rail_width, 6, 1], center=true);
-
-
 					// Back.
 					translate([0, rail_thick/2, platform_length/2]) zrot(90) {
 						if (wall_style == "crossbeams")
@@ -91,6 +74,16 @@ module yz_joiner()
 									cube(size=[joiner_width, groove_height, platform_length-rail_height], center=true);
 							}
 						}
+					}
+				}
+
+				// Shrinkage stress relief
+				translate([0, platform_length/2, rail_thick/2]) {
+					grid_of(count=[1, 7], spacing=[0, 12]) {
+						cube(size=[rail_width+1, 1, rail_thick-2], center=true);
+					}
+					grid_of(count=[9, 2], spacing=[12, platform_length-10]) {
+						cube(size=[1, 20, rail_thick-2], center=true);
 					}
 				}
 
