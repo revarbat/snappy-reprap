@@ -18,7 +18,6 @@ module cable_chain_barrel()
 
 	color("SpringGreen")
 	union () {
-		// Bottom and top struts
 		difference() {
 			translate([0, 0, h/2])
 				cube(size=[w, l-20, h], center=true);
@@ -42,7 +41,7 @@ module cable_chain_mount1()
 		difference() {
 			// Sides and tabs
 			mirror_copy([1,0,0]) {
-				translate([w/2-3*cable_chain_wall/2, -l/4, h/2]) {
+				translate([w/2-3*cable_chain_wall/2-printer_slop, -l/4, h/2]) {
 					cube(size=[cable_chain_wall, l/2, h], center=true);
 				}
 			}
@@ -65,7 +64,7 @@ module cable_chain_mount1()
 			// Pivot Divot
 			mirror_copy([1,0,0]) {
 				translate([(w-cable_chain_wall)/2, 0, h/2]) {
-					translate([-cable_chain_wall/2-cable_chain_bump/2, -l/2+r+2.75, 0]) {
+					translate([-cable_chain_wall/2-cable_chain_bump/2, -l/2+r+2.75-printer_slop, 0]) {
 						yrot(90) cylinder(h=cable_chain_bump+0.05, r1=r, r2=r+cable_chain_bump, center=true, $fn=32);
 					}
 				}
