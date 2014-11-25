@@ -69,7 +69,7 @@ module axis_slider_assembly(slidepos=0)
 
 module full_assembly(hide_endcaps=false)
 {
-	joiner_length=15;
+	joiner_length=20;
 	xpos = 100*cos(360*$t);
 	ypos = 100*sin(360*$t);
 	zpos = 100*cos(240+360*$t);
@@ -159,7 +159,7 @@ module full_assembly(hide_endcaps=false)
 								cantilever_arm();
 								translate([0, cantilever_length/2, 0]) {
 									extruder_platform();
-									translate([platform_width/2+5, 86, 5]) {
+									translate([platform_width/2+5, 81, 5]) {
 										yrot(30) fan_shroud();
 									}
 								}

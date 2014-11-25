@@ -87,6 +87,7 @@ printer_slop =   0.25; // mm
 rail_spacing = platform_width - joiner_width*4 - 10;
 rail_width = rail_spacing + joiner_width*2;
 motor_mount_spacing=43+joiner_width+10;
+side_mount_spacing = platform_length-25;
 
 wall_styles = ["thinwall", "corrugated", "crossbeams"];
 wall_style = wall_styles[wall_styling];

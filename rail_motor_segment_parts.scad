@@ -131,14 +131,14 @@ module rail_motor_segment()
 		zrot_copies([0,180]) {
 			translate([rail_width/2-5, 0, 0]) {
 				translate([side_joiner_len+joiner_width/2, 0, rail_height/2/2]) {
-					translate([0, -platform_length/4, 0]) {
+					translate([0, -side_mount_spacing/2, 0]) {
 						zrot(-90) {
 							chamfer(chamfer=joiner_width/3, size=[joiner_width, side_joiner_len*2, rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
 								half_joiner(h=rail_height/2, w=joiner_width, l=side_joiner_len, a=joiner_angle);
 							}
 						}
 					}
-					translate([0, platform_length/4, 0]) {
+					translate([0, side_mount_spacing/2, 0]) {
 						zrot(-90) {
 							chamfer(chamfer=joiner_width/3, size=[joiner_width, side_joiner_len*2, rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
 								half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len, a=joiner_angle, slop=printer_slop);

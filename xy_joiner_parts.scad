@@ -46,13 +46,13 @@ module xy_joiner()
 		// Top half-joiners.
 		translate([0, hoff, 0]) {
 			translate([0, 0, rail_height/2/2]) {
-				translate([platform_length/4, 0, 0]) {
+				translate([side_mount_spacing/2, 0, 0]) {
 					intersection() {
 						half_joiner(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle);
 						xrot(90) rrect(r=joiner_width/3, size=[joiner_width, rail_height/2, (hoff+joiner_length)*2], center=true);
 					}
 				}
-				translate([-platform_length/4, 0, 0]) {
+				translate([-side_mount_spacing/2, 0, 0]) {
 					intersection() {
 						half_joiner2(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle, slop=printer_slop);
 						xrot(90) rrect(r=joiner_width/3, size=[joiner_width, rail_height/2, (hoff+joiner_length)*2], center=true);
@@ -63,14 +63,13 @@ module xy_joiner()
 
 		// Connect top half-joiners.
 		translate([0, platform_thick/2-joiner_length, rail_height/2-platform_thick/2])
-			xrot(90) cube(size=[platform_length/2, platform_thick, platform_thick], center=true);
+			xrot(90) cube(size=[platform_width-joiner_width, platform_thick, platform_thick], center=true);
 
 		// Remove indents on attachment to main body
-		grid_of(
-			xa=[-platform_length/4, platform_length/4],
-			ya=[-joiner_length/2]
-		) {
-			cube(size=[joiner_width, joiner_length, joiner_width], center=true);
+		translate([0, -joiner_length/2, 0]) {
+			grid_of(count=2, spacing=side_mount_spacing) {
+				cube(size=[joiner_width, joiner_length, joiner_width], center=true);
+			}
 		}
 
 		// Rack and pinion hard stop.
