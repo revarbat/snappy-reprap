@@ -76,6 +76,14 @@ fan_mount_width  = 10;  // mm
 fan_mount_screw  =  3;  // mm
 fan_shroud_angle = 60;  // degrees
 
+// Cable chain dimentions
+cable_chain_height = 13;  // mm
+cable_chain_width  = 22;  // mm
+cable_chain_length = 26;  // mm
+cable_chain_pivot   = 6;  // mm
+cable_chain_bump    = 1;  // mm
+cable_chain_wall    = 3;  // mm
+
 // This is the slop needed to make parts fit more exactly, and may be
 // printer dependant.  Printing a slop calibration plate should help
 // dial this setting in for your printer.

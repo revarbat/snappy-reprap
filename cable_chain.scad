@@ -1,13 +1,6 @@
 include <config.scad>
 use <GDMUtils.scad>
-use <joiners.scad>
 
-cable_chain_height = 13;  // mm
-cable_chain_width  = 22;  // mm
-cable_chain_length = 26;  // mm
-cable_chain_pivot   = 6;  // mm
-cable_chain_bump    = 1;  // mm
-cable_chain_wall    = 3;  // mm
 
 module cable_chain_barrel()
 {
@@ -41,8 +34,8 @@ module cable_chain_mount1()
 		difference() {
 			// Sides and tabs
 			mirror_copy([1,0,0]) {
-				translate([w/2-3*cable_chain_wall/2-printer_slop, -l/4, h/2]) {
-					cube(size=[cable_chain_wall, l/2, h], center=true);
+				translate([w/2-3*cable_chain_wall/2-printer_slop/2, -l/4, h/2]) {
+					cube(size=[cable_chain_wall-printer_slop, l/2, h], center=true);
 				}
 			}
 
@@ -91,6 +84,9 @@ module cable_chain_mount2()
 					translate([0, l/4, 0])
 						cube(size=[cable_chain_wall, l/2, h], center=true);
 
+					translate([0, l/2-h/3, 0])
+						yrot(90) cylinder(h=cable_chain_wall, r=cable_chain_pivot/2+1.333, center=true, $fn=64);
+
 					// Pivot bump
 					translate([-cable_chain_wall/2-cable_chain_bump/2, l/2-h/3, 0])
 						yrot(90) cylinder(h=cable_chain_bump, r1=r, r2=r+cable_chain_bump, center=true, $fn=32);
@@ -99,65 +95,14 @@ module cable_chain_mount2()
 
 			// Chamfer top back
 			translate([0, l/2, h]) {
-				xrot(45) cube(size=[w+2, h/3*sqrt(2), h/3*sqrt(2)], center=true);
-				scale([1, tan(20), 1]) xrot(45) cube(size=[w+2, h/2*sqrt(2), h/2*sqrt(2)], center=true);
+				for (ang = [5:10:45]) {
+					scale([1, sin(ang), cos(ang)]) xrot(45) cube(size=[w+2, h/2*sqrt(2), h/2*sqrt(2)], center=true);
+				}
 			}
 		}
 	}
 }
 //!cable_chain_mount2();
-
-
-module cable_chain_link()
-{
-	color("SpringGreen")
-	union () {
-		cable_chain_mount1();
-		cable_chain_barrel();
-		cable_chain_mount2();
-	}
-}
-//!cable_chain_link();
-
-
-module cable_chain_mount()
-{
-	joiner_length=10;
-	color("SpringGreen")
-	union () {
-		translate([0, -2, 0]) {
-			cable_chain_mount1();
-			cable_chain_barrel();
-		}
-		translate([0, 2, 0]) {
-			cable_chain_barrel();
-			cable_chain_mount2();
-		}
-		translate([(joiner_length+cable_chain_width/2-3), 0, rail_height/4]) {
-			zrot(-90) {
-				half_joiner(h=rail_height/2, w=joiner_width, l=joiner_length, a=joiner_angle);
-			}
-		}
-	}
-}
-//!cable_chain_mount();
-
-
-module cable_chain_link_parts() { // make me
-	translate([0, -20, 0]) {
-		grid_of(count=[5, 4], spacing=[23, 27]) {
-			cable_chain_link();
-		}
-	}
-	translate([12, 40, 0]) {
-		grid_of(count=2, spacing=46) {
-			zrot(180) cable_chain_mount();
-		}
-	}
-}
-
-
-cable_chain_link_parts();
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
