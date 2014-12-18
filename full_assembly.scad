@@ -5,6 +5,8 @@ include <GDMUtils.scad>
 use <NEMA.scad>
 
 use <platform_support_parts.scad>
+use <cable_chain_link_parts.scad>
+use <cable_chain_mount_parts.scad>
 use <cantilever_joint_parts.scad>
 use <cantilever_arm_parts.scad>
 use <drive_gear_parts.scad>
@@ -101,6 +103,9 @@ module full_assembly(hide_endcaps=false)
 				translate([0, -platform_length, 0]) {
 					xy_joiner();
 				}
+			}
+			translate([(platform_width-joiner_width)/2, -platform_length, 0]) {
+				zrot(180) cable_chain_xy_mount();
 			}
 			zrot(90) {
 				// X-axis rail endcaps.

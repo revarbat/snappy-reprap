@@ -40,8 +40,8 @@ module cantilever_joint()
 			}
 
 			// Clear for side joiners
-			translate([0, joiner_width/2, joiner_length-rail_height/4]) {
-				circle_of(n=2, r=platform_width/2+5, rot=true) {
+			translate([0, joiner_width/2, joiner_length-rail_height/4-rail_height]) {
+				circle_of(n=2, r=platform_width/2, rot=true) {
 					zrot(-90) {
 						half_joiner_clear(h=rail_height/2, w=joiner_width, l=10, a=joiner_angle);
 					}
@@ -50,8 +50,8 @@ module cantilever_joint()
 		}
 
 		// Side joiners
-		translate([0, joiner_width/2, joiner_length-rail_height/4]) {
-			circle_of(n=2, r=platform_width/2+5, rot=true) {
+		translate([0, joiner_width/2, joiner_length-rail_height/4-rail_height]) {
+			circle_of(n=2, r=platform_width/2, rot=true) {
 				zrot(-90) {
 					half_joiner2(h=rail_height/2, w=joiner_width, l=10, a=joiner_angle);
 				}

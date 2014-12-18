@@ -44,7 +44,7 @@ module cantilever_arm()
 
 								// Wiring access holes.
 								grid_of(count=3, spacing=w/3) {
-									cube(size=[20,11,8], center=true);
+									cube(size=[25,11,8], center=true);
 								}
 							}
 						}

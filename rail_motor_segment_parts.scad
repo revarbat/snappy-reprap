@@ -88,7 +88,7 @@ module rail_motor_segment()
 			// Wiring access holes.
 			translate([0, 0, rail_height/4]) {
 				grid_of(count=[3,2], spacing=[rail_width/3, motor_rail_length-20]) {
-					cube(size=[10, 10, 10], center=true);
+					cube(size=[16, 11, 10], center=true);
 				}
 			}
 

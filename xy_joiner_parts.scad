@@ -7,8 +7,8 @@ module xy_joiner()
 {
 	joiner_length=10;
 	hardstop_offset=8;
-
 	hoff = (platform_length*2-rail_width-20)/2;
+
 	color("Sienna")
 	prerender(convexity=10)
 	union() {
@@ -47,15 +47,13 @@ module xy_joiner()
 		translate([0, hoff, 0]) {
 			translate([0, 0, rail_height/2/2]) {
 				translate([side_mount_spacing/2, 0, 0]) {
-					intersection() {
+					chamfer(chamfer=3, size=[joiner_width, 2*(hoff+joiner_length), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
 						half_joiner(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle);
-						xrot(90) rrect(r=joiner_width/3, size=[joiner_width, rail_height/2, (hoff+joiner_length)*2], center=true);
 					}
 				}
 				translate([-side_mount_spacing/2, 0, 0]) {
-					intersection() {
+					chamfer(chamfer=3, size=[joiner_width, 2*(hoff+joiner_length), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
 						half_joiner2(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle, slop=printer_slop);
-						xrot(90) rrect(r=joiner_width/3, size=[joiner_width, rail_height/2, (hoff+joiner_length)*2], center=true);
 					}
 				}
 			}

@@ -134,8 +134,9 @@ module yz_joiner()
 					cube(size=[rail_width, 5, rail_height/2], center=true);
 
 					// Wiring access holes.
-					grid_of(xa=[-rail_width/4, rail_width/4])
-						cube(size=[10, 10, 10], center=true);
+					grid_of(count=3, spacing=rail_width/3) {
+						cube(size=[16, 11, 10], center=true);
+					}
 				}
 			}
 		}
