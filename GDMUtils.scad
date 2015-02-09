@@ -332,7 +332,8 @@ module rrect(size=[1,1,1], r=0.25, center=false, $fn=undef)
 module chamfcube(
 		size=[1,1,1],
 		chamfer=0.25,
-		chamfaxes=[1,1,1]
+		chamfaxes=[1,1,1],
+		chamfcorners=false
 ) {
 	ch_width = sqrt(2)*chamfer;
 	ch_offset = 1;
@@ -356,6 +357,39 @@ module chamfcube(
 					translate([xs*size[0]/2,ys*size[1]/2],0) {
 						rotate(a=[0,0,45])
 						 cube(size=[ch_width,ch_width,size[2]+0.1], center=true);
+					}
+				}
+				if (chamfcorners) {
+					for (zs = [-1,1]) {
+						translate([xs*size[0]/2,ys*size[1]/2,zs*size[2]/2]) {
+							scale([chamfer,chamfer,chamfer]) {
+								polyhedron(
+									points=[
+										[0,-1,-1], [0,-1,1], [0,1,1], [0,1,-1],
+										[-1,0,-1], [-1,0,1], [1,0,1], [1,0,-1],
+										[-1,-1,0], [-1,1,0], [1,1,0], [1,-1,0]
+									],
+									faces=[
+										[ 8,  4,  9,  5],
+										[ 9,  3, 10,  2],
+										[10,  7, 11,  6],
+										[11,  0,  8,  1],
+										[ 0,  7,  3,  4],
+										[ 1,  5,  2,  6],
+
+										[ 1,  8,  5],
+										[ 5,  9,  2],
+										[ 2, 10,  6],
+										[ 6, 11,  1],
+
+										[ 0,  4,  8],
+										[ 4,  3,  9],
+										[ 3,  7, 10],
+										[ 7,  0, 11],
+									]
+								);
+							}
+						}
 					}
 				}
 			}

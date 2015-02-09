@@ -15,12 +15,14 @@ use <extruder_platform_parts.scad>
 use <motor_mount_plate_parts.scad>
 use <rail_endcap_parts.scad>
 use <rail_motor_segment_parts.scad>
+use <rail_lifter_segment_parts.scad>
 use <rail_segment_parts.scad>
 use <sled_endcap_parts.scad>
-use <sled_parts.scad>
+use <xy_sled_parts.scad>
 use <support_leg_parts.scad>
 use <xy_joiner_parts.scad>
 use <yz_joiner_parts.scad>
+use <z_sled_parts.scad>
 
 
 // Set default camera position.
@@ -61,8 +63,47 @@ module axis_slider_assembly(slidepos=0)
 	translate([0, slidepos, platform_vert_off]) {
 		grid_of(count=[1,2], spacing=platform_length) {
 			yrot(180) {
-				sled();
+				xy_sled();
 			}
+		}
+		children();
+	}
+}
+
+
+module z_axis_slider_assembly(slidepos=0)
+{
+	platform_vert_off = rail_height+groove_height+rail_offset;
+
+	translate([0, -motor_rail_length, 0]) {
+		grid_of(count=[1,2], spacing=rail_length) {
+			rail_segment();
+		}
+	}
+	translate([0, motor_rail_length, 0]) {
+		zrot(180) rail_lifter_segment();
+	}
+
+	translate([0, rail_length-motor_rail_length/2, rail_height+groove_height/2]) {
+		// Stepper Motor
+		xrot(90) {
+			motor_mount_plate();
+			translate([0, 0, 20-4-0.2]) {
+				nema17_stepper(h=34, shaft_len=20.05);
+				translate([0, 0, 19]) {
+					color("black") cylinder(d=20, h=20, center=true);
+					translate([0, 0, lifter_rod_length/2+5]) {
+						color("silver") cylinder(d=lifter_rod_diam, h=lifter_rod_length, center=true);
+					}
+				}
+			}
+		}
+	}
+
+	// Sleds
+	translate([0, slidepos, platform_vert_off]) {
+		yrot(180) {
+			z_sled();
 		}
 		children();
 	}
@@ -143,17 +184,17 @@ module full_assembly(hide_endcaps=false)
 		}
 	}
 
-	translate([0, 0, platform_length + rail_length + motor_rail_length/2]) {
+	translate([0, 0, platform_length + rail_length]) {
 		xrot(-90) {
 			// Z-axis rail endcaps.
 			if (hide_endcaps == false) {
-				translate([0, -(motor_rail_length/2 + rail_length+0.1), 0]) {
+				translate([0, -(motor_rail_length+rail_length+0.1), 0]) {
 					rail_endcap();
 				}
 			}
 			// Z-axis rails.
-			axis_slider_assembly(zpos) {
-				translate([0, -platform_length, 0]) {
+			z_axis_slider_assembly(zpos) {
+				translate([0, -platform_length/2, 0]) {
 					xrot(90) {
 						// Z-axis platform to extruder cantilever joint.
 						cantilever_joint();

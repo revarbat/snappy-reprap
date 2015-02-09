@@ -48,4 +48,3 @@ module acme_threaded_nut(
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
-
