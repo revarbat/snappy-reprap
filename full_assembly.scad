@@ -101,7 +101,7 @@ module z_axis_slider_assembly(slidepos=0)
 	}
 
 	// Sleds
-	translate([0, slidepos, platform_vert_off]) {
+	translate([0, slidepos-motor_rail_length, platform_vert_off]) {
 		yrot(180) {
 			z_sled();
 		}
