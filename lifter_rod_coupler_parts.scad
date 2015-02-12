@@ -27,7 +27,11 @@ module lifter_rod_coupler()
 					translate([0, 5, height/8]) {
 						hull() {
 							grid_of(count=[1,1,2], spacing=height/4) {
-								xrot(90) zrot(90) metric_nut(size=3, hole=false);
+								xrot(90) zrot(90) {
+									scale([1.05,1.05,1.05]) {
+										metric_nut(size=set_screw_size, hole=false);
+									}
+								}
 							}
 						}
 					}
@@ -36,7 +40,7 @@ module lifter_rod_coupler()
 		}
 	}
 }
-!lifter_rod_coupler();
+//!lifter_rod_coupler();
 
 
 module lifter_rod_coupler_parts() { // make me
