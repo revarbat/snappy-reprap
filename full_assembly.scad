@@ -12,6 +12,7 @@ use <cantilever_arm_parts.scad>
 use <drive_gear_parts.scad>
 use <fan_shroud_parts.scad>
 use <extruder_platform_parts.scad>
+use <lifter_rod_coupler_parts.scad>
 use <motor_mount_plate_parts.scad>
 use <rail_endcap_parts.scad>
 use <rail_motor_segment_parts.scad>
@@ -90,9 +91,13 @@ module z_axis_slider_assembly(slidepos=0)
 			motor_mount_plate();
 			translate([0, 0, 20-4-0.2]) {
 				nema17_stepper(h=34, shaft_len=20.05);
-				translate([0, 0, 19]) {
-					color("black") cylinder(d=20, h=20, center=true);
-					translate([0, 0, lifter_rod_length/2+5]) {
+				translate([0, 0, 5]) {
+					color("darkgrey") {
+						zrot(slidepos/lifter_thread_size*360.0) {
+							lifter_rod_coupler();
+						}
+					}
+					translate([0, 0, lifter_rod_length/2+16]) {
 						color("silver") cylinder(d=lifter_rod_diam, h=lifter_rod_length, center=true);
 					}
 				}
