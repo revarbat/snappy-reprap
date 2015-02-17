@@ -9,7 +9,7 @@ module cantilever_joint()
 	hanger_strut = rail_height*2;
 
 	color("Chocolate")
-	//prerender(convexity=10)
+	prerender(convexity=10)
 	union() {
 		difference() {
 			union() {
