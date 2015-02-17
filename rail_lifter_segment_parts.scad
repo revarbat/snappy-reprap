@@ -8,6 +8,11 @@ module rail_lifter_segment()
 	joiner_length = 10;
 	side_joiner_len = 10;
 
+	xlen = motor_rail_length/2-25;
+	ylen = (rail_width-motor_mount_spacing)/2;
+	hlen = sqrt(xlen*xlen+ylen*ylen);
+	ang = atan2(ylen,hlen);
+
 	color("SpringGreen")
 	prerender(convexity=20)
 	union() {
@@ -15,12 +20,11 @@ module rail_lifter_segment()
 			union() {
 				// Bottom.
 				translate([0,0,rail_thick/2]) {
-					difference() {
-						union() {
-							yrot(90) sparse_strut(h=rail_width, l=motor_rail_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
-							cube(size=[motor_mount_spacing+joiner_width, 45+20, rail_thick], center=true);
+					union() {
+						yrot(90) sparse_strut(h=rail_width, l=motor_rail_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
+						grid_of(count=2, spacing=motor_mount_spacing) {
+							cube(size=[joiner_width, motor_rail_length, rail_thick], center=true);
 						}
-						cube(size=[motor_mount_spacing-joiner_width, 45, rail_thick+1], center=true);
 					}
 				}
 
@@ -42,57 +46,42 @@ module rail_lifter_segment()
 						chamfer(size=[joiner_width, motor_rail_length, groove_height], chamfer=1, edges=[[1,1,0,0], [1,1,0,0], [0,0,0,0]])
 							cube(size=[joiner_width, motor_rail_length, groove_height], center=true);
 
-				// Side Supports
-				translate([0, 0, rail_height/4]) {
-					grid_of(count=[1,2], spacing=[0, motor_rail_length-20]) {
-						cube(size=[rail_width, 5, rail_height/2], center=true);
+				// Top side support
+				translate([0, (motor_rail_length-18)/2, (rail_height-15)/2]) {
+					zrot(90) sparse_strut(h=rail_height-15, l=rail_width, thick=5, strut=5);
+					translate([0, 0, -(rail_height-15-rail_thick)/2]) {
+						cube(size=[rail_width, 5, rail_thick], center=true);
+					}
+				}
+
+				// Bottom side support
+				translate([0, -(motor_rail_length-18)/2, (rail_height+groove_height)/2]) {
+					zrot(90) sparse_strut(h=rail_height+groove_height, l=rail_width-joiner_width, thick=5, strut=6);
+					translate([0, 0, -(rail_height+groove_height-rail_thick)/2]) {
+						cube(size=[rail_width, 5, rail_thick], center=true);
 					}
 				}
 
 				// Motor mount joiners.
 				translate([0, 0, rail_height+groove_height/2]) {
-					joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=25, a=joiner_angle);
+					joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=15, a=joiner_angle);
 				}
 				grid_of(count=2, spacing=motor_mount_spacing) {
-					translate([0, -25/2, rail_height/4+groove_height/4]) {
-						cube(size=[joiner_width, 25, rail_height/2+groove_height/2], center=true);
+					translate([0, -15/2, rail_height/4+groove_height/4]) {
+						cube(size=[joiner_width, 15, rail_height/2+groove_height/2], center=true);
 					}
 				}
-			}
 
-			// Rail grooves.
-			translate([0,0,rail_height+groove_height/2]) {
-				mirror_copy([1,0,0]) {
-					translate([-(rail_width/2-joiner_width/2), 0, 0]) {
-						mirror_copy([1,0,0]) {
-							translate([(joiner_width/2), 0, 0]) {
-								// main groove
-								scale([tan(groove_angle),1,1]) yrot(45) {
-									cube(size=[groove_height*sqrt(2)/2,motor_rail_length+1,groove_height*sqrt(2)/2], center=true);
-								}
-
-								// chamfers
-								mirror_copy([0,1,0]) {
-									translate([0, motor_rail_length/2, 0]) {
-										hull() {
-											grid_of(count=[1,2], spacing=2) {
-												zrot(45) scale([tan(groove_angle)*sin(45),1,1]) yrot(45) {
-													cube(size=[groove_height*sqrt(2)/2,10,groove_height*sqrt(2)/2], center=true);
-												}
-											}
-										}
-									}
-								}
+				// Motor mount supports.
+				mirror_copy([1, 0, 0]) {
+					translate([(rail_width+motor_mount_spacing)/4-2, -motor_rail_length/4, (rail_height+groove_height)/2]) {
+						zrot(ang) {
+							sparse_strut(h=rail_height+groove_height, l=hlen, thick=7.5, strut=5);
+							translate([0, 0, -(rail_height+groove_height-rail_thick)/2]) {
+								cube(size=[7.5, hlen, rail_thick], center=true);
 							}
 						}
 					}
-				}
-			}
-
-			// Wiring access holes.
-			translate([0, 0, rail_height/4]) {
-				grid_of(count=[3,2], spacing=[rail_width/3, motor_rail_length-20]) {
-					cube(size=[16, 11, 10], center=true);
 				}
 			}
 
