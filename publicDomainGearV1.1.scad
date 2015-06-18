@@ -70,31 +70,30 @@ module gear (
 	clearance       = 0.0,  //gap between top of a tooth on one gear and bottom of valley on a meshing gear (in millimeters)
 	backlash        = 0.0   //gap between two meshing teeth, in the direction along the circumference of the pitch circle
 ) {
-	assign(pi = 3.1415926)
-	assign(p  = mm_per_tooth * number_of_teeth / pi / 2)  //radius of pitch circle
-	assign(c  = p + mm_per_tooth / pi - clearance)        //radius of outer circle
-	assign(b  = p*cos(pressure_angle))                    //radius of base circle
-	assign(r  = p-(c-p)-clearance)                        //radius of root circle
-	assign(t  = mm_per_tooth/2-backlash/2)                //tooth thickness at pitch circle
-	assign(k  = -iang(b, p) - t/2/p/pi*180) {             //angle to where involute meets base circle on each side of tooth
-		difference() {
-			for (i = [0:number_of_teeth-teeth_to_hide-1] )
-				rotate([0,0,i*360/number_of_teeth])
-					linear_extrude(height = thickness, center = true, convexity = 10, twist = twist)
-						polygon(
-							points=[
-								[0, -hole_diameter/10],
-								polar(r, -181/number_of_teeth),
-								polar(r, r<b ? k : -180/number_of_teeth),
-								q7(0/5,r,b,c,k, 1),q7(1/5,r,b,c,k, 1),q7(2/5,r,b,c,k, 1),q7(3/5,r,b,c,k, 1),q7(4/5,r,b,c,k, 1),q7(5/5,r,b,c,k, 1),
-								q7(5/5,r,b,c,k,-1),q7(4/5,r,b,c,k,-1),q7(3/5,r,b,c,k,-1),q7(2/5,r,b,c,k,-1),q7(1/5,r,b,c,k,-1),q7(0/5,r,b,c,k,-1),
-								polar(r, r<b ? -k : 180/number_of_teeth),
-								polar(r, 181/number_of_teeth)
-							],
- 							paths=[[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]]
-						);
-			cylinder(h=2*thickness+1, r=hole_diameter/2, center=true, $fn=20);
-		}
+	pi = 3.1415926;
+	p  = mm_per_tooth * number_of_teeth / pi / 2; //radius of pitch circle
+	c  = p + mm_per_tooth / pi - clearance;       //radius of outer circle
+	b  = p*cos(pressure_angle);                   //radius of base circle
+	r  = p-(c-p)-clearance;                       //radius of root circle
+	t  = mm_per_tooth/2-backlash/2;               //tooth thickness at pitch circle
+	k  = -iang(b, p) - t/2/p/pi*180;              //angle to where involute meets base circle on each side of tooth
+	difference() {
+		for (i = [0:number_of_teeth-teeth_to_hide-1] )
+			rotate([0,0,i*360/number_of_teeth])
+				linear_extrude(height = thickness, center = true, convexity = 10, twist = twist)
+					polygon(
+						points=[
+							[0, -hole_diameter/10],
+							polar(r, -181/number_of_teeth),
+							polar(r, r<b ? k : -180/number_of_teeth),
+							q7(0/5,r,b,c,k, 1),q7(1/5,r,b,c,k, 1),q7(2/5,r,b,c,k, 1),q7(3/5,r,b,c,k, 1),q7(4/5,r,b,c,k, 1),q7(5/5,r,b,c,k, 1),
+							q7(5/5,r,b,c,k,-1),q7(4/5,r,b,c,k,-1),q7(3/5,r,b,c,k,-1),q7(2/5,r,b,c,k,-1),q7(1/5,r,b,c,k,-1),q7(0/5,r,b,c,k,-1),
+							polar(r, r<b ? -k : 180/number_of_teeth),
+							polar(r, 181/number_of_teeth)
+						],
+						paths=[[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]]
+					);
+		cylinder(h=2*thickness+1, r=hole_diameter/2, center=true, $fn=20);
 	}
 };	
 //these 4 functions are used by gear
@@ -113,25 +112,25 @@ module rack (
 	pressure_angle  = 28,   //Controls how straight or bulged the tooth sides are. In degrees.
 	backlash        = 0.0   //gap between two meshing teeth, in the direction along the circumference of the pitch circle
 ) {
-	assign(pi = 3.1415926)
-	assign(a = mm_per_tooth / pi) //addendum
-	assign(t = a*cos(pressure_angle)-1)         //tooth side is tilted so top/bottom corners move this amount
-		for (i = [0:number_of_teeth-1] )
-			translate([i*mm_per_tooth,0,0])
-				linear_extrude(height = thickness, center = true, convexity = 10)
-					polygon(
-						points=[
-							[-mm_per_tooth * 3/4,                 a-height],
-							[-mm_per_tooth * 3/4 - backlash,     -a],
-							[-mm_per_tooth * 1/4 + backlash - t, -a],
-							[-mm_per_tooth * 1/4 + backlash + t,  a],
-							[ mm_per_tooth * 1/4 - backlash - t,  a],
-							[ mm_per_tooth * 1/4 - backlash + t, -a],
-							[ mm_per_tooth * 3/4 + backlash,     -a],
-							[ mm_per_tooth * 3/4,                 a-height],
-						],
-						paths=[[0,1,2,3,4,5,6,7]]
-					);
+	pi = 3.1415926;
+	a = mm_per_tooth / pi; //addendum
+	t = a*cos(pressure_angle)-1;         //tooth side is tilted so top/bottom corners move this amount
+	for (i = [0:number_of_teeth-1] )
+		translate([i*mm_per_tooth,0,0])
+			linear_extrude(height = thickness, center = true, convexity = 10)
+				polygon(
+					points=[
+						[-mm_per_tooth * 3/4,                 a-height],
+						[-mm_per_tooth * 3/4 - backlash,     -a],
+						[-mm_per_tooth * 1/4 + backlash - t, -a],
+						[-mm_per_tooth * 1/4 + backlash + t,  a],
+						[ mm_per_tooth * 1/4 - backlash - t,  a],
+						[ mm_per_tooth * 1/4 - backlash + t, -a],
+						[ mm_per_tooth * 3/4 + backlash,     -a],
+						[ mm_per_tooth * 3/4,                 a-height],
+					],
+					paths=[[0,1,2,3,4,5,6,7]]
+				);
 };	
 
 //These 5 functions let the user find the derived dimensions of the gear.

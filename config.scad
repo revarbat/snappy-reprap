@@ -4,7 +4,7 @@ snappy_version = 0.91;
 // 0 = Thinning Walls (Thin in the middle, thick at edges.  Prettier smooth walls.)
 // 1 = Corrugated walls. (Zig-zagged walls. Less shrinkage stress. Closed walls.)
 // 2 = Crossbeam walls. (Open sparse struts. Far less shrinkage stress. Recommended.)
-wall_styling = 2;
+wall_styling = 0;
 
 
 platform_length = 100; // mm.  Must be a multiple of rack_tooth_size.
@@ -18,7 +18,7 @@ rail_thick    =   7;    // mm
 rail_offset   =  12;    // mm
 
 motor_rail_length = 100; // mm
-cantilever_length = 125; // mm
+cantilever_length = 180; // mm
 
 groove_angle  =  30;    // degrees
 groove_height =  12;    // mm
@@ -94,6 +94,7 @@ rail_spacing = platform_width - joiner_width*4 - 10;
 rail_width = rail_spacing + joiner_width*2;
 motor_mount_spacing=43+joiner_width+10;
 side_mount_spacing = platform_length-25;
+extruder_length = motor_rail_length+2*platform_length-2*rail_height+2*rail_length-2*cantilever_length;
 
 wall_styles = ["thinwall", "corrugated", "crossbeams"];
 wall_style = wall_styles[wall_styling];

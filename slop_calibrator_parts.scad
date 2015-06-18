@@ -40,13 +40,12 @@ module float_seven_segment(val=0.0, decim=2, size=10, h=1, suppress=false)
 	}
 	for (p = [mag:-1:-decim]) {
 		translate([-0.8*size*(p+0.5), 0, 0]) {
-			assign(d = floor(abs(val)/pow(10, p)+0.000001) % 10) {
-				if (p == -1) {
-					translate([-0.8*size/2, -size/2, 0])
-						cube(size=[size*0.1, size*0.1, h], center=true);
-				}
-				digit_seven_segment(digit=d, size=size, h=h);
+			d = floor(abs(val)/pow(10, p)+0.000001) % 10;
+			if (p == -1) {
+				translate([-0.8*size/2, -size/2, 0])
+					cube(size=[size*0.1, size*0.1, h], center=true);
 			}
+			digit_seven_segment(digit=d, size=size, h=h);
 		}
 	}
 }
@@ -66,12 +65,11 @@ module slop_calibrator_parts() { // make me
 			difference() {
 				cube(size=[spacing, rows*spacing, h], center=true);
 				for (row = [0:rows-1]) {
-					assign(slop = (step*rows*col)+step*row) {
-						translate([0, spacing*row-(rows-1)*spacing/2, 0]) {
-							cube(size=[(r+slop)*2, (r+slop)*2, h+1], center=true);
-							translate([spacing/2, -7, 0]) {
-								zrot(90) xrot(90) float_seven_segment(val=slop, decim=2, size=8, h=1, suppress=true);
-							}
+					slop = (step*rows*col)+step*row;
+					translate([0, spacing*row-(rows-1)*spacing/2, 0]) {
+						cube(size=[(r+slop)*2, (r+slop)*2, h+1], center=true);
+						translate([spacing/2, -7, 0]) {
+							zrot(90) xrot(90) float_seven_segment(val=slop, decim=2, size=8, h=1, suppress=true);
 						}
 					}
 				}

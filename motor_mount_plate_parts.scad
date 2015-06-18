@@ -72,7 +72,7 @@ module motor_mount_plate(thick=4, l=20)
 
 
 module motor_mount_plate_parts() { // make me
-	grid_of(count=[1,1], spacing=65) {
+	yspread(65, n=1) {
 		yrot(180) motor_mount_plate();
 	}
 }

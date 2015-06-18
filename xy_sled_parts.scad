@@ -8,7 +8,7 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 {
 	translate([-(rack_tooth_size/2), 0, 0]) {
 		mirror_copy([0,0,1]) {
-			skew_along_z(xang=CA) {
+			skew_xy(xang=CA) {
 				intersection() {
 					translate([-(l/2-rack_tooth_size/2), 0, h/4]) {
 						rack(

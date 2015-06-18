@@ -14,79 +14,222 @@ module prerender(convexity=10) {
 }
 
 
+
+//////////////////////////////////////////////////////////////////////
+// Transformations.
+//////////////////////////////////////////////////////////////////////
+
+
+// Moves/translates children.
+//   x = X axis translation.
+//   y = Y axis translation.
+//   z = Z axis translation.
+// Example:
+//   move([10,20,30]) sphere(r=1);
+//   move(y=10) sphere(r=1);
+//   move(x=10, z=20) sphere(r=1);
+module move(a=[0,0,0], x=0, y=0, z=0) {
+	translate(a) translate([x,y,z]) children();
+}
+
+
+// Moves/translates children the given amount along the X axis.
+// Example:
+//   xmove(10) sphere(r=1);
+module xmove(x=0) { translate([x,0,0]) children(); }
+
+
+// Moves/translates children the given amount along the Y axis.
+// Example:
+//   ymove(10) sphere(r=1);
+module ymove(y=0) { translate([0,y,0]) children(); } 
+
+
+// Moves/translates children the given amount along the Z axis.
+// Example:
+//   zmove(10) sphere(r=1);
+module zmove(z=0) { translate([0,0,z]) children(); } 
+
+
+// Moves children left by the given amount in the -X direction.
+// Example:
+//   left(10) sphere(r=1);
+module left(x=0) { translate([-x,0,0]) children(); }
+
+
+// Moves children right by the given amount in the +X direction.
+// Example:
+//   right(10) sphere(r=1);
+module right(x=0) { translate([x,0,0]) children(); }
+
+
+// Moves children forward by x amount in the -Y direction.
+// Example:
+//   forward(10) sphere(r=1);
+module forward(y=0) { translate([0,-y,0]) children(); }
+module fwd(y=0) { translate([0,-y,0]) children(); }
+
+
+// Moves children back by the given amount in the +Y direction.
+// Example:
+//   back(10) sphere(r=1);
+module back(y=0) { translate([0,y,0]) children(); }
+
+
+// Moves children down by the given amount in the -Z direction.
+// Example:
+//   down(10) sphere(r=1);
+module down(z=0) { translate([0,0,-z]) children(); }
+
+
+// Moves children up by the given amount in the +Z direction.
+// Example:
+//   up(10) sphere(r=1);
+module up(z=0) { translate([0,0,z]) children(); }
+
+
 // Rotates children around the Z axis by the given number of degrees.
 // Example:
 //   xrot(90) cylinder(h=10, r=2, center=true);
-module xrot(a=0)
-{
-	rotate([a, 0, 0])
-		children();
-}
+module xrot(a=0) { rotate([a, 0, 0]) children(); }
 
 
 // Rotates children around the Y axis by the given number of degrees.
 // Example:
 //   yrot(90) cylinder(h=10, r=2, center=true);
-module yrot(a=0)
-{
-	rotate([0, a, 0])
-		children();
-}
+module yrot(a=0) { rotate([0, a, 0]) children(); }
 
 
 // Rotates children around the Z axis by the given number of degrees.
 // Example:
 //   zrot(90) cube(size=[9,1,4], center=true);
-module zrot(a=0)
-{
-	rotate([0, 0, a])
-		children();
-}
+module zrot(a=0) { rotate([0, 0, a]) children(); }
 
 
+// Scales children by the given factor in the X axis.
+// Example:
+//   xscale(3) sphere(r=100, center=true);
+module xscale(x) {scale([x,0,0]) children();}
 
-module skew_along_x(yang=0, zang=0)
+
+// Scales children by the given factor in the Y axis.
+// Example:
+//   yscale(3) sphere(r=100, center=true);
+module yscale(y) {scale([0,y,0]) children();}
+
+
+// Scales children by the given factor in the Z axis.
+// Example:
+//   zscale(3) sphere(r=100, center=true);
+module zscale(z) {scale([0,0,z]) children();}
+
+
+// Mirrors the children along the X axis, kind of like xscale(-1)
+module xflip() mirror([1,0,0]) children();
+
+
+// Mirrors the children along the Y axis, kind of like yscale(-1)
+module yflip() mirror([0,1,0]) children();
+
+
+// Mirrors the children along the Z axis, kind of like zscale(-1)
+module zflip() mirror([0,0,1]) children();
+
+
+// Skews children on the X-Y plane, keeping constant in Z.
+//   xang = skew angle towards the X direction.
+//   yang = skew angle towards the Y direction.
+// Examples:
+//   skew_xy(xang=15) cube(size=10);
+//   skew_xy(xang=15, yang=30) cube(size=10);
+module skew_xy(xang=0, yang=0)
 {
 	multmatrix(m = [
-		[1,         0,          0,        0],
-		[sin(yang), 1,          0,        0],
-		[sin(zang), 0,          1,        0],
-		[0,         0,          0,        1]
-	]) {
-		children();
-	}
-}
-
-
-
-module skew_along_y(xang=0, zang=0)
-{
-	multmatrix(m = [
-		[1, sin(xang),          0,        0],
-		[0,         1,          0,        0],
-		[0, sin(zang),          1,        0],
-		[0,         0,          0,        1]
-	]) {
-		children();
-	}
-}
-
-
-
-module skew_along_z(xang=0, yang=0)
-{
-	multmatrix(m = [
-		[1,         0,  sin(xang),        0],
-		[0,         1,  sin(yang),        0],
+		[1,         0,  tan(xang),        0],
+		[0,         1,  tan(yang),        0],
 		[0,         0,          1,        0],
 		[0,         0,          0,        1]
 	]) {
 		children();
 	}
 }
+module zskew(xa=0,ya=0) skew_xy(xang=xa,yang=ya) children();
+
+
+// Skews children on the Y-Z plane, keeping constant in X.
+//   yang = skew angle towards the Y direction.
+//   zang = skew angle towards the Z direction.
+// Examples:
+//   skew_yz(yang=15) cube(size=10);
+//   skew_yz(yang=15, zang=30) cube(size=10);
+module skew_yz(yang=0, zang=0)
+{
+	multmatrix(m = [
+		[1,         0,          0,        0],
+		[tan(yang), 1,          0,        0],
+		[tan(zang), 0,          1,        0],
+		[0,         0,          0,        1]
+	]) {
+		children();
+	}
+}
+module xskew(ya=0,za=0) skew_yz(yang=ya,zang=za) children();
+
+
+// Skews children on the X-Z plane, keeping constant in Y.
+//   xang = skew angle towards the X direction.
+//   zang = skew angle towards the Z direction.
+// Examples:
+//   skew_xz(xang=15) cube(size=10);
+//   skew_xz(xang=15, zang=30) cube(size=10);
+module skew_xz(xang=0, zang=0)
+{
+	multmatrix(m = [
+		[1, tan(xang),          0,        0],
+		[0,         1,          0,        0],
+		[0, tan(zang),          1,        0],
+		[0,         0,          0,        1]
+	]) {
+		children();
+	}
+}
+module yskew(xa=0,za=0) skew_xz(xang=xa,zang=za) children();
 
 
 
+//////////////////////////////////////////////////////////////////////
+// Mutators.
+//////////////////////////////////////////////////////////////////////
+
+
+// Performs hull operations between consecutive pairs of children,
+// then unions all of the hull results.
+module chain_hull() {
+	union() {
+		if ($children == 1) {
+			children();
+		} else if ($children > 1) {
+			for (i =[1:$children-1]) {
+				hull() {
+					children(i-1);
+					children(i);
+				}
+			}
+		}
+	}
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+// Duplicators and Distributers.
+//////////////////////////////////////////////////////////////////////
+
+
+// Makes a copy of the children, mirrored across the given axes.
+//   v = The normal vector of the plane to mirror across.
+// Example:
+//   mirror_copy([1,-1,0]) yrot(30) cylinder(h=10, r=1, center=true);
 module mirror_copy(v=[0,0,1])
 {
 	union() {
@@ -94,6 +237,9 @@ module mirror_copy(v=[0,0,1])
 		mirror(v) children();
 	}
 }
+module xflip_copy() {children(); mirror([1,0,0]) children();}
+module yflip_copy() {children(); mirror([0,1,0]) children();}
+module zflip_copy() {children(); mirror([0,0,1]) children();}
 
 
 // Given a number of euller angles, rotates copies of the given children to each of those angles.
@@ -108,37 +254,81 @@ module rot_copies(rots=[[0,0,0]])
 }
 
 
-
 // Given an array of angles, rotates copies of the children to each of those angles around the X axis.
+//   rots = Optional array of angles, in degrees, to make copies at.
+//   count = Optional number of evenly distributed copies, rotated around a circle.
+//   offset = Angle offset in degrees, for use with count.
 // Example:
 //   xrot_copies(rots=[0,15,30,60,120,240]) translate([0,6,0]) cube(size=[4,9,1], center=true);
-module xrot_copies(rots=[0])
+//   xrot_copies(count=6, offset=15) translate([0,6,0]) cube(size=[4,9,1], center=true);
+module xrot_copies(rots=[0], offset=0, count=undef)
 {
-	for (a = rots)
-		rotate([a, 0, 0])
-			children();
+	if (count != undef) {
+		for (i = [0 : count-1]) {
+			a = (i / count) * 360.0;
+			rotate([a+offset, 0, 0]) {
+				children();
+			}
+		}
+	} else {
+		for (a = rots) {
+			rotate([a+offset, 0, 0]) {
+				children();
+			}
+		}
+	}
 }
 
 
 // Given an array of angles, rotates copies of the children to each of those angles around the Y axis.
+//   rots = Optional array of angles, in degrees, to make copies at.
+//   count = Optional number of evenly distributed copies, rotated around a circle.
+//   offset = Angle offset in degrees, for use with count.
 // Example:
 //   yrot_copies(rots=[0,15,30,60,120,240]) translate([6,0,0]) cube(size=[9,4,1], center=true);
-module yrot_copies(rots=[0])
+//   yrot_copies(count=6, offset=15) translate([6,0,0]) cube(size=[9,4,1], center=true);
+module yrot_copies(rots=[0], offset=0, count=undef)
 {
-	for (a = rots)
-		rotate([0, a, 0])
-			children();
+	if (count != undef) {
+		for (i = [0 : count-1]) {
+			a = (i / count) * 360.0;
+			rotate([0, a+offset, 0]) {
+				children();
+			}
+		}
+	} else {
+		for (a = rots) {
+			rotate([0, a+offset, 0]) {
+				children();
+			}
+		}
+	}
 }
 
 
 // Given an array of angles, rotates copies of the children to each of those angles around the Z axis.
+//   rots = Optional array of angles, in degrees, to make copies at.
+//   count = Optional number of evenly distributed copies, rotated around a circle.
+//   offset = Angle offset in degrees, for use with count.
 // Example:
 //   zrot_copies(rots=[0,15,30,60,120,240]) translate([6,0,0]) cube(size=[9,1,4], center=true);
-module zrot_copies(rots=[0])
+//   zrot_copies(count=6, offset=15) translate([6,0,0]) cube(size=[9,1,4], center=true);
+module zrot_copies(rots=[0], offset=0, count=undef)
 {
-	for (a = rots)
-		rotate([0, 0, a])
-			children();
+	if (count != undef) {
+		for (i = [0 : count-1]) {
+			a = (i / count) * 360.0;
+			rotate([0, 0, a+offset]) {
+				children();
+			}
+		}
+	} else {
+		for (a = rots) {
+			rotate([0, 0, a+offset]) {
+				children();
+			}
+		}
+	}
 }
 
 
@@ -153,58 +343,25 @@ module translate_copies(offsets=[[0,0,0]])
 		translate(off)
 			children();
 }
+module place_copies(a=[[0,0,0]]) {for (p = a) translate(p) children();}
 
 
-// Makes a 3D XYZ grid of duplicate children.
-//   xa = array or range of X-axis values to offset by. (Default: [0])
-//   ya = array or range of Y-axis values to offset by. (Default: [0])
-//   za = array or range of Z-axis values to offset by. (Default: [0])
-//   count = number of copies to have per axis. (Default: none)
-//   spacing = spacing of copies per axis. Use with count. (Default: 0)
+// Evenly distributes n duplicate children along an XYZ line.
+//   p1 = starting point of line.  (Default: [0,0,0])
+//   p2 = ending point of line.  (Default: [10,0,0])
+//   n = number of copies to distribute along the line. (Default: 2)
 // Examples:
-//   grid_of(xa=[0,2,3,5],ya=[3:5],za=[-4:2:6]) sphere(r=0.5,center=true);
-//   grid_of(ya=[-6:3:6],za=[4,7]) sphere(r=1,center=true);
-//   grid_of(count=3, spacing=10) sphere(r=1,center=true);
-//   grid_of(count=[3, 1, 2], spacing=10) sphere(r=1,center=true);
-//   grid_of(count=[3, 4], spacing=[10, 8]) sphere(r=1,center=true);
-//   grid_of(count=[3, 4, 2], spacing=[10, 8, 5]) sphere(r=1,center=true, $fn=24);
-module grid_of(xa=[0], ya=[0], za=[0], count=[], spacing=[])
+//   line_of(p1=[0,0,0], p2=[-10,15,20], n=5) cube(size=[3,1,1],center=true);
+//
+module line_of(p1=[0,0,0], p2=[10,0,0], n=2)
 {
-	count = (len(count) == undef)? [count,1,1] :
-			((len(count) == 1)? [count[0], 1, 1] :
-			((len(count) == 2)? [count[0], count[1], 1] :
-			((len(count) == 3)? count : undef)));
-
-	spacing = (len(spacing) == undef)? [spacing,spacing,spacing] :
-			((len(spacing) == 1)? [spacing[0], 0, 0] :
-			((len(spacing) == 2)? [spacing[0], spacing[1], 0] :
-			((len(spacing) == 3)? spacing : undef)));
-
-	if (count != undef && spacing != undef) {
-		for (x = [-(count[0]-1)/2 : (count[0]-1)/2 + 0.1]) {
-			for (y = [-(count[1]-1)/2 : (count[1]-1)/2 + 0.1]) {
-				for (z = [-(count[2]-1)/2 : (count[2]-1)/2 + 0.1]) {
-					translate([x*spacing[0], y*spacing[1], z*spacing[2]]) {
-						children();
-					}
-				}
-			}
-		}
-	} else {
-		for (xoff = xa) {
-			for (yoff = ya) {
-				for (zoff = za) {
-					translate([xoff,yoff,zoff]) {
-						children();
-					}
-				}
-			}
-		}
-	}
+	delta = (p2 - p1) / (n-1);
+	for (i = [0:n-1]) translate(p1+delta*i) children();
 }
+module spread(p1,p2,n=3) for (i=[0:n-1]) translate(p1+i*(p2-p1)/(n-1)) children();
 
 
-// Evenly distributes n duplicate children around a circle on the XY plane.
+// Evenly distributes n duplicate children around an arc/circle on the XY plane.
 //   n = number of copies to distribute around the circle. (Default: 6)
 //   r = radius of circle (Default: 1)
 //   rx = radius of ellipse on X axis. Used instead of r.
@@ -249,81 +406,342 @@ module circle_of(
 }
 
 
+module xring(n=2,r=0,rot=true) {if (n>0) for (i=[0:n-1]) {a=i*360/n; xrot(a) back(r) xrot(rot?0:-a) children();}}
+module yring(n=2,r=0,rot=true) {if (n>0) for (i=[0:n-1]) {a=i*360/n; yrot(a) right(r) yrot(rot?0:-a) children();}}
+module zring(n=2,r=0,rot=true) {if (n>0) for (i=[0:n-1]) {a=i*360/n; zrot(a) right(r) zrot(rot?0:-a) children();}}
 
-// Evenly distributes n duplicate children along an XYZ line.
-//   p1 = starting point of line.  (Default: [0,0,0])
-//   p2 = ending point of line.  (Default: [10,0,0])
-//   n = number of copies to distribute along the line. (Default: 6)
+
+// Spreads out n copies of the given children along the X axis.
+//   spacing = spacing between copies. (Default: 1.0)
+//   n = Number of copies to spread out. (Default: 2)
 // Examples:
-//   line_of(p1=[0,0,0], p2=[-10,15,20], n=5)
-//     cube(size=[3,1,1],center=true);
-//
-module line_of(p1=[0,0,0], p2=[10,0,0], n=6)
+//   xspread(25) sphere(1);
+//   xspread(25,3) sphere(1)
+//   xspread(25, n=3) sphere(1)
+//   xspread(spacing=20, n=4) sphere(1)
+module xspread(spacing=1,n=2) for (i=[0:n-1]) right((i-(n-1)/2.0)*spacing) children();
+
+
+// Spreads out n copies of the given children along the Y axis.
+//   spacing = spacing between copies. (Default: 1.0)
+//   n = Number of copies to spread out. (Default: 2)
+// Examples:
+//   yspread(25) sphere(1);
+//   yspread(25,3) sphere(1)
+//   yspread(25, n=3) sphere(1)
+//   yspread(spacing=20, n=4) sphere(1)
+module yspread(spacing=1,n=2) for (i=[0:n-1]) back((i-(n-1)/2.0)*spacing) children();
+
+
+// Spreads out n copies of the given children along the Z axis.
+//   spacing = spacing between copies. (Default: 1.0)
+//   n = Number of copies to spread out. (Default: 2)
+// Examples:
+//   zspread(25) sphere(1);
+//   zspread(25,3) sphere(1)
+//   zspread(25, n=3) sphere(1)
+//   zspread(spacing=20, n=4) sphere(1)
+module zspread(spacing=1,n=2) for (i=[0:n-1]) up((i-(n-1)/2.0)*spacing) children();
+
+
+// Makes a 3D grid of duplicate children.
+//   xa = array or range of X-axis values to offset by. (Default: [0])
+//   ya = array or range of Y-axis values to offset by. (Default: [0])
+//   za = array or range of Z-axis values to offset by. (Default: [0])
+//   count = Optional number of copies to have per axis. (Default: none)
+//   spacing = spacing of copies per axis. Use with count. (Default: 0)
+// Examples:
+//   grid_of(xa=[0,2,3,5],ya=[3:5],za=[-4:2:6]) sphere(r=0.5,center=true);
+//   grid_of(ya=[-6:3:6],za=[4,7]) sphere(r=1,center=true);
+//   grid_of(count=3, spacing=10) sphere(r=1,center=true);
+//   grid_of(count=[3, 1, 2], spacing=10) sphere(r=1,center=true);
+//   grid_of(count=[3, 4], spacing=[10, 8]) sphere(r=1,center=true);
+//   grid_of(count=[3, 4, 2], spacing=[10, 8, 5]) sphere(r=1,center=true, $fn=24);
+module grid_of(xa=[0], ya=[0], za=[0], count=[], spacing=[])
 {
-	delta = (p2 - p1) / (n-1);
-	for (i = [0:n-1])
-		translate([p1[0]+delta[0]*i, p1[1]+delta[1]*i, p1[2]+delta[2]*i])
-			children();
+	count = (len(count) == undef)? [count,1,1] :
+			((len(count) == 1)? [count[0], 1, 1] :
+			((len(count) == 2)? [count[0], count[1], 1] :
+			((len(count) == 3)? count : undef)));
+
+	spacing = (len(spacing) == undef)? [spacing,spacing,spacing] :
+			((len(spacing) == 1)? [spacing[0], 0, 0] :
+			((len(spacing) == 2)? [spacing[0], spacing[1], 0] :
+			((len(spacing) == 3)? spacing : undef)));
+
+	if (count != undef && spacing != undef) {
+		for (x = [-(count[0]-1)/2 : (count[0]-1)/2 + 0.1]) {
+			for (y = [-(count[1]-1)/2 : (count[1]-1)/2 + 0.1]) {
+				for (z = [-(count[2]-1)/2 : (count[2]-1)/2 + 0.1]) {
+					translate([x*spacing[0], y*spacing[1], z*spacing[2]]) {
+						children();
+					}
+				}
+			}
+		}
+	} else {
+		for (xoff = xa) {
+			for (yoff = ya) {
+				for (zoff = za) {
+					translate([xoff,yoff,zoff]) {
+						children();
+					}
+				}
+			}
+		}
+	}
 }
 
 
-// Makes a cube with rounded edges and corners.
-//   size = size of cube [X,Y,Z].  (Default: [1,1,1])
-//   r = radius of edge/corner rounding.  (Default: 0.25)
-// Examples:
-//   rcube(size=[9,4,1], r=0.333, center=true, $fn=24);
-//   rcube(size=[5,7,3], r=1);
-module rcube(size=[1,1,1], r=0.25, center=false, $fn=undef)
+
+//////////////////////////////////////////////////////////////////////
+// Masking shapes.
+//////////////////////////////////////////////////////////////////////
+
+
+module angle_half_pie_mask(
+	ang=45, h=1,
+	r=undef, r1=undef, r2=undef,
+	d=1.0, d1=undef, d2=undef,
+) {
+	r  = (r  != undef)? r  : (d/2);
+	r1 = (r1 != undef)? r1 : ((d1 != undef)? (d1/2) : r);
+	r2 = (r2 != undef)? r2 : ((d2 != undef)? (d2/2) : r);
+	rm = max(r1,r2);
+	difference() {
+		cylinder(h=h, r1=r1, r2=r2, center=true);
+		translate([0, -rm/2, 0])
+			cube(size=[rm*2+1, rm, h+1], center=true);
+		zrot(ang) {
+			translate([0, rm/2, 0]) {
+				cube(size=[rm*2.1, rm, h+1], center=true);
+			}
+		}
+	}
+}
+
+
+module angle_pie_mask(
+	ang=45, h=1,
+	r=undef, r1=undef, r2=undef,
+	d=1.0, d1=undef, d2=undef,
+) {
+	a1 = min(ang, 180.0);
+	a2 = max(0.0, ang-180.0);
+	r  = (r  != undef)? r  : (d/2);
+	r1 = (r1 != undef)? r1 : ((d1 != undef)? (d1/2) : r);
+	r2 = (r2 != undef)? r2 : ((d2 != undef)? (d2/2) : r);
+	union() {
+		angle_half_pie_mask(h=h, r1=r1, r2=r2, ang=a1);
+		if (a2 > 0.0) {
+			zrot(180) angle_half_pie_mask(h=h, r1=r1, r2=r2, ang=a2);
+		}
+	}
+}
+
+
+// Creates a shape that can be used to chamfer a 90 degree edge.
+// Difference it from the object to be chamfered.  The center of the mask
+// object should align exactly with the edge to be chamfered.
+module chamfer_mask(h=1.0, r=1.0)
 {
-	$fn = ($fn==undef)?max(18,floor(180/asin(1/r)/2)*2):$fn;
-	xoff=abs(size[0])/2-r;
-	yoff=abs(size[1])/2-r;
-	zoff=abs(size[2])/2-r;
-	offset = center?[0,0,0]:size/2;
-	translate(offset) {
+	zrot(45) cube(size=[r*sqrt(2.0), r*sqrt(2.0), h], center=true);
+}
+
+
+// Chamfers the edges of a cuboid region containing the given children.
+//   chamfer = inset of the chamfer from the edge. (Default: 1)
+//   size = The size of the rectangular cuboid we want to chamfer.
+//   edges = which edges do we want to chamfer.
+//           [
+//               [Y+Z+, Y-Z+, Y-Z-, Y+Z-],
+//               [X+Z+, X-Z+, X-Z-, X+Z-],
+//               [X+Y+, X-Y+, X-Y-, X+Y-]
+//           ]
+// Example:
+//   chamfer(chamfer=2, size=[10,40,90], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+//     cube(size=[10,40,90], center=true);
+//   }
+module chamfer(chamfer=1, size=[1,1,1], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]])
+{
+	difference() {
 		union() {
-			grid_of([-xoff,xoff],[-yoff,yoff],[-zoff,zoff])
-				sphere(r=r,center=true,$fn=$fn);
-			grid_of(xa=[-xoff,xoff],ya=[-yoff,yoff])
-				cylinder(r=r,h=zoff*2,center=true,$fn=$fn);
-			grid_of(xa=[-xoff,xoff],za=[-zoff,zoff])
-				rotate([90,0,0])
-					cylinder(r=r,h=yoff*2,center=true,$fn=$fn);
-			grid_of(ya=[-yoff,yoff],za=[-zoff,zoff])
-				rotate([90,0,0])
-				rotate([0,90,0])
-					cylinder(r=r,h=xoff*2,center=true,$fn=$fn);
-			cube(size=[xoff*2,yoff*2,size[2]], center=true);
-			cube(size=[xoff*2,size[1],zoff*2], center=true);
-			cube(size=[size[0],yoff*2,zoff*2], center=true);
+			children();
+		}
+		union() {
+			if (edges[0][0] != 0)
+				translate([0,  size[1]/2,  size[2]/2])
+					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+			if (edges[0][1] != 0)
+				translate([0, -size[1]/2,  size[2]/2])
+					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+			if (edges[0][2] != 0)
+				translate([0,  size[1]/2, -size[2]/2])
+					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+			if (edges[0][3] != 0)
+				translate([0, -size[1]/2, -size[2]/2])
+					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+
+			if (edges[1][0] != 0)
+				translate([ size[0]/2, 0,  size[2]/2])
+					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+			if (edges[1][1] != 0)
+				translate([-size[0]/2, 0,  size[2]/2])
+					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+			if (edges[1][2] != 0)
+				translate([ size[0]/2, 0, -size[2]/2])
+					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+			if (edges[1][3] != 0)
+				translate([-size[0]/2, 0, -size[2]/2])
+					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+
+			if (edges[2][0] != 0)
+				translate([ size[0]/2,  size[1]/2, 0])
+					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+			if (edges[2][1] != 0)
+				translate([-size[0]/2,  size[1]/2, 0])
+					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+			if (edges[2][2] != 0)
+				translate([ size[0]/2, -size[1]/2, 0])
+					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+			if (edges[2][3] != 0)
+				translate([-size[0]/2, -size[1]/2, 0])
+					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
 		}
 	}
 }
 
 
-
-// Makes a cube with rounded vertical edges.
-//   size = size of cube [X,Y,Z].  (Default: [1,1,1])
-//   r = radius of edge/corner rounding.  (Default: 0.25)
-// Examples:
-//   rrect(size=[9,4,1], r=1, center=true);
-//   rrect(size=[5,7,3], r=1, $fn=24);
-module rrect(size=[1,1,1], r=0.25, center=false, $fn=undef)
+// Creates a shape that can be used to fillet a 90 degree edge.
+// Difference it from the object to be filletted.  The center of the mask
+// object should align exactly with the edge to be filletted.
+module fillet_mask(h=1.0, r=1.0)
 {
-	$fn = ($fn==undef)?max(18,floor(180/asin(1/r)/2)*2):$fn;
-	xoff=abs(size[0])/2-r;
-	yoff=abs(size[1])/2-r;
-	offset = center?[0,0,0]:size/2;
-	translate(offset) {
-		union(){
-			grid_of([-xoff,xoff],[-yoff,yoff])
-				cylinder(r=r,h=size[2],center=true,$fn=$fn);
-			cube(size=[xoff*2,size[1],size[2]], center=true);
-			cube(size=[size[0],yoff*2,size[2]], center=true);
+	render(convexity=4)
+	difference() {
+		cube(size=[r*2, r*2, h], center=true);
+		grid_of(count=[2,2], spacing=r*2-0.05) {
+			cylinder(h=h+1, r=r, center=true);
 		}
 	}
 }
 
+
+// Example:
+//   fillet_edge_joint_mask(fillet=100, ang=90);
+module fillet_edge_joint_mask(fillet=1.0, ang=90)
+{
+	dy = fillet * tan(ang/2);
+	th = max(dy, fillet*2);
+	render(convexity=4)
+	difference() {
+		down(dy) {
+			up(th/2) {
+				forward(fillet) {
+					cube(size=[fillet*2, fillet*4, th], center=true);
+				}
+			}
+		}
+		down(dy) {
+			forward(fillet) {
+				grid_of(count=2, spacing=fillet*2) {
+					sphere(r=fillet);
+				}
+				xrot(ang) {
+					up(fillet*2) {
+						cube(size=[fillet*8, fillet*8, fillet*4], center=true);
+					}
+				}
+			}
+		}
+	}
+}
+
+
+// Creates a shape that can be used to fillet a convex edge at any angle.
+// Difference it from the object to be filletted.  The center of the mask
+// object should align exactly with the edge to be filletted.
+module fillet_planes_joint_mask(h=1.0, r=1.0, ang=90)
+{
+	x = r*sin(90-(ang/2))/sin(ang/2);
+	render(convexity=4)
+	difference() {
+		cylinder(h=h, r=abs(x), center=true);
+		translate([x, r, 0]) {
+			cylinder(h=h+1, r=r, center=true);
+		}
+	}
+}
+//!fillet_planes_joint_mask(h=50.0, r=10.0, ang=240, $fn=32);
+
+
+// Creates a shape that you can use to round 90 degree corners on a fillet.
+// Difference it from the object to be filletted.  The center of the mask
+// object should align exactly with the corner to be filletted.
+//   r = radius of corner fillet.
+// Example:
+//   $fa=1; $fs=1;
+//   difference() {
+//     cube(size=[6,10,16], center=true);
+//     translate([0, 5, 8]) yrot(90) fillet_mask(h=7, r=3);
+//     translate([3, 0, 8]) xrot(90) fillet_mask(h=11, r=3);
+//     translate([3, 5, 0]) fillet_mask(h=17, r=3);
+//     translate([3, 5, 8]) corner_fillet_mask(r=3);
+//   }
+module corner_fillet_mask(r=1.0)
+{
+	render(convexity=4)
+	difference() {
+		cube(size=r*2, center=true);
+		grid_of(count=[2,2,2], spacing=r*2-0.05) {
+			sphere(r=r, center=true);
+		}
+	}
+}
+
+
+// Create a mask that can be used to round the end of a cylinder.
+// Difference it from the cylinder to be filletted.  The center of the
+// mask object should align exactly with the center of the end of the
+// cylinder to be filletted.
+//   r = radius of cylinder to fillet. (Default: 1.0)
+//   fillet = radius of the edge filleting. (Default: 0.25)
+//   xtilt = angle of tilt of end of cylinder in the X direction. (Default: 0)
+//   ytilt = angle of tilt of end of cylinder in the Y direction. (Default: 0)
+// Example:
+//   $fa=2; $fs=2;
+//   difference() {
+//     cylinder(r=50, h=100, center=true);
+//     translate([0, 0, 50])
+//       fillet_cylinder_mask(r=50, fillet=10, xtilt=30, ytilt=30);
+//   }
+module fillet_cylinder_mask(r=1.0, fillet=0.25, xtilt=0, ytilt=0)
+{
+	dhx = 2*r*sin(xtilt);
+	dhy = 2*r*sin(ytilt);
+	dh = hypot(dhy, dhx);
+	down(dh/2) {
+		skew_xz(zang=xtilt) {
+			skew_yz(zang=ytilt) {
+				down(fillet) {
+					difference() {
+						up((dh+2*fillet)/2) {
+							cube(size=[r*2+10, r*2+10, dh+2*fillet], center=true);
+						}
+						torus(or=r, ir=r-2*fillet);
+						cylinder(r=r-fillet, h=2*fillet, center=true);
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+// Compound Shapes.
+//////////////////////////////////////////////////////////////////////
 
 
 // Makes a cube with chamfered edges.
@@ -398,6 +816,225 @@ module chamfcube(
 }
 
 
+// Makes a cube with rounded (filletted) vertical edges.
+//   size = size of cube [X,Y,Z].  (Default: [1,1,1])
+//   r = radius of edge/corner rounding.  (Default: 0.25)
+// Examples:
+//   rrect(size=[9,4,1], r=1, center=true);
+//   rrect(size=[5,7,3], r=1, $fn=24);
+module rrect(size=[1,1,1], r=0.25, center=false)
+{
+	$fn = ($fn==undef)?max(18,floor(180/asin(1/r)/2)*2):$fn;
+	xoff=abs(size[0])/2-r;
+	yoff=abs(size[1])/2-r;
+	offset = center?[0,0,0]:size/2;
+	translate(offset) {
+		union(){
+			grid_of([-xoff,xoff],[-yoff,yoff])
+				cylinder(r=r,h=size[2],center=true,$fn=$fn);
+			cube(size=[xoff*2,size[1],size[2]], center=true);
+			cube(size=[size[0],yoff*2,size[2]], center=true);
+		}
+	}
+}
+
+
+// Makes a cube with rounded (filletted) edges and corners.
+//   size = size of cube [X,Y,Z].  (Default: [1,1,1])
+//   r = radius of edge/corner rounding.  (Default: 0.25)
+// Examples:
+//   rcube(size=[9,4,1], r=0.333, center=true, $fn=24);
+//   rcube(size=[5,7,3], r=1);
+module rcube(size=[1,1,1], r=0.25, center=false)
+{
+	$fn = ($fn==undef)?max(18,floor(180/asin(1/r)/2)*2):$fn;
+	xoff=abs(size[0])/2-r;
+	yoff=abs(size[1])/2-r;
+	zoff=abs(size[2])/2-r;
+	offset = center?[0,0,0]:size/2;
+	translate(offset) {
+		union() {
+			grid_of([-xoff,xoff],[-yoff,yoff],[-zoff,zoff])
+				sphere(r=r,center=true,$fn=$fn);
+			grid_of(xa=[-xoff,xoff],ya=[-yoff,yoff])
+				cylinder(r=r,h=zoff*2,center=true,$fn=$fn);
+			grid_of(xa=[-xoff,xoff],za=[-zoff,zoff])
+				rotate([90,0,0])
+					cylinder(r=r,h=yoff*2,center=true,$fn=$fn);
+			grid_of(ya=[-yoff,yoff],za=[-zoff,zoff])
+				rotate([90,0,0])
+				rotate([0,90,0])
+					cylinder(r=r,h=xoff*2,center=true,$fn=$fn);
+			cube(size=[xoff*2,yoff*2,size[2]], center=true);
+			cube(size=[xoff*2,size[1],zoff*2], center=true);
+			cube(size=[size[0],yoff*2,zoff*2], center=true);
+		}
+	}
+}
+
+
+// Creates a cylinder with chamferred edges.
+//   h = height of cylinder. (Default: 1.0)
+//   r = radius of cylinder. (Default: 1.0)
+//   chamfer = X axis inset of the edge chamfer. (Default: 0.25)
+//   center = boolean.  If true, cylinder is centered. (Default: false)
+//   top = boolean.  If true, chamfer the top edges. (Default: True)
+//   bottom = boolean.  If true, chamfer the bottom edges. (Default: True)
+// Example:
+//   chamferred_cylinder(h=50, r=20, chamfer=5, angle=45, bottom=false, center=true);
+module chamferred_cylinder(h=1, r=1, chamfer=0.25, angle=45, center=false, top=true, bottom=true)
+{
+	off = center? 0 : h/2;
+	up(off) {
+		difference() {
+			cylinder(r=r, h=h, center=true);
+			if (top) {
+				translate([0, 0, h/2]) {
+					rotate_extrude(convexity = 4) {
+						translate([r, 0, 0]) {
+							scale([1, tan(angle), 1]) {
+								zrot(45) square(size=sqrt(2)*chamfer, center=true);
+							}
+						}
+					}
+				}
+			}
+			if (bottom) {
+				translate([0, 0, -h/2]) {
+					rotate_extrude(convexity = 4) {
+						translate([r, 0, 0]) {
+							scale([1, tan(angle), 1]) {
+								zrot(45) square(size=sqrt(2)*chamfer, center=true);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+// Creates a cylinder with filletted (rounded) ends.
+//   h = height of cylinder. (Default: 1.0)
+//   r = radius of cylinder. (Default: 1.0)
+//   fillet = radius of the edge filleting. (Default: 0.25)
+//   center = boolean.  If true, cylinder is centered. (Default: false)
+// Example:
+//   rcylinder(h=50, r=20, fillet=5, center=true, $fa=1, $fs=1);
+module rcylinder(h=1, r=1, fillet=0.25, center=false)
+{
+	off = center? 0 : h/2;
+	up(off) {
+		grid_of(count=[1,1,2], spacing=h-2*fillet) {
+			torus(or=r, ir=r-2*fillet);
+			cylinder(r=r-fillet, h=fillet*2, center=true);
+		}
+		cylinder(r=r, h=h-2*fillet, center=true);
+	}
+}
+
+
+// Makes a hollow tube with the given size and wall thickness.
+//   h = height of tube. (Default: 1)
+//   r = Outer radius of tube.  (Default: 1)
+//   r1 = Outer radius of bottom of tube.  (Default: value of r)
+//   r2 = Outer radius of top of tube.  (Default: value of r)
+//   wall = horizontal thickness of tube wall. (Default 0.5)
+// Example:
+//   tube(h=3, r=4, wall=1, center=true);
+//   tube(h=6, r=4, wall=2, $fn=6);
+//   tube(h=3, r1=5, r2=7, wall=2, center=true);
+module tube(h=1, r=1, r1=undef, r2=undef, wall=0.5, center=false, $fn=undef)
+{
+	r1 = (r1==undef)? r : r1;
+	r2 = (r2==undef)? r : r2;
+	$fn = ($fn==undef)?max(12,floor(180/asin(2/max(r1,r2))/2)*2):$fn;
+	difference() {
+		cylinder(h=h, r1=r1, r2=r2, center=center, $fn=$fn);
+		cylinder(h=h+0.03, r1=r1-wall, r2=r2-wall, center=center, $fn=$fn);
+	}
+}
+
+
+// Creates a torus with a given outer radius and inner radius.
+//   or = outer radius of the torus.
+//   ir = inside radius of the torus.
+// Example:
+//   torus(or=30, ir=20, $fa=1, $fs=1);
+module torus(or=1, ir=0.5)
+{
+	rotate_extrude(convexity = 4)
+		translate([(or-ir)/2+ir, 0, 0])
+			circle(r = (or-ir)/2);
+}
+
+
+// Makes a linear slot with rounded ends, appropriate for bolts to slide along.
+//   p1 = center of starting circle of slot.  (Default: [0,0,0])
+//   p2 = center of ending circle of slot.  (Default: [1,0,0])
+//   h = height of slot shape. (default: 1.0)
+//   r = radius of slot circle. (default: 0.5)
+//   r1 = bottom radius of slot cone. (use instead of r)
+//   r2 = top radius of slot cone. (use instead of r)
+//   d = diameter of slot circle. (default: 1.0)
+//   d1 = bottom diameter of slot cone. (use instead of d)
+//   d2 = top diameter of slot cone. (use instead of d)
+module slot(
+	p1=[0,0,0], p2=[1,0,0], h=1.0,
+	r=undef, r1=undef, r2=undef,
+	d=1.0, d1=undef, d2=undef
+) {
+	r  = (r  != undef)? r  : (d/2);
+	r1 = (r1 != undef)? r1 : ((d1 != undef)? (d1/2) : r);
+	r2 = (r2 != undef)? r2 : ((d2 != undef)? (d2/2) : r);
+	hull() {
+		translate(p1) cylinder(h=h, r1=r1, r2=r2, center=true);
+		translate(p2) cylinder(h=h, r1=r1, r2=r2, center=true);
+	}
+}
+
+
+// Makes an arced slot, appropriate for bolts to slide along.
+//   cp = centerpoint of slot arc. (default: [0, 0, 0])
+//   h = height of slot arc shape. (default: 1.0)
+//   r = radius of slot arc. (default: 0.5)
+//   d = diameter of slot arc. (default: 1.0)
+//   sr = radius of slot channel. (default: 0.5)
+//   sd = diameter of slot channel. (default: 0.5)
+//   sr1 = bottom radius of slot channel cone. (use instead of sr)
+//   sr2 = top radius of slot channel cone. (use instead of sr)
+//   sd1 = bottom diameter of slot channel cone. (use instead of sd)
+//   sd2 = top diameter of slot channel cone. (use instead of sd)
+//   sa = starting angle. (Default: 0.0)
+//   ea = ending angle. (Default: 90.0)
+// Examples:
+//   arced_slot(d=100, h=15, sd=10, sa=60, ea=280);
+//   arced_slot(r=100, h=10, sd1=30, sd2=10, sa=45, ea=180, $fa=5, $fs=2);
+module arced_slot(
+	cp=[0,0,0],
+	r=undef, d=1.0, h=1.0,
+	sr=undef, sr1=undef, sr2=undef,
+	sd=1.0, sd1=undef, sd2=undef,
+	sa=0, ea=90
+) {
+	r  = (r  != undef)? r  : (d/2);
+	sr  = (sr  != undef)? sr  : (sd/2);
+	sr1 = (sr1 != undef)? sr1 : ((sd1 != undef)? (sd1/2) : sr);
+	sr2 = (sr2 != undef)? sr2 : ((sd2 != undef)? (sd2/2) : sr);
+	da = ea - sa;
+	zrot(sa) {
+		translate([r, 0, 0]) cylinder(h=h, r1=sr1, r2=sr2, center=true);
+		difference() {
+			angle_pie_mask(h=h, r1=(r+sr1), r2=(r+sr2), ang=da);
+			cylinder(h=h+1, r1=(r-sr1), r2=(r-sr2), center=true);
+		}
+		zrot(da) {
+			translate([r, 0, 0]) cylinder(h=h, r1=sr1, r2=sr2, center=true);
+		}
+	}
+}
+
 
 // Makes a teardrop shape in the XZ plane. Useful for 3D printable holes.
 //   r = radius of circular part of teardrop.  (Default: 1)
@@ -425,22 +1062,219 @@ module teardrop(r=1, h=1, ang=45, $fn=undef)
 }
 
 
-
-// Makes a simple threadless screw, useful for making screwholes.
-//   screwsize = diameter of threaded part of screw.
-//   screwlen = length of threaded part of screw.
-//   headsize = diameter of the screw head.
-//   headlen = length of the screw head.
+// Makes a rectangular strut with the top side narrowing in a triangle.
+// The shape created may be likened to an extruded home plate from baseball.
+// This is useful for constructing parts that minimize the need to support
+// overhangs.
+//   w = Width (thickness) of the strut.
+//   l = Length of the strut.
+//   wall = height of rectangular portion of the strut.
+//   ang = angle that the trianglar side will converge at.
 // Example:
-//   screw(screwsize=3,screwlen=10,headsize=6,headlen=3);
-module screw(screwsize=3,screwlen=10,headsize=6,headlen=3,$fn=undef)
+//   narrowing_strut(w=10, l=100, wall=5, ang=30);
+module narrowing_strut(w=10, l=100, wall=5, ang=30)
 {
-	$fn = ($fn==undef)?max(8,floor(180/asin(2/screwsize)/2)*2):$fn;
-	translate([0,0,-(screwlen)/2])
-		cylinder(r=screwsize/2, h=screwlen+0.05, center=true, $fn=$fn);
-	translate([0,0,(headlen)/2])
-		cylinder(r=headsize/2, h=headlen, center=true, $fn=$fn*2);
+	union() {
+		translate([0, 0, wall/2])
+			cube(size=[w, l, wall], center=true);
+		difference() {
+			translate([0, 0, wall])
+				scale([1, 1, 1/tan(ang)]) yrot(45)
+					cube(size=[w/sqrt(2), l, w/sqrt(2)], center=true);
+			translate([0, 0, -w+0.05])
+				cube(size=[w+1, l+1, w*2], center=true);
+		}
+	}
 }
+
+
+// Makes a rectangular wall which thins to a smaller width in the center,
+// with angled supports to prevent critical overhangs.
+//   h = height of wall.
+//   l = length of wall.
+//   thick = thickness of wall.
+//   ang = maximum overhang angle of diagonal brace.
+//   strut = the width of the diagonal brace.
+//   wall = the thickness of the thinned portion of the wall.
+//   bracing = boolean, denoting that the wall should have diagonal cross-braces.
+// Example:
+//   thinning_wall(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
+module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=3, bracing=true)
+{
+	dang = atan((h-2*strut)/(l-2*strut));
+	dlen = (h-2*strut)/sin(dang);
+	union() {
+		xrot_copies([0, 180]) {
+			translate([0, 0, -h/2])
+				narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
+			translate([0, -l/2, 0])
+				xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
+			if (bracing == true) {
+				intersection() {
+					cube(size=[thick, l, h], center=true);
+					xrot_copies([-dang,dang]) {
+						grid_of(za=[-strut/4, strut/4]) {
+							scale([1,1,1.5]) yrot(45) {
+								cube(size=[thick/sqrt(2), dlen, thick/sqrt(2)], center=true);
+							}
+						}
+						cube(size=[thick, dlen, strut/2], center=true);
+					}
+				}
+			}
+		}
+		cube(size=[wall, l-0.1, h-0.1], center=true);
+	}
+}
+
+
+// Makes a triangular wall with thick edges, which thins to a smaller width in
+// the center, with angled supports to prevent critical overhangs.
+//   h = height of wall.
+//   l = length of wall.
+//   thick = thickness of wall.
+//   ang = maximum overhang angle of diagonal brace.
+//   strut = the width of the diagonal brace.
+//   wall = the thickness of the thinned portion of the wall.
+//   diagonly = boolean, which denotes only the diagonal brace should be thick.
+// Example:
+//   thinning_triangle(h=50, l=100, thick=4, ang=30, strut=5, wall=2, diagonly=true);
+module thinning_triangle(h=50, l=100, thick=5, ang=30, strut=5, wall=3, diagonly=false)
+{
+	dang = atan(h/l);
+	dlen = h/sin(dang);
+	difference() {
+		union() {
+			if (!diagonly) {
+				translate([0, 0, -h/2])
+					narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
+				translate([0, -l/2, 0])
+					xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
+			}
+			intersection() {
+				cube(size=[thick, l, h], center=true);
+				xrot(-dang) yrot(180) {
+					narrowing_strut(w=thick, l=dlen*1.2, wall=strut, ang=ang);
+				}
+			}
+			cube(size=[wall, l-0.1, h-0.1], center=true);
+		}
+		xrot(-dang) {
+			translate([0, 0, h/2]) {
+				cube(size=[thick+0.1, l*2, h], center=true);
+			}
+		}
+	}
+}
+
+
+// Makes a triangular wall which thins to a smaller width in the center,
+// with angled supports to prevent critical overhangs.  Basically an alias
+// of thinning_triangle(), with diagonly=true.
+//   h = height of wall.
+//   l = length of wall.
+//   thick = thickness of wall.
+//   ang = maximum overhang angle of diagonal brace.
+//   strut = the width of the diagonal brace.
+//   wall = the thickness of the thinned portion of the wall.
+// Example:
+//   thinning_brace(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
+module thinning_brace(h=50, l=100, thick=5, ang=30, strut=5, wall=3)
+{
+	thinning_triangle(h=h, l=l, thick=thick, ang=ang, strut=strut, wall=wall, diagonly=true);
+}
+
+
+// Makes an open rectangular strut with X-shaped cross-bracing, designed with 3D printing in mind.
+//   h = height of strut wall.
+//   l = length of strut wall.
+//   thick = thickness of strut wall.
+//   maxang = maximum overhang angle of cross-braces.
+//   max_bridge = maximum bridging distance between cross-braces.
+//   strut = the width of the cross-braces.
+// Example:
+//   sparse_strut(h=40, l=120, thick=4, maxang=30, strut=5, max_bridge=20);
+module sparse_strut(h=50, l=100, thick=4, maxang=30, strut=5, max_bridge = 20)
+{
+
+	zoff = h/2 - strut/2;
+	yoff = l/2 - strut/2;
+
+	maxhyp = 1.5 * (max_bridge+strut)/2 / sin(maxang);
+	maxz = 2 * maxhyp * cos(maxang);
+
+	zreps = ceil(2*zoff/maxz);
+	zstep = 2*zoff / zreps;
+
+	hyp = zstep/2 / cos(maxang);
+	maxy = min(2 * hyp * sin(maxang), max_bridge+strut);
+
+	yreps = ceil(2*yoff/maxy);
+	ystep = 2*yoff / yreps;
+
+	ang = atan(ystep/zstep);
+	len = zstep / cos(ang);
+
+	union() {
+		grid_of(za=[-zoff, zoff])
+			cube(size=[thick, l, strut], center=true);
+		grid_of(ya=[-yoff, yoff])
+			cube(size=[thick, strut, h], center=true);
+		grid_of(ya=[-yoff+ystep/2:ystep:yoff], za=[-zoff+zstep/2:zstep:zoff]) {
+			xrot( ang) cube(size=[thick, strut, len], center=true);
+			xrot(-ang) cube(size=[thick, strut, len], center=true);
+		}
+	}
+}
+
+
+// Makes a corrugated wall which relieves contraction stress while still
+// providing support strength.  Designed with 3D printing in mind.
+//   h = height of strut wall.
+//   l = length of strut wall.
+//   thick = thickness of strut wall.
+//   strut = the width of the cross-braces.
+//   wall = thickness of corrugations.
+// Example:
+//   corrugated_wall(h=50, l=100, thick=4, strut=5, wall=2);
+module corrugated_wall(h=50, l=100, thick=5, strut=5, wall=2)
+{
+	innerlen = l - strut*2;
+	inner_height = h - wall*2;
+	spacing = thick*sqrt(3);
+	corr_count = floor(innerlen/spacing/2)*2;
+
+	grid_of(ya=[-(l-strut)/2, (l-strut)/2]) {
+		cube(size=[thick, strut, h], center=true);
+	}
+	grid_of(za=[-(h-wall)/2, (h-wall)/2]) {
+		cube(size=[thick, l, wall], center=true);
+	}
+
+	prerender(convexity=corr_count*4+4)
+	difference() {
+		for (ypos = [-innerlen/2:spacing:innerlen/2]) {
+			translate([0, ypos, 0]) {
+				translate([0, spacing/4, 0])
+					zrot(-45) cube(size=[wall, thick*sqrt(2), inner_height], center=true);
+				translate([0, spacing*3/4, 0])
+					zrot(45) cube(size=[wall, thick*sqrt(2), inner_height], center=true);
+			}
+		}
+		grid_of(xa=[-thick, thick]) {
+			cube(size=[thick, l, h], center=true);
+		}
+		grid_of(ya=[-l, l]) {
+			cube(size=[thick*2, l, h], center=true);
+		}
+	}
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+// Screws, Bolts, and Nuts.
+//////////////////////////////////////////////////////////////////////
 
 
 function get_metric_bolt_head_size(size) = lookup(size, [
@@ -494,6 +1328,22 @@ function get_metric_nut_thickness(size) = lookup(size, [
 	]);
 
 
+// Makes a simple threadless screw, useful for making screwholes.
+//   screwsize = diameter of threaded part of screw.
+//   screwlen = length of threaded part of screw.
+//   headsize = diameter of the screw head.
+//   headlen = length of the screw head.
+// Example:
+//   screw(screwsize=3,screwlen=10,headsize=6,headlen=3);
+module screw(screwsize=3,screwlen=10,headsize=6,headlen=3,$fn=undef)
+{
+	$fn = ($fn==undef)?max(8,floor(180/asin(2/screwsize)/2)*2):$fn;
+	translate([0,0,-(screwlen)/2])
+		cylinder(r=screwsize/2, h=screwlen+0.05, center=true, $fn=$fn);
+	translate([0,0,(headlen)/2])
+		cylinder(r=headsize/2, h=headlen, center=true, $fn=$fn*2);
+}
+
 
 // Makes an unthreaded model of a standard nut for a standard metric screw.
 //   size = standard metric screw size in mm. (Default: 3)
@@ -514,6 +1364,11 @@ module metric_nut(size=3, hole=true, $fn=undef, center=false)
 	}
 }
 
+
+
+//////////////////////////////////////////////////////////////////////
+// Linear Bearings.
+//////////////////////////////////////////////////////////////////////
 
 
 function get_lmXuu_bearing_diam(size) = lookup(size, [
@@ -606,288 +1461,376 @@ module lmXuu_housing(size=8,tab=7,gap=5,wall=3,tabwall=5,screwsize=3)
 //lmXuu_housing(size=10);
 
 
-// Makes a hollow tube with the given size and wall thickness.
-//   h = height of tube. (Default: 1)
-//   r = Outer radius of tube.  (Default: 1)
-//   r1 = Outer radius of bottom of tube.  (Default: value of r)
-//   r2 = Outer radius of top of tube.  (Default: value of r)
-//   wall = horizontal thickness of tube wall. (Default 0.5)
+
+//////////////////////////////////////////////////////////////////////
+// Helper functions.
+//////////////////////////////////////////////////////////////////////
+
+
+// Calculate OpenSCAD standard number of segments in a circle based on $fn, $fa, and $fs.
+//   r = radius of circle to get the number of segments for.
+function segs(r) = $fn>0?($fn>3?$fn:3):(ceil(max(min(360.0/$fa,abs(r)*2*3.14159/$fs),5)));
+
+
+// Calculate hypotenuse of X by Y triangle.
+function hypot(x,y) = sqrt(x*x+y*y);
+
+
+// Returns all but the first item of a given array.
+function cdr(list) = len(list)>1?[for (i=[1:len(list)-1]) list[i]]:[];
+
+
+// Reverses a list/array.
+function reverse(list) = [ for (i = [len(list)-1 : -1 : 0]) list[i] ];
+
+
+// Returns a 3D vector/point from a 2D or 3D vector.
+function point3d(point) = [point[0], point[1], ((len(point) < 3)? 0 : point[2])];
+
+
+// Returns an array of 3D vectors/points from a 2D or 3D vector array.
+function path3d(points) = [for (point = points) point3d(point)];
+
+
+// returns the distance between a pair of 2D or 3D points.
+function distance(point1, point2) = let(
+		delta = point3d(point2) - point3d(point1)
+	) sqrt(delta[0]*delta[0] + delta[1]*delta[1] + delta[2]*delta[2]);
+
+
+// Create an identity matrix, for a given number of axes.
+function ident(axes) = [for (i = [0:axes-1]) [for (j = [0:axes-1]) (i==j)?1:0]];
+
+
+// Create an identity matrix, for 3 axes.
+ident3 = ident(3);
+
+
+// Mathematical rotation of a vector around the X axis.
+//   ang = number of degrees to rotate.
+function matrix3_xrot(ang) = [
+	[1,        0,         0],
+	[0, cos(ang), -sin(ang)],
+	[0, sin(ang),  cos(ang)]
+];
+
+
+// Mathematical rotation of a vector around the Y axis.
+//   ang = number of degrees to rotate.
+function matrix3_yrot(ang) = [
+	[ cos(ang), 0, sin(ang)],
+	[        0, 1,        0],
+	[-sin(ang), 0, cos(ang)],
+];
+
+
+// Mathematical rotation of a vector around the Z axis.
+//   ang = number of degrees to rotate.
+function matrix3_zrot(ang) = [
+	[cos(ang), -sin(ang), 0],
+	[sin(ang),  cos(ang), 0],
+	[       0,         0, 1]
+];
+
+
+// Mathematical rotation of a vector around an axis.
+//   u = axis vector to rotate around.
+//   ang = number of degrees to rotate.
+function matrix3_rot_by_axis(u, ang) = let(
+	c = cos(ang), c2 = 1-c, s = sin(ang)
+) [
+	[u[0]*u[0]*c2+c,      u[0]*u[1]*c2-u[2]*s, u[0]*u[2]*c2+u[1]*s],
+	[u[1]*u[0]*c2+u[2]*s, u[1]*u[1]*c2+c,      u[1]*u[2]*c2-u[0]*s],
+	[u[2]*u[0]*c2-u[1]*s, u[2]*u[1]*c2+u[0]*s, u[2]*u[2]*c2+c     ]
+];
+
+
+// Gives the sum of a series of sines, at a given angle.
+//   a = angle to get the value for.
+//   sines = array of [amplitude, frequency] pairs, where the frequency is the
+//           number of times the cycle repeats around the circle.
+function sum_of_sines(a,sines) = len(sines)==0? 0 :
+	len(sines)==1?sines[0][0]*sin(a*sines[0][1]+(len(sines[0])>2?sines[0][2]:0)):
+	sum_of_sines(a,[sines[0]])+sum_of_sines(a,cdr(sines));
+
+
+
+//////////////////////////////////////////////////////////////////////
+// 2D and Bezier Stuff.
+//////////////////////////////////////////////////////////////////////
+
+
+// Creates a 2D polygon circle, modulated by one or more superimposed
+// sine waves.
+//   r = radius of the base circle.
+//   sines = array of [amplitude, frequency] pairs, where the frequency is the
+//           number of times the cycle repeats around the circle.
 // Example:
-//   tube(h=3, r=4, wall=1, center=true);
-//   tube(h=6, r=4, wall=2, $fn=6);
-//   tube(h=3, r1=5, r2=7, wall=2, center=true);
-module tube(h=1, r=1, r1=undef, r2=undef, wall=0.5, center=false, $fn=undef)
+//   modulated_circle(r=40, sines=[[3, 11], [1, 31]], $fn=6);
+module modulated_circle(r=40, sines=[10])
 {
-	r1 = (r1==undef)? r : r1;
-	r2 = (r2==undef)? r : r2;
-	$fn = ($fn==undef)?max(12,floor(180/asin(2/max(r1,r2))/2)*2):$fn;
-	difference() {
-		cylinder(h=h, r1=r1, r2=r2, center=center, $fn=$fn);
-		cylinder(h=h+0.03, r1=r1-wall, r2=r2-wall, center=center, $fn=$fn);
-	}
+	freqs = len(sines)>0? [for (i=sines) i[1]] : [5];
+	points = [
+		for (a = [0 : (360/segs(r)/max(freqs)) : 360])
+			let(nr=r+sum_of_sines(a,sines)) [nr*cos(a), nr*sin(a)]
+	];
+	polygon(points);
 }
 
 
-
+// Similar to linear_extrude(), except the result is a hollow shell.
+//   wall = thickness of shell wall.
+//   height = height of extrusion.
+//   twist = degrees of twist, from bottom to top.
+//   slices = how many slices to use when making extrusion.
 // Example:
-//   narrowing_strut(w=10, l=100, wall=3, ang=30);
-module narrowing_strut(w=10, l=100, wall=5, ang=30)
+//   extrude_2d_hollow(wall=2, height=100, twist=90, slices=50)
+//     circle(r=40, center=true, $fn=6);
+module extrude_2d_hollow(wall=2, height=50, twist=90, slices=60)
 {
-	union() {
-		translate([0, 0, wall/2])
-			cube(size=[w, l, wall], center=true);
+	linear_extrude(height=height, twist=twist, slices=slices) {
 		difference() {
-			translate([0, 0, wall])
-				scale([1, 1, 1/tan(ang)]) yrot(45)
-					cube(size=[w/sqrt(2), l, w/sqrt(2)], center=true);
-			translate([0, 0, -w+0.05])
-				cube(size=[w+1, l+1, w*2], center=true);
-		}
-	}
-}
-//!narrowing_strut();
-
-
-
-// Makes a wall which thins to a smaller width in the center,
-// with angled supports to prevent critical overhangs.
-// Example:
-//   thinning_wall(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
-module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=3, bracing=true)
-{
-	dang = atan((h-2*strut)/(l-2*strut));
-	dlen = (h-2*strut)/sin(dang);
-	union() {
-		xrot_copies([0, 180]) {
-			translate([0, 0, -h/2])
-				narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
-			translate([0, -l/2, 0])
-				xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
-			if (bracing == true) {
-				intersection() {
-					cube(size=[thick, l, h], center=true);
-					xrot_copies([-dang,dang]) {
-						grid_of(za=[-strut/4, strut/4]) {
-							scale([1,1,1.5]) yrot(45) {
-								cube(size=[thick/sqrt(2), dlen, thick/sqrt(2)], center=true);
-							}
-						}
-						cube(size=[thick, dlen, strut/2], center=true);
-					}
-				}
-			}
-		}
-		cube(size=[wall, l-0.1, h-0.1], center=true);
-	}
-}
-//!thinning_wall(bracing=false);
-
-
-
-// Makes a triangular wall which thins to a smaller width in the center,
-// with angled supports to prevent critical overhangs.
-// Example:
-//   thinning_triangle(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
-module thinning_triangle(h=50, l=100, thick=5, ang=30, strut=5, wall=3, diagonly=false)
-{
-	dang = atan((h-strut)/(l-strut));
-	dlen = (h-strut)/sin(dang);
-	difference() {
-		union() {
-			if (!diagonly) {
-				translate([0, 0, -h/2])
-					narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
-				translate([0, -l/2, 0])
-					xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
-			}
-			intersection() {
-				cube(size=[thick, l, h], center=true);
-				xrot(-dang) yrot(180) {
-					narrowing_strut(w=thick, l=dlen*1.2, wall=strut, ang=ang);
-				}
-			}
-			cube(size=[wall, l-0.1, h-0.1], center=true);
-		}
-		xrot(-dang) {
-			translate([0, 0, h/2]) {
-				cube(size=[thick+0.1, l*2, h], center=true);
-			}
-		}
-	}
-}
-//!thinning_triangle(bracing=false);
-
-
-
-// Makes a triangular wall which thins to a smaller width in the center,
-// with angled supports to prevent critical overhangs.
-// Example:
-//   thinning_brace(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
-module thinning_brace(h=50, l=100, thick=5, ang=30, strut=5, wall=3)
-{
-	dang = atan((h)/(l));
-	dlen = (h)/sin(dang);
-	difference() {
-		union() {
-			intersection() {
-				cube(size=[thick, l, h], center=true);
-				translate([0, 0, 0]) {
-					xrot(-dang) yrot(180) {
-						narrowing_strut(w=thick, l=dlen, wall=strut, ang=ang);
-					}
-				}
-			}
-			cube(size=[wall, l-0.1, h-0.1], center=true);
-		}
-		xrot(-dang) {
-			translate([0, 0, h/2]) {
-				cube(size=[thick+0.1, l*2, h], center=true);
-			}
-		}
-	}
-}
-//!thinning_brace(bracing=false);
-
-
-
-// Example:
-//   sparse_strut(h=40, l=120, thick=4, maxang=30, strut=5, max_bridge=20);
-module sparse_strut(h=50, l=100, thick=4, maxang=30, strut=5, max_bridge = 20)
-{
-
-	zoff = h/2 - strut/2;
-	yoff = l/2 - strut/2;
-
-	maxhyp = 1.5 * (max_bridge+strut)/2 / sin(maxang);
-	maxz = 2 * maxhyp * cos(maxang);
-
-	zreps = ceil(2*zoff/maxz);
-	zstep = 2*zoff / zreps;
-
-	hyp = zstep/2 / cos(maxang);
-	maxy = min(2 * hyp * sin(maxang), max_bridge+strut);
-
-	yreps = ceil(2*yoff/maxy);
-	ystep = 2*yoff / yreps;
-
-	ang = atan(ystep/zstep);
-	len = zstep / cos(ang);
-
-	union() {
-		grid_of(za=[-zoff, zoff])
-			cube(size=[thick, l, strut], center=true);
-		grid_of(ya=[-yoff, yoff])
-			cube(size=[thick, strut, h], center=true);
-		grid_of(ya=[-yoff+ystep/2:ystep:yoff], za=[-zoff+zstep/2:zstep:zoff]) {
-			xrot( ang) cube(size=[thick, strut, len], center=true);
-			xrot(-ang) cube(size=[thick, strut, len], center=true);
-		}
-	}
-}
-
-
-// Makes a corrugated wall which relieved contraction stress while
-// still providing support strength.
-// Example:
-//   corrugated_wall(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
-module corrugated_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2)
-{
-	innerlen = l - strut*2;
-	inner_height = h - wall*2;
-	spacing = thick*sqrt(3);
-	corr_count = floor(innerlen/spacing/2)*2;
-
-	grid_of(ya=[-(l-strut)/2, (l-strut)/2]) {
-		cube(size=[thick, strut, h], center=true);
-	}
-	grid_of(za=[-(h-wall)/2, (h-wall)/2]) {
-		cube(size=[thick, l, wall], center=true);
-	}
-
-	prerender(convexity=corr_count*4+4)
-	difference() {
-		for (ypos = [-innerlen/2:spacing:innerlen/2]) {
-			translate([0, ypos, 0]) {
-				translate([0, spacing/4, 0])
-					zrot(-45) cube(size=[wall, thick*sqrt(2), inner_height], center=true);
-				translate([0, spacing*3/4, 0])
-					zrot(45) cube(size=[wall, thick*sqrt(2), inner_height], center=true);
-			}
-		}
-		grid_of(xa=[-thick, thick]) {
-			cube(size=[thick, l, h], center=true);
-		}
-		grid_of(ya=[-l, l]) {
-			cube(size=[thick*2, l, h], center=true);
-		}
-	}
-}
-//!corrugated_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2);
-
-
-
-module torus(or=1, ir=0.5)
-{
-	rotate_extrude(convexity = 10)
-		translate([(or-ir)/2+ir, 0, 0])
-			circle(r = (or-ir)/2, $fs=1);
-}
-//!torus(or=30, ir=10);
-
-
-
-module chamfer(chamfer=1, size=[1,1,1], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]])
-{
-	difference() {
-		union() {
 			children();
-		}
-		union() {
-			if (edges[0][0] != 0)
-				translate([0,  size[1]/2,  size[2]/2])
-					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
-			if (edges[0][1] != 0)
-				translate([0, -size[1]/2,  size[2]/2])
-					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
-			if (edges[0][2] != 0)
-				translate([0,  size[1]/2, -size[2]/2])
-					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
-			if (edges[0][3] != 0)
-				translate([0, -size[1]/2, -size[2]/2])
-					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
-
-			if (edges[1][0] != 0)
-				translate([ size[0]/2, 0,  size[2]/2])
-					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
-			if (edges[1][1] != 0)
-				translate([-size[0]/2, 0,  size[2]/2])
-					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
-			if (edges[1][2] != 0)
-				translate([ size[0]/2, 0, -size[2]/2])
-					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
-			if (edges[1][3] != 0)
-				translate([-size[0]/2, 0, -size[2]/2])
-					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
-
-			if (edges[2][0] != 0)
-				translate([ size[0]/2,  size[1]/2, 0])
-					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
-			if (edges[2][1] != 0)
-				translate([-size[0]/2,  size[1]/2, 0])
-					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
-			if (edges[2][2] != 0)
-				translate([ size[0]/2, -size[1]/2, 0])
-					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
-			if (edges[2][3] != 0)
-				translate([-size[0]/2, -size[1]/2, 0])
-					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+			offset(r=-wall) {
+				children();
+			}
 		}
 	}
 }
-//!chamfer(chamfer=2, size=[10,40,90], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-//	cube(size=[10,40,90], center=true);
-//}
+
+
+// Formulae to calculate points on a cubic bezier curve.
+function bez_B0(curve,u) = curve[0]*pow((1-u),3);
+function bez_B1(curve,u) = curve[1]*(3*u*pow((1-u),2));
+function bez_B2(curve,u) = curve[2]*(3*pow(u,2)*(1-u));
+function bez_B3(curve,u) = curve[3]*pow(u,3);
+function bez_point(curve,u) = bez_B0(curve,u) + bez_B1(curve,u) + bez_B2(curve,u) + bez_B3(curve,u);
+
+
+// Takes a closed 2D bezier path, and creates a 2D polygon from it.
+module bezier_path(bezier, splinesteps=16) {
+	pointslist = [
+		for (
+			b = [0 : 3 : len(bezier)-4],
+			l = [0 : splinesteps-1]
+		) let (
+			crv = [bezier[b+0], bezier[b+1], bezier[b+2], bezier[b+3]],
+			u = l / (splinesteps-1)
+		) bez_point(crv, u)
+	];
+	polygon(points=pointslist);
+}
+
+
+// Takes a closed 2D bezier and rotates it around the X axis, forming a solid.
+//   bezier = array of points for the bezier path to rotate.
+//   splinesteps = number of segments to divide each bezier segment into.
+// Example:
+//   path = [
+//     [  0, 10], [ 50,  0], [ 50, 40],
+//     [ 95, 40], [100, 40], [100, 45],
+//     [ 95, 45], [ 66, 45], [  0, 20],
+//     [  0, 12], [  0, 12], [  0, 10],
+//     [  0, 10]
+//   ];
+//   revolve_bezier(path, splinesteps=32, $fn=180);
+module revolve_bezier(bezier, splinesteps=16) {
+	yrot(90) rotate_extrude(convexity=10) {
+		xrot(180) zrot(-90) bezier_path(bezier, splinesteps);
+	}
+}
+
+
+// Takes a bezier path and closes it to the X axis.
+function bezier_close_to_axis(bezier) =
+	let(bezend = len(bezier)-1)
+		concat(
+			[ [bezier[0][0], 0], [bezier[0][0], 0], bezier[0] ],
+			bezier,
+			[ bezier[bezend], [bezier[bezend][0], 0], [bezier[bezend][0], 0] ]
+		);
+
+
+// Takes a bezier curve and closes it with a matching path that is
+// lowered by a given amount towards the X axis.
+function bezier_offset(inset, bezier) =
+	let(backbez = reverse([ for (pt = bezier) [pt[0], pt[1]-inset] ]))
+		concat(
+			bezier,
+			[bezier[len(bezier)-1]],
+			[backbez[0]],
+			backbez,
+			[backbez[len(backbez)-1]],
+			[bezier[0]],
+			[bezier[0]]
+		);
+
+
+// Takes a 2D bezier and rotates it around the X axis, forming a solid.
+//   bezier = array of points for the bezier path to rotate.
+//   splinesteps = number of segments to divide each bezier segment into.
+// Example:
+//   path = [ [0, 10], [33, 10], [66, 40], [100, 40] ];
+//   revolve_bezier_solid_to_axis(path, splinesteps=32, $fn=72);
+module revolve_bezier_solid_to_axis(bezier, splinesteps=16) {
+	revolve_bezier(bezier=bezier_close_to_axis(bezier), splinesteps=splinesteps);
+}
+
+
+// Takes a 2D bezier and rotates it around the X axis, into a hollow shell.
+//   bezier = array of points for the bezier path to rotate.
+//   offset = the thickness of the created shell.
+//   splinesteps = number of segments to divide each bezier segment into.
+// Example:
+//   path = [ [0, 10], [33, 10], [66, 40], [100, 40] ];
+//   revolve_bezier_offset_shell(path, offset=1, splinesteps=32, $fn=72);
+module revolve_bezier_offset_shell(bezier, offset=1, splinesteps=16) {
+	revolve_bezier(bezier=bezier_offset(offset, bezier), splinesteps=splinesteps);
+}
+
+
+// Extrudes 2D children along a bezier path.
+//   bezier = array of points for the bezier path to extrude along.
+//   splinesteps = number of segments to divide each bezier segment into.
+// Example:
+//   path = [ [0, 0, 0], [33, 33, 33], [66, -33, -33], [100, 0, 0] ];
+//   extrude_2d_shapes_along_bezier(path, splinesteps=32)
+//     circle(r=10, center=true);
+module extrude_2d_shapes_along_bezier(bezier, splinesteps=16) {
+	pointslist = [
+		for (
+			b = [0 : 3 : len(bezier)-4],
+			l = [0 : splinesteps-2]
+		) let (
+			crv = [bezier[b+0], bezier[b+1], bezier[b+2], bezier[b+3]]
+		) bez_point(crv, l / (splinesteps-1))
+	];
+
+	ptcount = len(pointslist);
+	for (i = [0 : ptcount-2]) {
+		pt1 = pointslist[i];
+		pt2 = pointslist[i+1];
+		pt0 = i==0? pt1 : pointslist[i-1];
+		pt3 = (i>=ptcount-2)? pt2 : pointslist[i+2];
+		dist = distance(pt1,pt2);
+		v1 = pt2-pt1;
+		v0 = (i==0)? v1 : (pt1-pt0);
+		v2 = (i==ptcount-2)? v1 : (pt3-pt2);
+		az1 = atan2(v1[1], v1[0]);
+		alt1 = (len(pt1)<3)? 0 : atan2(v1[2], hypot(v1[1], v1[0]));
+		az0 = atan2(v0[1], v0[0]);
+		alt0 = (len(pt0)<3)? 0 : atan2(v0[2], hypot(v0[1], v0[0]));
+		az2 = atan2(v2[1], v2[0]);
+		alt2 = (len(pt2)<3)? 0 : atan2(v2[2], hypot(v2[1], v2[0]));
+		translate(pt1) {
+			difference() {
+				rotate([0, 90-alt1, az1]) {
+					translate([0, 0, -1]) {
+						linear_extrude(height=dist*3, convexity=10) {
+							children();
+						}
+					}
+				}
+				rotate([0, 90-(alt0+alt1)/2, (az0+az1)/2]) {
+					translate([0, 0, -dist-0.05]) {
+						cube(size=[99,99,dist*2], center=true);
+					}
+				}
+				rotate([0, 90-(alt1+alt2)/2, (az1+az2)/2]) {
+					translate([0, 0, dist+dist]) {
+						cube(size=[99,99,dist*2], center=true);
+					}
+				}
+			}
+		}
+	}
+}
+
+
+// Takes a closed convex 2D bezier path, centered on the XY plane, and
+// extrudes it perpendicularly along a 3D bezier path, forming a solid.
+//   bezier = Array of points of a bezier path, to be extruded.
+//   path = Array of points of a bezier path, to extrude along.
+//   pathsteps = number of steps to divide each path segment into.
+//   bezsteps = number of steps to divide each bezier segment into.
+// Example:
+//   bez = [ [-15, 0], [-10, 5], [-5, 10], [0, 10], [5, 10], [10, 5], [15, 0], [10, -5], [5, -10], [0, -10], [-5, -10], [-10, -5], [-15, 0] ];
+//   path = [ [0, 0, 0], [33, 33, 33], [66, -33, -33], [100, 0, 0] ];
+//   extrude_bezier_along_bezier(bez, path, pathsteps=32, bezsteps=8);
+module extrude_bezier_along_bezier(bezier, path, pathsteps=16, bezsteps=16) {
+	bezlen = len(bezier);
+	bez_points = path3d(
+		concat(
+			[
+				for (
+					b = [0 : 3 : bezlen-4],
+					l = [0 : bezsteps-1]
+				) let (
+					crv = [bezier[b+0], bezier[b+1], bezier[b+2], bezier[b+3]]
+				) bez_point(crv, l / bezsteps)
+			],
+			[bez_point([bezier[bezlen-4], bezier[bezlen-3], bezier[bezlen-2], bezier[bezlen-1]], 1.0)]
+		)
+	);
+	bez_count = len(bez_points);
+
+	pathlen = len(path);
+	path_points = path3d(
+		concat(
+			[
+				for (
+					b = [0 : 3 : pathlen-4],
+					l = [0 : pathsteps-1]
+				) let (
+					crv = [path[b+0], path[b+1], path[b+2], path[b+3]]
+				) bez_point(crv, l / pathsteps)
+			],
+			[bez_point([path[pathlen-4], path[pathlen-3], path[pathlen-2], path[pathlen-1]], 1.0)]
+		)
+	);
+	path_count = len(path_points);
+
+	poly_points = concat(
+		[
+			for (p = [0:path_count-1]) let (
+				ppt1 = path_points[p],
+				ppt0 = (p==0)? ppt1 : path_points[p-1],
+				ppt2 = (p==(path_count-1))? ppt1 : path_points[p+1],
+				v = ppt2 - ppt0,
+				xyr = hypot(v[1], v[0]),
+				az = atan2(v[1], v[0]),
+				alt = atan2(v[2], xyr),
+				roty = matrix3_yrot(90-alt),
+				rotz = matrix3_zrot(az),
+				rotm = rotz * roty
+			) for (b = [0:bez_count-1]) rotm*bez_points[b]+ppt1
+		],
+		[path_points[0]],
+		[path_points[path_count-1]]
+	);
+
+	polylen = len(poly_points);
+	poly_faces = concat(
+		[for (b = [0:bez_count-1]) [b, (b+1) % bez_count, polylen-2] ],
+		[
+			for (
+				p = [0:path_count-2],
+				b = [0:bez_count-1],
+				i = [0:1]
+			) let (
+				b2 = (b == bez_count-1)? 0 : b+1,
+				p0 = p * bez_count + b,
+				p1 = p * bez_count + b2,
+				p2 = (p+1) * bez_count + b2,
+				p3 = (p+1) * bez_count + b,
+				pt = (i==0)? [p0, p1, p2] : [p0, p2, p3]
+			) pt
+		],
+		[for (b = [0:bez_count-1]) [b+(path_count-1)*bez_count, ((b+1) % bez_count)+(path_count-1)*bez_count, polylen-1] ]
+	);
+
+	polyhedron(points=poly_points, faces=poly_faces, convexity=10);
+}
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
-
