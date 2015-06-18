@@ -22,7 +22,7 @@ cleanwiki:
 ${ROTFILES}: full_assembly.scad $(wildcard *.scad)
 	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=800,800 --projection=p --csglimit=1000000 \
 	    -D '$$t=$(shell echo $(patsubst wiki/snappy_rot%.png,%/360.0,$@) | bc -l)' \
-	    -D '$$do_prerender=false' --camera=0,0,255,65,0,120,3500 $<
+	    -D '$$do_prerender=false' --camera=0,0,255,65,0,120,2000 $<
 	${CONVERT} -strip -resize 400x400 $(subst wiki/,tmp_,$@) $@
 	rm -f  $(subst wiki/,tmp_,$@)
 
