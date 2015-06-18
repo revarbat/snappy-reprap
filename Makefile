@@ -10,6 +10,9 @@ all: ${TARGETS}
 STLs/%.stl: %.scad config.scad GDMUtils.scad
 	${OPENSCAD} -m make -o $@ $<
 
+pull:
+	git pull --recurse-submodules
+
 clean:
 	rm -f tmp_*.png wiki/snappy_rot*.png render_*_parts.scad
 
