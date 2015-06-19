@@ -20,6 +20,13 @@ module extruder_platform()
 					cube(size=[w, l, rail_thick], center=true);
 
 				// Walls.
+				xspread(rail_spacing+joiner_width) {
+					up(h/6) {
+						cube(size=[joiner_width, extruder_length/2, h/3], center=true);
+					}
+				}
+
+				// Wall Triangles
 				zring(n=2) {
 					xflip_copy() {
 						up(h/2) {
@@ -34,12 +41,12 @@ module extruder_platform()
 			}
 
 			// Extruder mount holes.
-			circle_of(r=25, n=2) {
+			yspread(50) {
 				cylinder(r=4.5/2, h=20, center=true);
 			}
 
 			// Extruder hole.
-			rrect(r=10, size=[40, 60, 20], center=true);
+			rrect(r=10, size=[40, 40, 20], center=true);
 
 			// Clear space for joiners.
 			up(rail_height/2) {
@@ -94,6 +101,7 @@ module extruder_platform()
 		}
 	}
 }
+!extruder_platform();
 
 
 

@@ -24,6 +24,7 @@ use <xy_joiner_parts.scad>
 use <yz_bottom_joiner_parts.scad>
 use <yz_top_joiner_parts.scad>
 use <z_sled_parts.scad>
+use <z_strut_parts.scad>
 
 
 
@@ -172,8 +173,11 @@ module extruder_assembly(slidepos=0)
 	down(platform_length/2-slidepos) {
 		zring(n=2) {
 			fwd(extruder_length/2) {
-				fwd(cantilever_length) {
-					zrot(90) z_sled();
+				fwd(motor_rail_length/2) {
+					z_strut();
+					fwd(motor_rail_length/2+cantilever_length) {
+						zrot(90) z_sled();
+					}
 				}
 			}
 		}

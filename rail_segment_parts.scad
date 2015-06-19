@@ -83,7 +83,7 @@ module rail_segment()
 
 			// Shrinkage stress relief
 			up(rail_thick/2) {
-				yspread(13, n=12) {
+				yspread(11, n=12) {
 					cube(size=[rail_width+1, 1, rail_thick-2], center=true);
 				}
 				xspread(13, n=8) {
