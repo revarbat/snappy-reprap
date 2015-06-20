@@ -16,7 +16,7 @@ module z_strut()
 
 				// Walls.
 				zrot_copies([0, 180]) {
-					up((rail_height+3)/2) {
+					up(rail_height/2) {
 						right((rail_spacing+joiner_width)/2) {
 							if (wall_style == "crossbeams")
 								sparse_strut(h=rail_height, l=motor_rail_length-10, thick=joiner_width, strut=5);
@@ -48,7 +48,7 @@ module z_strut()
 
 			// Shrinkage stress relief
 			up(rail_thick/2) {
-				yspread(11, n=12) {
+				yspread(7, n=12) {
 					cube(size=[rail_width+1, 1, rail_thick-2], center=true);
 				}
 				xspread(13, n=8) {
