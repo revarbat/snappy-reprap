@@ -40,10 +40,8 @@ module yz_bottom_joiner()
 					// Side Walls
 					xflip_copy() {
 						right((rail_spacing+joiner_width)/2) {
-							// Lower Wall.
-							grid_of(
-								ya=[(platform_length-joiner_length+1)/2]
-							) {
+							// Wall.
+							back((platform_length-joiner_length+1)/2) {
 								if (wall_style == "crossbeams")
 									up((rail_height+rail_thick)/2)
 										sparse_strut(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=5);

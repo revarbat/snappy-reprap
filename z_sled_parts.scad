@@ -121,12 +121,25 @@ module z_sled()
 					}
 				}
 			}
+
+			// Clear side joiners
 			xflip_copy() {
 				up(rail_height/2/2) {
-				    fwd(joiner_width/2) {
-						right((platform_width-5)/2) {
-							#zrot(-90) half_joiner2(h=rail_height/2+0.001, w=joiner_width, clearance=5, a=joiner_angle, slop=printer_slop);
+					fwd(joiner_width/2) {
+						right((platform_width-5)/2+0.05) {
+							zrot(-90) half_joiner_clear(h=rail_height/2+0.001, w=joiner_width, clearance=5, a=joiner_angle, slop=printer_slop);
 						}
+					}
+				}
+			}
+		}
+
+		// Side joiners
+		xflip_copy() {
+			up(rail_height/2/2) {
+				fwd(joiner_width/2) {
+					right((platform_width-5)/2) {
+						zrot(-90) half_joiner2(h=rail_height/2, w=joiner_width, clearance=5, a=joiner_angle, slop=printer_slop);
 					}
 				}
 			}
@@ -175,7 +188,7 @@ module z_sled()
 
 				// Clear space for joiners.
 				up(rail_height/2) {
-					back(cantilever_length/2) {
+					back(cantilever_length/2+0.05) {
 						joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height+0.001, w=joiner_width, clearance=5, a=joiner_angle);
 					}
 				}
@@ -195,14 +208,14 @@ module z_sled()
 
 			// Snap-tab joiners.
 			up(rail_height/2) {
-				back(cantilever_length/2) {
+				back(cantilever_length/2+0.05) {
 					joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=5, a=joiner_angle);
 				}
 			}
 		}
 	}
 }
-!z_sled();
+//!z_sled();
 
 
 

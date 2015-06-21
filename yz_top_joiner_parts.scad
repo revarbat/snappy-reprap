@@ -24,41 +24,31 @@ module yz_top_joiner()
 					}
 
 					// Back.
-					up((rail_height+groove_height)/2) {
+					up(rail_height/2) {
 						back(rail_thick/2) {
 							zrot(90) {
 								if (wall_style == "crossbeams")
-									sparse_strut(h=rail_height+groove_height, l=rail_width-joiner_width, thick=rail_thick, strut=5);
+									sparse_strut(h=rail_height, l=rail_width-joiner_width, thick=rail_thick, strut=5);
 								if (wall_style == "thinwall")
-									thinning_wall(h=rail_height+groove_height, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick, bracing=true);
+									thinning_wall(h=rail_height, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick, bracing=true);
 								if (wall_style == "corrugated")
-									corrugated_wall(h=rail_height+groove_height, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick, wall=3);
+									corrugated_wall(h=rail_height, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick, wall=3);
 							}
 						}
 					}
 
-					// Side Walls
+					// Walls
 					xflip_copy() {
 						right((rail_spacing+joiner_width)/2) {
-							// Lower Wall.
-							grid_of(
-								ya=[(platform_length-joiner_length+1)/2]
-							) {
-								if (wall_style == "crossbeams")
-									up((rail_height+rail_thick)/2)
-										sparse_strut(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=5);
-								if (wall_style == "thinwall")
-									up((rail_height+rail_thick)/2)
-										thinning_wall(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=rail_thick, bracing=true);
-								if (wall_style == "corrugated")
-									up(rail_height/2)
+							back((platform_length-joiner_length+1)/2) {
+								up(rail_height/2) {
+									if (wall_style == "crossbeams")
+										sparse_strut(l=platform_length-joiner_length+1, h=rail_height, thick=joiner_width, strut=5);
+									if (wall_style == "thinwall")
+										thinning_wall(l=platform_length-joiner_length+1, h=rail_height, thick=joiner_width, strut=rail_thick, bracing=true);
+									if (wall_style == "corrugated")
 										corrugated_wall(l=platform_length-joiner_length+1, h=rail_height, thick=joiner_width, strut=rail_thick, wall=3);
-							}
-
-							// Rail tops.
-							translate([0, rail_height, rail_height-0.05]) {
-								translate([0, (platform_length-rail_height)/2, groove_height/2])
-									cube(size=[joiner_width, platform_length-rail_height, groove_height], center=true);
+								}
 							}
 						}
 					}
@@ -82,7 +72,7 @@ module yz_top_joiner()
 				}
 
 				// Clear space for top joiners.
-				translate([0, rail_height/2, rail_height+groove_height+0.05]) {
+				translate([0, rail_height/2, rail_height+0.05]) {
 					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+0.001, clearance=5, a=joiner_angle);
 				}
 			}
@@ -93,18 +83,18 @@ module yz_top_joiner()
 			}
 
 			// Top joiners.
-			translate([0, rail_height/2, rail_height+groove_height]) {
-				xrot(90) joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+			translate([0, rail_height/2, rail_height]) {
+				xrot(90) joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=7, a=joiner_angle);
 			}
 
 			translate([0, platform_length-joiner_length, rail_height/4]) {
 				difference() {
 					// Side supports.
-					cube(size=[rail_width, 5, rail_height/2], center=true);
+					cube(size=[rail_width, 4, rail_height/2], center=true);
 
 					// Wiring access holes.
 					xspread(rail_width/3, n=3) {
-						cube(size=[16, 11, 10], center=true);
+						cube(size=[16, 11, 11], center=true);
 					}
 				}
 			}

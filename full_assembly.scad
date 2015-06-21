@@ -4,23 +4,24 @@ include <config.scad>
 include <GDMUtils.scad>
 use <NEMA.scad>
 
-use <platform_support_parts.scad>
+use <bridge_center_parts.scad>
+use <bridge_segment_parts.scad>
 use <cable_chain_link_parts.scad>
 use <cable_chain_mount_parts.scad>
 use <drive_gear_parts.scad>
-use <fan_shroud_parts.scad>
 use <extruder_platform_parts.scad>
+use <fan_shroud_parts.scad>
 use <lifter_rod_coupler_parts.scad>
 use <motor_mount_plate_parts.scad>
+use <platform_support_parts.scad>
 use <rail_endcap_parts.scad>
-use <rail_lifter_segment_parts.scad>
 use <rail_segment_parts.scad>
-use <rail_x_motor_segment_parts.scad>
-use <rail_y_motor_segment_parts.scad>
+use <rail_xy_motor_segment_parts.scad>
+use <rail_z_motor_segment_parts.scad>
 use <sled_endcap_parts.scad>
-use <xy_sled_parts.scad>
 use <support_leg_parts.scad>
 use <xy_joiner_parts.scad>
+use <xy_sled_parts.scad>
 use <yz_bottom_joiner_parts.scad>
 use <yz_top_joiner_parts.scad>
 use <z_sled_parts.scad>
@@ -39,7 +40,7 @@ module x_axis_slider_assembly(slidepos=0)
 			}
 		}
 	}
-	rail_x_motor_segment();
+	rail_xy_motor_segment();
 
 	// Stepper Motor
 	up(rail_height-5-20) {
@@ -88,7 +89,7 @@ module y_axis_slider_assembly(slidepos=0)
 			}
 		}
 	}
-	rail_y_motor_segment();
+	rail_xy_motor_segment();
 
 	// Stepper Motor
 	up(rail_height-5-20) {
@@ -123,7 +124,7 @@ module z_axis_slider_assembly(slidepos=0)
 		}
 	}
 	back(motor_rail_length) {
-		zrot(180) rail_lifter_segment();
+		zrot(180) rail_z_motor_segment();
 	}
 
 	up(rail_height+groove_height/2) {
@@ -155,14 +156,14 @@ module bridge_assembly()
 	zring(n=2) {
 		fwd(motor_rail_length/2) {
 			fwd(rail_length/2) {
-				rail_segment();
+				bridge_segment();
 				fwd(rail_length/2+platform_length) {
 					yz_top_joiner();
 				}
 			}
 		}
 	}
-	rail_y_motor_segment();
+	bridge_center();
 }
 
 
@@ -197,7 +198,7 @@ module full_assembly(hide_endcaps=false)
 	zpos = 80*cos(240+360*$t)+10;
 
 	// Top bridge
-	up(2*rail_height+motor_rail_length+2*rail_length+2*groove_height) {
+	up(2*rail_height+motor_rail_length+2*rail_length+groove_height) {
 		xrot(180) bridge_assembly();
 	}
 
