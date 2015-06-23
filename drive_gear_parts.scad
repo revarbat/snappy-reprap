@@ -71,7 +71,7 @@ module drive_gear() {
 
 
 module drive_gear_parts() { // make me
-	yspread(20) drive_gear();
+	yspread(30) drive_gear();
 }
 
 

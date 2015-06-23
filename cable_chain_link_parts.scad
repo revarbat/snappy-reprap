@@ -16,8 +16,10 @@ module cable_chain_link()
 
 
 module cable_chain_link_parts() { // make me
-	grid_of(count=[5, 4], spacing=[23, 27]) {
-		cable_chain_link();
+	xspread(cable_chain_width+3, n=5) {
+		yspread(cable_chain_length+3, n=4) {
+			cable_chain_link();
+		}
 	}
 }
 

@@ -83,7 +83,7 @@ module extruder_platform()
 						xrot(90) cylinder(h=fan_mount_length, r=fan_mount_width/2, center=true);
 					}
 					xrot(90) cylinder(h=fan_mount_length+1, r=fan_mount_screw*1.1/2, center=true, $fn=12);
-					grid_of(count=[1,2], spacing=fan_mount_length-2*4) {
+					yspread(fan_mount_length-2*4) {
 						hull() {
 							grid_of(za=[0,5]) {
 								xrot(90) zrot(90) {

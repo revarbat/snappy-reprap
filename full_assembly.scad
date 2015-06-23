@@ -227,7 +227,7 @@ module full_assembly(hide_endcaps=false)
 			}
 		}
 		translate([(platform_width-joiner_width)/2, -platform_length, 0]) {
-			zrot(180) cable_chain_xy_mount();
+			zrot(180) cable_chain_xy_joiner_mount();
 		}
 		zrot(90) {
 			// X-axis rail endcaps.

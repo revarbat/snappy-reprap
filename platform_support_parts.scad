@@ -1,6 +1,7 @@
 include <config.scad>
 use <GDMUtils.scad>
 use <joiners.scad>
+use <cable_chain.scad>
 
 
 
@@ -36,6 +37,18 @@ module platform_support1()
 			translate([0, 0, -platform_height/2]) {
 				chamfer(chamfer=joiner_width/3, size=[joiner_width, 2*joiner_length, platform_height], edges=[[0,0,0,0], [0,0,1,1], [0,0,0,0]]) {
 					joiner(h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+				}
+			}
+
+			// cable chain mount
+			fwd(cable_chain_width/2+5) {
+				right(8-0.05) {
+					up(3) {
+						zrot(90) xrot(180) {
+							cable_chain_mount2();
+							cable_chain_barrel();
+						}
+					}
 				}
 			}
 		}
@@ -91,12 +104,12 @@ module platform_support2()
 
 
 module platform_support_parts() { // make me
-	zrot_copies([0, 180]) {
-		translate([0, 10, 3]) {
-			translate([-10, 0, 0])
-				xrot(180) platform_support1();
-			translate([10, 0, 0])
-				xrot(180) platform_support2();
+	zring(n=2) {
+		up(3) {
+			back(10) {
+				left(30) xrot(180) platform_support2();
+				right(30) xrot(180) platform_support1();
+			}
 		}
 	}
 }
