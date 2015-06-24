@@ -1,8 +1,9 @@
 include <config.scad>
 use <GDMUtils.scad>
 
-$fa = 2;
+$fa = 1;
 $fs = 2;
+
 
 module lifter_rod_coupler()
 {
@@ -12,10 +13,17 @@ module lifter_rod_coupler()
 	up(height/2)
 	difference () {
 		cylinder(h=height, d=diam, center=true);
-		down(height/4)
-			cylinder(h=height/2+0.1, d=motor_shaft_size+printer_slop*2, center=true, $fn=24);
+		down(height/4) {
+			difference() {
+				cylinder(h=height/2+0.1, d=motor_shaft_size+2*printer_slop, center=true, $fn=24);
+				if (motor_shaft_flatted) {
+					left(motor_shaft_size*1.45)
+						cube(size=[motor_shaft_size*2, motor_shaft_size*2, height/2], center=true);
+				}
+			}
+		}
 		up(height/4)
-			cylinder(h=height/2+0.1, d=lifter_rod_diam+printer_slop*2, center=true, $fn=24);
+			cylinder(h=height/2+0.1, d=lifter_rod_diam+2*printer_slop, center=true, $fn=24);
 		right(diam/4)
 			cube(size=[diam/2+0.1, 2, height+0.1], center=true);
 		right((diam+lifter_rod_diam)/2/2-1) {

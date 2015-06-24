@@ -44,16 +44,23 @@ module xy_joiner()
 		}
 
 		// Top half-joiners.
-		translate([0, hoff, 0]) {
-			translate([0, 0, rail_height/2/2]) {
-				translate([side_mount_spacing/2, 0, 0]) {
-					chamfer(chamfer=3, size=[joiner_width, 2*(hoff+joiner_length), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-						half_joiner(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle);
+		back(hoff) {
+			difference() {
+				up(rail_height/2/2) {
+					right(side_mount_spacing/2) {
+						chamfer(chamfer=3, size=[joiner_width, 2*(hoff+joiner_length), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+							half_joiner(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle);
+						}
+					}
+					left(side_mount_spacing/2) {
+						chamfer(chamfer=3, size=[joiner_width, 2*(hoff+joiner_length), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+							half_joiner2(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle, slop=printer_slop);
+						}
 					}
 				}
-				translate([-side_mount_spacing/2, 0, 0]) {
-					chamfer(chamfer=3, size=[joiner_width, 2*(hoff+joiner_length), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-						half_joiner2(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle, slop=printer_slop);
+				up(rail_height/2/2) {
+					fwd((hoff+joiner_width)/2) {
+						cube([side_mount_spacing+2*joiner_width, 15, 10], center=true);
 					}
 				}
 			}
