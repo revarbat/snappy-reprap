@@ -22,7 +22,7 @@ module extruder_platform()
 				// Walls.
 				xspread(rail_spacing+joiner_width) {
 					up(h/6) {
-						cube(size=[joiner_width, extruder_length/2, h/3], center=true);
+						cube(size=[joiner_width, extruder_length/2-5, h/3], center=true);
 					}
 				}
 
@@ -30,9 +30,9 @@ module extruder_platform()
 				zring(n=2) {
 					xflip_copy() {
 						up(h/2) {
-							fwd(l/2-l/6-5) {
+							fwd(l/2-l/6-10+0.05) {
 								right((rail_spacing+joiner_width)/2) {
-									thinning_triangle(h=h, l=l/3, thick=joiner_width, strut=5, bracing=false);
+									thinning_brace(h=h, l=l/3, thick=joiner_width, strut=5);
 								}
 							}
 						}
@@ -49,19 +49,17 @@ module extruder_platform()
 			rrect(r=10, size=[40, 40, 20], center=true);
 
 			// Clear space for joiners.
-			up(rail_height/2) {
-				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=l+0.05, h=h+0.001, w=joiner_width, clearance=5, a=joiner_angle);
+			up(rail_height/2+0.005) {
+				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=l+0.001, h=h, w=joiner_width, clearance=5, a=joiner_angle);
 			}
 
 			// Shrinkage stress relief
 			up(rail_thick/2) {
-				yspread(13, n=12) {
+				yspread(20, n=6) {
 					cube(size=[w+1, 1, rail_thick-2], center=true);
 				}
-				xspread(13, n=8) {
-					yspread(l-10) {
-						cube(size=[1, 60, rail_thick-2], center=true);
-					}
+				xspread(16, n=6) {
+					cube(size=[1, l+1, rail_thick-2], center=true);
 				}
 			}
 
@@ -95,13 +93,14 @@ module extruder_platform()
 				}
 			}
 		}
+
 		// Snap-tab joiners.
 		up(rail_height/2) {
-			joiner_quad(xspacing=rail_spacing+joiner_width, yspacing=l, h=h, w=joiner_width, l=5, a=joiner_angle);
+			joiner_quad(xspacing=rail_spacing+joiner_width, yspacing=l-0.05, h=h, w=joiner_width, l=10, a=joiner_angle);
 		}
 	}
 }
-!extruder_platform();
+//!extruder_platform();
 
 
 
