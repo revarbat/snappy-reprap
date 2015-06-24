@@ -71,10 +71,12 @@ module cable_chain_xy_joiner_mount()
 				cable_chain_barrel();
 				zrot(180) cable_chain_mount1();
 			}
-			translate([-8, -5, 0]) {
-				zrot(-90) {
-					cable_chain_mount1();
-					cable_chain_barrel();
+			left(cable_chain_width/2-cable_chain_length/8+0.5) {
+				fwd(cable_chain_width/2-cable_chain_width/4+0.5) {
+					zrot(-90) {
+						cable_chain_mount1();
+						cable_chain_barrel();
+					}
 				}
 			}
 			difference() {
