@@ -87,11 +87,12 @@ board_hole_xspacing =  95.25;  // mm
 board_hole_yspacing =  96.50;  // mm
 board_width         = 105;     // mm
 board_length        = 110;     // mm
+board_thick         =  25;     // mm
 board_screw_size    =   3;     // mm
-board_standoff_hgt  =   3;     // mm
+board_standoff_hgt  =   2.5;   // mm
 board_standoff_diam =   5;     // mm
 
-// This is the slop needed to make parts fit more exactly, and may be
+// This is the slop needed to make parts fit more exactly, and might be
 // printer dependant.  Printing a slop calibration plate should help
 // dial this setting in for your printer.
 printer_slop =   0.25; // mm

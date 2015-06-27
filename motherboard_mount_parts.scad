@@ -5,7 +5,7 @@ use <joiners.scad>
 
 $fa = 1;
 $fs = 2;
-joiner_length = 25;
+joiner_length = board_thick + rail_thick + board_standoff_hgt;
 
 module motherboard_mount() {
     color("LightBlue")
