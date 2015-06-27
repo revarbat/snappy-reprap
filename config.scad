@@ -74,13 +74,22 @@ fan_mount_width  = 10;  // mm
 fan_mount_screw  =  3;  // mm
 fan_shroud_angle = 60;  // degrees
 
-// Cable chain dimentions
+// Cable chain dimensions
 cable_chain_height = 13;  // mm
 cable_chain_width  = 25;  // mm
 cable_chain_length = 26;  // mm
 cable_chain_pivot  =  6;  // mm
 cable_chain_bump   =  1;  // mm
 cable_chain_wall   =  3;  // mm
+
+// Motherboard dimensions (RAMBo)
+board_hole_xspacing =  95.25;  // mm
+board_hole_yspacing =  96.50;  // mm
+board_width         = 105;     // mm
+board_length        = 110;     // mm
+board_screw_size    =   3;     // mm
+board_standoff_hgt  =   3;     // mm
+board_standoff_diam =   5;     // mm
 
 // This is the slop needed to make parts fit more exactly, and may be
 // printer dependant.  Printing a slop calibration plate should help
@@ -101,4 +110,3 @@ wall_style = wall_styles[wall_styling];
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
-
