@@ -13,6 +13,7 @@ use <extruder_platform_parts.scad>
 use <fan_shroud_parts.scad>
 use <lifter_rod_coupler_parts.scad>
 use <motor_mount_plate_parts.scad>
+use <motherboard_mount_parts.scad>
 use <platform_support_parts.scad>
 use <rail_endcap_parts.scad>
 use <rail_segment_parts.scad>
@@ -217,6 +218,9 @@ module full_assembly(hide_endcaps=false)
 			}
 		}
 	}
+	back(platform_length + rail_length + motor_rail_length/2 +6) {
+		motherboard_mount();
+	}
 
 	// Y-axis rails.
 	y_axis_slider_assembly(ypos) {
@@ -271,4 +275,3 @@ full_assembly(hide_endcaps=false);
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
-

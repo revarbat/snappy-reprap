@@ -5,13 +5,14 @@ use <joiners.scad>
 
 $fa = 1;
 $fs = 2;
+joiner_length = 25;
 
 module motherboard_mount() {
-    joiner_length = 25;
-    side_joiner_len = 10;
-
     color("LightBlue")
     prerender(convexity=20)
+    xrot(90)
+    back((board_length+rail_height+5)/2)
+    down(joiner_length)
     difference() {
         union() {
             // Bottom.
@@ -63,11 +64,14 @@ module motherboard_mount() {
         }
     }
 }
-!motherboard_mount();
+//!motherboard_mount();
 
 
 module motherboard_mount_parts() { // make me
-	zrot(90) motherboard_mount();
+    up(joiner_length)
+    fwd((board_length+rail_height+5)/2)
+    xrot(-90)
+    motherboard_mount();
 }
 
 
