@@ -2,32 +2,62 @@ include <config.scad>
 use <GDMUtils.scad>
 
 
+// Constructs an acme threaded screw rod.  This method makes much
+//  smoother threads than the naive linear_extrude method.
 module acme_threaded_rod(
 	d=10.5,
 	l=100,
 	threading=3.175,
 	thread_depth=1
 ) {
-	r = d/2;
-	twists = l/threading;
-	linear_extrude(
-		height=l,
-		convexity=20,
-		twist=-360*twists,
-		slices=12*twists,
-		center=true
-	) {
+	astep = 360/segs(d/2);
+	asteps = ceil(360/astep);
+	threads = ceil(l/threading)+2;
+	poly_points = [
+		for (
+			thread = [0 : threads-1],
+			astep = [0 : asteps-1],
+			i = [0 : 3]
+		) let (
+			r = max(0, d/2 - ((i==1||i==2)? 0 : (thread_depth+1))),
+			a = astep / asteps,
+			rx = r * cos(360 * a),
+			ry = r * sin(360 * a),
+			tz = (thread + a - threads/2 + (i<2? -0.25 : 0.25)) * threading
+		) [rx, ry, tz]
+	];
+	point_count = len(poly_points);
+	poly_faces = concat(
+		[
+			for (thread = [0 : threads-1])
+			for (astep = [0 : asteps-1])
+			for (j = [0 : 3])
+			for (i = [0 : 1])
+			let(
+				p0 = (thread*asteps + astep)*4 + j,
+				p1 = p0 + 4,
+				p2 = (thread*asteps + astep)*4 + ((j+1)%4),
+				p3 = p2 + 4,
+				tri = (i==0? [p0, p3, p1] : [p0, p2, p3])
+			)
+			if (p0 < point_count-4) tri
+		],
+		[
+			[0, 3, 2],
+			[0, 2, 1],
+			[point_count-4, point_count-3, point_count-2],
+			[point_count-4, point_count-2, point_count-1]
+		]
+	);
+	intersection() {
 		union() {
-			circle(r=r-thread_depth, center=true);
-			difference() {
-				circle(r=r, center=true);
-				translate([r/2, 0]) {
-					square([r, r*2], center=true);
-				}
-			}
+			polyhedron(points=poly_points, faces=poly_faces, convexity=10);
+			cylinder(h=(threads+0.5)*threading, d=d-2*thread_depth, center=true);
 		}
+		cube([d+1, d+1, l], center=true);
 	}
 }
+//!acme_threaded_rod(d=20, l=20, threading=10, thread_depth=5);
 
 
 module acme_threaded_nut(
@@ -40,7 +70,7 @@ module acme_threaded_nut(
 ) {
 	difference() {
 		cylinder(r=od/2/cos(30), h=h, center=true, $fn=6);
-		grid_of(za=[-slop/2,slop/2]) {
+		zspread(slop) {
 			acme_threaded_rod(d=id+2*slop, l=h+1, threading=threading, thread_depth=thread_depth);
 		}
 	}

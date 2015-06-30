@@ -36,92 +36,92 @@ module move(a=[0,0,0], x=0, y=0, z=0) {
 // Moves/translates children the given amount along the X axis.
 // Example:
 //   xmove(10) sphere(r=1);
-module xmove(x=0) { translate([x,0,0]) children(); }
+module xmove(x=0) translate([x,0,0]) children();
 
 
 // Moves/translates children the given amount along the Y axis.
 // Example:
 //   ymove(10) sphere(r=1);
-module ymove(y=0) { translate([0,y,0]) children(); } 
+module ymove(y=0) translate([0,y,0]) children();
 
 
 // Moves/translates children the given amount along the Z axis.
 // Example:
 //   zmove(10) sphere(r=1);
-module zmove(z=0) { translate([0,0,z]) children(); } 
+module zmove(z=0) translate([0,0,z]) children();
 
 
 // Moves children left by the given amount in the -X direction.
 // Example:
 //   left(10) sphere(r=1);
-module left(x=0) { translate([-x,0,0]) children(); }
+module left(x=0) translate([-x,0,0]) children();
 
 
 // Moves children right by the given amount in the +X direction.
 // Example:
 //   right(10) sphere(r=1);
-module right(x=0) { translate([x,0,0]) children(); }
+module right(x=0) translate([x,0,0]) children();
 
 
 // Moves children forward by x amount in the -Y direction.
 // Example:
 //   forward(10) sphere(r=1);
-module forward(y=0) { translate([0,-y,0]) children(); }
-module fwd(y=0) { translate([0,-y,0]) children(); }
+module forward(y=0) translate([0,-y,0]) children();
+module fwd(y=0) translate([0,-y,0]) children();
 
 
 // Moves children back by the given amount in the +Y direction.
 // Example:
 //   back(10) sphere(r=1);
-module back(y=0) { translate([0,y,0]) children(); }
+module back(y=0) translate([0,y,0]) children();
 
 
 // Moves children down by the given amount in the -Z direction.
 // Example:
 //   down(10) sphere(r=1);
-module down(z=0) { translate([0,0,-z]) children(); }
+module down(z=0) translate([0,0,-z]) children();
 
 
 // Moves children up by the given amount in the +Z direction.
 // Example:
 //   up(10) sphere(r=1);
-module up(z=0) { translate([0,0,z]) children(); }
+module up(z=0) translate([0,0,z]) children();
 
 
 // Rotates children around the Z axis by the given number of degrees.
 // Example:
 //   xrot(90) cylinder(h=10, r=2, center=true);
-module xrot(a=0) { rotate([a, 0, 0]) children(); }
+module xrot(a=0) rotate([a, 0, 0]) children();
 
 
 // Rotates children around the Y axis by the given number of degrees.
 // Example:
 //   yrot(90) cylinder(h=10, r=2, center=true);
-module yrot(a=0) { rotate([0, a, 0]) children(); }
+module yrot(a=0) rotate([0, a, 0]) children();
 
 
 // Rotates children around the Z axis by the given number of degrees.
 // Example:
 //   zrot(90) cube(size=[9,1,4], center=true);
-module zrot(a=0) { rotate([0, 0, a]) children(); }
+module zrot(a=0) rotate([0, 0, a]) children();
 
 
 // Scales children by the given factor in the X axis.
 // Example:
 //   xscale(3) sphere(r=100, center=true);
-module xscale(x) {scale([x,0,0]) children();}
+module xscale(x) scale([x,0,0]) children();
 
 
 // Scales children by the given factor in the Y axis.
 // Example:
 //   yscale(3) sphere(r=100, center=true);
-module yscale(y) {scale([0,y,0]) children();}
+module yscale(y) scale([0,y,0]) children();
 
 
 // Scales children by the given factor in the Z axis.
 // Example:
 //   zscale(3) sphere(r=100, center=true);
-module zscale(z) {scale([0,0,z]) children();}
+module zscale(z) scale([0,0,z]) children();
 
 
 // Mirrors the children along the X axis, kind of like xscale(-1)
@@ -394,7 +394,7 @@ module circle_of(
 	ry = (dy == undef)?rx:(dy/2.0);
 	rx = (rx == undef)?r:rx;
 	ry = (ry == undef)?r:ry;
-	sa = ((sa % 360.0) + 360.0) % 360.0; // make 0 < ang < 360 
+	sa = ((sa % 360.0) + 360.0) % 360.0; // make 0 < ang < 360
 	ea = ((ea % 360.0) + 360.0) % 360.0; // make 0 < ang < 360
 	n = (abs(ea-sa)<0.01)?(n+1):n;
 	delt = (((ea<=sa)?360.0:0)+ea-sa)/(n-1);
@@ -847,27 +847,19 @@ module rrect(size=[1,1,1], r=0.25, center=false)
 //   rcube(size=[5,7,3], r=1);
 module rcube(size=[1,1,1], r=0.25, center=false)
 {
-	$fn = ($fn==undef)?max(18,floor(180/asin(1/r)/2)*2):$fn;
-	xoff=abs(size[0])/2-r;
-	yoff=abs(size[1])/2-r;
-	zoff=abs(size[2])/2-r;
-	offset = center?[0,0,0]:size/2;
-	translate(offset) {
-		union() {
-			grid_of([-xoff,xoff],[-yoff,yoff],[-zoff,zoff])
-				sphere(r=r,center=true,$fn=$fn);
-			grid_of(xa=[-xoff,xoff],ya=[-yoff,yoff])
-				cylinder(r=r,h=zoff*2,center=true,$fn=$fn);
-			grid_of(xa=[-xoff,xoff],za=[-zoff,zoff])
-				rotate([90,0,0])
-					cylinder(r=r,h=yoff*2,center=true,$fn=$fn);
-			grid_of(ya=[-yoff,yoff],za=[-zoff,zoff])
-				rotate([90,0,0])
-				rotate([0,90,0])
-					cylinder(r=r,h=xoff*2,center=true,$fn=$fn);
-			cube(size=[xoff*2,yoff*2,size[2]], center=true);
-			cube(size=[xoff*2,size[1],zoff*2], center=true);
-			cube(size=[size[0],yoff*2,zoff*2], center=true);
+	translate(center?[0,0,0]:size/2) {
+		hull() {
+			xspread(size[0]-2*r) {
+				hull() yspread(size[1]-2*r) {
+					hull() zspread(size[2]-2*r) {
+						sphere(r=r, center=true);
+					}
+				}
+			}
+			// Have to add in these center cubes to make exact edge match.
+			cube([size[0], size[1]-2*r, size[2]-2*r], center=true);
+			cube([size[0]-2*r, size[1], size[2]-2*r], center=true);
+			cube([size[0]-2*r, size[1]-2*r, size[2]], center=true);
 		}
 	}
 }

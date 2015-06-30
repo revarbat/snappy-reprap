@@ -4,13 +4,14 @@ use <joiners.scad>
 use <acme_screw.scad>
 
 
-$fa = 2;
-$fs = 2;
+$fa = 1;
+$fs = 1.5;
 
 module z_sled()
 {
 	offcenter = platform_thick;
 	cantlen = cantilever_length - platform_thick - groove_height/2;
+	slider_len = 15;
 
 	color("MediumSlateBlue")
 	prerender(convexity=10)
@@ -26,12 +27,12 @@ module z_sled()
 						zrot(90) yrot(90)
 							sparse_strut(l=rail_spacing-joiner_width+5, h=platform_length, thick=platform_thick, strut=8, maxang=45, max_bridge=999);
 
-					// Slider support
+					// Lifter clamp support
 					up(5/2) {
 						cube(size=[lifter_rod_diam+2*3, platform_length, 5], center=true);
 					}
 
-					// Side aupports
+					// Side supports
 					yspread(platform_length-platform_thick) {
 						up((offcenter+groove_height+5)/2) {
 							cube(size=[rail_spacing-joiner_width+5, platform_thick, offcenter+groove_height+5], center=true);
@@ -44,21 +45,28 @@ module z_sled()
 							difference() {
 								// Slider block
 								up(6/2) {
-									cube(size=[joiner_width+2*5, platform_length, groove_height+offcenter+6], center=true);
+									cube(size=[joiner_width+2*5+2, platform_length, groove_height+offcenter+6], center=true);
 								}
-
 								// Slider groove
 								up(printer_slop-0.05) {
-									cube(size=[joiner_width, platform_length+1, groove_height+offcenter+2*printer_slop], center=true);
+									cube(size=[joiner_width+2, platform_length+1, groove_height+offcenter+2*printer_slop], center=true);
 								}
 							}
 						}
 						// Slider ridge
-						up(groove_height/2+offcenter) {
-							zring(n=2, r=joiner_width/2+printer_slop) {
-								scale([tan(groove_angle),1,1]) {
-									yrot(45) {
-										chamfcube(size=[groove_height/sqrt(2), platform_length, groove_height/sqrt(2)], chamfer=2, chamfaxes=[1,0,1], center=true);
+						yspread(platform_length-slider_len) {
+							up(groove_height/2+offcenter) {
+								zring(n=2, r=joiner_width/2+printer_slop+2) {
+									xs = 1 + 4/(groove_height*tan(groove_angle));
+									scale([xs*tan(groove_angle),1,xs]) {
+										difference() {
+											yrot(45) {
+												rcube(size=[groove_height/sqrt(2), slider_len, groove_height/sqrt(2)], r=1, center=true, $fn=12);
+											}
+											right(groove_height/2+0.1) {
+												cube([groove_height, slider_len+1, groove_height+1], center=true);
+											}
+										}
 									}
 								}
 							}
@@ -85,7 +93,8 @@ module z_sled()
 									d=lifter_rod_diam+2*printer_slop,
 									l=platform_length/8+0.5+2*lifter_thread_size,
 									threading=lifter_thread_size,
-									thread_depth=1.5
+									thread_depth=1.0,
+									$fn=32
 								);
 							}
 						}
