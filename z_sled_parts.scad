@@ -74,29 +74,25 @@ module z_sled()
 					}
 
 					// Lifter block
-					yspread(platform_length*5/8) {
-						up((offcenter+lifter_rod_diam+4)/2) {
-							difference() {
-								cube(size=[lifter_rod_diam+2*3, platform_length/8, offcenter+lifter_rod_diam+4], center=true);
-								up(5) cube(size=[lifter_rod_diam/2, platform_length/8+1, offcenter+lifter_rod_diam+4.05], center=true);
-							}
+					up((offcenter+lifter_rod_diam+4)/2) {
+						difference() {
+							cube(size=[lifter_rod_diam+2*3, platform_length/8, offcenter+lifter_rod_diam+4], center=true);
+							up(5) cube(size=[lifter_rod_diam/2, platform_length/8+1, offcenter+lifter_rod_diam+4.05], center=true);
 						}
 					}
 				}
 
 				// Lifter threading
-				yspread(floor((platform_length*5/8)/lifter_thread_size)*lifter_thread_size) {
-					up(offcenter+groove_height/2) {
-						yspread(printer_slop) {
-							xrot(90) zrot(90) {
-								acme_threaded_rod(
-									d=lifter_rod_diam+2*printer_slop,
-									l=platform_length/8+0.5+2*lifter_thread_size,
-									threading=lifter_thread_size,
-									thread_depth=1.0,
-									$fn=32
-								);
-							}
+				up(offcenter+groove_height/2) {
+					yspread(printer_slop) {
+						xrot(90) zrot(90) {
+							acme_threaded_rod(
+								d=lifter_rod_diam+2*printer_slop,
+								l=platform_length/8+0.5+2*lifter_thread_size,
+								threading=lifter_thread_size,
+								thread_depth=1.0,
+								$fn=32
+							);
 						}
 					}
 				}
