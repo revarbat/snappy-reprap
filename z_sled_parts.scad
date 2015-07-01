@@ -12,6 +12,7 @@ module z_sled()
 	offcenter = platform_thick;
 	cantlen = cantilever_length - platform_thick - groove_height/2;
 	slider_len = 15;
+	lifter_block_size = 15;
 
 	color("MediumSlateBlue")
 	prerender(convexity=10)
@@ -75,11 +76,13 @@ module z_sled()
 
 					// Lifter block
 					up((offcenter+lifter_rod_diam+4)/2) {
-						difference() {
-							cube(size=[lifter_rod_diam+2*3, platform_length/8, offcenter+lifter_rod_diam+4], center=true);
-							up(5) cube(size=[lifter_rod_diam/2, platform_length/8+1, offcenter+lifter_rod_diam+4.05], center=true);
-						}
+						cube(size=[lifter_rod_diam+2*3, lifter_block_size, offcenter+lifter_rod_diam+4], center=true);
 					}
+				}
+
+				// Split Lifter block
+				up((offcenter+lifter_rod_diam+4)/2) {
+					up(5) cube(size=[lifter_rod_diam/2, lifter_block_size+1, offcenter+lifter_rod_diam+4.05], center=true);
 				}
 
 				// Lifter threading
@@ -88,7 +91,7 @@ module z_sled()
 						xrot(90) zrot(90) {
 							acme_threaded_rod(
 								d=lifter_rod_diam+2*printer_slop,
-								l=platform_length/8+0.5+2*lifter_thread_size,
+								l=lifter_block_size+0.5+2*lifter_thread_size,
 								threading=lifter_thread_size,
 								thread_depth=1.0,
 								$fn=32
