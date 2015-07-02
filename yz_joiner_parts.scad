@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-module yz_bottom_joiner()
+module yz_joiner()
 {
 	joiner_length=10;
 	base_height = rail_height+groove_height;
@@ -129,17 +129,17 @@ module yz_bottom_joiner()
 		}
 	}
 }
-//yz_bottom_joiner();
+//yz_joiner();
 
 
 
-module yz_bottom_joiner_parts() { // make me
-	fwd(platform_length/2) yz_bottom_joiner();
+module yz_joiner_parts() { // make me
+	fwd(platform_length/2) yz_joiner();
 }
 
 
 
-yz_bottom_joiner_parts();
+yz_joiner_parts();
 
 
 

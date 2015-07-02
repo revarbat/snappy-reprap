@@ -3,9 +3,8 @@ $do_prerender=true;
 include <config.scad>
 include <GDMUtils.scad>
 use <NEMA.scad>
+use <acme_screw.scad>
 
-use <bridge_center_parts.scad>
-use <bridge_segment_parts.scad>
 use <cable_chain_link_parts.scad>
 use <cable_chain_mount_parts.scad>
 use <drive_gear_parts.scad>
@@ -23,8 +22,7 @@ use <sled_endcap_parts.scad>
 use <support_leg_parts.scad>
 use <xy_joiner_parts.scad>
 use <xy_sled_parts.scad>
-use <yz_bottom_joiner_parts.scad>
-use <yz_top_joiner_parts.scad>
+use <yz_joiner_parts.scad>
 use <z_sled_parts.scad>
 use <z_strut_parts.scad>
 
@@ -47,7 +45,7 @@ module x_axis_slider_assembly(slidepos=0)
 	up(rail_height-5-20) {
 		motor_mount_plate();
 		up(20-4-0.2) {
-			nema17_stepper(h=34, shaft_len=20.05);
+			nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
 			up(19) {
 				drive_gear();
 			}
@@ -76,7 +74,7 @@ module y_axis_slider_assembly(slidepos=0)
 				rail_segment();
 				fwd(rail_length/2+platform_length) {
 					// Bottom Y-axis to Z-axis corner joiner.
-					yz_bottom_joiner();
+					yz_joiner();
 
 					// Support legs.
 					back(platform_length/2) {
@@ -96,7 +94,7 @@ module y_axis_slider_assembly(slidepos=0)
 	up(rail_height-5-20) {
 		motor_mount_plate();
 		up(20-4-0.2) {
-			nema17_stepper(h=34, shaft_len=20.05);
+			nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
 			up(19) {
 				drive_gear();
 			}
@@ -123,6 +121,9 @@ module z_axis_slider_assembly(slidepos=0)
 		yspread(rail_length) {
 			rail_segment();
 		}
+		fwd(rail_length) {
+			rail_endcap();
+		}
 	}
 	back(motor_rail_length) {
 		zrot(180) rail_z_motor_segment();
@@ -133,16 +134,24 @@ module z_axis_slider_assembly(slidepos=0)
 			// Stepper Motor
 			xrot(90) {
 				motor_mount_plate();
-				up(20-4-0.2) {
-					nema17_stepper(h=34, shaft_len=20.05);
-					up(5) {
-						color("darkgrey") {
-							zrot(slidepos/lifter_thread_size*360.0) {
+				up(20-5-0.2) {
+					nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
+					zrot(slidepos/lifter_thread_size*360.0) {
+						up(motor_shaft_length) {
+							color("darkgrey") {
 								lifter_rod_coupler();
 							}
-						}
-						up(lifter_rod_length/2+16) {
-							color("silver") cylinder(d=lifter_rod_diam, h=lifter_rod_length, center=true);
+							up(lifter_rod_length/2) {
+								color("silver") {
+									acme_threaded_rod(
+										d=lifter_rod_diam,
+										l=lifter_rod_length,
+										threading=lifter_thread_size,
+										thread_depth=lifter_thread_depth,
+										$fn=32
+									);
+								}
+							}
 						}
 					}
 				}
@@ -150,22 +159,7 @@ module z_axis_slider_assembly(slidepos=0)
 		}
 	}
 }
-
-
-module bridge_assembly()
-{
-	zring(n=2) {
-		fwd(motor_rail_length/2) {
-			fwd(rail_length/2) {
-				bridge_segment();
-				fwd(rail_length/2+platform_length) {
-					yz_top_joiner();
-				}
-			}
-		}
-	}
-	bridge_center();
-}
+//!z_axis_slider_assembly(slidepos=1/32*25.4);
 
 
 module extruder_assembly(slidepos=0)
@@ -197,11 +191,6 @@ module full_assembly(hide_endcaps=false)
 	xpos = 100*cos(360*$t);
 	ypos = 100*sin(360*$t);
 	zpos = 80*cos(240+360*$t)+10;
-
-	// Top bridge
-	up(2*rail_height+motor_rail_length+2*rail_length+groove_height) {
-		xrot(180) bridge_assembly();
-	}
 
 	// Extruder bridge
 	up(rail_height+motor_rail_length+rail_length+groove_height) {

@@ -4,26 +4,33 @@ use <NEMA.scad>
 use <joiners.scad>
 
 
-module motor_mount_plate(thick=4, l=20)
+$fa=1;
+$fs=1;
+
+
+module motor_mount_plate(thick=5, l=20)
 {
+	motor_width = nema_motor_width(17)+printer_slop*2;
 	color("Teal")
 	prerender(convexity=10)
 	difference() {
 		union() {
-			up(l-thick/2) {
+			up(l-thick) {
 				difference() {
 					rrect(size=[motor_mount_spacing+joiner_width, rail_height+10, 4], r=5, center=true);
-					zrot(90) nema17_mount_holes(depth=thick+1, l=5);
+					zrot(90) nema17_mount_holes(depth=thick+1, l=0);
+					down(thick/2/2+0.05)
+						cube([motor_width, motor_width, thick/2], center=true);
 				}
 			}
 
 			// Joiners
-			xrot(-90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=l, a=joiner_angle);
+			xrot(-90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=l-thick/2, a=joiner_angle);
 
 			// Standoffs
 			zrot_copies([0, 180]) {
 				right(motor_mount_spacing/2+joiner_width/2+endstop_standoff/2-0.05) {
-					up(l-endstop_hole_inset) {
+					up(l-thick/2-endstop_hole_inset) {
 						fwd(endstop_hole_hoff) {
 							yspread(endstop_hole_spacing) {
 								difference() {
@@ -53,7 +60,7 @@ module motor_mount_plate(thick=4, l=20)
 
 		zrot_copies([0, 180]) {
 			right(motor_mount_spacing/2+endstop_standoff/2-0.05) {
-				up(l-endstop_hole_inset) {
+				up(l-thick/2-endstop_hole_inset) {
 					fwd(endstop_hole_hoff) {
 						yspread(endstop_hole_spacing) {
 							yrot(90) cylinder(r=endstop_screw_size*1.1/2, h=joiner_width+endstop_standoff+0.05, center=true, $fn=12);

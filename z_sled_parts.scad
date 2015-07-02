@@ -55,17 +55,19 @@ module z_sled()
 							}
 						}
 						// Slider ridge
-						yspread(platform_length-slider_len) {
-							up(groove_height/2+offcenter) {
-								zring(n=2, r=joiner_width/2+printer_slop+2) {
-									xs = 1 + 4/(groove_height*tan(groove_angle));
-									scale([xs*tan(groove_angle),1,xs]) {
-										difference() {
-											yrot(45) {
-												rcube(size=[groove_height/sqrt(2), slider_len, groove_height/sqrt(2)], r=1, center=true, $fn=12);
-											}
-											right(groove_height/2+0.1) {
-												cube([groove_height, slider_len+1, groove_height+1], center=true);
+						fwd(10/2) {
+							yspread(platform_length-slider_len-10) {
+								up(groove_height/2+offcenter) {
+									zring(n=2, r=joiner_width/2+printer_slop+2) {
+										xs = 1 + 4/(groove_height*tan(groove_angle));
+										scale([xs*tan(groove_angle),1,xs]) {
+											difference() {
+												yrot(45) {
+													rcube(size=[groove_height/sqrt(2), slider_len, groove_height/sqrt(2)], r=1, center=true, $fn=12);
+												}
+												right(groove_height/2+0.1) {
+													cube([groove_height, slider_len+1, groove_height+1], center=true);
+												}
 											}
 										}
 									}
@@ -93,7 +95,7 @@ module z_sled()
 								d=lifter_rod_diam+2*printer_slop,
 								l=lifter_block_size+0.5+2*lifter_thread_size,
 								threading=lifter_thread_size,
-								thread_depth=1.0,
+								thread_depth=lifter_thread_depth-printer_slop,
 								$fn=32
 							);
 						}

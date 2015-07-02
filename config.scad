@@ -26,15 +26,18 @@ groove_height =  12;    // mm
 joiner_angle  =  30;    // degrees
 joiner_width  =  10;    // mm
 
-rack_tooth_size  =  5; // mm per tooth.
-set_screw_size   =  3; // mm size of set screw in drive gears, couplers, etc
-motor_shaft_size =  5; // mm
-motor_shaft_flatted = false;  // boolean. Set true if motor shaft has a flattened side.
+rack_tooth_size    =  5; // mm per tooth.
+set_screw_size     =  3; // mm size of set screw in drive gears, couplers, etc
+motor_length       = 34; // mm length of NEMA17 motor.
+motor_shaft_size   =  5; // mm diameter of NEMA17 motor shaft.
+motor_shaft_length = 20; // mm length of NEMA17 motor shaft.
+motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
 
-// Currently configured for 3/8" ACME threaded rod and matching 11/16" nut
-lifter_rod_diam    =   9.5; // mm
-lifter_rod_length  = 300.0; // mm
-lifter_thread_size =   3.175; // mm lift per revolution
+// Currently configured for 3/8" ACME threaded rod.
+lifter_rod_diam     =   9.5; // mm
+lifter_rod_length   = 300.0; // mm
+lifter_thread_size  =   3.175; // mm lift per revolution
+lifter_thread_depth =   1.25; // mm
 
 /*
 // Mechanical endstop boards.
