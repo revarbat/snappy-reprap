@@ -14,7 +14,7 @@ pull:
 	git pull --recurse-submodules
 
 clean:
-	rm -f tmp_*.png wiki/snappy_rot*.png render_*_parts.scad
+	rm -f tmp_*.png wiki/snappy_rot*.png
 
 cleaner: clean
 	rm -f ${TARGETS}
@@ -45,6 +45,7 @@ wiki/snappy_small.png: wiki/snappy_full.png
 
 wiki/snappy_animated.gif: ${ROTFILES}
 	${CONVERT} -delay 10 -loop 0 ${ROTFILES} $@
+	rm -f ${ROTFILES}
 
 wiki/snappy_anim_small.gif: wiki/snappy_animated.gif
 	${CONVERT} -resize 200x200 $< $@

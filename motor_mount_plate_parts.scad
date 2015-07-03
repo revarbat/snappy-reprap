@@ -8,7 +8,7 @@ $fa=1;
 $fs=1;
 
 
-module motor_mount_plate(thick=5, l=20)
+module motor_mount_plate(thick=4, l=20)
 {
 	motor_width = nema_motor_width(17)+printer_slop*2;
 	color("Teal")
@@ -17,7 +17,7 @@ module motor_mount_plate(thick=5, l=20)
 		union() {
 			up(l-thick) {
 				difference() {
-					rrect(size=[motor_mount_spacing+joiner_width, rail_height+10, 4], r=5, center=true);
+					cube(size=[motor_mount_spacing+joiner_width, rail_height, thick], center=true);
 					zrot(90) nema17_mount_holes(depth=thick+1, l=0);
 					down(thick/2/2+0.05)
 						cube([motor_width, motor_width, thick/2], center=true);
@@ -30,24 +30,24 @@ module motor_mount_plate(thick=5, l=20)
 			// Standoffs
 			zrot_copies([0, 180]) {
 				right(motor_mount_spacing/2+joiner_width/2+endstop_standoff/2-0.05) {
-					up(l-thick/2-endstop_hole_inset) {
+					up(l-endstop_hole_inset) {
 						fwd(endstop_hole_hoff) {
 							yspread(endstop_hole_spacing) {
 								difference() {
 									hull() {
-										grid_of(za=[0, endstop_hole_inset]) {
+										grid_of(za=[0, endstop_hole_inset-thick/2]) {
 											yrot(90) {
 												cylinder(
 													r1=endstop_screw_size*1.1/2/cos(30)+0.5+endstop_standoff,
 													r2=endstop_screw_size*1.1/2/cos(30)+0.5,
-													h=endstop_standoff,
+													h=endstop_standoff+0.05,
 													center=true,
 													$fn=24
 												);
 											}
 										}
 									}
-									up(endstop_hole_inset+endstop_screw_size) {
+									up(endstop_hole_inset-thick/2+endstop_screw_size) {
 										cube(size=[endstop_standoff+2, endstop_screw_size*4, endstop_screw_size*2], center=true);
 									}
 								}
@@ -60,10 +60,10 @@ module motor_mount_plate(thick=5, l=20)
 
 		zrot_copies([0, 180]) {
 			right(motor_mount_spacing/2+endstop_standoff/2-0.05) {
-				up(l-thick/2-endstop_hole_inset) {
+				up(l-endstop_hole_inset) {
 					fwd(endstop_hole_hoff) {
 						yspread(endstop_hole_spacing) {
-							yrot(90) cylinder(r=endstop_screw_size*1.1/2, h=joiner_width+endstop_standoff+0.05, center=true, $fn=12);
+							yrot(90) cylinder(r=endstop_screw_size*1.1/2, h=joiner_width+endstop_standoff+0.1, center=true, $fn=12);
 							scale([1.1, 1.1, 1.1]) {
 								hull() {
 									yrot(90) metric_nut(size=endstop_screw_size);

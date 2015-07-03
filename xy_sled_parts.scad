@@ -4,6 +4,9 @@ use <joiners.scad>
 use <publicDomainGearV1.1.scad>
 
 
+$fa = 1;
+$fs = 1.5;
+
 module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 {
 	translate([-(rack_tooth_size/2), 0, 0]) {
@@ -72,42 +75,32 @@ module xy_sled()
 							cube(size=[6, platform_length, platform_thick], center=true);
 						}
 
-						grid_of(
-							ya=[-platform_length*6/16, 0, platform_length*6/16],
-							za=[rail_offset+groove_height/2]
-						) {
-							translate([-joiner_width/2, 0, 0]) {
-							    circle_of(n=2, r=joiner_width/2+printer_slop, rot=true) {
-									// Slider base
-									translate([15/2-9, 0, -groove_height-printer_slop]) {
-										difference() {
-											cube(size=[15, platform_length/8, groove_height-printer_slop*2], center=true);
-											grid_of(
-												ya=[-(platform_length/8/2), (platform_length/8/2)],
-												za=[groove_height/2]
-											) {
-												xrot(45) cube(size=[16, 2*sqrt(2), 2*sqrt(2)], center=true);
+						yspread(platform_length*6/8/2, n=3) {
+							up(rail_offset+groove_height/2) {
+								translate([-joiner_width/2, 0, 0]) {
+									circle_of(n=2, r=joiner_width/2+printer_slop, rot=true) {
+										// Slider base
+										translate([15/2-9, 0, -groove_height-printer_slop]) {
+											difference() {
+												cube(size=[15, platform_length/8, groove_height-printer_slop*2], center=true);
+												up(groove_height/2) {
+													yspread(platform_length/8) {
+														xrot(45) cube(size=[16, 2*sqrt(2), 2*sqrt(2)], center=true);
+													}
+												}
 											}
 										}
-									}
 
-									// Slider backing
-									translate([6/2, 0, -4/2]) {
-										difference() {
+										// Slider backing
+										translate([6/2, 0, -4/2]) {
 											cube(size=[6, platform_length/8, groove_height+4], center=true);
-											grid_of(
-												ya=[-(platform_length/8/2), (platform_length/8/2)],
-												za=[(groove_height+4)/2]
-											) {
-												xrot(45) cube(size=[11, 2*sqrt(2), 2*sqrt(2)], center=true);
-											}
 										}
-									}
 
-									// Slider ridge
-									scale([tan(groove_angle),1,1]) {
-										yrot(45) {
-											chamfcube(size=[groove_height/sqrt(2), platform_length/8, groove_height/sqrt(2)], chamfer=2, chamfaxes=[1,0,1], center=true);
+										// Slider ridge
+										scale([tan(groove_angle),1,1]) {
+											yrot(45) {
+												rcube(size=[groove_height/sqrt(2), platform_length/8, groove_height/sqrt(2)], r=1, center=true, $fn=12);
+											}
 										}
 									}
 								}
@@ -123,12 +116,14 @@ module xy_sled()
 			}
 
 			// Shrinkage stress relief
-			translate([0, 0, platform_thick/2]) {
-				grid_of(count=[1, 9], spacing=[0,9]) {
+			up(platform_thick/2) {
+				yspread(18, n=5) {
 					cube(size=[platform_width+1, 1, platform_thick-2], center=true);
 				}
-				grid_of(count=[9, 2], spacing=[14, platform_length-10]) {
-					cube(size=[1, 20, platform_thick-2], center=true);
+				xspread(20, n=7) {
+					yspread(platform_length-10) {
+						cube(size=[1, 20, platform_thick-2], center=true);
+					}
 				}
 			}
 		}

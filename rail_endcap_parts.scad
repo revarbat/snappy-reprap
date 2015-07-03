@@ -27,6 +27,38 @@ module rail_endcap()
 						if (wall_style == "corrugated")
 							corrugated_wall(h=base_height, l=rail_width, thick=rail_thick, strut=joiner_width);
 					}
+
+					// Corner pieces.
+					up(base_height) {
+						xspread(rail_spacing+joiner_width) {
+							down((base_height-rail_height)/2) {
+								fwd(joiner_length/2) {
+									cube(size=[joiner_width, joiner_length, (base_height-rail_height)], center=true);
+								}
+							}
+						}
+					}
+
+					// Limit switch standoffs
+					xflip_copy() {
+						left(rail_width/2-joiner_width) {
+							up(rail_height+groove_height-endstop_hole_hoff) {
+								fwd(endstop_hole_inset) {
+									zspread(endstop_hole_spacing) {
+										yrot(90) {
+											cylinder(
+												r1=endstop_screw_size*1.1/2/cos(30)+0.5+endstop_standoff,
+												r2=endstop_screw_size*1.1/2/cos(30)+0.5,
+												h=endstop_standoff+0.05,
+												center=true,
+												$fn=24
+											);
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 
 				// Clear space for joiners.
@@ -35,18 +67,25 @@ module rail_endcap()
 				}
 			}
 
-			// Corner pieces.
-			grid_of(
-				xa=[-(rail_spacing+joiner_width)/2, (rail_spacing+joiner_width)/2],
-				za=[base_height]
-			) {
-				translate([0, -joiner_length/2, -(base_height-rail_height)/2])
-					cube(size=[joiner_width, joiner_length, (base_height-rail_height)], center=true);
-			}
-
 			// Joiner clips.
 			translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
 				joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+			}
+		}
+
+		// Limit switch mount holes.
+		xflip_copy() {
+			left((rail_width-joiner_width)/2) {
+				up(rail_height+groove_height-endstop_hole_hoff) {
+					fwd(endstop_hole_inset) {
+						zspread(endstop_hole_spacing) {
+							yrot(90) cylinder(r=endstop_screw_size*1.1/2, h=joiner_width+2*endstop_standoff+0.1, center=true, $fn=12);
+							left(joiner_width/2+0.05) {
+								yrot(90) zrot(90) metric_nut(size=endstop_screw_size);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
