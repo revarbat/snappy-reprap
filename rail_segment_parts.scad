@@ -5,6 +5,8 @@ use <joiners.scad>
 
 module rail_segment()
 {
+	fillet = 1;
+
 	color([0.9, 0.7, 1.0])
 	prerender(convexity=20)
 	union() {
@@ -30,9 +32,8 @@ module rail_segment()
 
 				// Rail backing.
 				xspread(rail_spacing+joiner_width)
-					up(rail_height+groove_height/2)
-						chamfer(size=[joiner_width, rail_length, groove_height], chamfer=1, edges=[[1,1,0,0], [1,1,0,0], [0,0,0,0]])
-							cube(size=[joiner_width, rail_length, groove_height], center=true);
+					up(rail_height+groove_height/2-fillet)
+						rcube(size=[joiner_width, rail_length, groove_height+fillet], r=fillet, center=true, $fn=12);
 
 				// Side Supports
 				up(rail_height/4) {
@@ -49,22 +50,43 @@ module rail_segment()
 
 			// Rail grooves.
 			up(rail_height+groove_height/2) {
-				mirror_copy([1,0,0]) {
+				xflip_copy() {
 					left((rail_width-joiner_width)/2) {
-						mirror_copy([1,0,0]) {
+						xflip_copy() {
 							right(joiner_width/2) {
 								// main groove
 								scale([tan(groove_angle),1,1]) yrot(45) {
 									cube(size=[groove_height*sqrt(2)/2,rail_length+1,groove_height*sqrt(2)/2], center=true);
 								}
 
-								// chamfers
-								mirror_copy([0,1,0]) {
-									back(rail_length/2) {
-										hull() {
-											yspread(2) {
-												zrot(45) scale([tan(groove_angle)*sin(45),1.01,1.01]) yrot(45) {
-													cube(size=[groove_height*sqrt(2)/2, 10, groove_height*sqrt(2)/2], center=true);
+								// fillets
+								facelen = groove_height/2/sin(90-groove_angle);
+								yflip_copy() {
+									fwd(rail_length/2) {
+										left(facelen*sin(groove_angle)) {
+											difference() {
+												zflip_copy() {
+													left(fillet) {
+														yrot(-groove_angle) {
+															right(fillet) {
+																down(facelen*1.5/2) {
+																	cube([fillet*2, fillet*2, facelen*1.5], center=true);
+																}
+															}
+														}
+													}
+												}
+												zflip_copy() {
+													left(fillet) {
+														yrot(-groove_angle) {
+															right(fillet) {
+																down(facelen) {
+																	back(fillet) left(fillet)
+																		cylinder(r=fillet, h=facelen*2, center=true, $fn=18);
+																}
+															}
+														}
+													}
 												}
 											}
 										}
@@ -83,12 +105,12 @@ module rail_segment()
 
 			// Shrinkage stress relief
 			up(rail_thick/2) {
-				yspread(11, n=12) {
+				yspread(17.5, n=7) {
 					cube(size=[rail_width+1, 1, rail_thick-2], center=true);
 				}
-				xspread(13, n=8) {
+				xspread(22, n=5) {
 					yspread(rail_length-10) {
-						cube(size=[1, 60, rail_thick-2], center=true);
+						cube(size=[1, 17.5*2, rail_thick-2], center=true);
 					}
 				}
 			}
