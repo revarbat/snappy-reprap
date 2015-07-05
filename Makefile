@@ -23,20 +23,22 @@ cleanwiki:
 	rm -f wiki/snappy_*.gif wiki/snappy_*.png wiki/*_parts.png
 
 ${ROTFILES}: full_assembly.scad $(wildcard *.scad)
-	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=1024,1024 --projection=p --csglimit=1000000 \
+	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=1024,1024 \
+	    --projection=p --csglimit=1000000 \
 	    -D '$$t=$(shell echo $(patsubst wiki/snappy_rot%.png,%/360.0,$@) | bc -l)' \
-	    -D '$$do_prerender=false' --camera=0,0,255,65,0,120,2000 $<
+	    -D '$$do_prerender=false' --camera=0,0,245,65,0,30,2000 $<
 	${CONVERT} -strip -resize 512x512 $(subst wiki/,tmp_,$@) $@
 	rm -f  $(subst wiki/,tmp_,$@)
 
 wiki/%.png: %.scad config.scad GDMUtils.scad
-	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --render --imgsize=3200,3200 --projection=p --csglimit=1000000 --camera=0,0,50,65,0,120,2500 $<
+	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --render --imgsize=3200,3200 \
+	    --projection=p --csglimit=1000000 --camera=0,0,50,65,0,30,2000 $<
 	${CONVERT} -trim -resize 200x200 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
 	rm -f $(subst wiki/,tmp_,$@)
 
 wiki/snappy_full.png: full_assembly.scad $(wildcard *.scad)
 	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=3200,3200 --projection=p \
-	    --csglimit=1000000 --camera=0,0,160,65,0,120,4500 -D '$$t=0.5' $<
+	    --csglimit=1000000 --camera=0,0,245,65,0,30,3000 -D '$$t=0.5' $<
 	${CONVERT} -trim -resize 800x800 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/,tmp_,$@) $@
 	rm -f $(subst wiki/,tmp_,$@)
 
@@ -71,5 +73,3 @@ STLs/sled_parts.stl: joiners.scad publicDomainGearV1.1.scad
 STLs/support_leg_parts.stl: joiners.scad
 STLs/xy_joiner_parts.stl: joiners.scad
 STLs/yz_joiner_parts.stl: joiners.scad
-
-

@@ -28,7 +28,7 @@ joiner_width  =  10;    // mm
 
 rack_tooth_size    =  5; // mm per tooth.
 set_screw_size     =  3; // mm size of set screw in drive gears, couplers, etc
-motor_length       = 34; // mm length of NEMA17 motor.
+motor_length       = 40; // mm length of NEMA17 motor.
 motor_shaft_size   =  5; // mm diameter of NEMA17 motor shaft.
 motor_shaft_length = 20; // mm length of NEMA17 motor shaft.
 motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
