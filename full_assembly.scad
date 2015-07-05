@@ -134,7 +134,7 @@ module xy_motor_segment_assembly(explode=0, arrows=false)
 //!xy_motor_segment_assembly(explode=100, arrows=true);
 
 
-module z_motor_segment_assembly(explode=0, arrows=false)
+module z_motor_segment_assembly(slidepos=0, explode=0, arrows=false)
 {
 	zrot(90) xrot(90) rail_z_motor_segment();
 
@@ -285,7 +285,7 @@ module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false)
 			}
 		}
 		up(rail_height+groove_height+motor_rail_length/2+explode) {
-			zrot(90) z_motor_segment_assembly();
+			zrot(90) z_motor_segment_assembly(slidepos=slidepos);
 
 			up(motor_rail_length/2+rail_length+explode*1.5) {
 				zspread(rail_length+explode) {
