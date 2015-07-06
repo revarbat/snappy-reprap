@@ -4,7 +4,7 @@ use <publicDomainGearV1.1.scad>
 
 
 module drive_gear() {
-	shaft = motor_shaft_size + 2 * printer_slop;
+	shaft = motor_shaft_size + printer_slop;
 
 	color("Salmon")
 	prerender(convexity=10)
@@ -44,7 +44,7 @@ module drive_gear() {
 
 				if (motor_shaft_flatted) {
 					// Shaft flat side.
-					right(1.42*shaft)
+					right(1.4*shaft)
 						cube(size=[shaft*2, shaft*2, (rack_height+gear_base)*3], center=true);
 				}
 			}

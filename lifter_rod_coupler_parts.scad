@@ -10,15 +10,17 @@ module lifter_rod_coupler()
 {
 	diam = 30;
 	height = 30;
+	shaft = motor_shaft_size + printer_slop;
+
 	color("SpringGreen")
 	difference () {
 		cylinder(h=height, d=diam, center=true);
 		down(height/4) {
 			difference() {
-				cylinder(h=height/2+0.1, d=motor_shaft_size+2*printer_slop, center=true, $fn=24);
+				cylinder(h=height/2+0.1, d=shaft+printer_slop, center=true, $fn=24);
 				if (motor_shaft_flatted) {
-					left(motor_shaft_size*1.45)
-						cube(size=[motor_shaft_size*2, motor_shaft_size*2, height/2], center=true);
+					left(shaft*1.4)
+						cube(size=[shaft*2, shaft*2, height/2], center=true);
 				}
 			}
 		}
