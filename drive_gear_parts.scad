@@ -44,7 +44,7 @@ module drive_gear() {
 
 				if (motor_shaft_flatted) {
 					// Shaft flat side.
-					translate([1.45*shaft, 0, 0])
+					right(1.42*shaft)
 						cube(size=[shaft*2, shaft*2, (rack_height+gear_base)*3], center=true);
 				}
 			}
