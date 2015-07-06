@@ -4,7 +4,6 @@ use <publicDomainGearV1.1.scad>
 
 
 module drive_gear() {
-	h = 10;
 	shaft = motor_shaft_size + 2 * printer_slop;
 
 	color("Salmon")
@@ -12,12 +11,12 @@ module drive_gear() {
 	union() {
 		difference() {
 			// Herringbone gear
-			mirror_copy([0, 0, 1]) {
-				translate([0, 0, h/4]) {
+			zflip_copy() {
+				up(rack_height/2/2) {
 					gear (
 						mm_per_tooth    = rack_tooth_size,
 						number_of_teeth = 9,
-						thickness       = h/2,
+						thickness       = rack_height/2,
 						hole_diameter   = shaft,
 						twist           = 15,
 						teeth_to_hide   = 0,
@@ -32,36 +31,36 @@ module drive_gear() {
 		difference() {
 			union() {
 				// Fix up gear weirdness with solid center.
-				cylinder(h=h, r=shaft, center=true);
+				cylinder(h=rack_height, r=shaft, center=true);
 
 				// Base
-				translate([0, 0, -(h+10)/2])
-					cylinder(h=10, r=9, center=true);
+				down((rack_height+10)/2)
+					cylinder(h=gear_base, r=9, center=true);
 			}
 
 			difference() {
 				// Shaft hole
-				cylinder(h=(h+5)*3, r=shaft/2, center=true, $fn=16);
+				cylinder(h=(rack_height+gear_base)*3, r=shaft/2, center=true, $fn=16);
 
 				if (motor_shaft_flatted) {
 					// Shaft flat side.
 					translate([1.45*shaft, 0, 0])
-						cube(size=[shaft*2, shaft*2, (h+6)*3], center=true);
+						cube(size=[shaft*2, shaft*2, (rack_height+gear_base)*3], center=true);
 				}
 			}
 
-			translate([motor_shaft_size/2+1.5, 0, -(h/2+5+11)/2]) {
-				yrot(90) {
-					// Nut Slot
-					scale([1.1, 1.1, 1.1]) hull() {
-						metric_nut(size=set_screw_size, hole=false);
-						translate([5, 0, 0])
+			right(motor_shaft_size/2+1.5) {
+				down(rack_height/2+gear_base/2) {
+					yrot(90) {
+						// Nut Slot
+						scale([1.1, 1.1, 1.1]) hull() {
 							metric_nut(size=set_screw_size, hole=false);
-					}
+							right(gear_base/2) metric_nut(size=set_screw_size, hole=false);
+						}
 
-					// Set screw hole.
-					translate([0, 0, 2])
-						cylinder(r=set_screw_size/2+printer_slop, h=9, center=true, $fn=8);
+						// Set screw hole.
+						up(2) cylinder(r=set_screw_size/2+printer_slop, h=9, center=true, $fn=8);
+					}
 				}
 			}
 		}
@@ -71,7 +70,9 @@ module drive_gear() {
 
 
 module drive_gear_parts() { // make me
-	yspread(30) drive_gear();
+	up(gear_base+rack_height/2) {
+		yspread(30) drive_gear();
+	}
 }
 
 
@@ -81,4 +82,3 @@ drive_gear_parts();
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
-

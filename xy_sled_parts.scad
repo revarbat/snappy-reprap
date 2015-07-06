@@ -9,22 +9,24 @@ $fs = 1.5;
 
 module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 {
-	translate([-(rack_tooth_size/2), 0, 0]) {
-		mirror_copy([0,0,1]) {
+	left(tooth_size/2) {
+		zflip_copy() {
 			skew_xy(xang=CA) {
 				intersection() {
-					translate([-(l/2-rack_tooth_size/2), 0, h/4]) {
-						rack(
-							mm_per_tooth=rack_tooth_size,
-							number_of_teeth=floor(l/rack_tooth_size),
-							thickness=h/2,
-							height=w,
-							pressure_angle=20,
-							backlash=0
-						);
+					up(h/4) {
+						left(l/2-tooth_size/2) {
+							rack(
+								mm_per_tooth=tooth_size,
+								number_of_teeth=floor(l/tooth_size),
+								thickness=h/2,
+								height=w,
+								pressure_angle=20,
+								backlash=0
+							);
+						}
 					}
 					cube(size=[l, h*3, h*3], center=true);
-				} 
+				}
 			}
 		}
 	}
@@ -41,7 +43,7 @@ module xy_sled()
 		difference() {
 			union() {
 				// Bottom
-				translate([0,0,platform_thick/2])
+				up(platform_thick/2)
 					yrot(90) sparse_strut(h=platform_width, l=platform_length, thick=platform_thick, maxang=45, strut=12, max_bridge=999);
 
 				// Walls.
@@ -57,18 +59,29 @@ module xy_sled()
 				}
 
 				// Length-wise bracing.
-				translate([0,0,platform_thick/2]) {
-					translate([-10, 0, 1])
-						cube(size=[14,platform_length,platform_thick+2], center=true);
+				up(platform_thick/2) {
+					translate([-10, 0, rack_base/2])
+						cube(size=[14,platform_length,platform_thick+rack_base], center=true);
 				}
 
 				// Drive rack
-				translate([-8, 0, platform_thick+2+5]) {
-					zrot(-90) herringbone_rack(l=platform_length, h=10, tooth_size=rack_tooth_size, CA=30);
+				left(8) {
+					up(platform_thick+rack_base+rack_height/2-0.01) {
+						difference() {
+							zrot(-90) herringbone_rack(l=platform_length, h=rack_height, tooth_size=rack_tooth_size, CA=30);
+							up(rack_height/2) {
+								left(rack_tooth_size/2) {
+									 yrot(10) up(2) {
+										cube(size=[rack_tooth_size*2, platform_length+10, 4], center=true);
+									}
+								}
+							}
+						}
+					}
 				}
 
 				// sliders
-				mirror_copy([1,0,0]) {
+				xflip_copy() {
 					translate([-(rail_spacing)/2, 0, 0]) {
 						// bottom strut
 						translate([6/2+printer_slop,0,platform_thick/2]) {
@@ -147,4 +160,3 @@ xy_sled_parts();
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
-

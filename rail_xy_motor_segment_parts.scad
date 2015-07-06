@@ -1,12 +1,14 @@
 include <config.scad>
 use <GDMUtils.scad>
 use <joiners.scad>
+use <NEMA.scad>
 
 
 module rail_xy_motor_segment()
 {
 	joiner_length = 10;
 	side_joiner_len = 10;
+	motor_width = nema_motor_width(17)+printer_slop*2;
 
 	color("SpringGreen")
 	prerender(convexity=20)
@@ -19,9 +21,16 @@ module rail_xy_motor_segment()
 						union() {
 							yrot(90)
 								sparse_strut(h=rail_width, l=motor_rail_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
-							cube(size=[motor_mount_spacing+joiner_width, 45+20, rail_thick], center=true);
+							up((motor_top_z-motor_length+4-rail_thick)/2) {
+								cube(size=[motor_mount_spacing+joiner_width, 30+20, motor_top_z-motor_length+4], center=true);
+							}
 						}
-						cube(size=[motor_mount_spacing-joiner_width, 45, rail_thick+1], center=true);
+						cube(size=[motor_mount_spacing-joiner_width, 30, motor_length], center=true);
+
+						// Clearance for NEMA17 stepper motor
+						up(motor_top_z-rail_thick/2) {
+							down(motor_length/2) cube(size=[motor_width, motor_width, motor_length], center=true);
+						}
 					}
 				}
 
@@ -53,8 +62,8 @@ module rail_xy_motor_segment()
 				}
 
 				// Motor mount joiners.
-				up(rail_height-5-20) {
-					xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=rail_height-5-20, a=joiner_angle);
+				up(motor_top_z-motor_length/2) {
+					xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=motor_top_z-motor_length/2, a=joiner_angle);
 				}
 			}
 
@@ -96,21 +105,14 @@ module rail_xy_motor_segment()
 				}
 			}
 
+			// access for stepper wires.
+			up(15/2) {
+				cube(size=[motor_mount_spacing+joiner_width+1, 20, 15+0.05], center=true);
+			}
+
 			// Clear space for joiners.
 			up(rail_height/2) {
 				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
-			}
-
-			// Shrinkage stress relief
-			up(rail_thick/2) {
-				yspread(16, n=5) {
-					cube(size=[rail_width+1, 1, rail_thick-2], center=true);
-				}
-				xspread(15, n=7) {
-					yspread(motor_rail_length-10) {
-						cube(size=[1, 60, rail_thick-2], center=true);
-					}
-				}
 			}
 
 			// Clear space for side mount joiners.
@@ -181,4 +183,3 @@ rail_xy_motor_segment_parts();
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
-

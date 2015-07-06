@@ -236,18 +236,18 @@ module nema17_mount_holes(depth=5, l=5)
 		xspread(screw_spacing) {
 			yspread(screw_spacing) {
 				hull() {
-					translate([0, -l/2, 0]) 
+					translate([0, -l/2, 0])
 						cylinder(h=depth, r=screw_size/2, center=true, $fn=max(8,segs(screw_size/2)));
-					translate([0, l/2, 0]) 
+					translate([0, l/2, 0])
 						cylinder(h=depth, r=screw_size/2, center=true, $fn=max(8,segs(screw_size/2)));
 				}
 			}
 		}
 	}
 	hull() {
-		translate([0, -l/2, 0]) 
+		translate([0, -l/2, 0])
 			cylinder(h=depth, r=plinth_diam/2, center=true);
-		translate([0, l/2, 0]) 
+		translate([0, l/2, 0])
 			cylinder(h=depth, r=plinth_diam/2, center=true);
 	}
 }
@@ -256,4 +256,3 @@ module nema17_mount_holes(depth=5, l=5)
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
-

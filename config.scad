@@ -27,8 +27,11 @@ joiner_angle  =  30;    // degrees
 joiner_width  =  10;    // mm
 
 rack_tooth_size    =  5; // mm per tooth.
+rack_height        = 10; // mm
+rack_base          =  2; // mm
+gear_base          = 10; // mm
 set_screw_size     =  3; // mm size of set screw in drive gears, couplers, etc
-motor_length       = 40; // mm length of NEMA17 motor.
+motor_length       = 39.25; // mm length of NEMA17 motor.
 motor_shaft_size   =  5; // mm diameter of NEMA17 motor shaft.
 motor_shaft_length = 20; // mm length of NEMA17 motor shaft.
 motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
@@ -108,6 +111,8 @@ rail_width = rail_spacing + joiner_width*2;
 motor_mount_spacing=43+joiner_width+10;
 side_mount_spacing = platform_length-25;
 cantilever_length = (motor_rail_length+2*rail_length+2*platform_length-2*rail_height-2*motor_rail_length-extruder_length-groove_height)/2;
+platform_z = rail_height+groove_height+rail_offset;
+motor_top_z = platform_z-platform_thick-rack_base-rack_height-gear_base-2;
 
 wall_styles = ["thinwall", "corrugated", "crossbeams"];
 wall_style = wall_styles[wall_styling];

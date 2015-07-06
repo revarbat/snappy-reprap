@@ -105,14 +105,16 @@ module y_sled_assembly(explode=0, arrows=false)
 
 module xy_motor_segment_assembly(explode=0, arrows=false)
 {
+	motor_width = nema_motor_width(17)+printer_slop*2;
+
 	rail_xy_motor_segment();
 
 	// Stepper Motor
-	up(rail_height-5-20) {
-		up(explode*2) motor_mount_plate();
-		up(20-4-0.2+explode) {
+	up(motor_top_z) {
+		up(explode*2-motor_length/2) motor_mount_plate();
+		up(explode) {
 			nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
-			up(19+explode*2) {
+			up(gear_base+rack_height/2+2.1+explode*2) {
 				drive_gear();
 			}
 		}
@@ -132,16 +134,19 @@ module xy_motor_segment_assembly(explode=0, arrows=false)
 	}
 }
 //!xy_motor_segment_assembly(explode=100, arrows=true);
+//!xy_motor_segment_assembly();
 
 
 module z_motor_segment_assembly(slidepos=0, explode=0, arrows=false)
 {
+	motor_width = nema_motor_width(17)+printer_slop*2;
+
 	zrot(90) xrot(90) rail_z_motor_segment();
 
 	right(rail_height+groove_height/2+explode) {
-		up(explode+explode/2) {
+		up(explode/2) {
 			zrot(90) motor_mount_plate();
-			up(20-4-0.2) {
+			up(motor_length/2-0.1) {
 				down(explode) nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
 				zrot(slidepos/lifter_thread_size*360.0) {
 					up(motor_shaft_length+explode) {
@@ -171,14 +176,12 @@ module z_motor_segment_assembly(slidepos=0, explode=0, arrows=false)
 			right(explode) {
 				yrot(-45) xrot(-90) arrow(size=explode/3);
 			}
-			up(explode*7/8) {
-				right(rail_height+groove_height/2+explode) {
+			right(rail_height+groove_height/2+explode) {
+				down(explode/10) yrot(90) arrow(size=explode/3);
+				up(explode) {
 					yrot(-90) arrow(size=explode/3);
-					up(explode) {
+					up(30+explode) {
 						yrot(-90) arrow(size=explode/3);
-						up(30+explode) {
-							yrot(-90) arrow(size=explode/3);
-						}
 					}
 				}
 			}
@@ -186,6 +189,7 @@ module z_motor_segment_assembly(slidepos=0, explode=0, arrows=false)
 	}
 }
 //!z_motor_segment_assembly(explode=100, arrows=true);
+//!z_motor_segment_assembly();
 
 
 module x_axis_slider_assembly(slidepos=0, explode=0, arrows=false)
@@ -224,6 +228,7 @@ module x_axis_slider_assembly(slidepos=0, explode=0, arrows=false)
 	}
 }
 //!x_axis_slider_assembly(slidepos=50, explode=100, arrows=true);
+//!x_axis_slider_assembly(slidepos=0) {sphere(1); sphere(1); x_sled_assembly();}
 
 
 module y_axis_slider_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false)
@@ -248,17 +253,6 @@ module y_axis_slider_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=
 			}
 			zrot(90) zring(r=(motor_rail_length+2*rail_length+3*explode)/2) {
 				arrow(size=explode/3);
-			}
-		}
-	}
-
-	// Stepper Motor
-	up(rail_height-5-20+explode*2) {
-		motor_mount_plate();
-		up(20-4-0.2-explode) {
-			nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
-			up(19+explode*2) {
-				drive_gear();
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 include <config.scad>
 use <GDMUtils.scad>
 use <joiners.scad>
+use <NEMA.scad>
 
 
 module rail_z_motor_segment()
@@ -12,6 +13,7 @@ module rail_z_motor_segment()
 	ylen = (rail_width-motor_mount_spacing)/2;
 	hlen = sqrt(xlen*xlen+ylen*ylen);
 	ang = atan2(ylen,hlen);
+	motor_width = nema_motor_width(17)+printer_slop*2;
 
 	color("SpringGreen")
 	prerender(convexity=20)
@@ -60,13 +62,28 @@ module rail_z_motor_segment()
 
 				// Motor mount joiners.
 				up(rail_height+groove_height/2) {
-					joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=15, a=joiner_angle);
+					joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=motor_length/2, a=joiner_angle);
 				}
 				xspread(motor_mount_spacing) {
 					up(rail_height/4+groove_height/4) {
-						fwd(15/2) {
-							cube(size=[joiner_width, 15, rail_height/2+groove_height/2], center=true);
+						fwd(motor_length/2/2) {
+							cube(size=[joiner_width, motor_length/2, rail_height/2+groove_height/2], center=true);
 						}
+					}
+				}
+				difference() {
+					up((rail_height+groove_height/2)/2) {
+						up(rail_height/2/2) {
+							fwd(motor_length/2) {
+								xspread((motor_mount_spacing+motor_width)/2) {
+									cube([motor_mount_spacing-motor_width, 6, rail_height+groove_height/2+rail_height/2], center=true);
+								}
+							}
+						}
+					}
+					up(rail_height+groove_height/2) {
+						cube(size=[motor_width, motor_length, motor_width], center=true);
+						up(motor_width/2) cube(size=[motor_width, motor_length, motor_width], center=true);
 					}
 				}
 
