@@ -21,7 +21,7 @@ module motor_mount_plate()
 			up(l) {
 				difference() {
 					cube(size=[motor_mount_spacing+joiner_width, rail_height, thick], center=true);
-					zrot(90) nema17_mount_holes(depth=thick+1, l=0);
+					zrot(90) nema17_mount_holes(depth=thick+1, l=0, slop=printer_slop);
 					down(l) cube([motor_width, motor_width, motor_length], center=true);
 				}
 			}

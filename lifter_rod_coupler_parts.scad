@@ -10,22 +10,20 @@ module lifter_rod_coupler()
 {
 	diam = 30;
 	height = 30;
-	shaft = motor_shaft_size + printer_slop;
 
 	color("SpringGreen")
 	difference () {
 		cylinder(h=height, d=diam, center=true);
 		down(height/4) {
 			difference() {
-				cylinder(h=height/2+0.1, d=shaft+printer_slop, center=true, $fn=24);
+				cylinder(h=height/2+0.1, d=motor_shaft_size, center=true, $fn=24);
 				if (motor_shaft_flatted) {
-					left(shaft*1.4)
-						cube(size=[shaft*2, shaft*2, height/2], center=true);
+					left(motor_shaft_size*1.4)
+						cube(size=[motor_shaft_size*2, motor_shaft_size*2, height/2], center=true);
 				}
 			}
 		}
 		up(height/4) {
-			// cylinder(h=height/2+0.1, d=lifter_rod_diam+2*printer_slop, center=true, $fn=24);
 			acme_threaded_rod(
 				d=lifter_rod_diam+2*printer_slop,
 				l=height/2+0.1,

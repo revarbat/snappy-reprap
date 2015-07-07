@@ -225,12 +225,12 @@ module nema34_stepper(h=75, shaft=12.7, shaft_len=32)
 
 
 
-module nema17_mount_holes(depth=5, l=5)
+module nema17_mount_holes(depth=5, l=5, slop=0)
 {
 	size = 17;
-	plinth_diam = nema_motor_plinth_diam(size);
+	plinth_diam = nema_motor_plinth_diam(size)+slop;
 	screw_spacing = nema_motor_screw_spacing(size);
-	screw_size = nema_motor_screw_size(size);
+	screw_size = nema_motor_screw_size(size)+slop;
 
 	union() {
 		xspread(screw_spacing) {

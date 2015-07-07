@@ -3,6 +3,9 @@ use <GDMUtils.scad>
 use <publicDomainGearV1.1.scad>
 
 
+$fa = 1;
+$fs = 1.5;
+
 module drive_gear() {
 	shaft = motor_shaft_size + printer_slop;
 
@@ -40,7 +43,7 @@ module drive_gear() {
 
 			difference() {
 				// Shaft hole
-				cylinder(h=(rack_height+gear_base)*3, r=shaft/2, center=true, $fn=16);
+				cylinder(h=(rack_height+gear_base)*3, r=shaft/2, center=true, $fn=24);
 
 				if (motor_shaft_flatted) {
 					// Shaft flat side.
@@ -59,7 +62,7 @@ module drive_gear() {
 						}
 
 						// Set screw hole.
-						up(2) cylinder(r=set_screw_size/2+printer_slop, h=9, center=true, $fn=8);
+						up(2) zrot(10) cylinder(r=set_screw_size/2+printer_slop, h=9, center=true, $fn=16);
 					}
 				}
 			}
