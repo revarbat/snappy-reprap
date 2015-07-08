@@ -41,7 +41,7 @@ module extruder_platform()
 			}
 
 			// Extruder mount holes.
-			yspread(50) {
+			zring(r=50/2, n=4) {
 				cylinder(r=4.5/2, h=20, center=true);
 			}
 
