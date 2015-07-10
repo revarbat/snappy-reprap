@@ -152,7 +152,7 @@ module xy_sled()
 
 
 module xy_sled_parts() { // make me
-	zrot(90) xy_sled();
+	zrot(-90) xy_sled();
 }
 
 

@@ -41,7 +41,7 @@ module support_leg(h=rail_height, l=75)
 
 
 module support_leg_parts() { // make me
-	translate([0, -75/2, 0]) support_leg();
+	zrot(180) translate([0, -75/2, 0]) support_leg();
 }
 
 

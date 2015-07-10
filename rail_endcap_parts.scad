@@ -95,7 +95,7 @@ module rail_endcap()
 
 
 module rail_endcap_parts() { // make me
-	zrot(90) rail_endcap();
+	zrot(-90) rail_endcap();
 }
 
 

@@ -99,7 +99,7 @@ module xy_joiner()
 
 
 module xy_joiner_parts() { // make me
-	zrot(90) xrot(90) xy_joiner();
+	zrot(-90) xrot(90) xy_joiner();
 }
 
 
