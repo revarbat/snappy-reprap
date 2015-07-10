@@ -135,7 +135,7 @@ module rail_z_motor_segment()
 				xflip_copy() {
 					right(rail_width/2+side_joiner_len) {
 						zrot(-90) {
-							half_joiner(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
+							half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
 						}
 					}
 				}

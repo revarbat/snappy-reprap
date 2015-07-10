@@ -152,7 +152,7 @@ module rail_xy_motor_segment()
 						fwd(side_mount_spacing/2) {
 							zrot(-90) {
 								chamfer(chamfer=joiner_width/3, size=[joiner_width, side_joiner_len*4, rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-									half_joiner(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
+									half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
 								}
 							}
 						}
