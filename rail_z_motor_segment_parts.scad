@@ -50,12 +50,14 @@ module rail_z_motor_segment()
 						chamfer(size=[joiner_width, motor_rail_length, groove_height], chamfer=1, edges=[[1,1,0,0], [1,1,0,0], [0,0,0,0]])
 							cube(size=[joiner_width, motor_rail_length, groove_height], center=true);
 
-				// Top side support
-				up((rail_height-15)/2) {
+				// Side supports
+				up((rail_height/2+groove_height/2)/2) {
 					yspread(motor_rail_length-18) {
-						zrot(90) sparse_strut(h=rail_height-15, l=rail_width, thick=5, strut=5);
-						down((rail_height-15-rail_thick)/2) {
-							cube(size=[rail_width, 5, rail_thick], center=true);
+						difference() {
+							cube([rail_width, 5, rail_height/2+groove_height/2], center=true);
+							xspread(rail_width/3, n=3) {
+								down(3) cube([16, 11, 11], center=true);
+							}
 						}
 					}
 				}
