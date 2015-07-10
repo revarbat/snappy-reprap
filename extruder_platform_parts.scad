@@ -129,7 +129,7 @@ module extruder_platform()
 
 
 module extruder_platform_parts() { // make me
-	zrot(90) extruder_platform();
+	extruder_platform();
 }
 
 

@@ -170,8 +170,9 @@ module z_sled()
 
 module z_sled_parts() { // make me
 	offcenter = platform_thick;
-	up(offcenter+groove_height/2)
-		zrot(-90) yrot(-90) z_sled();
+	left(platform_length/2)
+		up(offcenter+groove_height/2)
+			zrot(180) yrot(-90) z_sled();
 }
 
 

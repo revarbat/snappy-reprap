@@ -148,7 +148,7 @@ module rail_z_motor_segment()
 
 
 module rail_z_motor_segment_parts() { // make me
-	zrot(90) rail_z_motor_segment();
+	zrot(-90) rail_z_motor_segment();
 }
 
 

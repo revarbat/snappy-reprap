@@ -70,7 +70,7 @@ module z_strut()
 
 
 module z_strut_parts() { // make me
-	z_strut();
+	zrot(90) z_strut();
 }
 
 
