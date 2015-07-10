@@ -78,7 +78,7 @@ module rail_z_motor_segment()
 						up(rail_height/2/2) {
 							fwd(motor_length/2) {
 								xspread((motor_mount_spacing+motor_width)/2) {
-									cube([motor_mount_spacing-motor_width, 6, rail_height+groove_height/2+rail_height/2], center=true);
+									cube([motor_mount_spacing-motor_width, 10, rail_height+groove_height/2+rail_height/2], center=true);
 								}
 							}
 						}
