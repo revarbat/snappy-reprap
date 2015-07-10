@@ -27,8 +27,8 @@ module lifter_rod_coupler()
 			acme_threaded_rod(
 				d=lifter_rod_diam+2*printer_slop,
 				l=height/2+0.1,
-				threading=lifter_thread_size,
-				thread_depth=0.3,
+				pitch=lifter_rod_pitch,
+				thread_depth=lifter_rod_pitch/4,
 				$fn=32
 			);
 		}

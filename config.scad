@@ -40,8 +40,7 @@ motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
 // Currently configured for 3/8" ACME threaded rod.
 lifter_rod_diam     =   9.5; // mm
 lifter_rod_length   = 300.0; // mm
-lifter_thread_size  =   3.175; // mm lift per revolution
-lifter_thread_depth =   1.25; // mm
+lifter_rod_pitch    =   3.175; // mm lift per revolution
 
 /*
 // Mechanical endstop boards.

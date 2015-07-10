@@ -93,9 +93,9 @@ module z_sled()
 						xrot(90) zrot(90) {
 							acme_threaded_rod(
 								d=lifter_rod_diam+2*printer_slop,
-								l=lifter_block_size+0.5+2*lifter_thread_size,
-								threading=lifter_thread_size,
-								thread_depth=lifter_thread_depth-printer_slop,
+								l=lifter_block_size+0.5+2*lifter_rod_pitch,
+								pitch=lifter_rod_pitch,
+								thread_depth=lifter_rod_pitch/2,
 								$fn=32
 							);
 						}

@@ -11,6 +11,7 @@ use <drive_gear_parts.scad>
 use <extruder_platform_parts.scad>
 use <fan_shroud_parts.scad>
 use <lifter_rod_coupler_parts.scad>
+use <lifter_lock_nut_parts.scad>
 use <motor_mount_plate_parts.scad>
 use <motherboard_mount_parts.scad>
 use <platform_support_parts.scad>
@@ -148,18 +149,23 @@ module z_motor_segment_assembly(slidepos=0, explode=0, arrows=false)
 			zrot(90) motor_mount_plate();
 			up(motor_length/2-0.1) {
 				down(explode) nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
-				zrot(slidepos/lifter_thread_size*360.0) {
+				zrot(slidepos/lifter_rod_pitch*360.0) {
 					up(motor_shaft_length+explode) {
 						color("darkgrey") {
 							lifter_rod_coupler();
 						}
-						up(lifter_rod_length/2+explode) {
+						color("grey") {
+							up(30/2+10/2+explode) {
+								zrot(180) lifter_lock_nut();
+							}
+						}
+						up(lifter_rod_length/2+2*explode) {
 							color("silver") {
 								acme_threaded_rod(
 									d=lifter_rod_diam,
 									l=lifter_rod_length,
-									threading=lifter_thread_size,
-									thread_depth=lifter_thread_depth,
+									pitch=lifter_rod_pitch,
+									thread_depth=lifter_rod_pitch/2,
 									$fn=32
 								);
 							}
@@ -182,6 +188,9 @@ module z_motor_segment_assembly(slidepos=0, explode=0, arrows=false)
 					yrot(-90) arrow(size=explode/3);
 					up(30+explode) {
 						yrot(-90) arrow(size=explode/3);
+						up(explode) {
+							yrot(-90) arrow(size=explode/3);
+						}
 					}
 				}
 			}
