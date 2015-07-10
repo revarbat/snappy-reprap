@@ -1,8 +1,8 @@
 snappy_version = 0.93;
 
 
-// 0 = Thinning Walls (Thin in the middle, thick at edges.  Prettier smooth walls.)
-// 1 = Corrugated walls. (Zig-zagged walls. Less shrinkage stress. Closed walls.)
+// 0 = Thinning Walls (Thin in the middle, thick at edges.  Prettier smooth solid walls.)
+// 1 = Corrugated closed walls. (Zig-zagged solid walls. Less shrinkage stress.)
 // 2 = Crossbeam walls. (Open sparse struts. Far less shrinkage stress. Recommended.)
 wall_styling = 0;
 
@@ -19,6 +19,7 @@ rail_offset   =  12;    // mm
 
 motor_rail_length = 100; // mm
 extruder_length   = 150; // mm
+extruder_thick    =   5; // mm
 
 groove_angle  =  30;    // degrees
 groove_height =  12;    // mm

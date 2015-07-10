@@ -9,6 +9,7 @@ module extruder_platform()
 	l = extruder_length;
 	w = rail_width;
 	h = rail_height;
+	thick = extruder_thick;
 
 	color("LightSteelBlue")
 	prerender(convexity=10)
@@ -16,13 +17,13 @@ module extruder_platform()
 		difference() {
 			union() {
 				// Bottom.
-				up(rail_thick/2)
-					cube(size=[w, l, rail_thick], center=true);
+				up(thick/2)
+					cube(size=[w, l, thick], center=true);
 
 				// Walls.
 				xspread(rail_spacing+joiner_width) {
 					up(h/6) {
-						cube(size=[joiner_width, extruder_length/2-5, h/3], center=true);
+						cube(size=[joiner_width, l/2-5, h/3], center=true);
 					}
 				}
 
@@ -38,15 +39,29 @@ module extruder_platform()
 						}
 					}
 				}
+
+				// side support walls
+				yspread(l-2*10+4) {
+					up(h/2/2) {
+						difference() {
+							cube([w, 4, h/2], center=true);
+							xspread(w/3, n=3) {
+								down(2) cube([16, 11, 11], center=true);
+							}
+						}
+					}
+				}
 			}
 
 			// Extruder mount holes.
-			zring(r=50/2, n=4) {
-				cylinder(r=4.5/2, h=20, center=true);
+			xspread(10, n=3) {
+				yspread(50) {
+					cylinder(r=4.5/2, h=20, center=true);
+				}
 			}
 
 			// Extruder hole.
-			rrect(r=10, size=[40, 40, 20], center=true);
+			rrect(r=10, size=[75, 40, 20], center=true);
 
 			// Clear space for joiners.
 			up(rail_height/2+0.005) {
@@ -54,12 +69,12 @@ module extruder_platform()
 			}
 
 			// Shrinkage stress relief
-			up(rail_thick/2) {
+			up(thick/2) {
 				yspread(20, n=6) {
-					cube(size=[w+1, 1, rail_thick-2], center=true);
+					cube(size=[w+1, 1, thick-2], center=true);
 				}
 				xspread(16, n=6) {
-					cube(size=[1, l+1, rail_thick-2], center=true);
+					cube(size=[1, l+1, thick-2], center=true);
 				}
 			}
 
