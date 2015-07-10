@@ -3,6 +3,9 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
+$fa = 1;
+$fs = 1.5;
+
 module extruder_platform()
 {
 	platform_vert_off = rail_height+groove_height+rail_offset;
@@ -54,7 +57,7 @@ module extruder_platform()
 			}
 
 			// Extruder mount holes.
-			xspread(10, n=3) {
+			xspread(15, n=3) {
 				yspread(50) {
 					cylinder(r=4.5/2, h=20, center=true);
 				}
@@ -88,12 +91,18 @@ module extruder_platform()
 		}
 
 		// Fan shroud mounts
-		grid_of(count=2, spacing=w+10-0.05) {
-			translate([0, 0, 10/2]) {
+		zring(n=2, r=(w+10)/2-0.05) {
+			up(10/2) {
 				difference() {
-					union() {
-						translate([0, 0, -fan_mount_width/4]) cube(size=[fan_mount_width, fan_mount_length, fan_mount_width/2], center=true);
-						xrot(90) cylinder(h=fan_mount_length, r=fan_mount_width/2, center=true);
+					difference() {
+						cube(size=[fan_mount_width, fan_mount_length, fan_mount_width], center=true);
+						up(fan_mount_width/2) {
+							right(fan_mount_width/2) {
+								yrot(45) {
+									cube(size=[2*sqrt(2), fan_mount_length+1, 2*sqrt(2)], center=true);
+								}
+							}
+						}
 					}
 					xrot(90) cylinder(h=fan_mount_length+1, r=fan_mount_screw*1.1/2, center=true, $fn=12);
 					yspread(fan_mount_length-2*4) {
