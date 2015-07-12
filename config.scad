@@ -54,7 +54,7 @@ endstop_standoff     =  2; // mm
 
 // Mechanical endstop bare microswitch.
 endstop_hole_spacing =  9.5; // mm
-endstop_hole_inset   =  9; // mm
+endstop_hole_inset   =  8; // mm
 endstop_hole_hoff    = 10; // mm
 endstop_click_voff   =  3; // mm
 endstop_screw_size   =  2.5; // mm

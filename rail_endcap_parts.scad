@@ -61,6 +61,16 @@ module rail_endcap()
 					}
 				}
 
+				// Filament feed hole
+				fwd(joiner_length/2) {
+					up(rail_thick/2) {
+						cylinder(h=rail_thick, d=1/4*25.4, center=true, $fn=24);
+						zflip_copy(offset=rail_thick/2+0.05) {
+							fillet_hole_mask(r=1/4*25.4/2, fillet=rail_thick/3, $fn=24);
+						}
+					}
+				}
+
 				// Clear space for joiners.
 				translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
 					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, a=joiner_angle, clearance=5);

@@ -228,18 +228,13 @@ module chain_hull() {
 
 // Makes a copy of the children, mirrored across the given axes.
 //   v = The normal vector of the plane to mirror across.
+//   offset = Distance away from the origin in the direction of the normal vector.
 // Example:
-//   mirror_copy([1,-1,0]) yrot(30) cylinder(h=10, r=1, center=true);
-module mirror_copy(v=[0,0,1])
-{
-	union() {
-		children();
-		mirror(v) children();
-	}
-}
-module xflip_copy() {children(); mirror([1,0,0]) children();}
-module yflip_copy() {children(); mirror([0,1,0]) children();}
-module zflip_copy() {children(); mirror([0,0,1]) children();}
+//   mirror_copy([1,-1,0], offset = 10) yrot(30) cylinder(h=10, r=1, center=true);
+module mirror_copy(v=[0,0,1], offset=0) {o=v*(offset/sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2])); translate(o) children(); mirror(v) translate(o) children();}
+module xflip_copy(offset=0) {right(offset) children(); mirror([1,0,0]) right(offset) children();}
+module yflip_copy(offset=0) {back(offset) children(); mirror([0,1,0]) back(offset) children();}
+module zflip_copy(offset=0) {up(offset) children(); mirror([0,0,1]) up(offset) children();}
 
 
 // Given a number of euller angles, rotates copies of the given children to each of those angles.
@@ -732,6 +727,35 @@ module fillet_cylinder_mask(r=1.0, fillet=0.25, xtilt=0, ytilt=0)
 						cylinder(r=r-fillet, h=2*fillet, center=true);
 					}
 				}
+			}
+		}
+	}
+}
+
+
+
+// Create a mask that can be used to round the edge of a circular hole.
+// Difference it from the hole to be filletted.  The center of the
+// mask object should align exactly with the center of the end of the
+// hole to be filletted.
+//   r = radius of hole to fillet. (Default: 1.0)
+//   fillet = radius of the edge filleting. (Default: 0.25)
+//   xtilt = angle of tilt of end of cylinder in the X direction. (Default: 0)
+//   ytilt = angle of tilt of end of cylinder in the Y direction. (Default: 0)
+// Example:
+//   $fa=2; $fs=2;
+//   difference() {
+//     cube([150,150,100], center=true);
+//     cylinder(r=50, h=100.1, center=true);
+//     up(50) fillet_hole_mask(r=50, fillet=10, xtilt=0, ytilt=0);
+//   }
+module fillet_hole_mask(r=1.0, fillet=0.25, xtilt=0, ytilt=0)
+{
+	skew_xz(zang=xtilt) {
+		skew_yz(zang=ytilt) {
+			difference() {
+				cylinder(r=r+fillet, h=2*fillet, center=true);
+				down(fillet) torus(ir=r, or=r+2*fillet);
 			}
 		}
 	}
