@@ -36,92 +36,92 @@ module move(a=[0,0,0], x=0, y=0, z=0) {
 // Moves/translates children the given amount along the X axis.
 // Example:
 //   xmove(10) sphere(r=1);
-module xmove(x=0) translate([x,0,0]) children();
+module xmove(x=0) { translate([x,0,0]) children(); }
 
 
 // Moves/translates children the given amount along the Y axis.
 // Example:
 //   ymove(10) sphere(r=1);
-module ymove(y=0) translate([0,y,0]) children();
+module ymove(y=0) { translate([0,y,0]) children(); }
 
 
 // Moves/translates children the given amount along the Z axis.
 // Example:
 //   zmove(10) sphere(r=1);
-module zmove(z=0) translate([0,0,z]) children();
+module zmove(z=0) { translate([0,0,z]) children(); }
 
 
 // Moves children left by the given amount in the -X direction.
 // Example:
 //   left(10) sphere(r=1);
-module left(x=0) translate([-x,0,0]) children();
+module left(x=0) { translate([-x,0,0]) children(); }
 
 
 // Moves children right by the given amount in the +X direction.
 // Example:
 //   right(10) sphere(r=1);
-module right(x=0) translate([x,0,0]) children();
+module right(x=0) { translate([x,0,0]) children(); }
 
 
 // Moves children forward by x amount in the -Y direction.
 // Example:
 //   forward(10) sphere(r=1);
-module forward(y=0) translate([0,-y,0]) children();
-module fwd(y=0) translate([0,-y,0]) children();
+module forward(y=0) { translate([0,-y,0]) children(); }
+module fwd(y=0) { translate([0,-y,0]) children(); }
 
 
 // Moves children back by the given amount in the +Y direction.
 // Example:
 //   back(10) sphere(r=1);
-module back(y=0) translate([0,y,0]) children();
+module back(y=0) { translate([0,y,0]) children(); }
 
 
 // Moves children down by the given amount in the -Z direction.
 // Example:
 //   down(10) sphere(r=1);
-module down(z=0) translate([0,0,-z]) children();
+module down(z=0) { translate([0,0,-z]) children(); }
 
 
 // Moves children up by the given amount in the +Z direction.
 // Example:
 //   up(10) sphere(r=1);
-module up(z=0) translate([0,0,z]) children();
+module up(z=0) { translate([0,0,z]) children(); }
 
 
 // Rotates children around the Z axis by the given number of degrees.
 // Example:
 //   xrot(90) cylinder(h=10, r=2, center=true);
-module xrot(a=0) rotate([a, 0, 0]) children();
+module xrot(a=0) { rotate([a, 0, 0]) children(); }
 
 
 // Rotates children around the Y axis by the given number of degrees.
 // Example:
 //   yrot(90) cylinder(h=10, r=2, center=true);
-module yrot(a=0) rotate([0, a, 0]) children();
+module yrot(a=0) { rotate([0, a, 0]) children(); }
 
 
 // Rotates children around the Z axis by the given number of degrees.
 // Example:
 //   zrot(90) cube(size=[9,1,4], center=true);
-module zrot(a=0) rotate([0, 0, a]) children();
+module zrot(a=0) { rotate([0, 0, a]) children(); }
 
 
 // Scales children by the given factor in the X axis.
 // Example:
 //   xscale(3) sphere(r=100, center=true);
-module xscale(x) scale([x,0,0]) children();
+module xscale(x) {scale([x,0,0]) children();}
 
 
 // Scales children by the given factor in the Y axis.
 // Example:
 //   yscale(3) sphere(r=100, center=true);
-module yscale(y) scale([0,y,0]) children();
+module yscale(y) {scale([0,y,0]) children();}
 
 
 // Scales children by the given factor in the Z axis.
 // Example:
 //   zscale(3) sphere(r=100, center=true);
-module zscale(z) scale([0,0,z]) children();
+module zscale(z) {scale([0,0,z]) children();}
 
 
 // Mirrors the children along the X axis, kind of like xscale(-1)
@@ -228,13 +228,18 @@ module chain_hull() {
 
 // Makes a copy of the children, mirrored across the given axes.
 //   v = The normal vector of the plane to mirror across.
-//   offset = Distance away from the origin in the direction of the normal vector.
 // Example:
-//   mirror_copy([1,-1,0], offset = 10) yrot(30) cylinder(h=10, r=1, center=true);
-module mirror_copy(v=[0,0,1], offset=0) {o=v*(offset/sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2])); translate(o) children(); mirror(v) translate(o) children();}
-module xflip_copy(offset=0) {right(offset) children(); mirror([1,0,0]) right(offset) children();}
-module yflip_copy(offset=0) {back(offset) children(); mirror([0,1,0]) back(offset) children();}
-module zflip_copy(offset=0) {up(offset) children(); mirror([0,0,1]) up(offset) children();}
+//   mirror_copy([1,-1,0]) yrot(30) cylinder(h=10, r=1, center=true);
+module mirror_copy(v=[0,0,1])
+{
+	union() {
+		children();
+		mirror(v) children();
+	}
+}
+module xflip_copy() {children(); mirror([1,0,0]) children();}
+module yflip_copy() {children(); mirror([0,1,0]) children();}
+module zflip_copy() {children(); mirror([0,0,1]) children();}
 
 
 // Given a number of euller angles, rotates copies of the given children to each of those angles.
@@ -785,20 +790,17 @@ module chamfcube(
 			for (ys = [-1,1]) {
 				if (chamfaxes[0] == 1) {
 					translate([0,xs*size[1]/2,ys*size[2]/2]) {
-						rotate(a=[45,0,0])
-						 cube(size=[size[0]+0.1,ch_width,ch_width], center=true);
+						rotate(a=[45,0,0]) cube(size=[size[0]+0.1,ch_width,ch_width], center=true);
 					}
 				}
 				if (chamfaxes[1] == 1) {
 					translate([xs*size[0]/2,0,ys*size[2]/2]) {
-						rotate(a=[0,45,0])
-						 cube(size=[ch_width,size[1]+0.1,ch_width], center=true);
+						rotate(a=[0,45,0]) cube(size=[ch_width,size[1]+0.1,ch_width], center=true);
 					}
 				}
 				if (chamfaxes[2] == 1) {
 					translate([xs*size[0]/2,ys*size[1]/2],0) {
-						rotate(a=[0,0,45])
-						 cube(size=[ch_width,ch_width,size[2]+0.1], center=true);
+						rotate(a=[0,0,45]) cube(size=[ch_width,ch_width,size[2]+0.1], center=true);
 					}
 				}
 				if (chamfcorners) {
@@ -848,13 +850,14 @@ module chamfcube(
 //   rrect(size=[5,7,3], r=1, $fn=24);
 module rrect(size=[1,1,1], r=0.25, center=false)
 {
+	$fn = ($fn==undef)?max(18,floor(180/asin(1/r)/2)*2):$fn;
 	xoff=abs(size[0])/2-r;
 	yoff=abs(size[1])/2-r;
 	offset = center?[0,0,0]:size/2;
 	translate(offset) {
-		hull(){
+		union(){
 			grid_of([-xoff,xoff],[-yoff,yoff])
-				cylinder(r=r,h=size[2],center=true);
+				cylinder(r=r,h=size[2],center=true,$fn=$fn);
 			cube(size=[xoff*2,size[1],size[2]], center=true);
 			cube(size=[size[0],yoff*2,size[2]], center=true);
 		}
@@ -870,19 +873,27 @@ module rrect(size=[1,1,1], r=0.25, center=false)
 //   rcube(size=[5,7,3], r=1);
 module rcube(size=[1,1,1], r=0.25, center=false)
 {
-	translate(center?[0,0,0]:size/2) {
-		hull() {
-			xspread(size[0]-2*r) {
-				hull() yspread(size[1]-2*r) {
-					hull() zspread(size[2]-2*r) {
-						sphere(r=r, center=true);
-					}
-				}
-			}
-			// Have to add in these center cubes to make exact edge match.
-			cube([size[0], size[1]-2*r, size[2]-2*r], center=true);
-			cube([size[0]-2*r, size[1], size[2]-2*r], center=true);
-			cube([size[0]-2*r, size[1]-2*r, size[2]], center=true);
+	$fn = ($fn==undef)?max(18,floor(180/asin(1/r)/2)*2):$fn;
+	xoff=abs(size[0])/2-r;
+	yoff=abs(size[1])/2-r;
+	zoff=abs(size[2])/2-r;
+	offset = center?[0,0,0]:size/2;
+	translate(offset) {
+		union() {
+			grid_of([-xoff,xoff],[-yoff,yoff],[-zoff,zoff])
+				sphere(r=r,center=true,$fn=$fn);
+			grid_of(xa=[-xoff,xoff],ya=[-yoff,yoff])
+				cylinder(r=r,h=zoff*2,center=true,$fn=$fn);
+			grid_of(xa=[-xoff,xoff],za=[-zoff,zoff])
+				rotate([90,0,0])
+					cylinder(r=r,h=yoff*2,center=true,$fn=$fn);
+			grid_of(ya=[-yoff,yoff],za=[-zoff,zoff])
+				rotate([90,0,0])
+				rotate([0,90,0])
+					cylinder(r=r,h=xoff*2,center=true,$fn=$fn);
+			cube(size=[xoff*2,yoff*2,size[2]], center=true);
+			cube(size=[xoff*2,size[1],zoff*2], center=true);
+			cube(size=[size[0],yoff*2,zoff*2], center=true);
 		}
 	}
 }
@@ -960,13 +971,14 @@ module rcylinder(h=1, r=1, fillet=0.25, center=false)
 //   tube(h=3, r=4, wall=1, center=true);
 //   tube(h=6, r=4, wall=2, $fn=6);
 //   tube(h=3, r1=5, r2=7, wall=2, center=true);
-module tube(h=1, r=1, r1=undef, r2=undef, wall=0.5, center=false)
+module tube(h=1, r=1, r1=undef, r2=undef, wall=0.5, center=false, $fn=undef)
 {
 	r1 = (r1==undef)? r : r1;
 	r2 = (r2==undef)? r : r2;
+	$fn = ($fn==undef)?max(12,floor(180/asin(2/max(r1,r2))/2)*2):$fn;
 	difference() {
-		cylinder(h=h, r1=r1, r2=r2, center=center);
-		cylinder(h=h+0.03, r1=r1-wall, r2=r2-wall, center=center);
+		cylinder(h=h, r1=r1, r2=r2, center=center, $fn=$fn);
+		cylinder(h=h+0.03, r1=r1-wall, r2=r2-wall, center=center, $fn=$fn);
 	}
 }
 
@@ -1055,9 +1067,10 @@ module arced_slot(
 //   h = thickness of teardrop. (Default: 1)
 // Example:
 //   teardrop(r=3, h=2, ang=30);
-module teardrop(r=1, h=1, ang=45)
+module teardrop(r=1, h=1, ang=45, $fn=undef)
 {
-	xrot(90) hull() {
+	$fn = ($fn==undef)?max(12,floor(180/asin(1/r)/2)*2):$fn;
+	xrot(90) union() {
 		translate([0, r*sin(ang), 0]) {
 			scale([1, 1/tan(ang), 1]) {
 				difference() {
@@ -1348,12 +1361,13 @@ function get_metric_nut_thickness(size) = lookup(size, [
 //   headlen = length of the screw head.
 // Example:
 //   screw(screwsize=3,screwlen=10,headsize=6,headlen=3);
-module screw(screwsize=3,screwlen=10,headsize=6,headlen=3)
+module screw(screwsize=3,screwlen=10,headsize=6,headlen=3,$fn=undef)
 {
+	$fn = ($fn==undef)?max(8,floor(180/asin(2/screwsize)/2)*2):$fn;
 	translate([0,0,-(screwlen)/2])
-		cylinder(r=screwsize/2, h=screwlen+0.05, center=true);
+		cylinder(r=screwsize/2, h=screwlen+0.05, center=true, $fn=$fn);
 	translate([0,0,(headlen)/2])
-		cylinder(r=headsize/2, h=headlen, center=true);
+		cylinder(r=headsize/2, h=headlen, center=true, $fn=$fn*2);
 }
 
 
@@ -1363,15 +1377,16 @@ module screw(screwsize=3,screwlen=10,headsize=6,headlen=3)
 // Example:
 //   metric_nut(size=8, hole=true);
 //   metric_nut(size=3, hole=false);
-module metric_nut(size=3, hole=true, center=false)
+module metric_nut(size=3, hole=true, $fn=undef, center=false)
 {
+	$fn = ($fn==undef)?max(8,floor(180/asin(2/size)/2)*2):$fn;
 	radius = get_metric_nut_size(size)/2/cos(30);
 	thick = get_metric_nut_thickness(size);
 	offset = (center == true)? 0 : thick/2;
 	translate([0,0,offset]) difference() {
 		cylinder(r=radius, h=thick, center=true, $fn=6);
 		if (hole == true)
-			cylinder(r=size/2, h=thick+0.5, center=true);
+			cylinder(r=size/2, h=thick+0.5, center=true, $fn=$fn);
 	}
 }
 
@@ -1610,6 +1625,43 @@ module extrude_2d_hollow(wall=2, height=50, twist=90, slices=60)
 }
 
 
+function vector2d_angle(v1,v2) = atan2(v1[1],v1[0]) - atan2(v2[1],v2[0]);
+function vector3d_angle(v1,v2) = acos((v1*v2)/(norm(v1)*norm(v2)));
+
+function slice(arr,st,end) = let(
+		s=st<0?(len(arr)+st):st,
+		e=end<0?(len(arr)+end+1):end
+	) [for (i=[s:e-1]) if (e>s) arr[i]];
+
+
+function simplify2d_path(path) = concat(
+	[path[0]],
+	[
+		for (
+			i = [1:len(path)-2]
+		) let (
+			v1 = path[i] - path[i-1],
+			v2 = path[i+1] - path[i-1]
+		) if (abs(cross(v1,v2)) > 1e-6) path[i]
+	],
+	[path[len(path)-1]]
+);
+
+function simplify3d_path(path) = concat(
+	[path[0]],
+	[
+		for (
+			i = [1:len(path)-2]
+		) let (
+			v1 = path[i] - path[i-1],
+			v2 = path[i+1] - path[i-1]
+		) if (vector3d_angle(v1,v2) > 1e-6) path[i]
+	],
+	[path[len(path)-1]]
+);
+
+
+
 // Formulae to calculate points on a cubic bezier curve.
 function bez_B0(curve,u) = curve[0]*pow((1-u),3);
 function bez_B1(curve,u) = curve[1]*(3*u*pow((1-u),2));
@@ -1617,19 +1669,24 @@ function bez_B2(curve,u) = curve[2]*(3*pow(u,2)*(1-u));
 function bez_B3(curve,u) = curve[3]*pow(u,3);
 function bez_point(curve,u) = bez_B0(curve,u) + bez_B1(curve,u) + bez_B2(curve,u) + bez_B3(curve,u);
 
-
-// Takes a closed 2D bezier path, and creates a 2D polygon from it.
-module bezier_path(bezier, splinesteps=16) {
-	pointslist = [
+function bezier_polyline(bezier, splinesteps=16) = concat(
+	[
 		for (
 			b = [0 : 3 : len(bezier)-4],
 			l = [0 : splinesteps-1]
 		) let (
 			crv = [bezier[b+0], bezier[b+1], bezier[b+2], bezier[b+3]],
-			u = l / (splinesteps-1)
+			u = l / splinesteps
 		) bez_point(crv, u)
-	];
-	polygon(points=pointslist);
+	],
+	[bez_point([bezier[len(bezier)-4], bezier[len(bezier)-3], bezier[len(bezier)-2], bezier[len(bezier)-1]], 1.0)]
+);
+
+
+// Takes a closed 2D bezier path, and creates a 2D polygon from it.
+module bezier_polygon(bezier, splinesteps=16) {
+	polypoints=bezier_polyline(bezier, splinesteps);
+	polygon(points=slice(polypoints, 0, -1));
 }
 
 
@@ -1647,7 +1704,7 @@ module bezier_path(bezier, splinesteps=16) {
 //   revolve_bezier(path, splinesteps=32, $fn=180);
 module revolve_bezier(bezier, splinesteps=16) {
 	yrot(90) rotate_extrude(convexity=10) {
-		xrot(180) zrot(-90) bezier_path(bezier, splinesteps);
+		xrot(180) zrot(-90) bezier_polygon(bezier, splinesteps);
 	}
 }
 
@@ -1708,15 +1765,7 @@ module revolve_bezier_offset_shell(bezier, offset=1, splinesteps=16) {
 //   extrude_2d_shapes_along_bezier(path, splinesteps=32)
 //     circle(r=10, center=true);
 module extrude_2d_shapes_along_bezier(bezier, splinesteps=16) {
-	pointslist = [
-		for (
-			b = [0 : 3 : len(bezier)-4],
-			l = [0 : splinesteps-2]
-		) let (
-			crv = [bezier[b+0], bezier[b+1], bezier[b+2], bezier[b+3]]
-		) bez_point(crv, l / (splinesteps-1))
-	];
-
+	pointslist = slice(bezier_polyline(bezier, splinesteps), 0, -1);
 	ptcount = len(pointslist);
 	for (i = [0 : ptcount-2]) {
 		pt1 = pointslist[i];
@@ -1758,89 +1807,124 @@ module extrude_2d_shapes_along_bezier(bezier, splinesteps=16) {
 }
 
 
-// Takes a closed convex 2D bezier path, centered on the XY plane, and
+// Takes a closed 2D polyline path, centered on the XY plane, and
+// extrudes it along a 3D spiral path of a given radius, height and twist.
+//   polyline = Array of points of a polyline path, to be extruded.
+//   h = height of the spiral to extrude along.
+//   r = radius of the spiral to extrude along.
+//   twist = number of degrees of rotation to spiral up along height.
+// Example:
+//   poly = [[-10,0], [-3,-5], [3,-5], [10,0], [0,-30]];
+//   extrude_2dpath_along_spiral(poly, h=200, r=50, twist=1000, $fn=36);
+module extrude_2dpath_along_spiral(polyline, h, r, twist=360) {
+	pline_count = len(polyline);
+	steps = ceil(segs(r)*(twist/360));
+
+	poly_points = [
+		for (
+			p = [0:steps]
+		) let (
+			a = twist * (p/steps),
+			dx = r*cos(a),
+			dy = r*sin(a),
+			dz = h * (p/steps),
+			cp = [dx, dy, dz],
+			rotx = matrix3_xrot(90),
+			rotz = matrix3_zrot(a),
+			rotm = rotz * rotx
+		) for (
+			b = [0:pline_count-1]
+		) rotm*point3d(polyline[b])+cp
+	];
+
+	poly_faces = concat(
+		[[for (b = [0:pline_count-1]) b]],
+		[
+			for (
+				p = [0:steps-1],
+				b = [0:pline_count-1],
+				i = [0:1]
+			) let (
+				b2 = (b == pline_count-1)? 0 : b+1,
+				p0 = p * pline_count + b,
+				p1 = p * pline_count + b2,
+				p2 = (p+1) * pline_count + b2,
+				p3 = (p+1) * pline_count + b,
+				pt = (i==0)? [p0, p1, p2] : [p0, p2, p3]
+			) pt
+		],
+		[[for (b = [0:pline_count-1]) b+(steps)*pline_count]]
+	);
+
+	polyhedron(points=poly_points, faces=poly_faces, convexity=10);
+}
+
+
+// Takes a closed 2D polyline path, centered on the XY plane, and
+// extrudes it perpendicularly along a 3D polyline path, forming a solid.
+//   polyline = Array of points of a polyline path, to be extruded.
+//   path = Array of points of a polyline path, to extrude along.
+//   tilt = True if extrusion should tilt vertically when following path.
+// Example:
+//   shape = [ [-15, 0], [25, -15], [-5, 10], [0, 10], [5, 10], [10, 5], [15, 0], [10, -5], [5, -10], [0, -10], [-5, -10], [-10, -5], [-15, 0] ];
+//   path = [ [0, 0, 0], [33, 33, 33], [66, -33, -33], [100, 0, 0] ];
+//   extrude_2dpath_along_3dpath(shape, path, tilt=false);
+module extrude_2dpath_along_3dpath(polyline, path, tilt=true) {
+	pline_count = len(polyline);
+	path_count = len(path);
+
+	poly_points = [
+		for (p = [0:path_count-1]) let (
+			ppt1 = path[p],
+			ppt0 = (p==0)? ppt1 : path[p-1],
+			ppt2 = (p==(path_count-1))? ppt1 : path[p+1],
+			v = ppt2 - ppt0,
+			xyr = hypot(v[1], v[0]),
+			az = atan2(v[1], v[0]),
+			alt = atan2(v[2], xyr),
+			rotx = matrix3_xrot(90+(tilt?alt:0)),
+			rotz = matrix3_zrot(az-90),
+			rotm = rotz * rotx
+		) for (b = [0:pline_count-1]) rotm*point3d(polyline[b])+ppt1
+	];
+
+	poly_faces = concat(
+		[[for (b = [0:pline_count-1]) b]],
+		[
+			for (
+				p = [0:path_count-2],
+				b = [0:pline_count-1],
+				i = [0:1]
+			) let (
+				b2 = (b == pline_count-1)? 0 : b+1,
+				p0 = p * pline_count + b,
+				p1 = p * pline_count + b2,
+				p2 = (p+1) * pline_count + b2,
+				p3 = (p+1) * pline_count + b,
+				pt = (i==0)? [p0, p1, p2] : [p0, p2, p3]
+			) pt
+		],
+		[[for (b = [0:pline_count-1]) b+(path_count-1)*pline_count]]
+	);
+
+	polyhedron(points=poly_points, faces=poly_faces, convexity=10);
+}
+
+
+// Takes a closed 2D bezier path, centered on the XY plane, and
 // extrudes it perpendicularly along a 3D bezier path, forming a solid.
 //   bezier = Array of points of a bezier path, to be extruded.
 //   path = Array of points of a bezier path, to extrude along.
 //   pathsteps = number of steps to divide each path segment into.
 //   bezsteps = number of steps to divide each bezier segment into.
 // Example:
-//   bez = [ [-15, 0], [-10, 5], [-5, 10], [0, 10], [5, 10], [10, 5], [15, 0], [10, -5], [5, -10], [0, -10], [-5, -10], [-10, -5], [-15, 0] ];
+//   bez = [ [-15, 0], [25, -15], [-5, 10], [0, 10], [5, 10], [10, 5], [15, 0], [10, -5], [5, -10], [0, -10], [-5, -10], [-10, -5], [-15, 0] ];
 //   path = [ [0, 0, 0], [33, 33, 33], [66, -33, -33], [100, 0, 0] ];
-//   extrude_bezier_along_bezier(bez, path, pathsteps=32, bezsteps=8);
+//   extrude_bezier_along_bezier(bez, path, pathsteps=64, bezsteps=32);
 module extrude_bezier_along_bezier(bezier, path, pathsteps=16, bezsteps=16) {
-	bezlen = len(bezier);
-	bez_points = path3d(
-		concat(
-			[
-				for (
-					b = [0 : 3 : bezlen-4],
-					l = [0 : bezsteps-1]
-				) let (
-					crv = [bezier[b+0], bezier[b+1], bezier[b+2], bezier[b+3]]
-				) bez_point(crv, l / bezsteps)
-			],
-			[bez_point([bezier[bezlen-4], bezier[bezlen-3], bezier[bezlen-2], bezier[bezlen-1]], 1.0)]
-		)
-	);
-	bez_count = len(bez_points);
-
-	pathlen = len(path);
-	path_points = path3d(
-		concat(
-			[
-				for (
-					b = [0 : 3 : pathlen-4],
-					l = [0 : pathsteps-1]
-				) let (
-					crv = [path[b+0], path[b+1], path[b+2], path[b+3]]
-				) bez_point(crv, l / pathsteps)
-			],
-			[bez_point([path[pathlen-4], path[pathlen-3], path[pathlen-2], path[pathlen-1]], 1.0)]
-		)
-	);
-	path_count = len(path_points);
-
-	poly_points = concat(
-		[
-			for (p = [0:path_count-1]) let (
-				ppt1 = path_points[p],
-				ppt0 = (p==0)? ppt1 : path_points[p-1],
-				ppt2 = (p==(path_count-1))? ppt1 : path_points[p+1],
-				v = ppt2 - ppt0,
-				xyr = hypot(v[1], v[0]),
-				az = atan2(v[1], v[0]),
-				alt = atan2(v[2], xyr),
-				roty = matrix3_yrot(90-alt),
-				rotz = matrix3_zrot(az),
-				rotm = rotz * roty
-			) for (b = [0:bez_count-1]) rotm*bez_points[b]+ppt1
-		],
-		[path_points[0]],
-		[path_points[path_count-1]]
-	);
-
-	polylen = len(poly_points);
-	poly_faces = concat(
-		[for (b = [0:bez_count-1]) [b, (b+1) % bez_count, polylen-2] ],
-		[
-			for (
-				p = [0:path_count-2],
-				b = [0:bez_count-1],
-				i = [0:1]
-			) let (
-				b2 = (b == bez_count-1)? 0 : b+1,
-				p0 = p * bez_count + b,
-				p1 = p * bez_count + b2,
-				p2 = (p+1) * bez_count + b2,
-				p3 = (p+1) * bez_count + b,
-				pt = (i==0)? [p0, p1, p2] : [p0, p2, p3]
-			) pt
-		],
-		[for (b = [0:bez_count-1]) [b+(path_count-1)*bez_count, ((b+1) % bez_count)+(path_count-1)*bez_count, polylen-1] ]
-	);
-
-	polyhedron(points=poly_points, faces=poly_faces, convexity=10);
+	bez_points = simplify2d_path(bezier_polyline(bezier, bezsteps));
+	path_points = simplify3d_path(path3d(bezier_polyline(path, pathsteps)));
+	extrude_polyline_along_path(bez_points, path_points);
 }
 
 

@@ -10,6 +10,7 @@ use <cable_chain_mount_parts.scad>
 use <drive_gear_parts.scad>
 use <extruder_platform_parts.scad>
 use <fan_shroud_parts.scad>
+use <filament_hanger_parts.scad>
 use <lifter_rod_coupler_parts.scad>
 use <lifter_lock_nut_parts.scad>
 use <motor_mount_plate_parts.scad>
@@ -277,17 +278,29 @@ module y_axis_slider_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=
 //!y_axis_slider_assembly(slidepos=90) y_sled_assembly();
 
 
-module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false)
+module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false, isback=false)
 {
 	left(platform_length)
 	zrot(-90) {
 		yz_joiner();
+		if (!isback && $children > 1) {
+			fwd(6+explode) {
+				children(1);
+			}
+		}
 		back(platform_length/2) {
 			zring(r=rail_width/2+14+explode) {
 				zrot(-90) support_leg();
 			}
 		}
 		up(rail_height+groove_height+motor_rail_length/2+explode) {
+			if (isback && $children > 0) {
+				up(motor_rail_length/2+10+explode/2) {
+					fwd(explode) {
+						children(0);
+					}
+				}
+			}
 			zrot(90) z_motor_segment_assembly(slidepos=slidepos);
 
 			up(motor_rail_length/2+rail_length+explode*1.5) {
@@ -296,7 +309,7 @@ module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false)
 				}
 				up(slidepos) {
 					back(rail_height+groove_height/2) {
-						if ($children > 0) children(0);
+						if (!isback && $children > 0) children(0);
 					}
 				}
 				up(rail_length+explode*1.5) {
@@ -393,9 +406,13 @@ module full_assembly(hide_endcaps=false, explode=0, arrows=false)
 	zpos = 80*cos(240+360*$t)+10;
 
 	x_axis_slider_assembly(slidepos=xpos, explode=explode, arrows=arrows) {
-		z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows)
+		z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows) {
 			extruder_bridge_assembly(explode=explode, arrows=arrows);
-		zrot(180) z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows);
+			zrot(180) motherboard_mount();
+		}
+		zrot(180) z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows, isback=true) {
+			zrot(-90) filament_hanger();
+		}
 		x_sled_assembly(explode=explode, arrows=arrows) {
 			y_axis_slider_assembly(slidepos=ypos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows)
 				y_sled_assembly(explode=explode, arrows=arrows)
@@ -403,7 +420,6 @@ module full_assembly(hide_endcaps=false, explode=0, arrows=false)
 		}
 	}
 
-	//motherboard_mount();
 	//cable_chain_xy_joiner_mount();
 }
 
