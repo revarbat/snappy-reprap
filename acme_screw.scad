@@ -9,7 +9,7 @@ module acme_threaded_rod(
 	l=100,
 	pitch=3.175,
 	thread_depth=1,
-	thread_angle=29
+	thread_angle=14.5
 ) {
 	astep = 360/segs(d/2);
 	asteps = ceil(360/astep);
