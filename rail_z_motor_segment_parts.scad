@@ -13,7 +13,7 @@ module rail_z_motor_segment()
 	ylen = (rail_width-motor_mount_spacing)/2;
 	hlen = sqrt(xlen*xlen+ylen*ylen);
 	ang = atan2(ylen,hlen);
-	motor_width = nema_motor_width(17)+printer_slop*2;
+	motor_width = nema_motor_width(17);
 
 	color("SpringGreen")
 	prerender(convexity=20)

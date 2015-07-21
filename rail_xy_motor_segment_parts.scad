@@ -8,7 +8,7 @@ module rail_xy_motor_segment()
 {
 	joiner_length = 10;
 	side_joiner_len = 10;
-	motor_width = nema_motor_width(17)+printer_slop*2;
+	motor_width = nema_motor_width(17);
 
 	color("SpringGreen")
 	prerender(convexity=20)

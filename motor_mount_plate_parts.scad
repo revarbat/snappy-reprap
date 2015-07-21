@@ -12,7 +12,7 @@ module motor_mount_plate()
 {
 	l = motor_length/2;
 	thick = 4;
-	motor_width = nema_motor_width(17)+printer_slop*2;
+	motor_width = nema_motor_width(17);
 
 	color("Teal")
 	prerender(convexity=10)
