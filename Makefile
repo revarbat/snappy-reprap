@@ -26,7 +26,7 @@ ${ROTFILES}: full_assembly.scad $(wildcard *.scad)
 	${OPENSCAD} -o $(subst wiki/,tmp_,$@) --imgsize=1024,1024 \
 	    --projection=p --csglimit=1000000 \
 	    -D '$$t=$(shell echo $(patsubst wiki/snappy_rot%.png,%/360.0,$@) | bc -l)' \
-	    -D '$$do_prerender=false' --camera=0,0,245,65,0,30,2000 $<
+	    -D '$$do_prerender=false' --camera=0,0,255,65,0,30,2200 $<
 	${CONVERT} -strip -resize 512x512 $(subst wiki/,tmp_,$@) $@
 	rm -f  $(subst wiki/,tmp_,$@)
 
