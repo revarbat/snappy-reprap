@@ -37,6 +37,16 @@ module spool_holder()
 				}
 			}
 
+			// Chamfer top corners.
+			xspread(rail_height) {
+				up(spool_holder_length) {
+					scale([1,1,0.75])
+					yrot(45) {
+						cube([sqrt(2)*15, rail_width+1, sqrt(2)*15], center=true);
+					}
+				}
+			}
+
 			// Clear space for joiners.
 			down(0.05) {
 				yrot(-90) zrot(90) joiner_pair_clear(spacing=rail_width-joiner_width, h=rail_height, w=joiner_width, a=joiner_angle, clearance=5);

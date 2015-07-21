@@ -48,12 +48,12 @@ module z_strut()
 
 			// Shrinkage stress relief
 			up(rail_thick/2) {
-				yspread(7, n=12) {
-					cube(size=[rail_width+1, 1, rail_thick-2], center=true);
+				yspread(20, n=4) {
+					#cube(size=[rail_width+1, 1, rail_thick-2], center=true);
 				}
-				xspread(13, n=8) {
+				xspread(18, n=6) {
 					yspread(motor_rail_length-10) {
-						cube(size=[1, 60, rail_thick-2], center=true);
+						#cube(size=[1, 30, rail_thick-2], center=true);
 					}
 				}
 			}

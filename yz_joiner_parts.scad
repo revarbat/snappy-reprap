@@ -106,7 +106,7 @@ module yz_joiner()
 			}
 
 			// Side joiners.
-			translate([0, platform_length/2, rail_height/2]) {
+			translate([0, platform_length/3, rail_height/2]) {
 				zrot(90) joiner_quad(xspacing=platform_length/2, yspacing=rail_width+2*6, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 			}
 
@@ -122,7 +122,7 @@ module yz_joiner()
 
 					// Wiring access holes.
 					xspread(rail_width/3, n=3) {
-						cube(size=[16, 11, 10], center=true);
+						cube(size=[16, 11, 11], center=true);
 					}
 				}
 			}

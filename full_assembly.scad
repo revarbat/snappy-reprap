@@ -289,7 +289,7 @@ module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false,
 				children(1);
 			}
 		}
-		back(platform_length/2) {
+		back(platform_length/3) {
 			zring(r=rail_width/2+14+explode) {
 				zrot(-90) support_leg();
 			}
