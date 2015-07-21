@@ -10,7 +10,7 @@ use <cable_chain_mount_parts.scad>
 use <drive_gear_parts.scad>
 use <extruder_platform_parts.scad>
 use <fan_shroud_parts.scad>
-use <filament_hanger_parts.scad>
+use <spool_holder_parts.scad>
 use <lifter_rod_coupler_parts.scad>
 use <lifter_lock_nut_parts.scad>
 use <motor_mount_plate_parts.scad>
@@ -150,17 +150,18 @@ module z_motor_segment_assembly(slidepos=0, explode=0, arrows=false)
 			zrot(90) motor_mount_plate();
 			up(motor_length/2-0.1) {
 				down(explode) nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
-				zrot(slidepos/lifter_rod_pitch*360.0) {
+				zrot(280-slidepos/lifter_rod_pitch*360.0) {
 					up(motor_shaft_length+explode) {
 						color("darkgrey") {
 							lifter_rod_coupler();
 						}
 						color("grey") {
 							up(30/2+10/2+explode) {
-								zrot(180) lifter_lock_nut();
+								zrot(170) lifter_lock_nut();
 							}
 						}
 						up(lifter_rod_length/2+2*explode) {
+							zrot(-50)
 							color("silver") {
 								acme_threaded_rod(
 									d=lifter_rod_diam,
@@ -294,13 +295,6 @@ module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false,
 			}
 		}
 		up(rail_height+groove_height+motor_rail_length/2+explode) {
-			if (isback && $children > 0) {
-				up(motor_rail_length/2+10+explode/2) {
-					fwd(explode) {
-						children(0);
-					}
-				}
-			}
 			zrot(90) z_motor_segment_assembly(slidepos=slidepos);
 
 			up(motor_rail_length/2+rail_length+explode*1.5) {
@@ -314,7 +308,19 @@ module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false,
 				}
 				up(rail_length+explode*1.5) {
 					if (hide_endcaps == false) {
-						xrot(-90) rail_endcap();
+						if (isback) {
+							back(rail_height/2) {
+								zrot(90) {
+									spool_holder();
+									up(spool_holder_length-15/2*cos(30)+0.25+explode) {
+										spool_axle();
+										down(52.5/2-14) spool();
+									}
+								}
+							}
+						} else {
+							xrot(-90) rail_endcap();
+						}
 					}
 				}
 			}
@@ -410,9 +416,7 @@ module full_assembly(hide_endcaps=false, explode=0, arrows=false)
 			extruder_bridge_assembly(explode=explode, arrows=arrows);
 			zrot(180) motherboard_mount();
 		}
-		zrot(180) z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows, isback=true) {
-			zrot(-90) filament_hanger();
-		}
+		zrot(180) z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows, isback=true);
 		x_sled_assembly(explode=explode, arrows=arrows) {
 			y_axis_slider_assembly(slidepos=ypos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows)
 				y_sled_assembly(explode=explode, arrows=arrows)
