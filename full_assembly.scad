@@ -8,19 +8,22 @@ use <acme_screw.scad>
 use <cable_chain_link_parts.scad>
 use <cable_chain_mount_parts.scad>
 use <drive_gear_parts.scad>
-use <extruder_platform_parts.scad>
+use <extruder_idler_parts.scad>
+use <extruder_motor_clip_parts.scad>
+use <fan_clip_parts.scad>
 use <fan_shroud_parts.scad>
-use <spool_holder_parts.scad>
-use <lifter_rod_coupler_parts.scad>
+use <jhead_platform_parts.scad>
 use <lifter_lock_nut_parts.scad>
-use <motor_mount_plate_parts.scad>
+use <lifter_rod_coupler_parts.scad>
 use <motherboard_mount_parts.scad>
+use <motor_mount_plate_parts.scad>
 use <platform_support_parts.scad>
 use <rail_endcap_parts.scad>
 use <rail_segment_parts.scad>
 use <rail_xy_motor_segment_parts.scad>
 use <rail_z_motor_segment_parts.scad>
 use <sled_endcap_parts.scad>
+use <spool_holder_parts.scad>
 use <support_leg_parts.scad>
 use <xy_joiner_parts.scad>
 use <xy_sled_parts.scad>
@@ -353,13 +356,54 @@ module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false,
 //!z_tower_assembly(slidepos=25.4/8/4, explode=0, arrows=true);
 
 
+module extruder_assembly(explode=0, arrows=false)
+{
+	motor_width = nema_motor_width(17);
+
+	jhead_platform();
+	jhead_hotend();
+	up(jhead_groove_thick+jhead_shelf_thick+motor_width/2+explode) {
+		right(extruder_drive_diam/2-0.5) {
+			fwd(extruder_shaft_len/2-0.05) {
+				xrot(-90) {
+					nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
+					down(motor_length/2) {
+						xrot(90) extruder_motor_clip();
+					}
+					up(4) extruder_drive_gear();
+				}
+			}
+		}
+		zrot(90) {
+			extruder_idler();
+			back(extruder_idler_diam/2) {
+				idler_bearing();
+				left(extruder_shaft_len/2/2+1)
+					yrot(90) extruder_idler_axle();
+				right(extruder_shaft_len/2/2+1)
+					yrot(-90) extruder_idler_axle_cap();
+			}
+		}
+	}
+	back(extruder_length/4) {
+		up(jhead_groove_thick+0.05) {
+			zrot(90) fan_shroud();
+			up(jhead_shelf_thick+12-extruder_fan_thick+2+0.05) {
+				fan_clip();
+			}
+		}
+	}
+}
+//!extruder_assembly();
+
+
 module extruder_bridge_assembly(slidepos=0, explode=0, arrows=false)
 {
 	platform_vert_off = groove_height/2+rail_offset;
 
 	back(extruder_length/2+motor_rail_length+cantilever_length+2*explode)
 	down(platform_length/2-slidepos) {
-		extruder_platform();
+		extruder_assembly();
 		yspread(extruder_length+motor_rail_length+2*explode) {
 			z_strut();
 		}
@@ -367,9 +411,6 @@ module extruder_bridge_assembly(slidepos=0, explode=0, arrows=false)
 			zrot(180) z_sled();
 		}
 
-		right(rail_width/2+5+explode) {
-			up(5) yrot(30) fan_shroud();
-		}
 
 		// Construction arrows.
 		if(arrows && explode>10) {

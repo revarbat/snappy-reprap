@@ -1,4 +1,4 @@
-snappy_version = 0.93;
+snappy_version = 0.95;
 
 
 // 0 = Thinning Walls (Thin in the middle, thick at edges.  Prettier smooth solid walls.)
@@ -12,28 +12,28 @@ platform_width  = 150;  // mm
 platform_height =  40;  // mm
 platform_thick  =   7;  // mm
 
-rail_length   = 150;    // mm
-rail_height   =  50;    // mm
-rail_thick    =   7;    // mm
-rail_offset   =  12;    // mm
+rail_length     = 150;  // mm
+rail_height     =  50;  // mm
+rail_thick      =   7;  // mm
+rail_offset     =  12;  // mm
 
 motor_rail_length = 100; // mm
 
-groove_angle  =  30;     // degrees
-groove_height =  12;     // mm
+groove_angle    =  30;   // degrees
+groove_height   =  12;   // mm
 
-joiner_angle  =  30;     // degrees
-joiner_width  =  10;     // mm
+joiner_angle    =  30;   // degrees
+joiner_width    =  10;   // mm
 
-rack_tooth_size    =  5;    // mm per tooth.
-rack_height        = 10;    // mm
-rack_base          =  2;    // mm
-gear_base          = 10;    // mm
-set_screw_size     =  3;    // mm size of set screw in drive gears, couplers, etc
-motor_length       = 39.25; // mm length of NEMA17 motor.
-motor_shaft_size   =  5;    // mm diameter of NEMA17 motor shaft.
-motor_shaft_length = 20;    // mm length of NEMA17 motor shaft.
-motor_shaft_flatted = true; // Is motor shaft keyed? (RECOMMENDED)
+rack_tooth_size     =  5;    // mm per tooth.
+rack_height         = 10;    // mm
+rack_base           =  2;    // mm
+gear_base           = 10;    // mm
+set_screw_size      =  3;    // mm size of set screw in drive gears, couplers, etc
+motor_length        = 39.25; // mm length of NEMA17 motor.
+motor_shaft_size    =  5;    // mm diameter of NEMA17 motor shaft.
+motor_shaft_length  = 20;    // mm length of NEMA17 motor shaft.
+motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
 
 // Currently configured for 3/8" ACME threaded rod.
 lifter_rod_diam     =   9.5;   // mm
@@ -70,14 +70,6 @@ glass_width     = 214;   // mm
 glass_length    = 200;   // mm
 glass_thick     =   3;   // mm
 
-// Fan shroud dimensions
-fan_size         = 60;  // mm
-fan_screw_size   =  4;  // mm
-fan_mount_length = 15;  // mm
-fan_mount_width  = 10;  // mm
-fan_mount_screw  =  3;  // mm
-fan_shroud_angle = 60;  // degrees
-
 // Cable chain dimensions
 cable_chain_height = 13;  // mm
 cable_chain_width  = 25;  // mm
@@ -87,28 +79,45 @@ cable_chain_bump   =  1;  // mm
 cable_chain_wall   =  3;  // mm
 
 // Motherboard dimensions (RAMBo)
-board_hole_xspacing =  95.25;  // mm
-board_hole_yspacing =  96.50;  // mm
-board_width         = 105;     // mm
-board_length        = 110;     // mm
-board_thick         =  30;     // mm
-board_screw_size    =   3;     // mm
-board_standoff_hgt  =   2.5;   // mm
-board_standoff_diam =   5;     // mm
+board_hole_xspacing =  95.25; // mm
+board_hole_yspacing =  96.5;  // mm
+board_width         = 105.0;  // mm
+board_length        = 110.0;  // mm
+board_thick         =  30.0;  // mm
+board_standoff_hgt  =   2.5;  // mm
+board_standoff_diam =   5.0;  // mm
+board_screw_size    =   3;    // mm
 
-spool_holder_length = 150.0; // mm
+spool_holder_length = 150.0;  // mm
 
-jhead_barrel_diam   = 16.0;  // mm
-jhead_shelf_thick   =  4.8;  // mm
-jhead_groove_thick  =  4.6;  // mm
-jhead_groove_diam   = 12.0;  // mm
+jhead_vent_span     =  20.0;  // mm
+jhead_barrel_diam   =  16.0;  // mm
+jhead_shelf_thick   =   4.8;  // mm
+jhead_groove_thick  =   4.6;  // mm
+jhead_groove_diam   =  12.0;  // mm
+jhead_cap_height    =   8.2;  // mm
+jhead_cap_diam      =  12.0;  // mm
 
 extruder_length      = 150.0;  // mm
 extruder_thick       =   5.0;  // mm
+extruder_shaft_len   =  25.0;  // mm
 extruder_drive_diam  =  12.5;  // mm
+
+/*
+// 626 bearing
 extruder_idler_diam  =  17.0;  // mm
 extruder_idler_axle  =   6.0;  // mm
 extruder_idler_width =   6.0;  // mm
+*/
+
+// SAE bearing 5/8"OD x 1/4"ID x 1/5"W
+extruder_idler_diam  =  15.9;  // mm
+extruder_idler_axle  =   6.3;  // mm
+extruder_idler_width =   5.0;  // mm
+
+extruder_fan_size    =  40.0;  // mm
+extruder_fan_thick   =  10.0;  // mm
+
 filament_diam        =   1.75; // mm
 
 // This is the slop needed to make parts fit more exactly, and might be

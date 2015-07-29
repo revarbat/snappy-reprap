@@ -493,6 +493,14 @@ module grid_of(xa=[0], ya=[0], za=[0], count=[], spacing=[])
 }
 
 
+module top_half   (s=100) difference() {children();  down(s/2) cube(s, center=true);}
+module bottom_half(s=100) difference() {children();    up(s/2) cube(s, center=true);}
+module left_half  (s=100) difference() {children(); right(s/2) cube(s, center=true);}
+module right_half (s=100) difference() {children();  left(s/2) cube(s, center=true);}
+module front_half (s=100) difference() {children();  back(s/2) cube(s, center=true);}
+module back_half  (s=100) difference() {children();   fwd(s/2) cube(s, center=true);}
+
+
 
 //////////////////////////////////////////////////////////////////////
 // Masking shapes.
@@ -961,7 +969,92 @@ module rcylinder(h=1, r=1, fillet=0.25, center=false)
 }
 
 
-// Makes a hollow tube with the given size and wall thickness.
+// Creates a pyramidal prism with a given number of sides.
+//   n = number of pyramid sides.
+//   h = height of the pyramid.
+//   l = length of one side of the pyramid. (optional)
+//   r = radius of the base of the pyramid. (optional)
+//   d = diameter of the base of the pyramid. (optional)
+//   circum = base circumscribes the circle of the given radius or diam.
+// Example:
+//   pyramid(h=3, d=4, n=6, circum=true);
+module pyramid(n=4, h=1, l=1, r=undef, d=undef, circum=false)
+{
+	cm = circum? 1/cos(180/n) : 1.0;
+	radius = (r!=undef)? r*cm : ((d!=undef)? d*cm/2 : (l/(2*sin(180/n))));
+	zrot(180/n) cylinder(r1=radius, r2=0, h=h, $fn=n, center=false);
+}
+
+
+// Creates a vertical prism with a given number of sides.
+//   n = number of sides.
+//   h = height of the prism.
+//   l = length of one side of the prism. (optional)
+//   r = radius of the prism. (optional)
+//   d = diameter of the prism. (optional)
+//   circum = prism circumscribes the circle of the given radius or diam.
+// Example:
+//   prism(n=6, h=3, d=4, circum=true);
+module prism(n=3, h=1, l=1, r=undef, d=undef, circum=false, center=false)
+{
+	cm = circum? 1/cos(180/n) : 1.0;
+	radius = (r!=undef)? r*cm : ((d!=undef)? d*cm/2 : (l/(2*sin(180/n))));
+	zrot(180/n) cylinder(r=radius, h=h, center=center, $fn=n);
+}
+
+
+// Creates a trapezoidal prism.
+//   size1 = [width, length] of the bottom of the prism.
+//   size2 = [width, length] of the top of the prism.
+//   h = Height of the prism.
+//   center = vertically center the prism.
+// Example:
+//   trapezoid(size1=[1,4], size2=[4,1], h=4, center=false);
+//   trapezoid(size1=[2,6], size2=[4,0], h=4, center=false);
+module trapezoid(size1=[1,1], size2=[1,1], h=1, center=false)
+{
+	ave = (size1 + size2)/2;
+	render(convexity=3)
+	up(center? 0 : h/2) {
+		linear_extrude(height=h/2, scale=[size2[0]/ave[0],size2[1]/ave[1]])
+			square(ave, center=true);
+		mirror([0,0,1])
+			linear_extrude(height=h/2, scale=[size1[0]/ave[0],size1[1]/ave[1]])
+				square(ave, center=true);
+	}
+}
+
+
+module onion(h=1, r=1, d=undef, maxang=45)
+{
+	rr = (d!=undef)? (d/2.0) : r;
+	xx = rr*cos(maxang);
+	yy = rr*sin(maxang);
+	hh = h-yy;
+	if (maxang < 0.01) {
+		cylinder(h=h, r=rr);
+		sphere(r=rr);
+	} else if (hh <= 0) {
+		up(h) bottom_half() down(h) sphere(r=rr);
+	} else {
+		x2 = hh/tan(90-maxang);
+		if (x2 <= xx) {
+			up(yy) {
+				bottom_half() down(yy) sphere(r=rr);
+				down(0.05) cylinder(h=hh+0.05, r1=xx, r2=xx-x2);
+			}
+		} else {
+			h2 = xx*tan(90-maxang);
+			up(yy) {
+				bottom_half() down(yy) sphere(r=rr);
+				down(0.05) cylinder(h=h2+0.05, r1=xx, r2=0);
+			}
+		}
+	}
+}
+
+
+// Makes a hollow tube with the given outer size and wall thickness.
 //   h = height of tube. (Default: 1)
 //   r = Outer radius of tube.  (Default: 1)
 //   r1 = Outer radius of bottom of tube.  (Default: value of r)
@@ -971,14 +1064,13 @@ module rcylinder(h=1, r=1, fillet=0.25, center=false)
 //   tube(h=3, r=4, wall=1, center=true);
 //   tube(h=6, r=4, wall=2, $fn=6);
 //   tube(h=3, r1=5, r2=7, wall=2, center=true);
-module tube(h=1, r=1, r1=undef, r2=undef, wall=0.5, center=false, $fn=undef)
+module tube(h=1, r=1, r1=undef, r2=undef, wall=0.5, center=false)
 {
 	r1 = (r1==undef)? r : r1;
 	r2 = (r2==undef)? r : r2;
-	$fn = ($fn==undef)?max(12,floor(180/asin(2/max(r1,r2))/2)*2):$fn;
 	difference() {
-		cylinder(h=h, r1=r1, r2=r2, center=center, $fn=$fn);
-		cylinder(h=h+0.03, r1=r1-wall, r2=r2-wall, center=center, $fn=$fn);
+		cylinder(h=h, r1=r1, r2=r2, center=center);
+		cylinder(h=h+0.03, r1=r1-wall, r2=r2-wall, center=center);
 	}
 }
 
