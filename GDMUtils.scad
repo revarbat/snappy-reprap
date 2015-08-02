@@ -1035,18 +1035,18 @@ module onion(h=1, r=1, d=undef, maxang=45)
 		cylinder(h=h, r=rr);
 		sphere(r=rr);
 	} else if (hh <= 0) {
-		up(h) bottom_half() down(h) sphere(r=rr);
+		up(h) bottom_half(2.1*rr) down(h) sphere(r=rr);
 	} else {
 		x2 = hh/tan(90-maxang);
 		if (x2 <= xx) {
 			up(yy) {
-				bottom_half() down(yy) sphere(r=rr);
+				bottom_half(2.1*rr) down(yy) sphere(r=rr);
 				down(0.05) cylinder(h=hh+0.05, r1=xx, r2=xx-x2);
 			}
 		} else {
 			h2 = xx*tan(90-maxang);
 			up(yy) {
-				bottom_half() down(yy) sphere(r=rr);
+				bottom_half(2.1*rr) down(yy) sphere(r=rr);
 				down(0.05) cylinder(h=h2+0.05, r1=xx, r2=0);
 			}
 		}

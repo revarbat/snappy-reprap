@@ -27,7 +27,7 @@ module fan_shroud()
 				}
 				cylinder(h=2*base_thickness+1, r=extruder_fan_size/2, center=true);
 			}
-			bottom_half(99) {
+			bottom_half(extruder_fan_size*1.5) {
 				difference() {
 					union() {
 						zflip() onion(h=(h+wall), r=(extruder_fan_size+2*wall)/2, maxang=35);

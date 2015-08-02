@@ -361,40 +361,50 @@ module extruder_assembly(explode=0, arrows=false)
 	motor_width = nema_motor_width(17);
 
 	jhead_platform();
-	jhead_hotend();
-	up(jhead_groove_thick+jhead_shelf_thick+motor_width/2+explode) {
-		right(extruder_drive_diam/2-0.5) {
-			fwd(extruder_shaft_len/2-0.05) {
-				xrot(-90) {
-					nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
-					down(motor_length/2) {
-						xrot(90) extruder_motor_clip();
+	down(explode) jhead_hotend();
+	fwd(explode) {
+		up(jhead_groove_thick+jhead_shelf_thick+motor_width/2+explode*1.5) {
+			right(extruder_drive_diam/2-0.5) {
+				fwd(extruder_shaft_len/2-0.05) {
+					xrot(-90) {
+						nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
+						up(4+explode) extruder_drive_gear();
+						fwd(explode) {
+							down(motor_length/2) {
+								xrot(90) extruder_motor_clip();
+							}
+						}
 					}
-					up(4) extruder_drive_gear();
+				}
+			}
+			zrot(90) {
+				up(explode*3) {
+					extruder_idler();
+					back(extruder_idler_diam/2) {
+						fwd(explode)
+							idler_bearing();
+						left(extruder_shaft_len/2/2+1+explode)
+							yrot(90) extruder_idler_axle();
+						right(extruder_shaft_len/2/2+1+explode)
+							yrot(-90) extruder_idler_axle_cap();
+					}
 				}
 			}
 		}
-		zrot(90) {
-			extruder_idler();
-			back(extruder_idler_diam/2) {
-				idler_bearing();
-				left(extruder_shaft_len/2/2+1)
-					yrot(90) extruder_idler_axle();
-				right(extruder_shaft_len/2/2+1)
-					yrot(-90) extruder_idler_axle_cap();
-			}
-		}
 	}
-	back(extruder_length/4) {
-		up(jhead_groove_thick+0.05) {
+	back(extruder_length/4+explode) {
+		up(jhead_groove_thick+0.05+explode*2) {
 			zrot(90) fan_shroud();
-			up(jhead_shelf_thick+12-extruder_fan_thick+2+0.05) {
-				fan_clip();
+			up(jhead_shelf_thick+explode) {
+				extruder_fan();
+				up(12-extruder_fan_thick+2+0.05+explode) {
+					fan_clip();
+				}
 			}
 		}
 	}
 }
-//!extruder_assembly();
+!extruder_assembly(explode=50);
 
 
 module extruder_bridge_assembly(slidepos=0, explode=0, arrows=false)

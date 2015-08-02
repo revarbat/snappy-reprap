@@ -84,6 +84,37 @@ module extruder_drive_gear()
 }
 
 
+module extruder_fan()
+{
+	up(extruder_fan_thick/2)
+	color([0.4, 0.4, 0.4]) {
+		difference() {
+			chamfcube(size=[extruder_fan_size, extruder_fan_size, extruder_fan_thick], chamfer=3, chamfaxes=[0,0,1], center=true);
+			cylinder(h=extruder_fan_thick+1, d=extruder_fan_size-2, center=true);
+			xspread(extruder_fan_size-3-3) {
+				yspread(extruder_fan_size-3-3) {
+					cylinder(h=extruder_fan_thick+1, d=3, center=true, $fn=12);
+				}
+			}
+		}
+		up((2-0.1)/2) {
+			linear_extrude(height=extruder_fan_thick-2, twist=30, slices=4, center=true, convexity=10) {
+				circle(r=extruder_fan_size/4, center=true);
+				zring(r=(extruder_fan_size-3)/4, n=8) {
+					square([(extruder_fan_size-3)/2, 1], center=true);
+				}
+			}
+		}
+		cylinder(h=extruder_fan_thick, d=extruder_fan_size/2-3, center=true);
+		down(extruder_fan_thick/2-1/2) {
+			cube([extruder_fan_size, 3, 1], center=true);
+			cube([3, extruder_fan_size, 1], center=true);
+		}
+	}
+}
+//!extruder_fan();
+
+
 module jhead_platform()
 {
 	platform_vert_off = rail_height+groove_height+rail_offset;
@@ -113,7 +144,7 @@ module jhead_platform()
 				right((rail_spacing)/2) {
 					up(h/3-0.05) {
 						right_half(30) {
-							trapezoid([joiner_width, 8], [joiner_width+5, 8], h=5);
+							trapezoid([joiner_width, 8], [joiner_width+5, 8], h=8);
 						}
 					}
 				}

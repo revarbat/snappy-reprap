@@ -17,7 +17,6 @@ topside = motor_width*0.25+topthick;
 botside = motor_width/2;
 
 
-
 module extruder_idler()
 {
 	color("Tan")
@@ -33,8 +32,8 @@ module extruder_idler()
 
 			// Vertical bar
 			back(backside-thick/2) {
-				up((topside+botside)/2-botside) {
-					cube([width, thick, topside+botside], center=true);
+				up((topside+botside+5)/2-botside) {
+					cube([width, thick, topside+botside+5], center=true);
 				}
 			}
 
@@ -50,8 +49,8 @@ module extruder_idler()
 		cylinder(d=filament_diam*2, h=100, $fn=12);
 
 		// spring/rubber-band mount hole
-		fwd(frontside-4) {
-			cube([width-4, 6, 100], center=true);
+		fwd(frontside-6) {
+			cube([width-5, 6, 100], center=true);
 		}
 
 		// Clearance for idler bearing
@@ -71,7 +70,7 @@ module extruder_idler()
 					back(2/2) cube([width+0.1, min(2*2,thick), 2.5], center=true);
 				}
 				xspread(width-2) {
-					up(2.5/2) cube([2.1, thick*2.1, 5.05], center=true);
+					up(2.5/2) cube([2.5, thick*2.1, 5.05], center=true);
 				}
 			}
 		}
