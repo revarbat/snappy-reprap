@@ -105,15 +105,22 @@ extruder_drive_diam  =  12.5;  // mm
 
 /*
 // 626 bearing
-extruder_idler_diam  =  17.0;  // mm
+extruder_idler_diam  =  19.0;  // mm
 extruder_idler_axle  =   6.0;  // mm
 extruder_idler_width =   6.0;  // mm
 */
 
+// 686 bearing
+extruder_idler_diam  =  13.0;  // mm
+extruder_idler_axle  =   6.0;  // mm
+extruder_idler_width =   5.0;  // mm
+
+/*
 // SAE bearing 5/8"OD x 1/4"ID x 1/5"W
 extruder_idler_diam  =  15.9;  // mm
 extruder_idler_axle  =   6.3;  // mm
 extruder_idler_width =   5.0;  // mm
+*/
 
 extruder_fan_size    =  40.0;  // mm
 extruder_fan_thick   =  10.0;  // mm

@@ -22,7 +22,7 @@ module fan_shroud()
 				up(base_thickness/2) {
 					cube([w, w, base_thickness], center=true);
 					left(extruder_length/4/2) {
-						cube([extruder_length/4, jhead_barrel_diam, base_thickness], center=true);
+						cube([extruder_length/4, w, base_thickness], center=true);
 					}
 				}
 				cylinder(h=2*base_thickness+1, r=extruder_fan_size/2, center=true);
@@ -44,7 +44,7 @@ module fan_shroud()
 		}
 		left(extruder_length/4-printer_slop) {
 			cylinder(d=jhead_barrel_diam, h=jhead_vent_span*4, center=true);
-			cube([jhead_barrel_diam*7/8, jhead_barrel_diam*2, jhead_vent_span*5], center=true);
+			cube([jhead_barrel_diam*6/8+2*printer_slop, w+1, jhead_vent_span*5], center=true);
 		}
 	}
 }

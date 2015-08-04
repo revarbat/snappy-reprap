@@ -79,6 +79,7 @@ module extruder_drive_gear()
 			up(12-3.5) {
 				torus(ir=extruder_drive_diam/2-1, or=extruder_drive_diam/2+4, $fn=24);
 			}
+			down(1) cylinder(h=15, d=motor_shaft_size, $fn=12);
 		}
 	}
 }
@@ -143,8 +144,18 @@ module jhead_platform()
 				// Rubber band clip
 				right((rail_spacing)/2) {
 					up(h/3-0.05) {
-						right_half(30) {
-							trapezoid([joiner_width, 8], [joiner_width+5, 8], h=8);
+						difference() {
+							right_half(30) {
+								right(2) {
+									scale([1,0.75,1]) {
+										cylinder(h=8, d1=joiner_width, d2=joiner_width+6);
+										up(8) cylinder(h=1, d=joiner_width+6);
+									}
+								}
+							}
+							up(8+1) {
+								xrot(90) fillet_mask(r=joiner_width/2, h=joiner_width*2);
+							}
 						}
 					}
 				}
@@ -183,17 +194,12 @@ module jhead_platform()
 					}
 				}
 
-				// Lower idler clip
+				// Lower idler mount block
 				up(jhead_groove_thick+jhead_shelf_thick) {
-					left((jhead_barrel_diam+8)/2+8) {
+					left((jhead_barrel_diam+8)/2+6) {
 						up(5/2) {
-							left_half() {
-								difference() {
-									trapezoid([20, extruder_shaft_len/2], [10, extruder_shaft_len/2], h=5, center=true);
-									down(5-3) {
-										cube([2*2, extruder_shaft_len/2-4, 5], center=true);
-									}
-								}
+							fwd(2/2) {
+								cube([15, extruder_shaft_len/2+2, 5], center=true);
 							}
 						}
 					}
@@ -307,13 +313,40 @@ module jhead_platform()
 				}
 			}
 
+			// Bottom idler holder
+			backside = (jhead_barrel_diam+8)/2+8;
+			up(jhead_groove_thick+3+printer_slop) {
+				left(backside-3) {
+					yrot_copies([0,-10]) {
+						difference() {
+							union() {
+								yrot(-45) {
+									xrot(90) cylinder(h=extruder_shaft_len/2+printer_slop, r=3+printer_slop, center=true);
+									up(3+printer_slop) {
+										cube([2*(3+printer_slop), extruder_shaft_len/2+printer_slop, 2*(3+printer_slop)], center=true);
+									}
+								}
+								left(3+printer_slop) {
+									up(motor_width/2) {
+										cube([2*(3+printer_slop), extruder_shaft_len/2+printer_slop, motor_width], center=true);
+									}
+								}
+							}
+							left(3+printer_slop+(extruder_shaft_len+1)/2) {
+								cube(extruder_shaft_len+1, center=true);
+							}
+						}
+					}
+				}
+			}
+
 			// Clear space for joiners.
 			up(rail_height/2+0.005) {
 				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=l+0.001, h=h, w=joiner_width, clearance=5, a=joiner_angle);
 			}
 		}
 
-		// Rail end  joiners.
+		// Rail end joiners.
 		up(rail_height/2) {
 			joiner_quad(xspacing=rail_spacing+joiner_width, yspacing=l-0.05, h=h, w=joiner_width, l=10, a=joiner_angle);
 		}

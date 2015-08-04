@@ -404,7 +404,7 @@ module extruder_assembly(explode=0, arrows=false)
 		}
 	}
 }
-!extruder_assembly(explode=50);
+//!extruder_assembly(explode=0);
 
 
 module extruder_bridge_assembly(slidepos=0, explode=0, arrows=false)

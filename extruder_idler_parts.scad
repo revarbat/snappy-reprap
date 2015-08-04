@@ -14,14 +14,14 @@ motor_width = nema_motor_width(17);
 frontside = (10+jhead_barrel_diam+8)/2+5;
 backside = (jhead_barrel_diam+8)/2+8;
 topside = motor_width*0.25+topthick;
-botside = motor_width/2;
+botside = motor_width/2+jhead_shelf_thick-thick;
 
 
 module extruder_idler()
 {
 	color("Tan")
 	prerender(convexity=10)
-	difference() {
+	!difference() {
 		union() {
 			// Top bar
 			up(topside-topthick/2) {
@@ -40,7 +40,29 @@ module extruder_idler()
 			// bearing supports
 			back((backside-extruder_idler_diam/2+extruder_idler_axle/3)/2+(extruder_idler_diam/2-extruder_idler_axle/3)) {
 				up(topside/4) {
-					cube([width, backside-extruder_idler_diam/2+extruder_idler_axle/3+0.05, extruder_idler_diam*2/3/2+topside], center=true);
+					difference() {
+						cube([width, backside-extruder_idler_diam/2+extruder_idler_axle/3+0.05, extruder_idler_diam*2/3/2+topside], center=true);
+						down((extruder_idler_diam*2/3/2+topside)/2) {
+							fwd((backside-extruder_idler_diam/2+extruder_idler_axle/3)/2) {
+								xrot(45) cube([width+0.05, extruder_idler_diam/6, extruder_idler_diam/6], center=true);
+							}
+						}
+					}
+				}
+			}
+
+			// Bottom clip
+			down(botside) {
+				back(backside-thick) {
+					difference() {
+						xrot(-45) {
+							union() {
+								yrot(90) cylinder(r=thick, h=width, center=true);
+								up(thick) cube([width, thick*2, thick*2], center=true);
+							}
+						}
+						back(3*thick) cube([width+1, 4*thick, 4*thick], center=true);
+					}
 				}
 			}
 		}
@@ -60,18 +82,6 @@ module extruder_idler()
 			difference() {
 				yrot(90) cylinder(d=extruder_idler_diam+2, h=extruder_idler_width+1, center=true);
 				yrot(90) cylinder(d=extruder_idler_axle+4, h=extruder_idler_width+1.1, center=true);
-			}
-		}
-
-		// Bottom clip
-		back(backside-2/2) {
-			down(botside-2.5/2) {
-				up(2.5) {
-					back(2/2) cube([width+0.1, min(2*2,thick), 2.5], center=true);
-				}
-				xspread(width-2) {
-					up(2.5/2) cube([2.5, thick*2.1, 5.05], center=true);
-				}
 			}
 		}
 	}

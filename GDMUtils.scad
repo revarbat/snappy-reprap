@@ -781,6 +781,10 @@ module fillet_hole_mask(r=1.0, fillet=0.25, xtilt=0, ytilt=0)
 //////////////////////////////////////////////////////////////////////
 
 
+// For when you MUST pass a child to a module, but you want it to be nothing.
+module nil() difference() {cube(0.1, center=true); cube(0.2, center=true);}
+
+
 // Makes a cube with chamfered edges.
 //   size = size of cube [X,Y,Z].  (Default: [1,1,1])
 //   chamfer = chamfer inset along axis.  (Default: 0.25)
@@ -858,14 +862,13 @@ module chamfcube(
 //   rrect(size=[5,7,3], r=1, $fn=24);
 module rrect(size=[1,1,1], r=0.25, center=false)
 {
-	$fn = ($fn==undef)?max(18,floor(180/asin(1/r)/2)*2):$fn;
 	xoff=abs(size[0])/2-r;
 	yoff=abs(size[1])/2-r;
 	offset = center?[0,0,0]:size/2;
 	translate(offset) {
 		union(){
 			grid_of([-xoff,xoff],[-yoff,yoff])
-				cylinder(r=r,h=size[2],center=true,$fn=$fn);
+				cylinder(r=r,h=size[2],center=true);
 			cube(size=[xoff*2,size[1],size[2]], center=true);
 			cube(size=[size[0],yoff*2,size[2]], center=true);
 		}
@@ -881,7 +884,6 @@ module rrect(size=[1,1,1], r=0.25, center=false)
 //   rcube(size=[5,7,3], r=1);
 module rcube(size=[1,1,1], r=0.25, center=false)
 {
-	$fn = ($fn==undef)?max(18,floor(180/asin(1/r)/2)*2):$fn;
 	xoff=abs(size[0])/2-r;
 	yoff=abs(size[1])/2-r;
 	zoff=abs(size[2])/2-r;
@@ -889,16 +891,16 @@ module rcube(size=[1,1,1], r=0.25, center=false)
 	translate(offset) {
 		union() {
 			grid_of([-xoff,xoff],[-yoff,yoff],[-zoff,zoff])
-				sphere(r=r,center=true,$fn=$fn);
+				sphere(r=r,center=true);
 			grid_of(xa=[-xoff,xoff],ya=[-yoff,yoff])
-				cylinder(r=r,h=zoff*2,center=true,$fn=$fn);
+				cylinder(r=r,h=zoff*2,center=true);
 			grid_of(xa=[-xoff,xoff],za=[-zoff,zoff])
 				rotate([90,0,0])
-					cylinder(r=r,h=yoff*2,center=true,$fn=$fn);
+					cylinder(r=r,h=yoff*2,center=true);
 			grid_of(ya=[-yoff,yoff],za=[-zoff,zoff])
 				rotate([90,0,0])
 				rotate([0,90,0])
-					cylinder(r=r,h=xoff*2,center=true,$fn=$fn);
+					cylinder(r=r,h=xoff*2,center=true);
 			cube(size=[xoff*2,yoff*2,size[2]], center=true);
 			cube(size=[xoff*2,size[1],zoff*2], center=true);
 			cube(size=[size[0],yoff*2,zoff*2], center=true);
@@ -1159,9 +1161,8 @@ module arced_slot(
 //   h = thickness of teardrop. (Default: 1)
 // Example:
 //   teardrop(r=3, h=2, ang=30);
-module teardrop(r=1, h=1, ang=45, $fn=undef)
+module teardrop(r=1, h=1, ang=45)
 {
-	$fn = ($fn==undef)?max(12,floor(180/asin(1/r)/2)*2):$fn;
 	xrot(90) union() {
 		translate([0, r*sin(ang), 0]) {
 			scale([1, 1/tan(ang), 1]) {
@@ -1453,13 +1454,12 @@ function get_metric_nut_thickness(size) = lookup(size, [
 //   headlen = length of the screw head.
 // Example:
 //   screw(screwsize=3,screwlen=10,headsize=6,headlen=3);
-module screw(screwsize=3,screwlen=10,headsize=6,headlen=3,$fn=undef)
+module screw(screwsize=3,screwlen=10,headsize=6,headlen=3)
 {
-	$fn = ($fn==undef)?max(8,floor(180/asin(2/screwsize)/2)*2):$fn;
 	translate([0,0,-(screwlen)/2])
-		cylinder(r=screwsize/2, h=screwlen+0.05, center=true, $fn=$fn);
+		cylinder(r=screwsize/2, h=screwlen+0.05, center=true);
 	translate([0,0,(headlen)/2])
-		cylinder(r=headsize/2, h=headlen, center=true, $fn=$fn*2);
+		cylinder(r=headsize/2, h=headlen, center=true);
 }
 
 
@@ -1469,16 +1469,15 @@ module screw(screwsize=3,screwlen=10,headsize=6,headlen=3,$fn=undef)
 // Example:
 //   metric_nut(size=8, hole=true);
 //   metric_nut(size=3, hole=false);
-module metric_nut(size=3, hole=true, $fn=undef, center=false)
+module metric_nut(size=3, hole=true, center=false)
 {
-	$fn = ($fn==undef)?max(8,floor(180/asin(2/size)/2)*2):$fn;
 	radius = get_metric_nut_size(size)/2/cos(30);
 	thick = get_metric_nut_thickness(size);
 	offset = (center == true)? 0 : thick/2;
 	translate([0,0,offset]) difference() {
 		cylinder(r=radius, h=thick, center=true, $fn=6);
 		if (hole == true)
-			cylinder(r=size/2, h=thick+0.5, center=true, $fn=$fn);
+			cylinder(r=size/2, h=thick+0.5, center=true);
 	}
 }
 

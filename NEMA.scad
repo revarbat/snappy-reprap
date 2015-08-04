@@ -137,11 +137,18 @@ module nema17_stepper(h=34, shaft=5, shaft_len=20)
 					cylinder(r=screw_size/2, h=screw_depth, center=true, $fn=max(12,segs(screw_size/2)));
 	}
 	color([0.4, 0.4, 0.4])
-		translate([0, 0, plinth_height/2])
+		up(plinth_height/2)
 			cylinder(h=plinth_height, r=plinth_diam/2, center=true);
-	color("silver")
-		translate([0, 0, shaft_len/2])
-			cylinder(h=shaft_len, r=shaft/2, center=true, $fn=max(12,segs(shaft/2)));
+	color("silver") {
+		difference() {
+			cylinder(h=shaft_len, r=shaft/2, $fn=max(12,segs(shaft/2)));
+			up(shaft_len/2+1) {
+				right(shaft_len/2+shaft/2-0.5) {
+					cube(shaft_len, center=true);
+				}
+			}
+		}
+	}
 }
 //!nema17_stepper();
 
