@@ -21,7 +21,7 @@ module extruder_idler()
 {
 	color("Tan")
 	prerender(convexity=10)
-	!difference() {
+	difference() {
 		union() {
 			// Top bar
 			up(topside-topthick/2) {
