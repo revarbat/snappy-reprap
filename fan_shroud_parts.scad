@@ -10,7 +10,7 @@ module fan_shroud()
 {
 	wall = 2;
 	lip = 2;
-	w = extruder_fan_size + 2*wall +2*lip;
+	w = extruder_fan_size + 2*wall + 2*lip;
 	h = jhead_groove_thick + jhead_vent_span;
 	base_thickness = jhead_shelf_thick;
 	ventlen = extruder_length/4-12;
@@ -39,6 +39,13 @@ module fan_shroud()
 					left((ventlen+10)/2) {
 						chamfcube([ventlen+10, jhead_groove_diam-2*wall, 2*h], chamfer=wall, center=true);
 					}
+				}
+			}
+
+			// Bottom joiner
+			left(w/8) {
+				down(h+6+wall) {
+					yrot(-90) zrot(90) half_joiner2(h=rail_height/2, w=joiner_width, l=6+wall, a=joiner_angle);
 				}
 			}
 		}

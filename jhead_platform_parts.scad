@@ -249,7 +249,7 @@ module jhead_platform()
 						left(extruder_idler_diam/2) {
 							back(1) {
 								hull() {
-									grid_of(xa=[0,-10]) {
+									grid_of(xa=[0,-5,-10]) {
 										xrot(90) cylinder(h=extruder_shaft_len-2+0.05, d=extruder_idler_diam+2, center=true);
 									}
 								}
@@ -315,24 +315,24 @@ module jhead_platform()
 
 			// Bottom idler holder
 			backside = (jhead_barrel_diam+8)/2+8;
-			up(jhead_groove_thick+3+printer_slop) {
+			up(jhead_groove_thick+3+printer_slop/2) {
 				left(backside-3) {
 					yrot_copies([0,-10]) {
 						difference() {
 							union() {
 								yrot(-45) {
-									xrot(90) cylinder(h=extruder_shaft_len/2+printer_slop, r=3+printer_slop, center=true);
+									xrot(90) cylinder(h=extruder_shaft_len/2+printer_slop, r=3+printer_slop/2, center=true);
 									up(3+printer_slop) {
-										cube([2*(3+printer_slop), extruder_shaft_len/2+printer_slop, 2*(3+printer_slop)], center=true);
+										cube([2*3+printer_slop, extruder_shaft_len/2+printer_slop, 2*3+printer_slop], center=true);
 									}
 								}
-								left(3+printer_slop) {
+								left(3+printer_slop/2) {
 									up(motor_width/2) {
-										cube([2*(3+printer_slop), extruder_shaft_len/2+printer_slop, motor_width], center=true);
+										cube([2*3+printer_slop, extruder_shaft_len/2+printer_slop, motor_width], center=true);
 									}
 								}
 							}
-							left(3+printer_slop+(extruder_shaft_len+1)/2) {
+							left(3+printer_slop/2+(extruder_shaft_len+1)/2) {
 								cube(extruder_shaft_len+1, center=true);
 							}
 						}

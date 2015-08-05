@@ -1,4 +1,6 @@
-# TODO:
-- Extruder base for J-head.
-- Minimalist Mk7-esque Extruder Parts.
-- Motherboard mounts.
+TODO:
+====
+
+- Screwless RAMPS motherboard mount.
+- Screwless mounts for limit switches.
+

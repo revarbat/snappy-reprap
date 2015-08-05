@@ -29,7 +29,6 @@ use <xy_joiner_parts.scad>
 use <xy_sled_parts.scad>
 use <yz_joiner_parts.scad>
 use <z_sled_parts.scad>
-use <z_strut_parts.scad>
 
 
 module arrow(size=10, headpart=0.4) {
@@ -411,13 +410,13 @@ module extruder_bridge_assembly(slidepos=0, explode=0, arrows=false)
 {
 	platform_vert_off = groove_height/2+rail_offset;
 
-	back(extruder_length/2+motor_rail_length+cantilever_length+2*explode)
+	back(extruder_length/2+rail_length+cantilever_length+2*explode)
 	down(platform_length/2-slidepos) {
 		extruder_assembly();
-		yspread(extruder_length+motor_rail_length+2*explode) {
-			z_strut();
+		yspread(extruder_length+rail_length+2*explode) {
+			rail_segment();
 		}
-		zrot(90) zring(r=(extruder_length+2*motor_rail_length+2*cantilever_length+4*explode)/2) {
+		zrot(90) zring(r=(extruder_length+2*rail_length+2*cantilever_length+4*explode)/2) {
 			zrot(180) z_sled();
 		}
 

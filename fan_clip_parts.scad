@@ -7,7 +7,7 @@ $fa = 1;
 $fs = 1.5;
 
 thick = extruder_thick;
-inset = 3;
+inset = 2.5;
 h = 6;
 
 
@@ -30,22 +30,22 @@ module fan_clip()
 							cube([extruder_fan_size+2*printer_slop, extruder_fan_size+2*printer_slop, inset*2], center=true);
 						}
 					}
-					up(inset/2) {
-						cylinder(d=extruder_fan_size/2.5, h=thick-inset, center=true);
+					up((inset+1)/2) {
+						cylinder(d=extruder_fan_size/2, h=thick-inset-1, center=true);
 						zring(n=8, r=extruder_fan_size/4) {
-							cube([extruder_fan_size/2+1, 3, thick-inset], center=true);
+							cube([extruder_fan_size/2+1, 3, thick-inset-1], center=true);
 						}
 					}
 				}
 			}
 
-			// Fan Shroud joiner clearance
+			// Fan clip joiner clearance
 			xspread(extruder_fan_size+2*joiner_width) {
 				xrot(-90) half_joiner_clear(h=extruder_fan_size/2, w=joiner_width, a=joiner_angle, clearance=2);
 			}
 		}
 
-		// Fan Shroud Joiners
+		// Fan clip Joiners
 		xspread(extruder_fan_size+2*joiner_width) {
 			xrot(-90) half_joiner(h=extruder_fan_size/2, w=joiner_width, l=h+thick-inset, a=joiner_angle);
 		}

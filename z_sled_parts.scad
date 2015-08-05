@@ -125,22 +125,19 @@ module z_sled()
 		up(offcenter+groove_height+platform_thick-2) {
 			difference() {
 				union() {
+					// Bottom.
 					up(cantlen/2) {
-						// Bottom.
 						back(platform_thick/2) {
 							zrot(90) sparse_strut(l=rail_width, h=cantlen+4, thick=platform_thick, strut=7);
 						}
+					}
 
-						// Walls.
-						xflip_copy() {
-							back(rail_height/2) {
-								right((rail_spacing+joiner_width)/2) {
-									if (wall_style == "crossbeams")
-										sparse_strut(l=rail_height, h=cantlen, thick=joiner_width, strut=5);
-									if (wall_style == "thinwall")
-										thinning_wall(l=rail_height, h=cantlen, thick=joiner_width, strut=5, bracing=false);
-									if (wall_style == "corrugated")
-										corrugated_wall(l=rail_height, h=cantlen, thick=joiner_width, strut=5);
+					// Rail top corners
+					up(cantlen+2) {
+						back(rail_height+groove_height/2-0.05) {
+							down((cantlen+3)/2+0.05) {
+								xspread(rail_spacing+joiner_width) {
+									cube([joiner_width, groove_height, cantlen+3], center=true);
 								}
 							}
 						}
@@ -158,7 +155,7 @@ module z_sled()
 			// Snap-tab joiners.
 			up(cantlen+2) {
 				back(rail_height/2) {
-					xrot(90) joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=5, a=joiner_angle);
+					xrot(90) joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=cantlen+3, a=joiner_angle);
 				}
 			}
 		}
