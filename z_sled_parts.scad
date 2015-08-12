@@ -11,7 +11,7 @@ module z_sled()
 {
 	offcenter = platform_thick;
 	cantlen = cantilever_length - platform_thick - groove_height/2;
-	slider_len = 15;
+	slider_len = 30;
 	lifter_block_size = 20;
 
 	color("MediumSlateBlue")

@@ -7,11 +7,12 @@ use <acme_screw.scad>
 
 use <cable_chain_link_parts.scad>
 use <cable_chain_mount_parts.scad>
+use <cooling_fan_shroud_parts.scad>
 use <drive_gear_parts.scad>
+use <extruder_fan_clip_parts.scad>
+use <extruder_fan_shroud_parts.scad>
 use <extruder_idler_parts.scad>
 use <extruder_motor_clip_parts.scad>
-use <fan_clip_parts.scad>
-use <fan_shroud_parts.scad>
 use <jhead_platform_parts.scad>
 use <lifter_lock_nut_parts.scad>
 use <lifter_rod_coupler_parts.scad>
@@ -393,11 +394,15 @@ module extruder_assembly(explode=0, arrows=false)
 	}
 	back(extruder_length/4+explode) {
 		up(jhead_groove_thick+0.05+explode*2) {
-			zrot(90) fan_shroud();
+			zrot(90) extruder_fan_shroud() {
+				cooling_fan_shroud() {
+					extruder_fan();
+				}
+			}
 			up(jhead_shelf_thick+explode) {
 				extruder_fan();
 				up(12-extruder_fan_thick+2+0.05+explode) {
-					fan_clip();
+					extruder_fan_clip();
 				}
 			}
 		}

@@ -6,12 +6,12 @@ use <joiners.scad>
 $fa = 1;
 $fs = 1.5;
 
-thick = extruder_thick;
-inset = 2.5;
 h = 6;
+thick = 8;
+inset = thick-2.5;
 
 
-module fan_clip()
+module extruder_fan_clip()
 {
 	color("violet")
 	prerender(convexity=10)
@@ -54,13 +54,13 @@ module fan_clip()
 
 
 
-module fan_clip_parts() { // make me
-	up(h+thick-inset) xrot(180) fan_clip();
+module extruder_fan_clip_parts() { // make me
+	up(h+thick-inset) xrot(180) extruder_fan_clip();
 }
 
 
 
-fan_clip_parts();
+extruder_fan_clip_parts();
 
 
 

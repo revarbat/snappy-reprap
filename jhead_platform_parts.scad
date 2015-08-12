@@ -5,7 +5,7 @@ use <joiners.scad>
 
 
 $fa = 1;
-$fs = 1.5;
+$fs = 2;
 
 
 jhead_length = 40; // mm

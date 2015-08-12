@@ -37,6 +37,8 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 
 module xy_sled()
 {
+	slider_len = 30;
+
 	color("MediumSlateBlue")
 	prerender(convexity=10)
 	union() {
@@ -71,7 +73,7 @@ module xy_sled()
 							zrot(-90) herringbone_rack(l=platform_length, h=rack_height, tooth_size=rack_tooth_size, CA=30);
 							up(rack_height/2) {
 								left(rack_tooth_size/2) {
-									 yrot(10) up(2) {
+									yrot(10) up(2) {
 										cube(size=[rack_tooth_size*2, platform_length+10, 4], center=true);
 									}
 								}
@@ -88,16 +90,16 @@ module xy_sled()
 							cube(size=[6, platform_length, platform_thick], center=true);
 						}
 
-						yspread(platform_length*6/8/2, n=3) {
+						yspread(platform_length-slider_len-15, n=2) {
 							up(rail_offset+groove_height/2) {
 								translate([-joiner_width/2, 0, 0]) {
 									circle_of(n=2, r=joiner_width/2+printer_slop, rot=true) {
 										// Slider base
 										translate([15/2-9, 0, -groove_height-printer_slop]) {
 											difference() {
-												cube(size=[15, platform_length/8, groove_height-printer_slop*2], center=true);
+												cube(size=[15, slider_len, groove_height-printer_slop*2], center=true);
 												up(groove_height/2) {
-													yspread(platform_length/8) {
+													yspread(slider_len) {
 														xrot(45) cube(size=[16, 2*sqrt(2), 2*sqrt(2)], center=true);
 													}
 												}
@@ -106,13 +108,13 @@ module xy_sled()
 
 										// Slider backing
 										translate([6/2, 0, -4/2]) {
-											cube(size=[6, platform_length/8, groove_height+4], center=true);
+											cube(size=[6, slider_len, groove_height+4], center=true);
 										}
 
 										// Slider ridge
 										scale([tan(groove_angle),1,1]) {
 											yrot(45) {
-												rcube(size=[groove_height/sqrt(2), platform_length/8, groove_height/sqrt(2)], r=1, center=true, $fn=12);
+												rcube(size=[groove_height/sqrt(2), slider_len, groove_height/sqrt(2)], r=1, center=true, $fn=12);
 											}
 										}
 									}
