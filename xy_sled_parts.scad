@@ -37,7 +37,7 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 
 module xy_sled()
 {
-	slider_len = 30;
+	slider_len = platform_length-10;
 
 	color("MediumSlateBlue")
 	prerender(convexity=10)
@@ -90,7 +90,7 @@ module xy_sled()
 							cube(size=[6, platform_length, platform_thick], center=true);
 						}
 
-						yspread(platform_length-slider_len-15, n=2) {
+						yspread(platform_length-slider_len-15, n=1) {
 							up(rail_offset+groove_height/2) {
 								translate([-joiner_width/2, 0, 0]) {
 									circle_of(n=2, r=joiner_width/2+printer_slop, rot=true) {

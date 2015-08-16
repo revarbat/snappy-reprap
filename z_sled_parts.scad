@@ -11,7 +11,7 @@ module z_sled()
 {
 	offcenter = platform_thick;
 	cantlen = cantilever_length - platform_thick - groove_height/2;
-	slider_len = 30;
+	slider_len = platform_length-10;
 	lifter_block_size = 20;
 
 	color("MediumSlateBlue")
@@ -56,7 +56,7 @@ module z_sled()
 						}
 						// Slider ridge
 						fwd(10/2) {
-							yspread(platform_length-slider_len-10) {
+							yspread(platform_length-slider_len-10, n=1) {
 								up(groove_height/2+offcenter) {
 									zring(n=2, r=joiner_width/2+printer_slop+2) {
 										xs = 1 + 4/(groove_height*tan(groove_angle));
