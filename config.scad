@@ -78,16 +78,6 @@ cable_chain_pivot  =  6;  // mm
 cable_chain_bump   =  1;  // mm
 cable_chain_wall   =  3;  // mm
 
-// Motherboard dimensions (RAMBo)
-board_hole_xspacing =  95.25; // mm
-board_hole_yspacing =  96.5;  // mm
-board_width         = 105.0;  // mm
-board_length        = 110.0;  // mm
-board_thick         =  30.0;  // mm
-board_standoff_hgt  =   2.5;  // mm
-board_standoff_diam =   5.0;  // mm
-board_screw_size    =   3;    // mm
-
 spool_holder_length = 150.0;  // mm
 
 jhead_vent_span     =  20.0;  // mm

@@ -16,7 +16,7 @@ use <extruder_motor_clip_parts.scad>
 use <jhead_platform_parts.scad>
 use <lifter_lock_nut_parts.scad>
 use <lifter_rod_coupler_parts.scad>
-use <motherboard_mount_parts.scad>
+use <ramps_mount_parts.scad>
 use <motor_mount_plate_parts.scad>
 use <platform_support_parts.scad>
 use <rail_endcap_parts.scad>
@@ -469,7 +469,7 @@ module full_assembly(hide_endcaps=false, explode=0, arrows=false)
 	x_axis_slider_assembly(slidepos=xpos, explode=explode, arrows=arrows) {
 		z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows) {
 			extruder_bridge_assembly(explode=explode, arrows=arrows);
-			zrot(180) motherboard_mount();
+			ramps_mount();
 		}
 		zrot(180) z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows, isback=true);
 		x_sled_assembly(explode=explode, arrows=arrows) {
