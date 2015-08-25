@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-$fa = 1;
+$fa = 2;
 $fs = 2;
 
 

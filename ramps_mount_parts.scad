@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-$fa = 1;
+$fa = 2;
 $fs = 2;
 
 
@@ -14,7 +14,7 @@ board_thick         =  50.0;  // mm
 
 
 // l = board_length + rail_height + 5;
-l = board_length + 5;
+l = board_length + 10;
 joiner_length = board_thick + rail_thick;
 
 
@@ -53,7 +53,7 @@ module ramps_mount() {
 
 			// Motherboard standoffs
 			fwd(joiner_length-10/2) {
-				up(l/2) {
+				up(l/2+5/2) {
 					xspread(board_width) {
 						cube([5, rail_thick+10, 10], center=true);
 					}
@@ -65,7 +65,7 @@ module ramps_mount() {
         }
 
 		// Motherboard clip clearance
-		up(l/2) {
+		up(l/2+5/2) {
 			fwd(joiner_length-10/2-2) {
 				xrot(-90) trapezoid([board_width, board_length], [board_width-0.5, board_length-0.5], h=10);
 			}

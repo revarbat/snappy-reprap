@@ -211,7 +211,7 @@ module x_axis_slider_assembly(slidepos=0, explode=0, arrows=false)
 	platform_vert_off = rail_height+groove_height/2;
 
 	zrot(90) xy_motor_segment_assembly();
-	xspread(motor_rail_length+rail_length+2*explode) {
+	zring(r=(motor_rail_length+rail_length+2*explode)/2, n=2) {
 		zrot(90) rail_segment();
 	}
 
@@ -250,8 +250,10 @@ module y_axis_slider_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=
 	platform_vert_off = rail_height+groove_height/2;
 
 	xy_motor_segment_assembly();
-	yspread(motor_rail_length+rail_length+2*explode) {
-		rail_segment();
+	zrot(90) {
+		zring(r=(motor_rail_length+rail_length+2*explode)/2, n=2) {
+			zrot(90) rail_segment();
+		}
 	}
 	zrot(90) zring(r=(motor_rail_length+2*rail_length+4*explode)/2) {
 		if (hide_endcaps == false) {
@@ -418,8 +420,8 @@ module extruder_bridge_assembly(slidepos=0, explode=0, arrows=false)
 	back(extruder_length/2+rail_length+cantilever_length+2*explode)
 	down(platform_length/2-slidepos) {
 		extruder_assembly();
-		yspread(extruder_length+rail_length+2*explode) {
-			rail_segment();
+		zrot(90) zring(r=(extruder_length+rail_length+2*explode)/2, n=2) {
+			zrot(-90) rail_segment();
 		}
 		zrot(90) zring(r=(extruder_length+2*rail_length+2*cantilever_length+4*explode)/2) {
 			zrot(180) z_sled();

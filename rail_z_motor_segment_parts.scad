@@ -128,19 +128,6 @@ module rail_z_motor_segment()
 		up(rail_height/2) {
 			joiner_quad(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length+0.05, h=rail_height, w=joiner_width, l=13, a=joiner_angle);
 		}
-
-		// Side mount joiners.
-		up(rail_height/2/2) {
-			back(side_mount_spacing/2) {
-				xflip_copy() {
-					right(rail_width/2+side_joiner_len) {
-						zrot(-90) {
-							half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
-						}
-					}
-				}
-			}
-		}
 	}
 }
 //!rail_z_motor_segment();

@@ -3,10 +3,10 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-$fa = 1;
+$fa = 2;
 $fs = 2;
 
-tilt = 15;
+tilt = 18;
 duct_h = cooling_duct_height - 8;
 
 module cooling_fan_shroud()
@@ -19,6 +19,7 @@ module cooling_fan_shroud()
 	yrot(-tilt) {
 		difference() {
 			union() {
+				// Top joiner
 				difference() {
 					rotate([90+tilt, 0, 90]) {
 						prerender(convexity=8) {
@@ -29,18 +30,19 @@ module cooling_fan_shroud()
 						cube(rail_height, center=true);
 					}
 				}
+
 				down(6+duct_h/2) {
 					right((cooling_fan_size+2*wall)/2-rail_height/2/2+extruder_fan_size) {
 						difference() {
 							union() {
-								up((cooling_fan_thick+wall)/2) {
+								up((cooling_fan_thick)/2) {
 									difference() {
-										rrect([cooling_fan_size+2*wall, cooling_fan_size+2*wall, duct_h+cooling_fan_thick+wall], r=10, center=true);
+										rrect([cooling_fan_size+2*wall, cooling_fan_size+2*wall, duct_h+cooling_fan_thick], r=10, center=true);
 										up(duct_h/2+0.05) {
 											zrot(45) {
 												difference() {
-													cube([cooling_fan_size*3, cooling_fan_size*3, cooling_fan_thick+wall], center=true);
-													cube([cooling_fan_size, cooling_fan_size, cooling_fan_thick+wall], center=true);
+													cube([cooling_fan_size*3, cooling_fan_size*3, cooling_fan_thick], center=true);
+													cube([cooling_fan_size, cooling_fan_size, cooling_fan_thick], center=true);
 												}
 											}
 										}
@@ -48,20 +50,28 @@ module cooling_fan_shroud()
 								}
 								yrot(-90) zrot(90) teardrop(r=cooling_fan_size/2+wall, h=duct_h, ang=duct_ang);
 							}
+
+							// Clear fan clip
 							up((duct_h+cooling_fan_thick+wall)/2+0.05) {
 								trapezoid([cooling_fan_size, cooling_fan_size], [cooling_fan_size-0.5, cooling_fan_size-0.5], h=cooling_fan_thick+wall, center=true);
 							}
-							yrot(-90) zrot(90) teardrop(r=cooling_fan_size/2, h=duct_h-2*wall, ang=duct_ang);
+
+							// Clear horiz duct
+							yrot(-90) zrot(90) teardrop(r=cooling_fan_size/2, h=duct_h-wall, ang=duct_ang);
 						}
+
+						// support columns aroundvertical fan duct
 						zring(r=cooling_fan_size/2+wall/2+0.05, n=20) {
 							cube([wall, wall, duct_h], center=true);
 						}
 					}
+
+					// Sidways top support struts
 					intersection() {
 						right(8.5) {
 							up(duct_h/2-2/2) {
 								xspread(10,n=5) {
-									cube([2, cooling_fan_size, wall+0.6], center=true);
+									cube([2, cooling_fan_size, wall/2+0.6], center=true);
 								}
 							}
 						}
@@ -69,15 +79,19 @@ module cooling_fan_shroud()
 							yrot(-90) zrot(90) teardrop(r=cooling_fan_size/2+wall, h=duct_h, ang=duct_ang);
 						}
 					}
+
+					// duct supports
 					left(cooling_fan_size*2) {
 						zrot_copies([-3.4, 3.4]) {
 							right(cooling_fan_size*2) {
-								trapezoid([cooling_fan_size*2, wall], [cooling_fan_size*1.5, wall*2], h=duct_h-wall/2, center=true);
+								trapezoid([cooling_fan_size*2, wall], [cooling_fan_size*1.5, wall*2], h=duct_h, center=true);
 							}
 						}
 					}
 				}
 			}
+
+			// Truncate exit tip
 			left(rail_height/2/2) {
 				left(200/2) cube(200, center=true);
 				down(duct_h+6) {
@@ -86,15 +100,19 @@ module cooling_fan_shroud()
 					}
 				}
 			}
+
+			// Clear vertical fan duct
 			down(6+duct_h/2) {
 				right((cooling_fan_size+2*wall)/2-rail_height/2/2+extruder_fan_size) {
 					up((wall+cooling_fan_thick+wall)/2+0.05) {
-						cylinder(h=duct_h+cooling_fan_thick+wall-wall+0.05, d=cooling_fan_size, center=true);
+						cylinder(h=duct_h+cooling_fan_thick+wall+0.05, d=cooling_fan_size, center=true);
 					}
 				}
 			}
 		}
 	}
+
+	// Fan
 	yrot(-tilt) {
 		down(6+duct_h/2) {
 			right((cooling_fan_size+2*wall)/2-rail_height/2/2+extruder_fan_size) {

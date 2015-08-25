@@ -4,8 +4,8 @@ use <joiners.scad>
 use <publicDomainGearV1.1.scad>
 
 
-$fa = 1;
-$fs = 1.5;
+$fa = 2;
+$fs = 2;
 
 module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 {
@@ -93,7 +93,8 @@ module xy_sled()
 						yspread(platform_length-slider_len-15, n=1) {
 							up(rail_offset+groove_height/2) {
 								translate([-joiner_width/2, 0, 0]) {
-									circle_of(n=2, r=joiner_width/2+printer_slop, rot=true) {
+									circle_of(n=2, r=joiner_width/2+printer_slop/2, rot=true) {
+
 										// Slider base
 										translate([15/2-9, 0, -groove_height-printer_slop]) {
 											difference() {

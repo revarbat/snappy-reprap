@@ -3,8 +3,8 @@ use <GDMUtils.scad>
 use <acme_screw.scad>
 
 
-$fa = 1;
-$fs = 1;
+$fa = 2;
+$fs = 2;
 
 module lifter_lock_nut()
 {

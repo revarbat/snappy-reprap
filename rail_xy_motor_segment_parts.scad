@@ -21,15 +21,18 @@ module rail_xy_motor_segment()
 						union() {
 							yrot(90)
 								sparse_strut(h=rail_width, l=motor_rail_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
-							up((motor_top_z-motor_length+4-rail_thick)/2) {
-								cube(size=[motor_mount_spacing+joiner_width, 30+20, motor_top_z-motor_length+4], center=true);
+							up((motor_top_z-motor_length+6-rail_thick)/2) {
+								cube(size=[motor_mount_spacing+joiner_width, 30+20, motor_top_z-motor_length+6], center=true);
 							}
 						}
-						cube(size=[motor_mount_spacing-joiner_width, 30, motor_length], center=true);
+						cube(size=[motor_mount_spacing-joiner_width, 20, motor_length], center=true);
 
 						// Clearance for NEMA17 stepper motor
 						up(motor_top_z-rail_thick/2) {
-							down(motor_length/2) cube(size=[motor_width, motor_width, motor_length], center=true);
+							down(motor_length/2) {
+								cube(size=[motor_width, motor_width, motor_length], center=true);
+								cube(size=[20, motor_rail_length/2+10, motor_length], center=true);
+							}
 						}
 					}
 				}
@@ -115,26 +118,12 @@ module rail_xy_motor_segment()
 				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
 			}
 
-			// Clear space for side mount joiners.
-			zring(r=0,n=2) {
-				right(rail_width/2-5) {
-					up(rail_height/2/2) {
-						right(side_joiner_len+joiner_width/2) {
-							left(platform_length/4) {
-								zrot(-90) half_joiner_clear(h=rail_height/2, w=joiner_width, l=side_joiner_len, a=joiner_angle);
-							}
-							right(platform_length/4) {
-								zrot(-90) half_joiner_clear(h=rail_height/2, w=joiner_width, l=side_joiner_len, a=joiner_angle, slop=printer_slop);
-							}
-						}
-					}
-				}
-			}
-
 			// Side wiring access hole
 			up(10/2+rail_thick) {
 				xspread(rail_width-joiner_width) {
-					cube(size=[joiner_width+1, 16, 10], center=true);
+					yspread(motor_rail_length-2*30) {
+						cube(size=[joiner_width+1, 16, 10], center=true);
+					}
 				}
 			}
 		}
@@ -142,30 +131,6 @@ module rail_xy_motor_segment()
 		// Snap-tab joiners.
 		up(rail_height/2) {
 			joiner_quad(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length, h=rail_height, w=joiner_width, l=13, a=joiner_angle);
-		}
-
-		// Side mount joiners.
-		zring(n=2) {
-			right(rail_width/2-5) {
-				up(rail_height/2/2) {
-					right(side_joiner_len+joiner_width/2) {
-						fwd(side_mount_spacing/2) {
-							zrot(-90) {
-								chamfer(chamfer=joiner_width/3, size=[joiner_width, side_joiner_len*4, rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-									half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
-								}
-							}
-						}
-						back(side_mount_spacing/2) {
-							zrot(-90) {
-								chamfer(chamfer=joiner_width/3, size=[joiner_width, side_joiner_len*4, rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-									half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle, slop=printer_slop);
-								}
-							}
-						}
-					}
-				}
-			}
 		}
 	}
 }

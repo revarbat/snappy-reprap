@@ -52,11 +52,14 @@ endstop_standoff     =  2; // mm
 
 // Mechanical endstop bare microswitch.
 endstop_hole_spacing =  9.5; // mm
-endstop_hole_inset   =  8;   // mm
-endstop_hole_hoff    = 10;   // mm
-endstop_click_voff   =  3;   // mm
+endstop_hole_inset   =  8.0; // mm
+endstop_hole_hoff    = 10.0; // mm
+endstop_click_voff   =  3.0; // mm
 endstop_screw_size   =  2.5; // mm
-endstop_standoff     =  2;   // mm
+endstop_standoff     =  1.0; // mm
+endstop_length       = 19.9; // mm
+endstop_thick        =  6.7; // mm
+endstop_depth        = 11.0; // mm
 
 // Standard Mk2b Heated Build Platform from RepRapDiscount.com
 hbp_width       = 215;   // mm
@@ -88,7 +91,7 @@ jhead_groove_diam   =  12.0;  // mm
 jhead_cap_height    =   8.2;  // mm
 jhead_cap_diam      =  12.0;  // mm
 
-extruder_length      = 150.0;  // mm
+extruder_length      = 130.0;  // mm
 extruder_thick       =   5.0;  // mm
 extruder_shaft_len   =  25.0;  // mm
 extruder_drive_diam  =  12.5;  // mm
@@ -132,7 +135,7 @@ printer_slop =   0.25;  // mm
 rail_spacing = platform_width - joiner_width*4 - 10;
 rail_width = rail_spacing + joiner_width*2;
 motor_mount_spacing=43+joiner_width+10;
-side_mount_spacing = platform_length-25;
+side_mount_spacing = platform_length+10*2;
 cantilever_length = (motor_rail_length+2*rail_length+2*platform_length-2*rail_height-2*rail_length-extruder_length-groove_height)/2;
 platform_z = rail_height+groove_height+rail_offset;
 motor_top_z = platform_z-platform_thick-rack_base-rack_height-gear_base-2;

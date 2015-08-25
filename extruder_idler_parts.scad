@@ -4,8 +4,8 @@ use <NEMA.scad>
 use <joiners.scad>
 
 
-$fa=1;
-$fs=1;
+$fa = 2;
+$fs = 2;
 
 width = extruder_shaft_len/2;
 thick = 3;

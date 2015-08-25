@@ -6,6 +6,7 @@ use <joiners.scad>
 module rail_segment()
 {
 	fillet = 1;
+	side_joiner_len = 10;
 
 	color([0.9, 0.7, 1.0])
 	prerender(convexity=20)
@@ -42,6 +43,19 @@ module rail_segment()
 							cube(size=[rail_width-joiner_width, 4, rail_height/2], center=true);
 							xspread(rail_width/3, n=3) {
 								cube(size=[16, 11, 12], center=true);
+							}
+						}
+					}
+				}
+
+				// Side half joiners
+				up(rail_height/2/2) {
+					back(rail_length/2-10) {
+						zring(r=rail_spacing/2+joiner_width+side_joiner_len, n=2) {
+							zrot(-90) {
+								chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+									half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
+								}
 							}
 						}
 					}

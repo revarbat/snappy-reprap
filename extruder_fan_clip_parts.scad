@@ -3,8 +3,8 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-$fa = 1;
-$fs = 1.5;
+$fa = 2;
+$fs = 2;
 
 h = 6;
 thick = 8;

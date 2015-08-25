@@ -3,8 +3,8 @@ use <GDMUtils.scad>
 use <publicDomainGearV1.1.scad>
 
 
-$fa = 1;
-$fs = 1.5;
+$fa = 2;
+$fs = 2;
 
 module drive_gear() {
 	shaft = motor_shaft_size + printer_slop;

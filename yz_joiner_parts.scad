@@ -28,11 +28,11 @@ module yz_joiner()
 						back(rail_thick/2) {
 							zrot(90) {
 								if (wall_style == "crossbeams")
-									sparse_strut(h=rail_height+groove_height, l=rail_width-joiner_width, thick=rail_thick, strut=5);
+									sparse_strut(h=rail_height+groove_height, l=rail_width-joiner_width/2, thick=rail_thick, strut=5);
 								if (wall_style == "thinwall")
-									thinning_wall(h=rail_height+groove_height, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick, bracing=true);
+									thinning_wall(h=rail_height+groove_height, l=rail_width-joiner_width/2, thick=rail_thick, strut=rail_thick, bracing=true);
 								if (wall_style == "corrugated")
-									corrugated_wall(h=rail_height+groove_height, l=rail_width-joiner_width, thick=rail_thick, strut=rail_thick, wall=3);
+									corrugated_wall(h=rail_height+groove_height, l=rail_width-joiner_width/2, thick=rail_thick, strut=rail_thick, wall=3);
 							}
 						}
 					}
@@ -47,7 +47,7 @@ module yz_joiner()
 										sparse_strut(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=5);
 								if (wall_style == "thinwall")
 									up((rail_height+rail_thick)/2)
-										thinning_wall(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=rail_thick, bracing=true);
+										thinning_wall(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=rail_thick, bracing=false);
 								if (wall_style == "corrugated")
 									up(rail_height/2)
 										corrugated_wall(l=platform_length-joiner_length+1, h=rail_height, thick=joiner_width, strut=rail_thick, wall=3);
@@ -92,6 +92,11 @@ module yz_joiner()
 				// Clear space for top joiners.
 				translate([0, rail_height/2, rail_height+groove_height+0.05]) {
 					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+0.001, clearance=5, a=joiner_angle);
+				}
+				
+				// Wiring access hole
+				up(rail_thick+rail_height/4/2) {
+					cube([16, joiner_width*3, rail_height/4], center=true);
 				}
 			}
 

@@ -3,8 +3,8 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-$fa = 1;
-$fs = 1.5;
+$fa = 2;
+$fs = 2;
 
 module spool_holder()
 {
@@ -27,6 +27,12 @@ module spool_holder()
 								if (wall_style == "corrugated")
 									corrugated_wall(h=rail_height, l=spool_holder_length, thick=joiner_width, strut=joiner_width);
 							}
+						}
+					}
+
+					top_half() {
+						right(rail_height/2) {
+							yrot(90) trapezoid([spool_holder_length/2, joiner_width], [10, joiner_width], h=groove_height);
 						}
 					}
 				}

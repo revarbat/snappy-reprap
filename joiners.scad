@@ -24,7 +24,7 @@ module half_joiner_clear(h=20, w=10, a=30, clearance=0)
 
 
 
-module half_joiner(h=20, w=10, l=10, a=30, screwsize=3, guides=true, slop=printer_slop)
+module half_joiner(h=20, w=10, l=10, a=30, screwsize=undef, guides=true, slop=printer_slop)
 {
 	dmnd_height = h*1.0;
 	dmnd_width = dmnd_height*tan(a);
@@ -58,10 +58,12 @@ module half_joiner(h=20, w=10, l=10, a=30, screwsize=3, guides=true, slop=printe
 
 			// Guide ridges.
 			if (guides == true) {
-				grid_of(xa=[-(w/6-slop), (w/6-slop)]) {
+				xspread(w/3-slop*2) {
 					// Guide ridge.
-					scale([0.75, 1, 2]) yrot(45)
-						cube(size=[guide_size/sqrt(2), guide_width, guide_size/sqrt(2)], center=true);
+					fwd(0.05/2) {
+						scale([0.75, 1, 2]) yrot(45)
+							cube(size=[guide_size/sqrt(2), guide_width+0.05, guide_size/sqrt(2)], center=true);
+					}
 
 					// Snap ridge.
 					scale([0.25, 0.5, 1]) zrot(45)
@@ -80,7 +82,7 @@ module half_joiner(h=20, w=10, l=10, a=30, screwsize=3, guides=true, slop=printe
 
 
 
-module half_joiner2(h=20, w=10, l=10, a=30, screwsize=3, guides=true)
+module half_joiner2(h=20, w=10, l=10, a=30, screwsize=undef, guides=true)
 {
 	difference() {
 		union () {
@@ -102,7 +104,7 @@ module half_joiner2(h=20, w=10, l=10, a=30, screwsize=3, guides=true)
 
 
 
-module joiner(h=40, w=10, l=10, a=30, screwsize=3, guides=true, slop=printer_slop)
+module joiner(h=40, w=10, l=10, a=30, screwsize=undef, guides=true, slop=printer_slop)
 {
 	union() {
 		translate([0,0,h/4])
@@ -125,7 +127,7 @@ module joiner_clear(h=40, w=10, a=30, clearance=0)
 
 
 
-module joiner_pair(spacing=100, h=40, w=10, l=10, a=30, screwsize=3, guides=true)
+module joiner_pair(spacing=100, h=40, w=10, l=10, a=30, screwsize=undef, guides=true)
 {
 	yrot_copies([0,180]) {
 		translate([spacing/2, 0, 0]) {
@@ -149,7 +151,7 @@ module joiner_pair_clear(spacing=100, h=40, w=10, a=30, clearance=0)
 
 
 
-module joiner_quad(xspacing=100, yspacing=50, h=40, w=10, l=10, a=30, screwsize=3, guides=true)
+module joiner_quad(xspacing=100, yspacing=50, h=40, w=10, l=10, a=30, screwsize=undef, guides=true)
 {
 	zrot_copies([0,180]) {
 		translate([0, yspacing/2, 0]) {

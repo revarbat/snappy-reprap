@@ -4,8 +4,8 @@ use <joiners.scad>
 use <cable_chain.scad>
 
 
-$fa = 1;
-$fs = 1;
+$fa = 2;
+$fs = 2;
 
 
 module cable_chain_joiner_mount()

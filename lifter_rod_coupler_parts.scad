@@ -2,7 +2,7 @@ include <config.scad>
 use <GDMUtils.scad>
 use <acme_screw.scad>
 
-$fa = 1;
+$fa = 2;
 $fs = 2;
 
 

@@ -4,8 +4,8 @@ use <NEMA.scad>
 use <joiners.scad>
 
 
-$fa=1;
-$fs=1;
+$fa = 2;
+$fs = 2;
 
 thick = 6;
 motor_width = nema_motor_width(17);

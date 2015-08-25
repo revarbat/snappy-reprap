@@ -4,8 +4,8 @@ use <joiners.scad>
 use <acme_screw.scad>
 
 
-$fa = 1;
-$fs = 1.5;
+$fa = 2;
+$fs = 2;
 
 module z_sled()
 {
@@ -58,7 +58,7 @@ module z_sled()
 						fwd(10/2) {
 							yspread(platform_length-slider_len-10, n=1) {
 								up(groove_height/2+offcenter) {
-									zring(n=2, r=joiner_width/2+printer_slop+2) {
+									zring(n=2, r=joiner_width/2+printer_slop/2+2) {
 										xs = 1 + 4/(groove_height*tan(groove_angle));
 										scale([xs*tan(groove_angle),1,xs]) {
 											difference() {
@@ -106,17 +106,6 @@ module z_sled()
 				yspread(platform_length-platform_thick) {
 					up(offcenter+groove_height/2) {
 						xrot(90) cylinder(d=lifter_rod_diam+4, h=platform_thick+0.05, center=true);
-					}
-				}
-			}
-		}
-
-		// Side joiners
-		xflip_copy() {
-			up(rail_height/2/2) {
-				back(joiner_width/2) {
-					right((platform_width-5)/2) {
-						zrot(-90) half_joiner2(h=rail_height/2, w=joiner_width, clearance=5, a=joiner_angle, slop=printer_slop);
 					}
 				}
 			}

@@ -4,7 +4,7 @@ use <NEMA.scad>
 use <joiners.scad>
 
 
-$fa = 1;
+$fa = 2;
 $fs = 2;
 
 
@@ -124,6 +124,8 @@ module jhead_platform()
 	h = rail_height;
 	thick = jhead_groove_thick;
 	motor_width = nema_motor_width(17);
+	idler_backside = (jhead_barrel_diam+8)/2+8;
+	idler_back_thick = 3;
 
 	color("SteelBlue")
 	prerender(convexity=10)
@@ -131,13 +133,14 @@ module jhead_platform()
 		difference() {
 			union() {
 				// Bottom.
-				up(thick/2)
+				up(thick/2) {
 					cube(size=[w, l, thick], center=true);
+				}
 
 				// Walls.
 				xspread(rail_spacing+joiner_width) {
 					up(h/6) {
-						cube(size=[joiner_width, l/2-5, h/3], center=true);
+						cube(size=[joiner_width, l/3-5, h/3], center=true);
 					}
 				}
 
@@ -163,21 +166,12 @@ module jhead_platform()
 				// Wall Triangles
 				zring(n=2) {
 					xflip_copy() {
-						up(h/2) {
-							fwd(l/2-l/6-10+0.05) {
+						up((h+groove_height)/2) {
+							fwd(l/2-l/2/2-0+0.05) {
 								right((rail_spacing+joiner_width)/2) {
-									thinning_brace(h=h, l=l/3, thick=joiner_width, strut=5);
+									thinning_brace(h=h+groove_height, l=l/2, thick=joiner_width, strut=groove_height/sqrt(2));
 								}
 							}
-						}
-					}
-				}
-
-				// Side support walls
-				yspread(l-2*10+4) {
-					up(h/5/2) {
-						difference() {
-							cube([w, 4, h/5], center=true);
 						}
 					}
 				}
@@ -196,7 +190,7 @@ module jhead_platform()
 
 				// Lower idler mount block
 				up(jhead_groove_thick+jhead_shelf_thick) {
-					left((jhead_barrel_diam+8)/2+6) {
+					xspread(jhead_barrel_diam+8+9) {
 						up(5/2) {
 							fwd(2/2) {
 								cube([15, extruder_shaft_len/2+2, 5], center=true);
@@ -304,7 +298,7 @@ module jhead_platform()
 				}
 
 				// Wire access slot
-				back(extruder_length/7) {
+				back(extruder_length/4-extruder_fan_size/2+8/2) {
 					hull() {
 						xspread(w*0.5) {
 							cylinder(h=jhead_shelf_thick+jhead_groove_thick+1, d=8, center=true);
@@ -314,26 +308,15 @@ module jhead_platform()
 			}
 
 			// Bottom idler holder
-			backside = (jhead_barrel_diam+8)/2+8;
-			up(jhead_groove_thick+3+printer_slop/2) {
-				left(backside-3) {
-					yrot_copies([0,-10]) {
-						difference() {
-							union() {
-								yrot(-45) {
-									xrot(90) cylinder(h=extruder_shaft_len/2+printer_slop, r=3+printer_slop/2, center=true);
-									up(3+printer_slop) {
-										cube([2*3+printer_slop, extruder_shaft_len/2+printer_slop, 2*3+printer_slop], center=true);
-									}
+			xflip_copy() {
+				up(jhead_groove_thick+idler_back_thick+printer_slop/2) {
+					left(idler_backside-idler_back_thick) {
+						teardrop(r=idler_back_thick+printer_slop/2, h=extruder_shaft_len/2+printer_slop/2, ang=40, $fs=1);
+						yrot_copies([0,-8]) {
+							left((idler_back_thick+printer_slop/2)/2) {
+								up(50/2) {
+									cube([idler_back_thick+printer_slop/2, extruder_shaft_len/2+printer_slop/2, 50], center=true);
 								}
-								left(3+printer_slop/2) {
-									up(motor_width/2) {
-										cube([2*3+printer_slop, extruder_shaft_len/2+printer_slop, motor_width], center=true);
-									}
-								}
-							}
-							left(3+printer_slop/2+(extruder_shaft_len+1)/2) {
-								cube(extruder_shaft_len+1, center=true);
 							}
 						}
 					}
