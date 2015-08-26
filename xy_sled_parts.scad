@@ -4,6 +4,9 @@ use <joiners.scad>
 use <publicDomainGearV1.1.scad>
 
 
+slop = 0.0;
+
+
 $fa = 2;
 $fs = 2;
 
@@ -60,17 +63,13 @@ module xy_sled()
 					}
 				}
 
-				// Length-wise bracing.
-				up(platform_thick/2) {
-					translate([-10, 0, rack_base/2])
-						cube(size=[14,platform_length,platform_thick+rack_base], center=true);
-				}
-
 				// Drive rack
-				left(8) {
-					up(platform_thick+rack_base+rack_height/2-0.01) {
+				rack_module = rack_tooth_size / 3.1415926535;
+				rack_pcd = gear_teeth * rack_module;
+				left(rack_pcd/2+printer_slop) {
+					up(platform_thick+rack_base+rack_height/2) {
 						difference() {
-							zrot(-90) herringbone_rack(l=platform_length, h=rack_height, tooth_size=rack_tooth_size, CA=30);
+							zrot(-90) herringbone_rack(l=platform_length, h=rack_height+0.1, w=10, tooth_size=rack_tooth_size, CA=30);
 							up(rack_height/2) {
 								left(rack_tooth_size/2) {
 									yrot(10) up(2) {
@@ -80,25 +79,33 @@ module xy_sled()
 							}
 						}
 					}
+
+					// rack base
+					addendum = rack_module;
+					up(platform_thick/2+rack_base/2) {
+						left(10/2-addendum) {
+							cube(size=[10,platform_length,platform_thick+rack_base], center=true);
+						}
+					}
 				}
 
 				// sliders
 				xflip_copy() {
 					translate([-(rail_spacing)/2, 0, 0]) {
 						// bottom strut
-						translate([6/2+printer_slop,0,platform_thick/2]) {
+						translate([6/2+slop,0,platform_thick/2]) {
 							cube(size=[6, platform_length, platform_thick], center=true);
 						}
 
 						yspread(platform_length-slider_len-15, n=1) {
 							up(rail_offset+groove_height/2) {
 								translate([-joiner_width/2, 0, 0]) {
-									circle_of(n=2, r=joiner_width/2+printer_slop/2, rot=true) {
+									circle_of(n=2, r=joiner_width/2+slop/2, rot=true) {
 
 										// Slider base
-										translate([15/2-9, 0, -groove_height-printer_slop]) {
+										translate([15/2-9, 0, -groove_height-slop]) {
 											difference() {
-												cube(size=[15, slider_len, groove_height-printer_slop*2], center=true);
+												cube(size=[15, slider_len, groove_height-slop], center=true);
 												up(groove_height/2) {
 													yspread(slider_len) {
 														xrot(45) cube(size=[16, 2*sqrt(2), 2*sqrt(2)], center=true);

@@ -29,6 +29,7 @@ rack_tooth_size     =  5;    // mm per tooth.
 rack_height         = 10;    // mm
 rack_base           =  2;    // mm
 gear_base           = 10;    // mm
+gear_teeth          =  8;
 set_screw_size      =  3;    // mm size of set screw in drive gears, couplers, etc
 motor_length        = 39.25; // mm length of NEMA17 motor.
 motor_shaft_size    =  5;    // mm diameter of NEMA17 motor shaft.

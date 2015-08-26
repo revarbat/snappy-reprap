@@ -4,6 +4,9 @@ use <joiners.scad>
 use <acme_screw.scad>
 
 
+slop = 0.0;
+
+
 $fa = 2;
 $fs = 2;
 
@@ -49,8 +52,8 @@ module z_sled()
 									cube(size=[joiner_width+2*5+2, platform_length, groove_height+offcenter+6], center=true);
 								}
 								// Slider groove
-								up(printer_slop-0.05) {
-									cube(size=[joiner_width+2, platform_length+1, groove_height+offcenter+2*printer_slop], center=true);
+								up(slop-0.05) {
+									cube(size=[joiner_width+2, platform_length+1, groove_height+offcenter+slop], center=true);
 								}
 							}
 						}
@@ -58,7 +61,7 @@ module z_sled()
 						fwd(10/2) {
 							yspread(platform_length-slider_len-10, n=1) {
 								up(groove_height/2+offcenter) {
-									zring(n=2, r=joiner_width/2+printer_slop/2+2) {
+									zring(n=2, r=joiner_width/2+slop/2+2) {
 										xs = 1 + 4/(groove_height*tan(groove_angle));
 										scale([xs*tan(groove_angle),1,xs]) {
 											difference() {

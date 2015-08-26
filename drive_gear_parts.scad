@@ -8,6 +8,12 @@ $fs = 2;
 
 module drive_gear() {
 	shaft = motor_shaft_size + printer_slop;
+	rack_module = rack_tooth_size / 3.1415926535;
+	gear_pcd = gear_teeth * rack_module;
+	addendum = rack_module;
+	dedendum = (2.4*rack_module) - addendum;
+	gear_id = gear_pcd - 2*dedendum;
+	gear_od = gear_pcd + 2*addendum;
 
 	color("Salmon")
 	prerender(convexity=10)
@@ -18,7 +24,7 @@ module drive_gear() {
 				up(rack_height/2/2) {
 					gear (
 						mm_per_tooth    = rack_tooth_size,
-						number_of_teeth = 9,
+						number_of_teeth = gear_teeth,
 						thickness       = rack_height/2,
 						hole_diameter   = shaft,
 						twist           = 15,
@@ -29,16 +35,21 @@ module drive_gear() {
 			}
 
 			// Bevel end of gear.
-			tube(h=6, r1=20, r2=7.5, wall=4);
+			up(rack_height/2) {
+				difference() {
+					down(3/2-1) cylinder(h=3, d=gear_od+2, center=true);
+					down(2/2) cylinder(h=2+0.05, d1=gear_od, d2=gear_id, center=true);
+				}
+			}
 		}
 		difference() {
 			union() {
 				// Fix up gear weirdness with solid center.
-				cylinder(h=rack_height, r=shaft, center=true);
+				cylinder(h=rack_height, d=gear_id, center=true);
 
 				// Base
 				down((rack_height+10)/2)
-					cylinder(h=gear_base, r=9, center=true);
+					cylinder(h=gear_base, d=max(18,gear_od), center=true);
 			}
 
 			difference() {
@@ -62,7 +73,7 @@ module drive_gear() {
 						}
 
 						// Set screw hole.
-						up(2) zrot(10) cylinder(r=set_screw_size/2+printer_slop, h=9, center=true, $fn=16);
+						down(4) zrot(10) cylinder(r=set_screw_size/2+printer_slop, h=30, $fn=16);
 					}
 				}
 			}
