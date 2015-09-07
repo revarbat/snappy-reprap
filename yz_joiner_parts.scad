@@ -90,7 +90,7 @@ module yz_joiner()
 				}
 
 				// Clear space for top joiners.
-				translate([0, rail_height/2, rail_height+groove_height+0.05]) {
+				translate([0, rail_height/2, rail_height+groove_height-0.05]) {
 					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+0.001, clearance=5, a=joiner_angle);
 				}
 				

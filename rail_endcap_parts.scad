@@ -10,83 +10,42 @@ module rail_endcap()
 
 	color("YellowGreen")
 	prerender(convexity=10)
-	difference() {
-		union() {
-			difference() {
-				union() {
-					// Bottom.
-					translate([0, -joiner_length/2, rail_thick/2])
-						cube(size=[rail_width, joiner_length, rail_thick], center=true);
+	union() {
+		difference() {
+			union() {
+				// Bottom.
+				translate([0, -joiner_length/2, rail_thick/2])
+					cube(size=[rail_width, joiner_length, rail_thick], center=true);
 
-					// Back.
-					translate([0, -joiner_length+rail_thick/2, base_height/2]) zrot(90) {
-						if (wall_style == "crossbeams")
-							sparse_strut(h=base_height, l=rail_width-2*5, thick=rail_thick, strut=5);
-						if (wall_style == "thinwall")
-							thinning_wall(h=base_height, l=rail_width-joiner_width, thick=rail_thick, strut=joiner_width, bracing=false);
-						if (wall_style == "corrugated")
-							corrugated_wall(h=base_height, l=rail_width, thick=rail_thick, strut=joiner_width);
-					}
-
-					// Corner pieces.
-					up(base_height) {
-						xspread(rail_spacing+joiner_width) {
-							down((base_height-rail_height)/2) {
-								fwd(joiner_length/2) {
-									cube(size=[joiner_width, joiner_length, (base_height-rail_height)], center=true);
-								}
-							}
-						}
-					}
-
-					// Limit switch standoffs
-					xflip_copy() {
-						left(rail_width/2-joiner_width) {
-							up(rail_height+groove_height-endstop_hole_hoff) {
-								fwd(endstop_hole_inset) {
-									zspread(endstop_hole_spacing) {
-										yrot(90) {
-											cylinder(
-												r1=endstop_screw_size*1.1/2/cos(30)+0.5+endstop_standoff,
-												r2=endstop_screw_size*1.1/2/cos(30)+0.5,
-												h=endstop_standoff+0.05,
-												center=true,
-												$fn=24
-											);
-										}
-									}
-								}
-							}
-						}
-					}
+				// Back.
+				translate([0, -joiner_length+rail_thick/2, base_height/2]) zrot(90) {
+					if (wall_style == "crossbeams")
+						sparse_strut(h=base_height, l=rail_width-2*5, thick=rail_thick, strut=5);
+					if (wall_style == "thinwall")
+						thinning_wall(h=base_height, l=rail_width-joiner_width, thick=rail_thick, strut=joiner_width, bracing=false);
+					if (wall_style == "corrugated")
+						corrugated_wall(h=base_height, l=rail_width, thick=rail_thick, strut=joiner_width);
 				}
 
-				// Clear space for joiners.
-				translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
-					joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, a=joiner_angle, clearance=5);
+				// Corner pieces.
+				up(base_height-groove_height/2-0.01) {
+					fwd(joiner_length/2) {
+						xspread(rail_spacing+joiner_width) {
+							cube(size=[joiner_width, joiner_length, groove_height+0.01], center=true);
+						}
+					}
 				}
 			}
 
-			// Joiner clips.
-			translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
-				joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+			// Clear space for joiners.
+			translate([0, 0, base_height/2-(base_height-rail_height)/2-0.05]) {
+				joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, a=joiner_angle, clearance=5);
 			}
 		}
 
-		// Limit switch mount holes.
-		xflip_copy() {
-			left((rail_width-joiner_width)/2) {
-				up(rail_height+groove_height-endstop_hole_hoff) {
-					fwd(endstop_hole_inset) {
-						zspread(endstop_hole_spacing) {
-							yrot(90) cylinder(r=endstop_screw_size*1.1/2, h=joiner_width+2*endstop_standoff+0.1, center=true, $fn=12);
-							left(joiner_width/2+0.05) {
-								yrot(90) zrot(90) metric_nut(size=endstop_screw_size);
-							}
-						}
-					}
-				}
-			}
+		// Joiner clips.
+		translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
+			joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 		}
 	}
 }

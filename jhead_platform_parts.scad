@@ -125,7 +125,7 @@ module jhead_platform()
 	thick = jhead_groove_thick;
 	motor_width = nema_motor_width(17);
 	idler_backside = (jhead_barrel_diam+8)/2+8;
-	idler_back_thick = 3;
+	idler_back_thick = 3.5;
 
 	color("SteelBlue")
 	prerender(convexity=10)
@@ -169,7 +169,10 @@ module jhead_platform()
 						up((h+groove_height)/2) {
 							fwd(l/2-l/2/2-0+0.05) {
 								right((rail_spacing+joiner_width)/2) {
-									thinning_brace(h=h+groove_height, l=l/2, thick=joiner_width, strut=groove_height/sqrt(2));
+									difference() {
+										thinning_brace(h=h+groove_height, l=l/2, thick=joiner_width, strut=groove_height/sqrt(2));
+										up((h+groove_height)/2) cube([l+1, w+1, 4], center=true);
+									}
 								}
 							}
 						}
@@ -188,10 +191,10 @@ module jhead_platform()
 					}
 				}
 
-				// Lower idler mount block
+				// Lower idler mount blocks
 				up(jhead_groove_thick+jhead_shelf_thick) {
 					xspread(jhead_barrel_diam+8+9) {
-						up(5/2) {
+						up(5/2-0.05) {
 							fwd(2/2) {
 								cube([15, extruder_shaft_len/2+2, 5], center=true);
 							}
@@ -311,11 +314,20 @@ module jhead_platform()
 			xflip_copy() {
 				up(jhead_groove_thick+idler_back_thick+printer_slop/2) {
 					left(idler_backside-idler_back_thick) {
-						teardrop(r=idler_back_thick+printer_slop/2, h=extruder_shaft_len/2+printer_slop/2, ang=40, $fs=1);
-						yrot_copies([0,-8]) {
-							left((idler_back_thick+printer_slop/2)/2) {
-								up(50/2) {
-									cube([idler_back_thick+printer_slop/2, extruder_shaft_len/2+printer_slop/2, 50], center=true);
+						intersection() {
+							yrot_copies([0,-98]) {
+								teardrop(r=idler_back_thick+printer_slop/2, h=extruder_shaft_len/2+printer_slop, ang=40, $fs=1);
+							}
+							up(idler_back_thick) {
+								cube([2*idler_back_thick+printer_slop, extruder_shaft_len/2+printer_slop, 4*idler_back_thick+printer_slop], center=true);
+							}
+						}
+						down(idler_back_thick/3) {
+							yrot_copies([0,-8]) {
+								left((idler_back_thick+printer_slop/2)/2) {
+									up(50/2) {
+										cube([idler_back_thick+printer_slop/2, extruder_shaft_len/2+printer_slop, 50], center=true);
+									}
 								}
 							}
 						}

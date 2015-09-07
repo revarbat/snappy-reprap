@@ -39,20 +39,20 @@ module motor_mount_plate()
 
 							// limit switch clips
 							down(endstop_depth/2) {
-								right(endstop_standoff/2-0.05/2) {
+								right(endstop_standoff/2-0.05) {
 									cube([endstop_standoff+0.05, endstop_length+2*clip_wall, endstop_depth], center=true);
-									down(endstop_depth/2+clip_wall/2) {
-										trapezoid([2, endstop_length+2*clip_wall], [endstop_standoff+3, endstop_length+2*clip_wall], h=clip_wall, center=true);
+									down(endstop_depth/2+clip_wall/2-0.05) {
+										trapezoid([2, endstop_length+2*clip_wall], [endstop_standoff+3, endstop_length+2*clip_wall], h=clip_wall+0.05, center=true);
 									}
 								}
-								right(endstop_standoff) {
+								right(endstop_standoff-0.05) {
 									right((endstop_thick+clip_wall-0.05)/2) {
 										yflip_copy() {
 											fwd((endstop_length+clip_wall)/2) {
 												cube([endstop_thick+clip_wall+0.05, clip_wall, endstop_depth], center=true);
 
 												// Clip ridge
-												right(endstop_thick/2) {
+												right(endstop_thick/2+0.05) {
 													back_half() {
 														yrot(90) trapezoid([endstop_depth, clip_wall+1], [endstop_depth, clip_wall], h=clip_wall, center=true);
 													}
@@ -67,7 +67,7 @@ module motor_mount_plate()
 							down(endstop_hole_inset) {
 								right(endstop_standoff) {
 									yspread(endstop_hole_spacing) {
-										scale([0.5,1,1]) sphere(d=endstop_screw_size, center=true, $fn=12);
+										scale([0.5, 1, 1]) sphere(d=endstop_screw_size, center=true, $fn=12);
 									}
 								}
 							}

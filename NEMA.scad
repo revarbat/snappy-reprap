@@ -242,20 +242,24 @@ module nema17_mount_holes(depth=5, l=5, slop=0)
 	union() {
 		xspread(screw_spacing) {
 			yspread(screw_spacing) {
-				hull() {
-					translate([0, -l/2, 0])
-						cylinder(h=depth, r=screw_size/2, center=true, $fn=max(8,segs(screw_size/2)));
-					translate([0, l/2, 0])
-						cylinder(h=depth, r=screw_size/2, center=true, $fn=max(8,segs(screw_size/2)));
+				if (l>0) {
+					union() {
+						yspread(l) cylinder(h=depth, r=screw_size/2, center=true, $fn=max(8,segs(screw_size/2)));
+						cube([screw_size/2, l, depth], center=true);
+					}
+				} else {
+					cylinder(h=depth, r=screw_size/2, center=true, $fn=max(8,segs(screw_size/2)));
 				}
 			}
 		}
 	}
-	hull() {
-		translate([0, -l/2, 0])
-			cylinder(h=depth, r=plinth_diam/2, center=true);
-		translate([0, l/2, 0])
-			cylinder(h=depth, r=plinth_diam/2, center=true);
+	if (l>0) {
+		union () {
+			yspread(l) cylinder(h=depth, r=plinth_diam/2, center=true);
+			cube([plinth_diam/2, l, depth], center=true);
+		}
+	} else {
+		cylinder(h=depth, r=plinth_diam/2, center=true);
 	}
 }
 //!nema17_mount_holes(depth=5, l=5);

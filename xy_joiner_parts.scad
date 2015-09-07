@@ -3,11 +3,13 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
+joiner_length=10;
+hardstop_offset=8;
+
+
 module xy_joiner()
 {
-	joiner_length=10;
-	hardstop_offset=8;
-	hoff = (platform_length*2-rail_width-20)/2;
+	hoff = (platform_length*2-rail_width-4)/2;
 
 	color("Sienna")
 	prerender(convexity=10)
@@ -27,7 +29,7 @@ module xy_joiner()
 		// Snap-tab joiners.
 		intersection() {
 			union() {
-				down(platform_height/2) {
+				down(platform_height/2-0.05) {
 					joiner_pair(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 				}
 				up(rail_height/4) {
@@ -94,7 +96,7 @@ module xy_joiner()
 
 
 module xy_joiner_parts() { // make me
-	zrot(-90) xrot(90) xy_joiner();
+	up(joiner_length) zrot(-90) xrot(90) xy_joiner();
 }
 
 

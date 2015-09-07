@@ -29,7 +29,7 @@ module extruder_motor_clip()
 			}
 
 			// Joiners
-			xrot(-90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=motor_width/2+5, a=joiner_angle);
+			xrot(-90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=motor_width/2+5+1, a=joiner_angle);
 		}
 
 		// Clear for motor.

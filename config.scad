@@ -137,8 +137,8 @@ rail_spacing = platform_width - joiner_width*4 - 10;
 rail_width = rail_spacing + joiner_width*2;
 motor_mount_spacing=43+joiner_width+10;
 side_mount_spacing = platform_length+10*2;
-cantilever_length = (motor_rail_length+2*rail_length+2*platform_length-2*rail_height-2*rail_length-extruder_length-groove_height)/2;
 platform_z = rail_height+groove_height+rail_offset;
+cantilever_length = (motor_rail_length+2*platform_length-2*platform_z-extruder_length)/2;
 motor_top_z = platform_z-platform_thick-rack_base-rack_height-gear_base-2;
 
 wall_styles = ["thinwall", "corrugated", "crossbeams"];

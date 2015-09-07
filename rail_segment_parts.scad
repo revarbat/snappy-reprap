@@ -6,7 +6,7 @@ use <joiners.scad>
 module rail_segment()
 {
 	fillet = 1;
-	side_joiner_len = 10;
+	side_joiner_len = 2;
 
 	color([0.9, 0.7, 1.0])
 	prerender(convexity=20)
@@ -47,19 +47,6 @@ module rail_segment()
 						}
 					}
 				}
-
-				// Side half joiners
-				up(rail_height/2/2) {
-					back(rail_length/2-10) {
-						zring(r=rail_spacing/2+joiner_width+side_joiner_len, n=2) {
-							zrot(-90) {
-								chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-									half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
-								}
-							}
-						}
-					}
-				}
 			}
 
 			// Rail grooves.
@@ -95,8 +82,9 @@ module rail_segment()
 														yrot(-groove_angle) {
 															right(fillet) {
 																down(facelen) {
-																	back(fillet) left(fillet)
-																		cylinder(r=fillet, h=facelen*2, center=true, $fn=18);
+																	back(fillet) left(fillet) {
+																		cylinder(r=fillet, h=facelen*3, center=true, $fn=12);
+																	}
 																}
 															}
 														}
@@ -114,7 +102,21 @@ module rail_segment()
 
 			// Clear space for joiners.
 			up(rail_height/2) {
-				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=rail_length, h=rail_height+0.001, w=joiner_width, clearance=5, a=joiner_angle);
+				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=rail_length-0.05, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
+			}
+
+
+			// Side half joiners
+			up(rail_height/2/2) {
+				back(rail_length/2-10) {
+					zring(r=rail_spacing/2+joiner_width+side_joiner_len-0.05, n=2) {
+						zrot(-90) {
+							chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+								half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle);
+							}
+						}
+					}
+				}
 			}
 
 			// Shrinkage stress relief
@@ -130,9 +132,22 @@ module rail_segment()
 			}
 		}
 
+		// Side half joiners
+		up(rail_height/2/2) {
+			back(rail_length/2-10) {
+				zring(r=rail_spacing/2+joiner_width+side_joiner_len, n=2) {
+					zrot(-90) {
+						chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+							half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
+						}
+					}
+				}
+			}
+		}
+
 		// Snap-tab joiners.
 		up(rail_height/2) {
-			joiner_quad(xspacing=rail_spacing+joiner_width, yspacing=rail_length, h=rail_height, w=joiner_width, l=5, a=joiner_angle);
+			joiner_quad(xspacing=rail_spacing+joiner_width, yspacing=rail_length, h=rail_height, w=joiner_width, l=6, a=joiner_angle);
 		}
 	}
 }

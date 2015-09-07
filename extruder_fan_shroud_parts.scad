@@ -29,17 +29,19 @@ module extruder_fan_shroud()
 						}
 						cylinder(h=2*base_thickness+1, r=extruder_fan_size/2, center=true);
 					}
-					bottom_half(extruder_fan_size*1.5) {
-						difference() {
-							union() {
-								zflip() onion(h=(h+wall), r=(extruder_fan_size+2*wall)/2, maxang=35);
-								left(ventlen/2) {
-									chamfcube([ventlen, jhead_groove_diam, 2*(h+wall)], chamfer=sqrt(2)*wall, chamfaxes=[1,0,0], center=true);
+					up(0.05) {
+						bottom_half(extruder_fan_size*1.5) {
+							difference() {
+								union() {
+									zflip() onion(h=(h+wall), r=(extruder_fan_size+2*wall)/2, maxang=35);
+									left(ventlen/2) {
+										chamfcube([ventlen, jhead_groove_diam, 2*(h+wall)], chamfer=sqrt(2)*wall, chamfaxes=[1,0,0], center=true);
+									}
 								}
-							}
-							zflip() onion(h=h, r=extruder_fan_size/2, maxang=35);
-							left((ventlen+10)/2) {
-								chamfcube([ventlen+10, jhead_groove_diam-2*wall, 2*h], chamfer=wall, center=true);
+								zflip() onion(h=h, r=extruder_fan_size/2, maxang=35);
+								left((ventlen+10)/2) {
+									chamfcube([ventlen+10, jhead_groove_diam-2*wall, 2*h], chamfer=wall, center=true);
+								}
 							}
 						}
 					}

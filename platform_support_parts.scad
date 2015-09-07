@@ -19,8 +19,10 @@ module platform_support1()
 	difference() {
 		union() {
 			// Side support strut
-			translate([-(w+joiner_width-0.1)/2, -joiner_length*3/4, h-20/2]) {
-				zrot(90) yrot(180) thinning_triangle(h=20, l=w, thick=joiner_length/2, ang=30, strut=5, wall=joiner_length/2, diagonly=true);
+			translate([-(joiner_width-0.1)/2, -joiner_length*3/4, h-20/2-0.1]) {
+				left_half() {
+					trapezoid([0.1, joiner_length/2], [w*2, joiner_length/2], h=20, center=true);
+				}
 			}
 
 			// Side strut
@@ -34,7 +36,7 @@ module platform_support1()
 			}
 
 			// joiners.
-			translate([0, 0, -platform_height/2]) {
+			down(platform_height/2-0.05) {
 				chamfer(chamfer=joiner_width/3, size=[joiner_width, 2*joiner_length, platform_height], edges=[[0,0,0,0], [0,0,1,1], [0,0,0,0]]) {
 					joiner(h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 				}
@@ -62,8 +64,10 @@ module platform_support2()
 	difference() {
 		union() {
 			// Side support strut
-			translate([(w+joiner_width-0.1)/2, -joiner_length*3/4, h-20/2]) {
-				zrot(-90) yrot(180) thinning_triangle(h=20, l=w, thick=joiner_length/2, ang=30, strut=5, wall=joiner_length/2, diagonly=true);
+			translate([(joiner_width-0.1)/2, -joiner_length*3/4, h-20/2-0.1]) {
+				right_half() {
+					trapezoid([0.1, joiner_length/2], [w*2, joiner_length/2], h=20, center=true);
+				}
 			}
 
 			// Side strut
@@ -77,7 +81,7 @@ module platform_support2()
 			}
 
 			// joiners.
-			translate([0, 0, -platform_height/2]) {
+			down(platform_height/2-0.05) {
 				chamfer(chamfer=joiner_width/3, size=[joiner_width, 2*joiner_length, platform_height], edges=[[0,0,0,0], [0,0,1,1], [0,0,0,0]]) {
 					yrot(180) joiner(h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 				}
@@ -105,8 +109,10 @@ module platform_support3()
 	difference() {
 		union() {
 			// Side support strut
-			translate([-(w+joiner_width-0.1)/2, -joiner_length*3/4, h-20/2]) {
-				zrot(90) yrot(180) thinning_triangle(h=20, l=w, thick=joiner_length/2, ang=30, strut=5, wall=joiner_length/2, diagonly=true);
+			translate([-(joiner_width-0.1)/2, -joiner_length*3/4, h-20/2-0.1]) {
+				left_half() {
+					trapezoid([0.1, joiner_length/2], [w*2, joiner_length/2], h=20, center=true);
+				}
 			}
 
 			// Side strut
@@ -120,7 +126,7 @@ module platform_support3()
 			}
 
 			// joiners.
-			translate([0, 0, -platform_height/2]) {
+			down(platform_height/2-0.05) {
 				chamfer(chamfer=joiner_width/3, size=[joiner_width, 2*joiner_length, platform_height], edges=[[0,0,0,0], [0,0,1,1], [0,0,0,0]]) {
 					joiner(h=platform_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 				}
