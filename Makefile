@@ -8,7 +8,9 @@ ROTFILES=$(shell seq -f 'wiki/snappy_rot%03g.png' 0 10 359.99)
 all: ${TARGETS}
 
 STLs/%.stl: %.scad config.scad GDMUtils.scad
+	@if grep -q '^\s*!' $< ; then echo "Found uncommented exclamation mark(s) in source." ; grep -Hn '^\s*!' $< ; false ; fi
 	${OPENSCAD} -m make -o $@ $<
+	./stl_normalize.py -c $@ -o $@
 
 pull:
 	git pull --recurse-submodules
