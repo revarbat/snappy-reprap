@@ -91,7 +91,7 @@ module sled()
 {
 	slider_len = 20;
 	slider_count = 2;
-	slider_spacing = (platform_length-slider_len-20)/(slider_count-1);
+	slider_spacing = (platform_length-slider_len-15)/(slider_count-1);
 
 	color("MediumSlateBlue")
 	prerender(convexity=10)
