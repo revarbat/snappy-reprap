@@ -21,10 +21,10 @@ use <rail_motor_segment_parts.scad>
 use <rail_segment_parts.scad>
 use <ramps_mount_parts.scad>
 use <sled_endcap_parts.scad>
+use <sled_parts.scad>
 use <spool_holder_parts.scad>
 use <support_leg_parts.scad>
 use <xy_joiner_parts.scad>
-use <xy_sled_parts.scad>
 use <yz_joiner_parts.scad>
 use <z_joiner_parts.scad>
 
@@ -48,7 +48,7 @@ module x_sled_assembly(explode=0, arrows=false)
 	platform_vert_off = groove_height/2+rail_offset;
 	up(platform_vert_off) {
 		xspread(platform_length+explode) {
-			zrot(90) yrot(180) xy_sled();
+			zrot(90) yrot(180) sled();
 		}
 		zrot_copies([0,180]) {
 			right(platform_length+explode*1.5) {
@@ -73,7 +73,7 @@ module y_sled_assembly(explode=0, arrows=false)
 	platform_vert_off = groove_height/2+rail_offset;
 	up(platform_vert_off) {
 		yspread(platform_length+explode) {
-			yrot(180) xy_sled();
+			yrot(180) sled();
 		}
 		zrot_copies([0,180]) {
 			fwd(platform_length+explode*1.5) {
@@ -111,7 +111,7 @@ module z_sled_assembly(explode=0, arrows=false)
 	platform_vert_off = groove_height/2+rail_offset;
 	back(platform_vert_off) {
 		zspread(platform_length+explode) {
-			xrot(90) xy_sled();
+			xrot(90) sled();
 		}
 		up(platform_length) {
 			z_joiner() {

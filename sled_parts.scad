@@ -38,11 +38,60 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 
 
 
-module xy_sled()
+module slider_segment(l=30, base=10, slop=0.1)
 {
-	slider_len = platform_length/4;
+	w = joiner_width + 2*5;
+	h = base + groove_height;
+	wall = 5;
+	difference() {
+		up(h/2) cube([joiner_width+2*wall, l, h], center=true);
+		up(base-printer_slop) {
+			up((groove_height+5)/2) {
+				cube([joiner_width+slop, l+1, groove_height+5], center=true);
+			}
+			yspread(l) {
+				scale([1, 1, tan(30)]) {
+					xrot(45) cube([joiner_width+slop, 2*sqrt(2), 2*sqrt(2)], center=true);
+				}
+			}
+		}
+		up(h) {
+			xspread(w) {
+				yrot(45) {
+					cube([wall/2*sqrt(2), l+1, wall/2*sqrt(2)], center=true);
+				}
+			}
+		}
+	}
+	up(base) {
+		up(groove_height/2) {
+			xflip_copy() {
+				left((joiner_width+slop)/2) {
+					difference() {
+						scale([tan(groove_angle), 1, 1]) {
+							yrot(45) cube([groove_height*sin(45), l, groove_height*sin(45)], center=true);
+						}
+						yflip_copy() {
+							right(sqrt(2)*groove_height/2) {
+								fwd(l/2) {
+									zrot(45) cube(groove_height, center=true);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+module sled()
+{
+	slider_len = 20;
 	slider_count = 2;
-	slider_spacing = (platform_length-slider_len-15)/(slider_count-1);
+	slider_spacing = (platform_length-slider_len-20)/(slider_count-1);
 
 	color("MediumSlateBlue")
 	prerender(convexity=10)
@@ -94,45 +143,9 @@ module xy_sled()
 				}
 
 				// sliders
-				xflip_copy() {
-					translate([-(rail_spacing)/2, 0, 0]) {
-						// bottom strut
-						translate([6/2+slop,0,platform_thick/2]) {
-							cube(size=[6, platform_length, platform_thick], center=true);
-						}
-
-						yspread(slider_spacing, n=slider_count) {
-							up(rail_offset+groove_height/2) {
-								translate([-joiner_width/2, 0, 0]) {
-									circle_of(n=2, r=joiner_width/2+slop/2, rot=true) {
-
-										// Slider base
-										translate([15/2-9, 0, -groove_height-slop]) {
-											difference() {
-												cube(size=[15, slider_len, groove_height-slop], center=true);
-												up(groove_height/2) {
-													yspread(slider_len) {
-														xrot(45) cube(size=[16, 2*sqrt(2), 2*sqrt(2)], center=true);
-													}
-												}
-											}
-										}
-
-										// Slider backing
-										translate([6/2, 0, -4/2]) {
-											cube(size=[6, slider_len, groove_height+4], center=true);
-										}
-
-										// Slider ridge
-										scale([tan(groove_angle),1,1]) {
-											yrot(45) {
-												rcube(size=[groove_height/sqrt(2), slider_len, groove_height/sqrt(2)], r=1.5, center=true, $fn=12);
-											}
-										}
-									}
-								}
-							}
-						}
+				xspread(rail_spacing+joiner_width) {
+					yspread(slider_spacing, n=slider_count) {
+						slider_segment(l=slider_len, base=rail_offset, slop=slop);
 					}
 				}
 			}
@@ -170,16 +183,16 @@ module xy_sled()
 		}
 	}
 }
-//!xy_sled();
+//!sled();
 
 
 
-module xy_sled_parts() { // make me
-	zrot(-90) xy_sled();
+module sled_parts() { // make me
+	zrot(-90) sled();
 }
 
 
-xy_sled_parts();
+sled_parts();
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
