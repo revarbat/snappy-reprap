@@ -3,9 +3,11 @@
 import os
 import os.path
 import sys
+import math
 import time
 import struct
 import argparse
+import itertools
 import subprocess
 
 
@@ -28,8 +30,40 @@ color([1.0, 1.0, 0.0, 0.2]) {modulename}();
 """
 
 
+def dot(a, b):
+    return sum(p*q for p, q in zip(a, b))
+
+
+def cross(a, b):
+    return [
+        a[1]*b[2] - a[2]*b[1],
+        a[2]*b[0] - a[0]*b[2],
+        a[0]*b[1] - a[1]*b[0]
+    ]
+
+
+def vsub(a, b):
+    return [i - j for i, j in zip(a, b)]
+
+
+def vsdiv(v, s):
+    return [x / s for x in v]
+
+
+def dist(v):
+    return math.sqrt(sum([x*x for x in v]))
+
+
+def normalize(v):
+    return vsdiv(v, dist(v))
+
+
+def is_clockwise(a, b, c, n):
+    return dot(n, cross(vsub(b, a), vsub(c, a))) < 0
+
+
 def point_cmp(p1, p2):
-    for i in range(len(p1)-1, -1, -1):
+    for i in [2, 1, 0]:
         val = cmp(p1[i], p2[i])
         if val != 0:
             return val
@@ -37,20 +71,20 @@ def point_cmp(p1, p2):
 
 
 def facet_cmp(f1, f2):
-    f1 = sorted(list(f1), cmp=point_cmp)
-    f2 = sorted(list(f2), cmp=point_cmp)
-    val = point_cmp(f1[0], f2[0])
-    if val != 0:
-        return val
-    val = point_cmp(f1[1], f2[1])
-    if val != 0:
-        return val
-    val = point_cmp(f1[2], f2[2])
-    return val
+    cl1 = [sorted([p[i] for p in f1]) for i in range(3)]
+    cl2 = [sorted([p[i] for p in f2]) for i in range(3)]
+    for i in [2, 1, 0]:
+        for c1, c2 in itertools.izip_longest(cl1[i], cl2[i]):
+            if c1 is None:
+                return -1
+            val = cmp(c1, c2)
+            if val != 0:
+                return val
+    return 0
 
 
 def float_fmt(val):
-    s = "%.3f" % val
+    s = "%.4f" % val
     while len(s) > 1 and s[-1:] in '0.':
         if s[-1:] == '.':
             s = s[:-1]
@@ -78,8 +112,12 @@ class PointCloud(object):
         self.pointhash = {}
 
     def add_or_get_point(self, x, y, z):
-        pt = (x, y, z)
-        key = "%f %f %f" % pt
+        pt = (
+            round(x, 4),
+            round(y, 4),
+            round(z, 4),
+        )
+        key = "%.4f %.4f %.4f" % pt
         if key in self.pointhash:
             return self.pointhash[key]
         idx = len(self.points)
@@ -189,6 +227,30 @@ class StlData(object):
         vertex3 = data[9:12]
         return (vertex1, vertex2, vertex3, normal)
 
+    def sort_facet(self, facet):
+        v1, v2, v3, norm = facet
+        p1 = self.points.point_coords(v1)
+        p2 = self.points.point_coords(v2)
+        p3 = self.points.point_coords(v3)
+        if dist(norm) > 0:
+            # Make sure vertex ordering is counter-clockwise,
+            # relative to the outward facing normal.
+            if is_clockwise(p1, p2, p3, norm):
+                v1, v3, v2 = (v1, v2, v3)
+                p1, p3, p2 = (p1, p2, p3)
+        else:
+            # If no normal was specified, we should calculate it, relative
+            # to the counter-clockwise vetices (as seen from outside).
+            norm = cross(vsub(p3, p1), vsub(p2, p1))
+            if dist(norm) > 1e-6:
+                norm = normalize(norm)
+        cmp23 = point_cmp(p2, p3)
+        if point_cmp(p1, p2) > 0 and cmp23 < 0:
+            return (v2, v3, v1, norm)
+        if point_cmp(p1, p3) > 0 and cmp23 > 0:
+            return (v3, v1, v2, norm)
+        return (v1, v2, v3, norm)
+
     def read_file(self, filename):
         self.filename = filename
         with open(filename, 'rb') as f:
@@ -200,6 +262,7 @@ class StlData(object):
                     facet = self.read_ascii_facet(f)
                     if facet is None:
                         break
+                    facet = self.sort_facet(facet)
                     vertex1, vertex2, vertex3, normal = facet
                     self.facets.append(facet)
                     self.add_edge(vertex1, vertex2)
@@ -213,6 +276,7 @@ class StlData(object):
                     facet = self.read_binary_facet(f)
                     if facet is None:
                         break
+                    facet = self.sort_facet(facet)
                     vertex1, vertex2, vertex3, normal = facet
                     self.facets.append(facet)
                     self.add_edge(vertex1, vertex2)
