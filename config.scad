@@ -1,4 +1,4 @@
-snappy_version = 0.95;
+snappy_version = 1.0;
 
 
 // 0 = Thinning Walls (Thin in the middle, thick at edges.  Prettier smooth solid walls.)
