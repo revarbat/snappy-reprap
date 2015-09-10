@@ -74,7 +74,7 @@ module sled_endcap()
 
 
 module sled_endcap_parts() { // make me
-	zrot_copies([90,270]) translate([0, 10, 0]) xrot(180) sled_endcap();
+	xrot(180) sled_endcap();
 }
 
 
