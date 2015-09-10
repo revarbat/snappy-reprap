@@ -47,11 +47,11 @@ module slider_segment(l=30, base=10, slop=0.1)
 		up(h/2) cube([joiner_width+2*wall, l, h], center=true);
 		up(base-printer_slop) {
 			up((groove_height+5)/2) {
-				cube([joiner_width+slop, l+1, groove_height+5], center=true);
+				cube([joiner_width+2*slop, l+1, groove_height+5], center=true);
 			}
 			yspread(l) {
 				scale([1, 1, tan(30)]) {
-					xrot(45) cube([joiner_width+slop, 2*sqrt(2), 2*sqrt(2)], center=true);
+					xrot(45) cube([joiner_width+2*slop, 2*sqrt(2), 2*sqrt(2)], center=true);
 				}
 			}
 		}
@@ -66,7 +66,7 @@ module slider_segment(l=30, base=10, slop=0.1)
 	up(base) {
 		up(groove_height/2) {
 			xflip_copy() {
-				left((joiner_width+slop)/2) {
+				left((joiner_width+2*slop)/2) {
 					difference() {
 						scale([tan(groove_angle), 1, 1]) {
 							yrot(45) cube([groove_height*sin(45), l, groove_height*sin(45)], center=true);
