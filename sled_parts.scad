@@ -4,9 +4,6 @@ use <joiners.scad>
 use <publicDomainGearV1.1.scad>
 
 
-slop = 0.1;
-
-
 $fa = 2;
 $fs = 2;
 
@@ -38,7 +35,7 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 
 
 
-module slider_segment(l=30, base=10, slop=0.1)
+module slider_segment(l=30, base=10, slop=0.2)
 {
 	w = joiner_width + 2*5;
 	h = base + groove_height;
@@ -47,11 +44,11 @@ module slider_segment(l=30, base=10, slop=0.1)
 		up(h/2) cube([joiner_width+2*wall, l, h], center=true);
 		up(base-printer_slop) {
 			up((groove_height+5)/2) {
-				cube([joiner_width+2*slop, l+1, groove_height+5], center=true);
+				cube([joiner_width+slop, l+1, groove_height+5], center=true);
 			}
 			yspread(l) {
 				scale([1, 1, tan(30)]) {
-					xrot(45) cube([joiner_width+2*slop, 2*sqrt(2), 2*sqrt(2)], center=true);
+					xrot(45) cube([joiner_width+slop, 2*sqrt(2), 2*sqrt(2)], center=true);
 				}
 			}
 		}
@@ -66,7 +63,7 @@ module slider_segment(l=30, base=10, slop=0.1)
 	up(base) {
 		up(groove_height/2) {
 			xflip_copy() {
-				left((joiner_width+2*slop)/2) {
+				left((joiner_width+slop)/2) {
 					difference() {
 						scale([tan(groove_angle), 1, 1]) {
 							yrot(45) cube([groove_height*sin(45), l, groove_height*sin(45)], center=true);
@@ -145,7 +142,7 @@ module sled()
 				// sliders
 				xspread(rail_spacing+joiner_width) {
 					yspread(slider_spacing, n=slider_count) {
-						slider_segment(l=slider_len, base=rail_offset, slop=slop);
+						slider_segment(l=slider_len, base=rail_offset, slop=printer_slop);
 					}
 				}
 			}
