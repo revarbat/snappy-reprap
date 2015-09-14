@@ -10,11 +10,11 @@ $fs = 2;
 
 module cable_chain_joiner_mount()
 {
-	joiner_length=10;
+	joiner_length=15;
 	color("SpringGreen")
 	prerender(convexity=10)
 	union () {
-		left(joiner_length+cable_chain_width/2-3) {
+		left(joiner_length+cable_chain_width/2-0.05) {
 			fwd(2) {
 				cable_chain_mount1();
 				cable_chain_barrel();
@@ -25,7 +25,7 @@ module cable_chain_joiner_mount()
 			}
 		}
 		up(rail_height/4) {
-			chamfer(chamfer=3, size=[joiner_length*2, joiner_width, rail_height/2], edges=[[1,1,0,0], [0,0,0,0], [0,0,0,0]]) {
+			chamfer(chamfer=3, size=[joiner_length*2, joiner_width, rail_height/2], edges=[[1,1,0,0], [1,1,0,0], [0,0,0,0]]) {
 				zrot(-90) {
 					half_joiner(h=rail_height/2, w=joiner_width, l=joiner_length, a=joiner_angle);
 				}
@@ -34,6 +34,39 @@ module cable_chain_joiner_mount()
 	}
 }
 //!cable_chain_joiner_mount();
+
+
+module cable_chain_joiner_vertical_mount()
+{
+	joiner_length=10;
+	color("SpringGreen")
+	prerender(convexity=10)
+	union () {
+		left(joiner_length+cable_chain_width/2+5-0.05) {
+			up(3) {
+				fwd(cable_chain_height/2) {
+					xrot(-90) {
+						cable_chain_mount1();
+						cable_chain_barrel();
+					}
+				}
+			}
+		}
+		up(6/2) {
+			left(joiner_length+5/2) {
+				cube([5+1, joiner_width, 6], center=true);
+			}
+		}
+		up(rail_height/4) {
+			chamfer(chamfer=3, size=[joiner_length*2, joiner_width, rail_height/2], edges=[[1,1,0,0], [1,1,0,0], [0,0,0,0]]) {
+				zrot(-90) {
+					half_joiner(h=rail_height/2, w=joiner_width, l=joiner_length, a=joiner_angle);
+				}
+			}
+		}
+	}
+}
+//!cable_chain_joiner_vertical_mount();
 
 
 module cable_chain_xy_joiner_mount()
@@ -64,7 +97,7 @@ module cable_chain_xy_joiner_mount()
 			}
 		}
 		up(rail_height/4) {
-			chamfer(chamfer=3, size=[joiner_width, joiner_length*2, rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+			chamfer(chamfer=3, size=[joiner_width, joiner_length*2, rail_height/2], edges=[[1,1,0,0], [1,1,0,0], [0,0,0,0]]) {
 				half_joiner(h=rail_height/2, w=joiner_width, l=joiner_length, a=joiner_angle);
 			}
 		}
@@ -93,7 +126,7 @@ module cable_chain_x_sled_mount()
 			}
 		}
 		up(rail_height/4) {
-			chamfer(chamfer=3, size=[joiner_width, joiner_length*2, rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+			chamfer(chamfer=3, size=[joiner_width, joiner_length*2, rail_height/2], edges=[[1,1,0,0], [1,1,0,0], [0,0,0,0]]) {
 				half_joiner(h=rail_height/2, w=joiner_width, l=joiner_length, a=joiner_angle);
 			}
 		}
@@ -103,9 +136,14 @@ module cable_chain_x_sled_mount()
 
 
 module cable_chain_mount_parts() { // make me
-	back(35) {
-		xspread(35, n=3) {
-			zrot(90) cable_chain_joiner_mount();
+	back(45) {
+		left(35/2) {
+			xspread(35) {
+				zrot(90) cable_chain_joiner_mount();
+			}
+		}
+		right(35) {
+			zrot(90) cable_chain_joiner_vertical_mount();
 		}
 	}
 	translate([35, -10, 0]) {
