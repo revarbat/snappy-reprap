@@ -43,24 +43,59 @@ module arrow(size=10, headpart=0.4) {
 //!arrow(size=200);
 
 
+module x_sled_end_assembly(explode=0, arrows=false)
+{
+	up(groove_height/2+rail_offset) {
+		zrot(90) yrot(180) sled();
+		right(platform_length/2+explode*2) {
+			zrot(90) xy_joiner();
+		}
+	}
+
+	// Construction arrows.
+	if(arrows && explode>20) {
+		right(platform_length/2+explode*0.75) {
+			arrow(size=explode/3);
+		}
+	}
+}
+//!x_sled_end_assembly(explode=100, arrows=true);
+
+
+module x_sled_end_assembly2(explode=0, arrows=false)
+{
+	up(groove_height/2+rail_offset) {
+		zrot(90) yrot(180) sled();
+		left(platform_length/2+explode*2) {
+			zrot(-90) xy_joiner();
+		}
+	}
+
+	// Construction arrows.
+	if(arrows && explode>20) {
+		left(platform_length/2+explode*0.75) {
+			zrot(180) arrow(size=explode/3);
+		}
+	}
+}
+//!x_sled_end_assembly2(explode=100, arrows=true);
+
+
 module x_sled_assembly(explode=0, arrows=false)
 {
-	platform_vert_off = groove_height/2+rail_offset;
-	up(platform_vert_off) {
-		xspread(platform_length+explode) {
-			zrot(90) yrot(180) sled();
-		}
-		zrot_copies([0,180]) {
-			right(platform_length+explode*1.5) {
-				zrot(90) xy_joiner();
-			}
-		}
+	right((platform_length/2+explode/2)) {
+		x_sled_end_assembly();
+	}
+	left((platform_length/2+explode/2)) {
+		x_sled_end_assembly2();
+	}
+	up(groove_height/2+rail_offset) {
 		children();
 	}
 
 	// Construction arrows.
 	if(arrows && explode>20) {
-		zring(r=platform_length+explode*3/4) {
+		zring(r=explode/6) {
 			arrow(size=explode/3);
 		}
 	}
@@ -68,62 +103,237 @@ module x_sled_assembly(explode=0, arrows=false)
 //!x_sled_assembly(explode=100, arrows=true);
 
 
+module y_sled_endcap_assembly(explode=0, arrows=false)
+{
+	sled_endcap();
+	fwd(20-joiner_width/2) {
+		right(platform_width/2+explode*1.5) {
+			zrot(90) platform_support2();
+		}
+		left(platform_width/2+explode*1.5) {
+			zrot(-90) platform_support1();
+		}
+	}
+
+	// Construction arrows.
+	fwd(20-joiner_width/2) {
+		zring(r=(platform_width+explode*1.5)/2) {
+			arrow(size=explode/3);
+		}
+	}
+}
+//!y_sled_endcap_assembly(explode=100, arrows=true);
+
+
+module y_sled_end_assembly(explode=0, arrows=false)
+{
+	up(groove_height/2+rail_offset) {
+		yrot(180) sled();
+		fwd(platform_length/2+explode) {
+			y_sled_endcap_assembly();
+		}
+	}
+
+	// Construction arrows.
+	if(arrows && explode>20) {
+		fwd(platform_length/2+explode*0.5) {
+			zrot(-90) arrow(size=explode/3);
+		}
+	}
+}
+//!y_sled_end_assembly(explode=100, arrows=true);
+
+
+module y_sled_end_assembly2(explode=0, arrows=false)
+{
+	up(groove_height/2+rail_offset) {
+		yrot(180) sled();
+		back(platform_length/2+explode) {
+			zrot(180) y_sled_endcap_assembly();
+		}
+	}
+
+	// Construction arrows.
+	if(arrows && explode>20) {
+		back(platform_length/2+explode*0.5) {
+			zrot(90) arrow(size=explode/3);
+		}
+	}
+}
+//!y_sled_end_assembly2(explode=100, arrows=true);
+
+
 module y_sled_assembly(explode=0, arrows=false)
 {
-	platform_vert_off = groove_height/2+rail_offset;
-	up(platform_vert_off) {
-		yspread(platform_length+explode) {
-			yrot(180) sled();
-		}
-		zrot_copies([0,180]) {
-			fwd(platform_length+explode*1.5) {
-				sled_endcap();
-				fwd(20-joiner_width/2) {
-					right(platform_width/2+explode*1.5) {
-						zrot(90) platform_support2();
-					}
-					left(platform_width/2+explode*1.5) {
-						zrot(-90) platform_support1();
-					}
-				}
-			}
-		}
+	fwd((platform_length/2+explode/2)) {
+		y_sled_end_assembly();
+	}
+	back((platform_length/2+explode/2)) {
+		y_sled_end_assembly2();
+	}
+	up(groove_height/2+rail_offset) {
 		children();
 	}
 
 	// Construction arrows.
-	if(arrows && explode>10) {
-		zrot(90) zring(r=platform_length+explode) {
+	if(arrows && explode>20) {
+		zrot(-90) zring(r=explode/6) {
 			arrow(size=explode/3);
-		}
-		yspread(platform_length*2+3*explode+20-joiner_width/2) {
-			zring(r=(platform_width+explode*1.5)/2) {
-				arrow(size=explode/3);
-			}
 		}
 	}
 }
 //!y_sled_assembly(explode=100, arrows=true);
 
 
-module z_sled_assembly(explode=0, arrows=false)
+module z_sled_top_end_assembly(explode=0, arrows=false)
 {
-	platform_vert_off = groove_height/2+rail_offset;
-	back(platform_vert_off) {
-		zspread(platform_length+explode) {
-			xrot(90) sled();
-		}
-		up(platform_length) {
-			z_joiner() {
+	right(groove_height/2+rail_offset) {
+		zrot(-90) xrot(90) sled();
+		up(platform_length/2+2*explode) {
+			zrot(-90) z_joiner() {
 				children();
 			}
 		}
-		down(platform_length) {
-			xrot(-90) zrot(180) sled_endcap();
+	}
+
+	// Construction arrows.
+	if(arrows && explode>20) {
+		up(platform_length/2+explode*0.5) {
+			yrot(-90) arrow(size=explode/3);
+		}
+	}
+}
+//!z_sled_top_end_assembly(explode=100, arrows=true);
+
+
+module z_sled_bottom_end_assembly(explode=0, arrows=false)
+{
+	right(groove_height/2+rail_offset) {
+		zrot(-90) xrot(90) sled();
+		down(platform_length/2+explode) {
+			yrot(90) zrot(90) sled_endcap();
+		}
+	}
+
+	// Construction arrows.
+	if(arrows && explode>20) {
+		down(platform_length/2+explode*0.5) {
+			yrot(90) arrow(size=explode/3);
+		}
+	}
+}
+//!z_sled_bottom_end_assembly(explode=100, arrows=true);
+
+
+module z_sled_assembly(explode=0, arrows=false)
+{
+	up((platform_length/2+explode/2)) {
+		z_sled_top_end_assembly() {
+			children();
+		}
+	}
+	down((platform_length/2+explode/2)) {
+		z_sled_bottom_end_assembly();
+	}
+
+	// Construction arrows.
+	if(arrows && explode>20) {
+		zrot(-90) xring() {
+			down(explode/6) {
+				yrot(90) arrow(size=explode/3);
+			}
 		}
 	}
 }
 //!z_sled_assembly(explode=0, arrows=true);
+
+
+module motor_assembly(explode=0, arrows=false)
+{
+	nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
+	up(gear_base+rack_height/2+2.1+explode) {
+		drive_gear();
+	}
+
+	// Construction arrow.
+	if(arrows && explode>10) {
+		up(explode*0.6) {
+			yrot(-90) arrow(size=explode/3);
+		}
+	}
+}
+//!motor_assembly(explode=100, arrows=true);
+
+
+module microswitch()
+{
+	color([0.3, 0.3, 0.3]) {
+		difference() {
+			cube([endstop_thick, endstop_length, endstop_depth], center=true);
+			xrot(-5) {
+				up(endstop_depth) {
+					cube([endstop_thick+1, endstop_length, endstop_depth], center=true);
+				}
+			}
+			down(endstop_hole_inset/2-endstop_click_voff/2) {
+				yspread(endstop_hole_spacing) {
+					yrot(90) cylinder(h=endstop_thick+1, d=endstop_screw_size, center=true, $fn=12);
+				}
+			}
+		}
+	}
+	up(endstop_depth/2) {
+		color([0.3, 0.3, 0.3]) {
+			yrot(90) cylinder(h=endstop_thick*0.75, d=1, center=true, $fn=12);
+		}
+		color("silver") {
+			fwd(endstop_length*0.9/2) xrot(5) back(endstop_length*0.9/2) {
+				cube([endstop_thick, endstop_length*0.9, 0.1], center=true);
+				back(endstop_length*0.9/2+1) {
+					top_half() {
+						yrot(90) {
+							difference() {
+								cylinder(h=endstop_thick, r=1, center=true, $fn=12);
+								cylinder(h=endstop_thick+1, r=0.8, center=true, $fn=12);
+							}
+						}
+					}
+				}
+			}
+			grid_of(ya=[-endstop_length/2+2, -endstop_length/8, endstop_length/2-2]) {
+				down(endstop_depth+5/2) {
+					cube([endstop_thick*0.5, 0.2, 5], center=true);
+				}
+			}
+		}
+	}
+}
+//!microswitch();
+
+
+module motor_mount_assembly(explode=0, arrows=false)
+{
+	motor_mount_plate();
+	up(motor_length/2+2-endstop_depth/2) {
+		fwd(endstop_hole_hoff) {
+			right((motor_mount_spacing+joiner_width)/2+endstop_standoff+endstop_thick/2+explode) {
+				microswitch();
+			}
+		}
+	}
+
+	// Construction arrow.
+	if(arrows && explode>10) {
+		up(motor_length/2+2-endstop_depth/2) {
+			fwd(endstop_hole_hoff) {
+				right((motor_mount_spacing+joiner_width)/2+endstop_standoff+endstop_thick/2+explode/2) {
+					xrot(-90) arrow(size=explode/3);
+				}
+			}
+		}
+	}
+}
+//!motor_mount_assembly(explode=100, arrows=true);
 
 
 module motor_segment_assembly(explode=0, arrows=false)
@@ -134,12 +344,11 @@ module motor_segment_assembly(explode=0, arrows=false)
 
 	// Stepper Motor
 	up(motor_top_z) {
-		up(explode*2-motor_length/2) motor_mount_plate();
-		up(explode) {
-			nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
-			up(gear_base+rack_height/2+2.1+explode*2) {
-				drive_gear();
-			}
+		up(explode*2.2-motor_length/2) {
+			motor_mount_assembly();
+		}
+		up(explode*1.1) {
+			motor_assembly();
 		}
 	}
 
@@ -147,11 +356,8 @@ module motor_segment_assembly(explode=0, arrows=false)
 	if(arrows && explode>10) {
 		up(rail_height+groove_height+explode/8) {
 			yrot(-90) arrow(size=explode/3);
-			up(motor_length+explode*7/8) {
+			up(motor_length+explode) {
 				yrot(-90) arrow(size=explode/3);
-				up(5+explode) {
-					yrot(-90) arrow(size=explode/3);
-				}
 			}
 		}
 	}
@@ -240,29 +446,30 @@ module y_axis_slider_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=
 
 module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false)
 {
-	left(platform_length)
-	zrot(-90) {
-		yz_joiner();
-		fwd(6+explode) {
+	left(platform_length) {
+		zrot(-90) yz_joiner();
+		left(6+explode) {
 			if ($children > 2) children(2);
 		}
-		back(platform_length/3) {
-			zring(r=rail_width/2+14+explode) {
-				zrot(-90) support_leg();
+		right(platform_length/3) {
+			zrot_copies([0,180]) {
+				back(rail_width/2+14+explode) {
+					zrot(0) support_leg();
+				}
 			}
 		}
 		up(rail_height+groove_height+rail_length/2+explode) {
-			xrot(-90) zrot(180) rail_segment();
+			yrot(90) zrot(90) rail_segment();
 
-			up(motor_rail_length/2+rail_length/2+explode*1.5) {
-				xrot(-90) motor_segment_assembly(slidepos=slidepos);
+			up(motor_rail_length/2+rail_length/2+explode*1) {
+				yrot(90) zrot(90) motor_segment_assembly(slidepos=slidepos);
 				up(slidepos) {
-					back(rail_height+groove_height/2) {
+					right(rail_height+groove_height/2) {
 						if ($children > 0) children(0);
 					}
 				}
-				up(motor_rail_length/2+rail_length/2+explode*1.5) {
-					xrot(-90) rail_segment();
+				up(motor_rail_length/2+rail_length/2+explode*1) {
+					yrot(90) zrot(-90) rail_segment();
 					up(rail_length/2+explode*1.5) {
 						if (hide_endcaps == false) {
 							if ($children > 1) children(1);
@@ -275,20 +482,17 @@ module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false)
 		// Construction arrows.
 		if (arrows && explode>10) {
 			back(rail_height/2+groove_height/2) {
-				up(rail_height+groove_height+explode/2) {
+				up(rail_height+groove_height+explode*0.55) {
 					yrot(-90) arrow(size=explode/3);
-					up(motor_rail_length+explode) {
+					up(motor_rail_length+explode*1.5) {
 						yrot(-90) arrow(size=explode/3);
-						up(rail_length+explode) {
+						up(rail_length+explode*0.5) {
 							yrot(-90) arrow(size=explode/3);
-							up(rail_length+explode) {
-								yrot(-90) arrow(size=explode/3);
-							}
 						}
 					}
 				}
 				up(rail_height/2+groove_height/2) {
-					zring(r=rail_width/2+explode/2) {
+					zring(r=rail_width/2+explode*0.55) {
 						arrow(size=explode/3);
 					}
 				}
@@ -296,7 +500,8 @@ module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false)
 		}
 	}
 }
-//!z_tower_assembly(slidepos=25.4/8/4, explode=0, arrows=true);
+//!z_tower_assembly(slidepos=0, explode=0, arrows=true) z_sled_assembly();
+//!z_tower_assembly(explode=100, arrows=true);
 
 
 module extruder_assembly(explode=0, arrows=false)
@@ -323,13 +528,13 @@ module extruder_assembly(explode=0, arrows=false)
 			zrot(90) {
 				up(explode*3) {
 					extruder_idler();
-					up(0.1) fwd(0.1) extruder_latch();
+					up(0.1) fwd(0.1+explode) extruder_latch();
 					back(extruder_idler_diam/2) {
-						fwd(explode)
+						fwd(explode/2)
 							idler_bearing();
-						left(extruder_shaft_len/2/2+1+explode)
+						left(extruder_shaft_len/2/2+1+explode/2)
 							yrot(90) extruder_idler_axle();
-						right(extruder_shaft_len/2/2+1+explode)
+						right(extruder_shaft_len/2/2+1+explode/2)
 							yrot(-90) extruder_idler_axle_cap();
 					}
 				}
@@ -352,7 +557,7 @@ module extruder_assembly(explode=0, arrows=false)
 		}
 	}
 }
-//!extruder_assembly(explode=0);
+//!extruder_assembly(explode=100, arrows=true);
 
 
 module extruder_bridge_assembly(explode=0, arrows=false)
@@ -389,13 +594,11 @@ module extruder_bridge_assembly(explode=0, arrows=false)
 
 module spool_holder_assembly(explode=0, arrows=false)
 {
-	back(rail_height/2) {
-		zrot(90) {
-			spool_holder();
-			up(spool_holder_length-15/2*cos(30)+0.25+explode) {
-				spool_axle();
-				down(52.5/2-14) spool();
-			}
+	right(rail_height/2) {
+		spool_holder();
+		up(spool_holder_length-15/2*cos(30)+0.25+explode) {
+			spool_axle();
+			down(52.5/2-14) spool();
 		}
 	}
 }
@@ -424,8 +627,8 @@ module full_assembly(hide_endcaps=false, explode=0, arrows=false)
 			z_sled_assembly(explode=explode, arrows=arrows) {
 				extruder_bridge_assembly(explode=explode, arrows=arrows);
 			}
-			xrot(-90) rail_endcap();
-			ramps_mount();
+			zrot(-90) xrot(-90) rail_endcap();
+			zrot(-90) ramps_mount();
 		}
 		zrot(180) z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows) {
 			z_sled_assembly(explode=explode, arrows=arrows);
