@@ -93,7 +93,7 @@ module yz_joiner()
 				translate([0, rail_height/2, rail_height+groove_height-0.05]) {
 					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+0.001, clearance=5, a=joiner_angle);
 				}
-				
+
 				// Wiring access hole
 				up(rail_thick+rail_height/4/2) {
 					cube([16, joiner_width*3, rail_height/4], center=true);

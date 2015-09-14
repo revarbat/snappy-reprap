@@ -17,15 +17,15 @@ module spool_holder()
 			union() {
 				// Side walls
 				yspread(rail_width-joiner_width) {
-					up(spool_holder_length/2+6) {
+					up(spool_holder_length/2+3) {
 						yrot(90) {
 							zrot(90) {
 								if (wall_style == "crossbeams")
-									sparse_strut(h=rail_height, l=spool_holder_length-12, thick=joiner_width, strut=5);
+									sparse_strut(h=rail_height, l=spool_holder_length-6, thick=joiner_width, strut=5);
 								if (wall_style == "thinwall")
-									thinning_wall(h=rail_height, l=spool_holder_length-12, thick=joiner_width, strut=joiner_width, bracing=false);
+									thinning_wall(h=rail_height, l=spool_holder_length-6, thick=joiner_width, strut=joiner_width, bracing=false);
 								if (wall_style == "corrugated")
-									corrugated_wall(h=rail_height, l=spool_holder_length-12, thick=joiner_width, strut=joiner_width);
+									corrugated_wall(h=rail_height, l=spool_holder_length-6, thick=joiner_width, strut=joiner_width);
 							}
 						}
 					}
