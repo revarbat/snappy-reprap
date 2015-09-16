@@ -1,12 +1,13 @@
 include <config.scad>
 use <GDMUtils.scad>
+use <sliders.scad>
 use <joiners.scad>
 
 
 // connectby valid options: "", "fwd", "back"
 module rail_segment(explode=0, connectby="")
 {
-	fillet = 1;
+	fillet = 1.0;
 	side_joiner_len = 2;
 
 	up(
@@ -29,22 +30,24 @@ module rail_segment(explode=0, connectby="")
 
 					// Walls.
 					zrot_copies([0, 180]) {
-						up((rail_height+3)/2) {
+						up(rail_height/2) {
 							right((rail_spacing+joiner_width)/2) {
 								if (wall_style == "crossbeams")
-									sparse_strut(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=5);
+									sparse_strut(h=rail_height, l=rail_length-10, thick=joiner_width, strut=5);
 								if (wall_style == "thinwall")
-									thinning_wall(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=5, bracing=false);
+									thinning_wall(h=rail_height, l=rail_length-10, thick=joiner_width, strut=5, bracing=false);
 								if (wall_style == "corrugated")
-									corrugated_wall(h=rail_height+3, l=rail_length-10, thick=joiner_width, strut=5);
+									corrugated_wall(h=rail_height, l=rail_length-10, thick=joiner_width, strut=5);
 							}
 						}
 					}
 
-					// Rail backing.
-					xspread(rail_spacing+joiner_width)
-						up(rail_height+groove_height/2-fillet)
-							rcube(size=[joiner_width, rail_length, groove_height+fillet], r=fillet, center=true, $fn=12);
+					// Rails.
+					xspread(rail_spacing+joiner_width) {
+						up(rail_height+groove_height/2-0.05) {
+							rail(l=rail_length, w=joiner_width, h=groove_height, fillet=fillet);
+						}
+					}
 
 					// Side Supports
 					up(rail_height/4) {
@@ -53,57 +56,6 @@ module rail_segment(explode=0, connectby="")
 								cube(size=[rail_width-joiner_width, 4, rail_height/2], center=true);
 								xspread(rail_width/3, n=3) {
 									cube(size=[16, 11, 12], center=true);
-								}
-							}
-						}
-					}
-				}
-
-				// Rail grooves.
-				up(rail_height+groove_height/2) {
-					xflip_copy() {
-						left((rail_width-joiner_width)/2) {
-							xflip_copy() {
-								right(joiner_width/2) {
-									// main groove
-									scale([tan(groove_angle),1,1]) yrot(45) {
-										cube(size=[groove_height*sqrt(2)/2,rail_length+1,groove_height*sqrt(2)/2], center=true);
-									}
-
-									// fillets
-									facelen = groove_height/2/sin(90-groove_angle);
-									yflip_copy() {
-										fwd(rail_length/2) {
-											left(facelen*sin(groove_angle)) {
-												difference() {
-													zflip_copy() {
-														left(fillet) {
-															yrot(-groove_angle) {
-																right(fillet) {
-																	down(facelen*1.5/2) {
-																		cube([fillet*2, fillet*2, facelen*1.5], center=true);
-																	}
-																}
-															}
-														}
-													}
-													zflip_copy() {
-														left(fillet) {
-															yrot(-groove_angle) {
-																right(fillet) {
-																	down(facelen) {
-																		back(fillet) left(fillet) {
-																			cylinder(r=fillet, h=facelen*3, center=true, $fn=12);
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
 								}
 							}
 						}

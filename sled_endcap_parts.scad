@@ -30,7 +30,16 @@ module sled_endcap()
 
 					// Snap-tab joiners.
 					translate([0,0,-platform_height/2]) {
-						joiner_pair(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, l=joiner_length-9, a=joiner_angle);
+						difference() {
+							joiner_pair(spacing=platform_width-joiner_width, h=platform_height, w=joiner_width, l=joiner_length-joiner_width/2, a=joiner_angle);
+							down(platform_height/2) {
+								xspread(platform_width-joiner_width) {
+									xspread(joiner_width) {
+										xrot(90) chamfer_mask(r=3, h=2*joiner_length);
+									}
+								}
+							}
+						}
 					}
 				}
 
@@ -44,9 +53,19 @@ module sled_endcap()
 
 			// Side joiners
 			translate([0, -(joiner_length-joiner_width/2), -platform_height/2]) {
-				yrot_copies([0,180]) {
-					translate([platform_width/2, 0, 0]) {
-						zrot(-90) joiner(h=platform_height, w=joiner_width, l=joiner_width, a=joiner_angle);
+				difference() {
+					yrot_copies([0,180]) {
+						translate([platform_width/2, 0, 0]) {
+							zrot(-90) joiner(h=platform_height, w=joiner_width, l=joiner_width, a=joiner_angle);
+						}
+					}
+					down(platform_height/2) {
+						yspread(joiner_width) {
+							yrot(90) chamfer_mask(r=3, h=2*joiner_length+platform_width);
+						}
+						xspread(platform_width-2*joiner_width) {
+							xrot(90) chamfer_mask(r=3, h=2*joiner_length+platform_width);
+						}
 					}
 				}
 			}

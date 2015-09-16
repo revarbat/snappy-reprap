@@ -1,5 +1,6 @@
 include <config.scad>
 use <GDMUtils.scad>
+use <sliders.scad>
 use <joiners.scad>
 use <NEMA.scad>
 
@@ -7,9 +8,9 @@ use <NEMA.scad>
 // connectby valid options: "", "fwd", "back"
 module rail_motor_segment(explode=0, connectby="")
 {
-	joiner_length = 10;
+	joiner_length = 8;
 	side_joiner_len = 10;
-	fillet = 1.5;
+	fillet = 1.0;
 	motor_width = nema_motor_width(17);
 
 	up(
@@ -50,22 +51,24 @@ module rail_motor_segment(explode=0, connectby="")
 
 					// Walls.
 					zring(r=0,n=2) {
-						up((rail_height+3)/2) {
+						up(rail_height/2) {
 							right((rail_spacing+joiner_width)/2) {
 								if (wall_style == "crossbeams")
-									sparse_strut(h=rail_height+3, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5);
+									sparse_strut(h=rail_height, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5);
 								if (wall_style == "thinwall")
-									thinning_wall(h=rail_height+3, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5, bracing=false);
+									thinning_wall(h=rail_height, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5, bracing=false);
 								if (wall_style == "corrugated")
-									corrugated_wall(h=rail_height+3, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5);
+									corrugated_wall(h=rail_height, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5);
 							}
 						}
 					}
 
-					// Rail backing.
-					xspread(rail_spacing+joiner_width)
-						up(rail_height+groove_height/2-fillet)
-							rcube(size=[joiner_width, motor_rail_length, groove_height+fillet], r=fillet, center=true, $fn=18);
+					// Rails.
+					xspread(rail_spacing+joiner_width) {
+						up(rail_height+groove_height/2-0.05) {
+							rail(l=motor_rail_length, w=joiner_width, h=groove_height, fillet=fillet);
+						}
+					}
 
 					// Side Supports
 					up(rail_height/4) {
@@ -80,57 +83,6 @@ module rail_motor_segment(explode=0, connectby="")
 					}
 				}
 
-				// Rail grooves.
-				up(rail_height+groove_height/2) {
-					xflip_copy() {
-						left((rail_width-joiner_width)/2) {
-							xflip_copy() {
-								right(joiner_width/2) {
-									// main groove
-									scale([tan(groove_angle),1,1]) yrot(45) {
-										cube(size=[groove_height*sqrt(2)/2,motor_rail_length+1,groove_height*sqrt(2)/2], center=true);
-									}
-
-									// fillets
-									facelen = groove_height/2/sin(90-groove_angle);
-									yflip_copy() {
-										fwd(motor_rail_length/2) {
-											left(facelen*sin(groove_angle)) {
-												difference() {
-													zflip_copy() {
-														left(fillet) {
-															yrot(-groove_angle) {
-																right(fillet) {
-																	down(facelen*1.5/2) {
-																		cube([fillet*2, fillet*2, facelen*1.5], center=true);
-																	}
-																}
-															}
-														}
-													}
-													zflip_copy() {
-														left(fillet) {
-															yrot(-groove_angle) {
-																right(fillet) {
-																	down(facelen) {
-																		back(fillet) left(fillet) {
-																			cylinder(r=fillet, h=facelen*3, center=true, $fn=12);
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-
 				// Wiring access holes.
 				up(rail_height/4) {
 					xspread(rail_width/3, n=3) {
@@ -140,7 +92,7 @@ module rail_motor_segment(explode=0, connectby="")
 					}
 				}
 
-				// access for stepper wires.
+				// Access for stepper wires.
 				up(15/2) {
 					cube(size=[motor_mount_spacing+joiner_width+1, 20, 15+0.05], center=true);
 				}
@@ -153,7 +105,7 @@ module rail_motor_segment(explode=0, connectby="")
 				// Side wiring access hole
 				up(10/2+rail_thick) {
 					xspread(rail_width-joiner_width) {
-						yspread(motor_rail_length-2*30) {
+						yspread(motor_rail_length-2*28) {
 							cube(size=[joiner_width+1, 16, 10], center=true);
 						}
 					}

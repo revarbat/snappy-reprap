@@ -687,7 +687,7 @@ module fillet_planes_joint_mask(h=1.0, r=1.0, ang=90)
 	x = r*sin(90-(ang/2))/sin(ang/2);
 	render(convexity=4)
 	difference() {
-		cylinder(h=h, r=abs(x), center=true);
+		cylinder(h=h, r=abs(x), center=true, $fn=32);
 		translate([x, r, 0]) {
 			cylinder(h=h+1, r=r, center=true);
 		}
