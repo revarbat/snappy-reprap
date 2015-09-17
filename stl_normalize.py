@@ -110,6 +110,26 @@ class PointCloud(object):
     def __init__(self):
         self.points = []
         self.pointhash = {}
+        self.minx = 9e9
+        self.miny = 9e9
+        self.minz = 9e9
+        self.maxx = -9e9
+        self.maxy = -9e9
+        self.maxz = -9e9
+
+    def update_volume(self, x, y, z):
+        if x < self.minx:
+            self.minx = x
+        if x > self.maxx:
+            self.maxx = x
+        if y < self.miny:
+            self.miny = y
+        if y > self.maxy:
+            self.maxy = y
+        if z < self.minz:
+            self.minz = z
+        if z > self.maxz:
+            self.maxz = z
 
     def add_or_get_point(self, x, y, z):
         pt = (
@@ -123,6 +143,7 @@ class PointCloud(object):
         idx = len(self.points)
         self.pointhash[key] = idx
         self.points.append(pt)
+        self.update_volume(x, y, z)
         return idx
 
     def point_coords(self, idx):
@@ -225,7 +246,10 @@ class StlData(object):
         vertex1 = data[3:6]
         vertex2 = data[6:9]
         vertex3 = data[9:12]
-        return (vertex1, vertex2, vertex3, normal)
+        v1 = self.points.add_or_get_point(*vertex1)
+        v2 = self.points.add_or_get_point(*vertex2)
+        v3 = self.points.add_or_get_point(*vertex3)
+        return (v1, v2, v3, normal)
 
     def sort_facet(self, facet):
         v1, v2, v3, norm = facet
@@ -365,8 +389,15 @@ def main():
     stl = StlData()
     stl.read_file(args.infile)
     if args.verbose:
-        print("Read {0} (faces:{1}  edges:{2})"
-              .format(args.infile, len(stl.facets), len(stl.edgehash)))
+        print(
+            "Read {0} ({1:.1f} x {2:.1f} x {3:.1f})"
+            .format(
+                args.infile,
+                (stl.points.maxx-stl.points.minx),
+                (stl.points.maxy-stl.points.miny),
+                (stl.points.maxz-stl.points.minz),
+            )
+        )
 
     stl.sort_facets()
     if args.check_manifold or args.gui_display:
