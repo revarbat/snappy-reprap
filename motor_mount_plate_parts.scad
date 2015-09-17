@@ -85,13 +85,7 @@ module motor_mount_plate()
 
 module motor_mount_plate_parts() { // make me
 	up(motor_length/2+2) {
-		yspread(55) {
-			zring(r=85/2, n=2) {
-				back(-3.5) {
-					yrot(180) motor_mount_plate();
-				}
-			}
-		}
+		yrot(180) motor_mount_plate();
 	}
 }
 
