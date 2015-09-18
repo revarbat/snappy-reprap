@@ -31,7 +31,7 @@ module rail_motor_segment(explode=0, connectby="")
 						difference() {
 							union() {
 								yrot(90)
-									sparse_strut(h=rail_width, l=motor_rail_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
+									sparse_strut(h=rail_width, l=motor_rail_length, thick=rail_thick, maxang=75, strut=10, max_bridge=500);
 								up((motor_top_z-motor_length+6-rail_thick)/2) {
 									cube(size=[motor_mount_spacing+joiner_width, 30+20, motor_top_z-motor_length+6], center=true);
 								}
