@@ -4,7 +4,7 @@ use <joiners.scad>
 use <publicDomainGearV1.1.scad>
 
 
-slop = 0.0;
+slop = printer_slop*1.5;
 
 
 $fa = 2;
