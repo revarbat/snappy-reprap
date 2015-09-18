@@ -139,7 +139,7 @@ module yz_joiner()
 
 
 module yz_joiner_parts() { // make me
-	zrot(180) fwd(platform_length/2) yz_joiner();
+	zrot(-90) fwd(platform_length/2) yz_joiner();
 }
 
 

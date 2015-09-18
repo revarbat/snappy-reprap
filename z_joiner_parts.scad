@@ -30,7 +30,7 @@ module z_joiner()
 
 		up((joiner_length+hardstop_offset)/2) {
 			fwd(platform_thick/2) {
-				cube(size=[platform_width+0.05, platform_thick, joiner_length-hardstop_offset], center=true);
+				cube(size=[platform_width-0.05, platform_thick, joiner_length-hardstop_offset], center=true);
 			}
 		}
 
@@ -71,7 +71,7 @@ module z_joiner()
 				down(descent-rail_height) {
 					back(platform_thick/2-0.05) {
 						xspread(rail_width-joiner_width) {
-							xrot(-90) trapezoid([joiner_width, groove_height*2+20], [joiner_width, groove_height*2], h=cantilever_length-platform_thick/2);
+							xrot(-90) trapezoid([joiner_width, groove_height*2+cantilever_length*2], [joiner_width, groove_height*2], h=cantilever_length-platform_thick/2);
 						}
 					}
 				}
@@ -105,7 +105,7 @@ module z_joiner()
 
 
 module z_joiner_parts() { // make me
-	xrot(180) down(joiner_length) z_joiner();
+	zrot(-90) xrot(180) down(joiner_length) z_joiner();
 }
 
 

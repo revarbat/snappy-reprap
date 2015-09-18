@@ -93,7 +93,7 @@ module sled_endcap()
 
 
 module sled_endcap_parts() { // make me
-	xrot(180) sled_endcap();
+	zrot(90) xrot(180) sled_endcap();
 }
 
 

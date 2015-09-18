@@ -13,7 +13,7 @@ board_length        = 110.0;  // mm
 board_thick         =  40.0;  // mm
 
 
-l = board_length + rail_height + 5;
+l = 150;
 joiner_length = board_thick + rail_thick;
 
 
@@ -52,19 +52,21 @@ module ramps_mount() {
 
 			// Motherboard standoffs
 			fwd(joiner_length-10/2) {
-				up(l/2+rail_height/2) {
-					xspread(board_width) {
-						cube([5, rail_thick+10, 10], center=true);
+				up((board_length+5)/2+rail_height) {
+					zspread(board_length*0.5) {
+						xspread(board_width+1) {
+							cube([3, rail_thick+5, 10], center=true);
+						}
 					}
-					zspread(board_length) {
-						cube([10, rail_thick+10, 5], center=true);
+					down((board_length+1)/2) {
+						cube([10, rail_thick+5, 3], center=true);
 					}
 				}
 			}
         }
 
 		// Motherboard clip clearance
-		up(l/2+rail_height/2) {
+		up((board_length+5)/2+rail_height) {
 			fwd(joiner_length-10/2-2) {
 				xrot(-90) trapezoid([board_width, board_length], [board_width-0.5, board_length-0.5], h=10);
 			}

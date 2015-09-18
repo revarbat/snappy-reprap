@@ -7,17 +7,17 @@ snappy_version = 1.0;
 wall_styling = 0;
 
 
-platform_length = 100;  // mm.  Must be a multiple of rack_tooth_size.
-platform_width  = 150;  // mm
-platform_height =  40;  // mm
-platform_thick  =   7;  // mm
+platform_length = 100.0;  // mm.  Must be a multiple of rack_tooth_size.
+platform_width  = 150.0;  // mm
+platform_height =  40.0;  // mm
+platform_thick  =   7.0;  // mm
 
-rail_length     = 150;  // mm
-rail_height     =  50;  // mm
-rail_thick      =   7;  // mm
-rail_offset     =  12;  // mm
+rail_length     = 133.3;  // mm
+rail_height     =  50.0;  // mm
+rail_thick      =   7.0;  // mm
+rail_offset     =  12.0;  // mm
 
-motor_rail_length = 100; // mm
+motor_rail_length = 133.3; // mm
 
 groove_angle    =  30;   // degrees
 groove_height   =  12;   // mm
@@ -35,11 +35,6 @@ motor_length        = 39.25; // mm length of NEMA17 motor.
 motor_shaft_size    =  5;    // mm diameter of NEMA17 motor shaft.
 motor_shaft_length  = 20;    // mm length of NEMA17 motor shaft.
 motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
-
-// Currently configured for 3/8" ACME threaded rod.
-lifter_rod_diam     =   9.5;   // mm
-lifter_rod_length   = 300.0;   // mm
-lifter_rod_pitch    =   3.175; // mm lift per revolution
 
 // Mechanical endstop bare microswitch.
 endstop_hole_spacing =  9.5; // mm
@@ -72,7 +67,7 @@ cable_chain_pivot  =  6;  // mm
 cable_chain_bump   =  1;  // mm
 cable_chain_wall   =  3;  // mm
 
-spool_holder_length = 150.0;  // mm
+spool_holder_length = 140.0;  // mm
 
 jhead_vent_span     =  20.0;  // mm
 jhead_barrel_diam   =  16.0;  // mm
@@ -82,7 +77,7 @@ jhead_groove_diam   =  12.0;  // mm
 jhead_cap_height    =   8.2;  // mm
 jhead_cap_diam      =  12.0;  // mm
 
-extruder_length      = 130.0;  // mm
+extruder_length      = 133.3;  // mm
 extruder_thick       =   5.0;  // mm
 extruder_shaft_len   =  25.0;  // mm
 extruder_drive_diam  =  12.5;  // mm

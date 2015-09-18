@@ -85,7 +85,7 @@ module motor_mount_plate()
 
 module motor_mount_plate_parts() { // make me
 	up(motor_length/2+2) {
-		yrot(180) motor_mount_plate();
+		zrot(90) yrot(180) motor_mount_plate();
 	}
 }
 
