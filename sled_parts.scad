@@ -94,7 +94,7 @@ module sled()
 				// sliders
 				xspread(rail_spacing+joiner_width) {
 					yspread(slider_spacing, n=slider_count) {
-						slider(l=slider_len, base=rail_offset, slop=printer_slop+0.1);
+						slider(l=slider_len, base=rail_offset, slop=2*printer_slop);
 					}
 				}
 			}

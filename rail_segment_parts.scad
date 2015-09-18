@@ -7,7 +7,6 @@ use <joiners.scad>
 // connectby valid options: "", "fwd", "back"
 module rail_segment(explode=0, connectby="")
 {
-	fillet = 1.0;
 	side_joiner_len = 2;
 
 	up(
@@ -45,7 +44,7 @@ module rail_segment(explode=0, connectby="")
 					// Rails.
 					xspread(rail_spacing+joiner_width) {
 						up(rail_height+groove_height/2-0.05) {
-							rail(l=rail_length, w=joiner_width, h=groove_height, fillet=fillet);
+							rail(l=rail_length, w=joiner_width, h=groove_height);
 						}
 					}
 

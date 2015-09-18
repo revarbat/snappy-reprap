@@ -10,7 +10,6 @@ module rail_motor_segment(explode=0, connectby="")
 {
 	joiner_length = 8;
 	side_joiner_len = 10;
-	fillet = 1.0;
 	motor_width = nema_motor_width(17);
 
 	up(
@@ -66,7 +65,7 @@ module rail_motor_segment(explode=0, connectby="")
 					// Rails.
 					xspread(rail_spacing+joiner_width) {
 						up(rail_height+groove_height/2-0.05) {
-							rail(l=motor_rail_length, w=joiner_width, h=groove_height, fillet=fillet);
+							rail(l=motor_rail_length, w=joiner_width, h=groove_height);
 						}
 					}
 

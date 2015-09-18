@@ -64,7 +64,7 @@ module slider(l=30, w=joiner_width, h=groove_height, base=10, wall=5, ang=groove
 
 
 
-module rail(l=30, w=joiner_width, h=groove_height, fillet=1.5, ang=groove_angle)
+module rail(l=30, w=joiner_width, h=groove_height, fillet=1.0, ang=groove_angle)
 {
 	difference() {
 		// Rail backing.
@@ -89,41 +89,56 @@ module rail(l=30, w=joiner_width, h=groove_height, fillet=1.5, ang=groove_angle)
 				}
 
 				// fillets
+				endfacets = 3;
 				facelen = h/2/cos(ang);
 				inset = h/2*tan(ang);
 				yflip_copy() {
 					fwd(l/2) {
-						// top end fillets
-						up(h/2) {
-							difference() {
-								cube([w*2, fillet*2, fillet*2], center=true);
-								back(fillet) down(fillet) {
-									yrot(90) cylinder(r=fillet, h=w*3, center=true, $fn=12);
+						scale([1, 2, 1]) {
+							up(h/2) {
+								// top end fillets
+								difference() {
+									cube([w*2, fillet*2, fillet*2], center=true);
+									back(fillet) down(fillet) {
+										yrot(90) cylinder(r=fillet, h=w*3, center=true, $fn=endfacets*4);
+									}
 								}
-							}
-						}
 
-						// groove fillets
-						left(inset) {
-							difference() {
-								zflip_copy() {
-									left(fillet/cos(ang)) {
-										yrot(-ang) {
-											right(fillet) {
-												down(facelen*1.5/2) {
-													cube([fillet*2, fillet*2, facelen*1.5], center=true);
-												}
+								// top corner end fillets
+								down(fillet/sin(ang)) {
+									yrot(45+ang/2) {
+										difference() {
+											cube([w*2, fillet*2, fillet*2], center=true);
+											back(fillet) down(fillet) {
+												yrot(90) cylinder(r=fillet, h=w*3, center=true, $fn=endfacets*4);
 											}
 										}
 									}
 								}
-								zflip_copy() {
-									left(fillet/cos(ang)) {
-										yrot(-ang) {
-											right(fillet) {
-												down(facelen) {
-													back(fillet) left(fillet) {
-														cylinder(r=fillet, h=facelen*3, center=true, $fn=12);
+							}
+
+							// groove fillets
+							left(inset) {
+								difference() {
+									zflip_copy() {
+										left(fillet/cos(ang)) {
+											yrot(-ang) {
+												right(fillet) {
+													down(facelen*1.5/2) {
+														cube([fillet*2, fillet*2, facelen*1.5], center=true);
+													}
+												}
+											}
+										}
+									}
+									zflip_copy() {
+										left(fillet/cos(ang)) {
+											yrot(-ang) {
+												right(fillet) {
+													down(facelen) {
+														back(fillet) left(fillet) {
+															cylinder(r=fillet, h=facelen*3, center=true, $fn=endfacets*4);
+														}
 													}
 												}
 											}
@@ -138,7 +153,7 @@ module rail(l=30, w=joiner_width, h=groove_height, fillet=1.5, ang=groove_angle)
 		}
 	}
 }
-rail(l=30, fillet=1.5);
+rail(l=30);
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
