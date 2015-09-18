@@ -16,9 +16,9 @@ module cable_chain_link()
 
 
 module cable_chain_link_parts() { // make me
-	xspread(cable_chain_length+3, n=5) {
-		yspread(cable_chain_width+3, n=5) {
-			zrot(90) cable_chain_link();
+	xspread(cable_chain_width+2, n=4) {
+		yspread(cable_chain_length+2, n=4) {
+			cable_chain_link();
 		}
 	}
 }
