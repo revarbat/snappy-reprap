@@ -1123,9 +1123,25 @@ module slot(
 	r  = (r  != undef)? r  : (d/2);
 	r1 = (r1 != undef)? r1 : ((d1 != undef)? (d1/2) : r);
 	r2 = (r2 != undef)? r2 : ((d2 != undef)? (d2/2) : r);
-	hull() {
-		translate(p1) cylinder(h=h, r1=r1, r2=r2, center=true);
-		translate(p2) cylinder(h=h, r1=r1, r2=r2, center=true);
+	delta = p2 - p1;
+	echo(delta);
+	theta = atan2(delta[1], delta[0]);
+	echo(theta);
+	xydist = sqrt(pow(delta[0],2) + pow(delta[1],2));
+	phi = atan2(delta[2], xydist);
+	echo(phi);
+	dist = sqrt(pow(delta[2],2) + xydist*xydist);
+	echo(dist);
+	$fn = quantup(segs(max(r1,r2)),4);
+	echo($fn);
+	translate(p1) {
+		zrot(theta) {
+			yrot(phi) {
+				cylinder(h=h, r1=r1, r2=r2, center=true);
+				right(dist/2) trapezoid([dist, r1*2], [dist, r2*2], h=h, center=true);
+				right(dist) cylinder(h=h, r1=r1, r2=r2, center=true);
+			}
+		}
 	}
 }
 
@@ -1600,6 +1616,17 @@ module lmXuu_housing(size=8,tab=7,gap=5,wall=3,tabwall=5,screwsize=3)
 //////////////////////////////////////////////////////////////////////
 // Helper functions.
 //////////////////////////////////////////////////////////////////////
+
+
+// Quantize a value x to an integer multiple of y, rounding to the nearest multiple.
+function quant(x,y) = floor(x/y+0.5)*y;
+
+
+// Quantize a value x to an integer multiple of y, rounding down to the previous multiple.
+function quantdn(x,y) = floor(x/y)*y;
+
+// Quantize a value x to an integer multiple of y, rounding up to the next multiple.
+function quantup(x,y) = ceil(x/y)*y;
 
 
 // Calculate OpenSCAD standard number of segments in a circle based on $fn, $fa, and $fs.

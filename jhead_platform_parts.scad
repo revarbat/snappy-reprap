@@ -24,11 +24,10 @@ module jhead_hotend()
 			up(4*4/2-jhead_length/2+0.5*25.4) {
 				zring(n=4, r=jhead_barrel_diam/2) {
 					zspread(4, n=4) {
-						hull() {
-							yspread(6) {
-								yrot(90) cylinder(h=4*2, d=3, center=true, $fn=12);
-							}
+						yspread(6) {
+							yrot(90) cylinder(h=4*2, d=3, center=true, $fn=12);
 						}
+						cube([4*2, 6, 3], center=true);
 					}
 				}
 			}
@@ -231,11 +230,7 @@ module jhead_platform()
 				up(motor_width/2) {
 					left(0.5) {
 						right(extruder_drive_diam/2) {
-							hull() {
-								grid_of(za=[0, 20]) {
-									xrot(90) cylinder(h=extruder_shaft_len+1, d=extruder_drive_diam+1, center=true);
-								}
-							}
+							xrot(90) cylinder(h=extruder_shaft_len+1, d=extruder_drive_diam+1, center=true);
 							fwd(extruder_shaft_len/2) {
 								xrot(90) nema17_mount_holes(depth=2*2+0.05, l=0);
 								fwd(motor_length/2) {
@@ -245,10 +240,9 @@ module jhead_platform()
 						}
 						left(extruder_idler_diam/2) {
 							back(1) {
-								hull() {
-									grid_of(xa=[0,-5,-10]) {
-										xrot(90) cylinder(h=extruder_shaft_len-2+0.05, d=extruder_idler_diam+2, center=true);
-									}
+								xrot(90) cylinder(h=extruder_shaft_len-2+0.05, d=extruder_idler_diam+2, center=true);
+								left((extruder_idler_diam+2)/2) {
+									cube([extruder_idler_diam+2, extruder_shaft_len-2+0.05, extruder_idler_diam+2], center=true);
 								}
 							}
 						}
@@ -276,20 +270,23 @@ module jhead_platform()
 			}
 
 			// Jhead groove slot
-			hull() {
-				grid_of(ya=[0,extruder_length/4]) {
-					up(jhead_groove_thick/2) {
+			up(jhead_groove_thick/2) {
+				back(extruder_length/4/2) {
+					yspread(extruder_length/4) {
 						cylinder(h=jhead_groove_thick+0.1, d=jhead_groove_diam+printer_slop, center=true);
 					}
+					cube([jhead_groove_diam+printer_slop, extruder_length/4, jhead_groove_thick+0.1], center=true);
 				}
 			}
 
 			// Jhead shelf slot
 			up(jhead_groove_thick) {
-				hull() {
-					grid_of(ya=[0,extruder_length/4]) {
-						up((jhead_shelf_thick+jhead_cap_height+2*printer_slop)/2)
+				up((jhead_shelf_thick+jhead_cap_height+2*printer_slop)/2) {
+					back(extruder_length/4/2) {
+						yspread(extruder_length/4) {
 							cylinder(h=jhead_shelf_thick+jhead_cap_height+2*printer_slop+0.1, d=jhead_barrel_diam+printer_slop, center=true);
+						}
+						cube([jhead_barrel_diam+printer_slop, extruder_length/4, jhead_shelf_thick+jhead_cap_height+2*printer_slop+0.1], center=true);
 					}
 				}
 			}
@@ -302,11 +299,10 @@ module jhead_platform()
 
 				// Wire access slot
 				back(extruder_length/4-extruder_fan_size/2+8/2) {
-					hull() {
-						xspread(w*0.5) {
-							cylinder(h=jhead_shelf_thick+jhead_groove_thick+1, d=8, center=true);
-						}
+					xspread(w*0.5) {
+						cylinder(h=jhead_shelf_thick+jhead_groove_thick+1, d=8, center=true);
 					}
+					cube([w*0.5, 8, jhead_shelf_thick+jhead_groove_thick+1], center=true);
 				}
 			}
 
