@@ -67,9 +67,9 @@ module rail_segment(explode=0, connectby="")
 				}
 
 
-				// Side half joiners
+				// Clear space for Side half joiners
 				up(rail_height/2/2) {
-					back(rail_length/2-10) {
+					yspread(rail_length-20) {
 						zring(r=rail_spacing/2+joiner_width+side_joiner_len-0.05, n=2) {
 							zrot(-90) {
 								chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
@@ -95,7 +95,7 @@ module rail_segment(explode=0, connectby="")
 
 			// Side half joiners
 			up(rail_height/2/2) {
-				back(rail_length/2-10) {
+				yspread(rail_length-20) {
 					zring(r=rail_spacing/2+joiner_width+side_joiner_len, n=2) {
 						zrot(-90) {
 							chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
