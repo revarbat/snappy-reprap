@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-joiner_length=10;
+joiner_length=15;
 hardstop_offset=8;
 
 
