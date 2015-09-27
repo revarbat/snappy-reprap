@@ -47,15 +47,13 @@ module xy_joiner()
 
 		// Top half-joiners.
 		back(hoff) {
-			difference() {
-				up(rail_height/2/2) {
+			up(rail_height/2/2) {
+				difference() {
 					xspread(side_mount_spacing) {
 						chamfer(chamfer=3, size=[joiner_width, 2*(hoff+joiner_length), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
 							half_joiner(h=rail_height/2, w=joiner_width, l=hoff+joiner_length, a=joiner_angle, slop=printer_slop);
 						}
 					}
-				}
-				up(rail_height/2/2) {
 					fwd((hoff+joiner_width)/2) {
 						cube([side_mount_spacing+2*joiner_width, hoff*3/4, 10], center=true);
 					}
@@ -84,7 +82,7 @@ module xy_joiner()
 			mirror_copy([1, 0, 0]) {
 				translate([motor_mount_spacing/2+joiner_width/2+2, 0, 0]) {
 					translate([10/2, 0, -(platform_thick+rail_offset+groove_height/2+3)/2]) {
-						xrot(90) rrect(r=10/3, size=[10, platform_thick+rail_offset+groove_height/2+3, joiner_length], center=true);
+						xrot(90) chamfcube(chamfer=2, size=[10, platform_thick+rail_offset+groove_height/2+3, joiner_length], chamfaxes=[1,0,1], center=true);
 					}
 				}
 			}

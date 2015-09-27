@@ -14,20 +14,22 @@ use <extruder_fan_shroud_parts.scad>
 use <extruder_idler_parts.scad>
 use <extruder_motor_clip_parts.scad>
 use <jhead_platform_parts.scad>
+use <lifter_lock_nut_parts.scad>
+use <lifter_rod_coupler_parts.scad>
 use <motor_mount_plate_parts.scad>
 use <platform_support_parts.scad>
 use <rail_endcap_parts.scad>
-use <rail_motor_segment_parts.scad>
+use <rail_xy_motor_segment_parts.scad>
+use <rail_z_motor_segment_parts.scad>
 use <rail_segment_parts.scad>
 use <ramps_mount_parts.scad>
 use <sled_endcap_parts.scad>
-use <sled_parts.scad>
 use <spool_holder_parts.scad>
 use <support_leg_parts.scad>
 use <xy_joiner_parts.scad>
+use <xy_sled_parts.scad>
 use <yz_joiner_parts.scad>
-use <z_joiner_parts.scad>
-
+use <z_sled_parts.scad>
 
 
 module arrow(size=10, headpart=0.4) {
@@ -46,7 +48,7 @@ module arrow(size=10, headpart=0.4) {
 module x_sled_end_assembly(explode=0, arrows=false)
 {
 	up(groove_height/2+rail_offset) {
-		zrot(90) yrot(180) sled();
+		zrot(90) yrot(180) xy_sled();
 		right(platform_length/2+explode*2) {
 			zrot(90) xy_joiner();
 		}
@@ -65,7 +67,7 @@ module x_sled_end_assembly(explode=0, arrows=false)
 module x_sled_end_assembly2(explode=0, arrows=false)
 {
 	up(groove_height/2+rail_offset) {
-		zrot(90) yrot(180) sled();
+		zrot(90) yrot(180) xy_sled();
 		left(platform_length/2+explode*2) {
 			zrot(-90) xy_joiner();
 		}
@@ -128,7 +130,7 @@ module y_sled_endcap_assembly(explode=0, arrows=false)
 module y_sled_end_assembly(explode=0, arrows=false)
 {
 	up(groove_height/2+rail_offset) {
-		yrot(180) sled();
+		yrot(180) xy_sled();
 		fwd(platform_length/2+explode) {
 			y_sled_endcap_assembly();
 		}
@@ -147,7 +149,7 @@ module y_sled_end_assembly(explode=0, arrows=false)
 module y_sled_end_assembly2(explode=0, arrows=false)
 {
 	up(groove_height/2+rail_offset) {
-		yrot(180) sled();
+		yrot(180) xy_sled();
 		back(platform_length/2+explode) {
 			zrot(180) y_sled_endcap_assembly();
 		}
@@ -185,70 +187,7 @@ module y_sled_assembly(explode=0, arrows=false)
 //!y_sled_assembly(explode=100, arrows=true);
 
 
-module z_sled_top_end_assembly(explode=0, arrows=false)
-{
-	right(groove_height/2+rail_offset) {
-		zrot(-90) xrot(90) sled();
-		up(platform_length/2+2*explode) {
-			zrot(-90) z_joiner() {
-				children();
-			}
-		}
-	}
-
-	// Construction arrows.
-	if(arrows && explode>20) {
-		up(platform_length/2+explode*0.5) {
-			yrot(-90) arrow(size=explode/3);
-		}
-	}
-}
-//!z_sled_top_end_assembly(explode=100, arrows=true);
-
-
-module z_sled_bottom_end_assembly(explode=0, arrows=false)
-{
-	right(groove_height/2+rail_offset) {
-		zrot(-90) xrot(90) sled();
-		down(platform_length/2+explode) {
-			yrot(90) zrot(90) sled_endcap();
-		}
-	}
-
-	// Construction arrows.
-	if(arrows && explode>20) {
-		down(platform_length/2+explode*0.5) {
-			yrot(90) arrow(size=explode/3);
-		}
-	}
-}
-//!z_sled_bottom_end_assembly(explode=100, arrows=true);
-
-
-module z_sled_assembly(explode=0, arrows=false)
-{
-	up((platform_length/2+explode/2)) {
-		z_sled_top_end_assembly() {
-			children();
-		}
-	}
-	down((platform_length/2+explode/2)) {
-		z_sled_bottom_end_assembly();
-	}
-
-	// Construction arrows.
-	if(arrows && explode>20) {
-		zrot(-90) xring() {
-			down(explode/6) {
-				yrot(90) arrow(size=explode/3);
-			}
-		}
-	}
-}
-//!z_sled_assembly(explode=0, arrows=true);
-
-
-module motor_assembly(explode=0, arrows=false)
+module xy_motor_assembly(explode=0, arrows=false)
 {
 	nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
 	up(gear_base+rack_height/2+2.1+explode) {
@@ -262,7 +201,55 @@ module motor_assembly(explode=0, arrows=false)
 		}
 	}
 }
-//!motor_assembly(explode=100, arrows=true);
+//!xy_motor_assembly(explode=100, arrows=true);
+
+
+module lifter_rod_assembly(explode=0, arrows=false)
+{
+	lifter_rod_coupler();
+	up(30/2+10/2+explode*0.8) {
+		zrot(180) lifter_lock_nut();
+	}
+	up(lifter_rod_length/2+2*explode) {
+		color("Silver") {
+			acme_threaded_rod(
+				d=lifter_rod_diam,
+				l=lifter_rod_length,
+				pitch=lifter_rod_pitch,
+				thread_depth=lifter_rod_pitch/2,
+				$fn=32
+			);
+		}
+	}
+
+	// Construction arrow.
+	if(arrows && explode>=50) {
+		up(30/2+explode*0.33) {
+			yrot(-90) arrow(size=explode/3);
+			up(explode) {
+				yrot(-90) arrow(size=explode/3);
+			}
+		}
+	}
+}
+//!lifter_rod_assembly(explode=100, arrows=true);
+
+
+module z_motor_assembly(slidepos=0, explode=0, arrows=false)
+{
+	nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
+	up(motor_shaft_length-2+2.1+explode) {
+		zrot(180+slidepos*360/lifter_rod_pitch) lifter_rod_assembly();
+	}
+
+	// Construction arrow.
+	if(arrows && explode>10) {
+		up(explode*0.6) {
+			yrot(-90) arrow(size=explode/3);
+		}
+	}
+}
+//!z_motor_assembly(explode=100, arrows=true);
 
 
 module microswitch()
@@ -336,11 +323,11 @@ module motor_mount_assembly(explode=0, arrows=false)
 //!motor_mount_assembly(explode=100, arrows=true);
 
 
-module motor_segment_assembly(explode=0, arrows=false)
+module motor_xy_segment_assembly(explode=0, arrows=false)
 {
 	motor_width = nema_motor_width(17)+printer_slop*2;
 
-	rail_motor_segment();
+	rail_xy_motor_segment();
 
 	// Stepper Motor
 	up(motor_top_z) {
@@ -348,7 +335,7 @@ module motor_segment_assembly(explode=0, arrows=false)
 			motor_mount_assembly();
 		}
 		up(explode*1.1) {
-			motor_assembly();
+			xy_motor_assembly();
 		}
 	}
 
@@ -362,15 +349,51 @@ module motor_segment_assembly(explode=0, arrows=false)
 		}
 	}
 }
-//!motor_segment_assembly(explode=100, arrows=true);
-//!motor_segment_assembly();
+//!motor_xy_segment_assembly(explode=100, arrows=true);
+//!motor_xy_segment_assembly();
+
+
+module motor_z_segment_assembly(slidepos=0, explode=0, arrows=false)
+{
+	motor_width = nema_motor_width(17)+printer_slop*2;
+
+	rail_z_motor_segment();
+
+	// Stepper Motor
+	up(rail_height+groove_height/2) {
+		xrot(-90) {
+			up(explode*6.5) {
+				motor_mount_plate();
+			}
+			up(motor_length/2+explode*1.8) {
+				z_motor_assembly(slidepos=slidepos);
+			}
+		}
+	}
+
+	// Construction arrows.
+	if(arrows && explode>=50) {
+		up(rail_height+groove_height/2) {
+			xrot(-90) {
+				up(explode) {
+					yrot(-90) arrow(size=explode/3);
+				}
+				up(explode*5.8) {
+					yrot(-90) arrow(size=explode/3);
+				}
+			}
+		}
+	}
+}
+//!motor_z_segment_assembly(explode=100, arrows=true);
+//!motor_z_segment_assembly();
 
 
 module x_axis_slider_assembly(slidepos=0, explode=0, arrows=false)
 {
 	platform_vert_off = rail_height+groove_height/2;
 
-	zrot(90) motor_segment_assembly();
+	zrot(90) motor_xy_segment_assembly();
 	zring(r=(motor_rail_length+rail_length+2*explode)/2, n=2) {
 		zrot(90) rail_segment();
 	}
@@ -409,7 +432,7 @@ module y_axis_slider_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=
 {
 	platform_vert_off = rail_height+groove_height/2;
 
-	motor_segment_assembly();
+	motor_xy_segment_assembly();
 	zrot(90) {
 		zring(r=(motor_rail_length+rail_length+2*explode)/2, n=2) {
 			zrot(90) rail_segment();
@@ -458,17 +481,17 @@ module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false)
 				}
 			}
 		}
-		up(rail_height+groove_height+rail_length/2+explode) {
-			yrot(90) zrot(90) rail_segment();
+		up(rail_height+groove_height+motor_rail_length/2+explode) {
+			yrot(90) zrot(90) motor_z_segment_assembly(slidepos=slidepos);
 
-			up(motor_rail_length/2+rail_length/2+explode*1) {
-				yrot(90) zrot(90) motor_segment_assembly(slidepos=slidepos);
-				up(slidepos) {
+			up(motor_rail_length/2+rail_length/2+explode) {
+				yrot(90) zrot(90) rail_segment();
+				up(rail_length/2+slidepos) {
 					right(rail_height+groove_height/2) {
 						if ($children > 0) children(0);
 					}
 				}
-				up(motor_rail_length/2+rail_length/2+explode*1) {
+				up(rail_length/2+rail_length/2+explode*1) {
 					yrot(90) zrot(-90) rail_segment();
 					up(rail_length/2+explode*1.5) {
 						if (hide_endcaps == false) {
@@ -500,7 +523,7 @@ module z_tower_assembly(slidepos=0, hide_endcaps=false, explode=0, arrows=false)
 		}
 	}
 }
-//!z_tower_assembly(slidepos=0, explode=0, arrows=true) z_sled_assembly();
+//!z_tower_assembly(slidepos=0, explode=0, arrows=true) z_sled();
 //!z_tower_assembly(explode=100, arrows=true);
 
 
@@ -620,18 +643,18 @@ module full_assembly(hide_endcaps=false, explode=0, arrows=false)
 	joiner_length=20;
 	xpos = 100*cos(360*$t);
 	ypos = 100*sin(360*$t);
-	zpos = 80*cos(240+360*$t)+10;
+	zpos = (rail_length*2-platform_length)/2*cos(240+360*$t) - platform_length/2;
 
 	x_axis_slider_assembly(slidepos=xpos, explode=explode, arrows=arrows) {
 		z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows) {
-			z_sled_assembly(explode=explode, arrows=arrows) {
+			z_sled(explode=explode, arrows=arrows) {
 				extruder_bridge_assembly(explode=explode, arrows=arrows);
 			}
 			zrot(-90) xrot(-90) rail_endcap();
 			zrot(-90) ramps_mount();
 		}
 		zrot(180) z_tower_assembly(slidepos=zpos, hide_endcaps=hide_endcaps, explode=explode, arrows=arrows) {
-			z_sled_assembly(explode=explode, arrows=arrows);
+			z_sled(explode=explode, arrows=arrows);
 			spool_holder_assembly(explode=explode, arrows=arrows);
 		}
 		x_sled_assembly(explode=explode, arrows=arrows) {

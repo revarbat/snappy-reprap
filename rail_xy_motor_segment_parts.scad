@@ -6,10 +6,10 @@ use <NEMA.scad>
 
 
 // connectby valid options: "", "fwd", "back"
-module rail_motor_segment(explode=0, connectby="")
+module rail_xy_motor_segment(explode=0, connectby="")
 {
 	joiner_length = 8;
-	side_joiner_len = 10;
+	side_joiner_len = 2;
 	motor_width = nema_motor_width(17);
 
 	up(
@@ -53,11 +53,11 @@ module rail_motor_segment(explode=0, connectby="")
 						up(rail_height/2) {
 							right((rail_spacing+joiner_width)/2) {
 								if (wall_style == "crossbeams")
-									sparse_strut(h=rail_height, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5);
+									sparse_strut(h=rail_height, l=motor_rail_length-10, thick=joiner_width, strut=5);
 								if (wall_style == "thinwall")
-									thinning_wall(h=rail_height, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5, bracing=false);
+									thinning_wall(h=rail_height, l=motor_rail_length-10, thick=joiner_width, strut=5, bracing=false);
 								if (wall_style == "corrugated")
-									corrugated_wall(h=rail_height, l=motor_rail_length-2*joiner_length, thick=joiner_width, strut=5);
+									corrugated_wall(h=rail_height, l=motor_rail_length-10, thick=joiner_width, strut=5);
 							}
 						}
 					}
@@ -98,7 +98,7 @@ module rail_motor_segment(explode=0, connectby="")
 
 				// Clear space for joiners.
 				up(rail_height/2) {
-					joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
+					joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length-0.05, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
 				}
 
 				// Side wiring access hole
@@ -109,11 +109,37 @@ module rail_motor_segment(explode=0, connectby="")
 						}
 					}
 				}
+
+				// Clear space for Side half joiners
+				up(rail_height/2/2) {
+					yspread(side_mount_spacing) {
+						zring(r=rail_spacing/2+joiner_width+side_joiner_len-0.05, n=2) {
+							zrot(-90) {
+								chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+									half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle);
+								}
+							}
+						}
+					}
+				}
 			}
 
 			// Snap-tab joiners.
 			up(rail_height/2) {
-				joiner_quad(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length, h=rail_height, w=joiner_width, l=13, a=joiner_angle);
+				joiner_quad(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length, h=rail_height, w=joiner_width, l=6, a=joiner_angle);
+			}
+
+			// Side half joiners
+			up(rail_height/2/2) {
+				yspread(side_mount_spacing) {
+					zring(r=rail_spacing/2+joiner_width+side_joiner_len, n=2) {
+						zrot(-90) {
+							chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+								half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
+							}
+						}
+					}
+				}
 			}
 		}
 		up(motor_top_z-motor_length/2+explode) {
@@ -129,16 +155,16 @@ module rail_motor_segment(explode=0, connectby="")
 		}
 	}
 }
-//!rail_motor_segment();
+//!rail_xy_motor_segment();
 
 
 
-module rail_motor_segment_parts() { // make me
-	zrot(90) rail_motor_segment();
+module rail_xy_motor_segment_parts() { // make me
+	zrot(90) rail_xy_motor_segment();
 }
 
 
-rail_motor_segment_parts();
+rail_xy_motor_segment_parts();
 
 
 

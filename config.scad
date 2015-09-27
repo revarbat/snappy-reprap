@@ -36,6 +36,11 @@ motor_shaft_size    =  5;    // mm diameter of NEMA17 motor shaft.
 motor_shaft_length  = 20;    // mm length of NEMA17 motor shaft.
 motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
 
+// Currently configured for 3/8" ACME threaded rod.
+lifter_rod_diam     =   9.5;   // mm
+lifter_rod_length   = 300.0;   // mm
+lifter_rod_pitch    =   3.175; // mm lift per revolution
+
 // Mechanical endstop bare microswitch.
 endstop_hole_spacing =  9.5; // mm
 endstop_hole_inset   =  8.0; // mm
@@ -121,9 +126,9 @@ printer_slop =   0.25;  // mm
 rail_spacing = platform_width - joiner_width*4 - 10;
 rail_width = rail_spacing + joiner_width*2;
 motor_mount_spacing=43+joiner_width+10;
-side_mount_spacing = platform_length+10*2;
+side_mount_spacing = motor_rail_length-10*2;
 platform_z = rail_height+groove_height+rail_offset;
-cantilever_length = (motor_rail_length+2*platform_length-2*platform_z-extruder_length)/2;
+cantilever_length = (motor_rail_length+2*platform_length-2*rail_height-extruder_length-groove_height)/2;
 motor_top_z = platform_z-platform_thick-rack_base-rack_height-gear_base-2;
 
 wall_styles = ["thinwall", "corrugated", "crossbeams"];

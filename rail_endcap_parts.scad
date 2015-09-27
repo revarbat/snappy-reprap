@@ -47,6 +47,35 @@ module rail_endcap()
 		translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
 			joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 		}
+		
+		// Endstop clip
+		fwd((endstop_depth+2)/2) {
+			left((rail_width-2*joiner_width-endstop_thick-2+0.05)/2) {
+				up(rail_height+groove_height-(endstop_length+2*2)/2) {
+					difference() {
+						cube([endstop_thick+2, endstop_depth+2, endstop_length+2*2], center=true);
+						left(2/2) back(2/2) {
+							cube([endstop_thick+2*printer_slop+0.05, endstop_depth+0.05, endstop_length+2*printer_slop], center=true);
+							cube([endstop_thick+2*printer_slop-2, endstop_depth+10, endstop_length+2*printer_slop-1], center=true);
+						}
+					}
+					down(endstop_length/2+2+endstop_thick*2/2-0.05) {
+						left((endstop_thick+2)/2) {
+							right_half() trapezoid([0.05, 0.05], [2*(endstop_thick+2), endstop_depth+2], h=endstop_thick*2, center=true);
+						}
+					}
+					zspread(endstop_hole_spacing) {
+						right(endstop_thick/2-1.5/2+0.05) {
+							back(endstop_depth/2+2/2-endstop_hole_inset) {
+								scale([0.5, 1, 1]) {
+									sphere(d=endstop_screw_size, center=true, $fn=8);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 //!rail_endcap();

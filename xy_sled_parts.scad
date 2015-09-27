@@ -36,7 +36,7 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 
 
 
-module sled()
+module xy_sled()
 {
 	slider_len = 20;
 	slider_count = 2;
@@ -132,16 +132,16 @@ module sled()
 		}
 	}
 }
-//!sled();
+//!xy_sled();
 
 
 
-module sled_parts() { // make me
-	zrot(-90) sled();
+module xy_sled_parts() { // make me
+	zrot(-90) xy_sled();
 }
 
 
-sled_parts();
+xy_sled_parts();
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
