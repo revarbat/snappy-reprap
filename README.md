@@ -1,6 +1,6 @@
 ![Snappy Full Rendering](https://github.com/revarbat/snappy-reprap/wiki/snappy_small.png)
 
-# Snappy-Reprap v1.0
+# Snappy-Reprap v1.1
 A parametric design for a cheap self-replicating 3D printer (reprap) that snaps together to minimize screws and non-printed parts.
 
 Important Links:
@@ -13,7 +13,7 @@ Bill of Materials | https://github.com/revarbat/snappy-reprap/wiki/BOM
 How to Assemble   | https://github.com/revarbat/snappy-reprap/wiki/Assembly
 
 ## Making STL Files
-For all platforms, you will need to have OpenSCAD installed. You can download OpenSCAD from their website at [http://www.openscad.org](http://www.openscad.org)
+For all platforms, you will need to have OpenSCAD and python installed. You can download OpenSCAD from their website at [http://www.openscad.org](http://www.openscad.org)
 
 ### OS X
 Under OS X, you shouldn't need to change the Makefile.  It should set $OPENSCAD as:
