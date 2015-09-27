@@ -95,8 +95,10 @@ module yz_joiner()
 				}
 
 				// Wiring access hole
-				up(rail_thick+rail_height/4/2) {
-					cube([16, joiner_width*3, rail_height/4], center=true);
+				if (wall_style != "crossbeams") {
+					up(rail_thick+rail_height/4/2) {
+						cube([16, joiner_width*3, rail_height/4], center=true);
+					}
 				}
 			}
 
