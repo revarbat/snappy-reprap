@@ -2,17 +2,20 @@
 
 # Snappy-Reprap v1.1
 
-[![Join the chat at https://gitter.im/revarbat/snappy-reprap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/revarbat/snappy-reprap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A parametric design for a cheap self-replicating 3D printer (reprap) that snaps together to minimize screws and non-printed parts.
 
 Important Links:
 
-What              | URL
------------------ | -------------------------------------------------------
-GitHub Repository | https://github.com/revarbat/snappy-reprap
-Project Wiki      | https://github.com/revarbat/snappy-reprap/wiki
-Bill of Materials | https://github.com/revarbat/snappy-reprap/wiki/BOM
-How to Assemble   | https://github.com/revarbat/snappy-reprap/wiki/Assembly
+What                 | URL
+-------------------- | -------------------------------------------------------
+GitHub Repository    | https://github.com/revarbat/snappy-reprap
+Project Wiki         | https://github.com/revarbat/snappy-reprap/wiki
+Bill of Materials    | https://github.com/revarbat/snappy-reprap/wiki/BOM
+How to Assemble      | https://github.com/revarbat/snappy-reprap/wiki/Assembly
+RepRap.org Wiki Page | http://reprap.org/wiki/Snappy
+Dev Forum            | https://groups.google.com/forum/#!forum/snappy-reprap-dev
+
+[![Join the chat at https://gitter.im/revarbat/snappy-reprap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/revarbat/snappy-reprap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Making STL Files
 For all platforms, you will need to have OpenSCAD and python installed. You can download OpenSCAD from their website at [http://www.openscad.org](http://www.openscad.org)
