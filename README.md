@@ -1,6 +1,8 @@
 ![Snappy Full Rendering](https://github.com/revarbat/snappy-reprap/wiki/snappy_small.png)
 
 # Snappy-Reprap v1.1
+
+[![Join the chat at https://gitter.im/revarbat/snappy-reprap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/revarbat/snappy-reprap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A parametric design for a cheap self-replicating 3D printer (reprap) that snaps together to minimize screws and non-printed parts.
 
 Important Links:
