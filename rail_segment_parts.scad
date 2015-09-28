@@ -81,10 +81,12 @@ module rail_segment(explode=0, connectby="")
 				}
 
 				// Side wiring access hole
-				up(10/2+rail_thick) {
-					xspread(rail_width-joiner_width) {
-						yspread(motor_rail_length-2*28) {
-							cube(size=[joiner_width+1, 16, 10], center=true);
+				if (wall_style != "crossbeams") {
+					up(10/2+rail_thick) {
+						xspread(rail_width-joiner_width) {
+							yspread(motor_rail_length-2*28) {
+								cube(size=[joiner_width+1, 16, 10], center=true);
+							}
 						}
 					}
 				}

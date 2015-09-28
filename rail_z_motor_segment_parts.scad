@@ -111,6 +111,17 @@ module rail_z_motor_segment()
 				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=motor_rail_length, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
 			}
 
+			// Side wiring access hole
+			if (wall_style != "crossbeams") {
+				up(10/2+rail_thick) {
+					xspread(rail_width-joiner_width) {
+						back((motor_rail_length-2*28)/2) {
+							cube(size=[joiner_width+1, 16, 10], center=true);
+						}
+					}
+				}
+			}
+
 			// Shrinkage stress relief
 			up(rail_thick/2) {
 				yspread(25, n=5) {
