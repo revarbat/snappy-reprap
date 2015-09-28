@@ -74,16 +74,16 @@ module z_sled(explode=0, arrows=false)
 
 				// Split Lifter block
 				up((offcenter+2*lifter_rod_diam+4)/2) {
-					up(5) cube(size=[lifter_rod_diam/2.5, lifter_block_size+1, offcenter+lifter_rod_diam+0.05], center=true);
+					up(5) cube(size=[lifter_rod_diam*0.65, lifter_block_size+1, offcenter+lifter_rod_diam+0.05], center=true);
 				}
 
 				// Lifter threading
 				up(offcenter+groove_height/2) {
-					yspread(printer_slop) {
+					yspread(printer_slop*1.5) {
 						xrot(90) zrot(90) {
 							acme_threaded_rod(
 								d=lifter_rod_diam+2*printer_slop,
-								l=lifter_block_size+0.5+2*lifter_rod_pitch,
+								l=lifter_block_size+2*lifter_rod_pitch+0.5,
 								pitch=lifter_rod_pitch,
 								thread_depth=lifter_rod_pitch/3,
 								$fn=32

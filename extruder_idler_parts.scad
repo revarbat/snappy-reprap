@@ -96,7 +96,7 @@ module extruder_latch()
 	difference() {
 		union() {
 			// Top bar
-			up(topside+topthick/2) {
+			up(topside+topthick/2-1) {
 				fwd(backside-10/2) {
 					cube([width, 10, topthick], center=true);
 					down(topthick/2+1/2-0.05) {
