@@ -6,6 +6,7 @@ import sys
 
 class GenAssemblyIndex(object):
     indexfile = "docs/assembly/index.html"
+    markdownfile = "wiki/Assembly.md"
     sourcefile = "full_assembly.scad"
     modules = []
     modinfo = {}
@@ -100,6 +101,33 @@ UL {
             f.write('</body>\n')
             f.write('</html>\n')
 
+    def write_markdown(self):
+        with open(self.markdownfile, "w") as f:
+            f.write("# Snappy RepRap Assembly Instructions\n\n")
+
+            for mod_eng in self.modules:
+                f.write('##%s\n\n' % mod_eng)
+
+                stepcnt = len(self.modinfo[mod_eng])
+                for stepinfo in self.modinfo[mod_eng]:
+                    stepinfo['base'] = \
+                        'https://raw.githubusercontent.com/' \
+                        'revarbat/snappy-reprap/master/docs/assembly/'
+
+                    if stepcnt > 1:
+                        f.write('### Step {step}\n\n'.format(**stepinfo))
+
+                    f.write(
+                        '{desc}\n\n'
+                        'Before | After\n'
+                        '------ | -----\n'
+                        '![{module} Step {step} Before]'
+                        '({base}{module}_before.png) | '
+                        '![{module} Step {step} After]'
+                        '({base}{module}_after.png)\n\n'
+                        .format(**stepinfo)
+                    )
+
     def process_module(self, module, desc):
         print("module: %s" % module)
         step = 1
@@ -151,6 +179,7 @@ UL {
             if module:
                 self.process_module(module, desc)
         self.write_index()
+        self.write_markdown()
 
 
 def main():
