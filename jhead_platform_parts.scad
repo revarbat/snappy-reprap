@@ -8,113 +8,6 @@ $fa = 2;
 $fs = 2;
 
 
-jhead_length = 40; // mm
-jhead_block_size = [18.7, 16, 9.6];
-jhead_block_off = 7; //mm
-
-
-module jhead_hotend()
-{
-	block_h = jhead_block_size[2];
-	down(jhead_length/2-jhead_groove_thick-jhead_shelf_thick) {
-		color([0.3, 0.3, 0.3])
-		difference() {
-			cylinder(h=jhead_length, d=jhead_barrel_diam, center=true);
-			cylinder(h=jhead_length+1, d=2, center=true, $fn=12);
-			up(4*4/2-jhead_length/2+0.5*25.4) {
-				zring(n=4, r=jhead_barrel_diam/2) {
-					zspread(4, n=4) {
-						yspread(6) {
-							yrot(90) cylinder(h=4*2, d=3, center=true, $fn=12);
-						}
-						cube([4*2, 6, 3], center=true);
-					}
-				}
-			}
-			up(jhead_length/2-jhead_shelf_thick-jhead_groove_thick/2) {
-				difference() {
-					cylinder(h=jhead_groove_thick, d=jhead_barrel_diam+1, center=true);
-					cylinder(h=jhead_groove_thick+1, d=jhead_groove_diam, center=true);
-				}
-			}
-		}
-		color("silver")
-		down((jhead_length+block_h)/2) {
-			difference() {
-				left(jhead_block_off/2) {
-					cube(jhead_block_size, center=true);
-				}
-				left(jhead_block_off) {
-					xrot(90) cylinder(h=100, d=6, center=true);
-				}
-				cylinder(h=100, d=2, center=true, $fn=12);
-			}
-			difference() {
-				down((block_h+3)/2) {
-					cylinder(h=3, r=4, center=true);
-					down((3+1.2)/2) {
-						cylinder(h=1.2, r1=1, r2=4, center=true);
-					}
-				}
-				cylinder(h=50, d=0.4, center=true, $fn=8);
-			}
-		}
-	}
-	color("silver")
-	up(jhead_groove_thick+jhead_shelf_thick) {
-		difference() {
-			cylinder(h=jhead_cap_height, d=jhead_cap_diam, $fn=6);
-			down(0.5) cylinder(h=jhead_cap_height+1, d=2, $fn=12);
-		}
-	}
-}
-
-
-module extruder_drive_gear()
-{
-	color("silver") {
-		difference() {
-			cylinder(h=12, d=extruder_drive_diam);
-			up(12-3.5) {
-				torus(ir=extruder_drive_diam/2-1, or=extruder_drive_diam/2+4, $fn=24);
-			}
-			down(1) cylinder(h=15, d=motor_shaft_size, $fn=12);
-		}
-	}
-}
-
-
-module extruder_fan()
-{
-	up(extruder_fan_thick/2)
-	color([0.4, 0.4, 0.4]) {
-		difference() {
-			chamfcube(size=[extruder_fan_size, extruder_fan_size, extruder_fan_thick], chamfer=3, chamfaxes=[0,0,1], center=true);
-			cylinder(h=extruder_fan_thick+1, d=extruder_fan_size-2, center=true);
-			xspread(extruder_fan_size-3-3) {
-				yspread(extruder_fan_size-3-3) {
-					cylinder(h=extruder_fan_thick+1, d=3, center=true, $fn=12);
-				}
-			}
-		}
-		up((2-0.1)/2) {
-			linear_extrude(height=extruder_fan_thick-2, twist=30, slices=4, center=true, convexity=10) {
-				circle(r=extruder_fan_size/4, center=true);
-				zring(r=(extruder_fan_size-3)/4, n=8) {
-					square([(extruder_fan_size-3)/2, 1], center=true);
-				}
-			}
-		}
-		cylinder(h=extruder_fan_thick, d=extruder_fan_size/2-3, center=true);
-		down(extruder_fan_thick/2-1/2) {
-			cube([extruder_fan_size, 3, 1], center=true);
-			cube([3, extruder_fan_size, 1], center=true);
-		}
-	}
-}
-//!extruder_fan();
-
-
 module jhead_platform()
 {
 	platform_vert_off = rail_height+groove_height+rail_offset;
@@ -128,6 +21,7 @@ module jhead_platform()
 
 	color("SteelBlue")
 	prerender(convexity=10)
+	zrot(-90)
 	union() {
 		difference() {
 			union() {

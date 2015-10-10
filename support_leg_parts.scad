@@ -18,7 +18,7 @@ module support_leg(h=rail_height, l=75)
 				}
 
 				// Legs.
-				grid_of(xa=[-platform_length/4, platform_length/4]) {
+				xspread(platform_length/2) {
 					translate([0, l/2, 0.75*h/2]) {
 						thinning_triangle(h=0.75*h, l=l, thick=platform_thick);
 					}

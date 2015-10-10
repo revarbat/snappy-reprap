@@ -10,7 +10,7 @@ module yz_joiner()
 	endstop_delta = platform_length - base_height;
 	motor_mount_spacing=43+joiner_width+10;
 
-	color("Turquoise")
+	color([0.5, 0.7, 1.0])
 	prerender(convexity=10)
 	difference() {
 		union() {

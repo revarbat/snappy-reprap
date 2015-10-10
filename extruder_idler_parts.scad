@@ -91,7 +91,7 @@ module extruder_idler()
 
 module extruder_latch()
 {
-	color("Brown")
+	color([0.6, 0.4, 0.0])
 	prerender(convexity=10)
 	difference() {
 		union() {
