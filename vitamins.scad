@@ -86,12 +86,14 @@ module extruder_drive_gear()
 {
 	color("silver") {
 		difference() {
-			cylinder(h=12, d=extruder_drive_diam);
+			cylinder(h=12, d=extruder_drive_diam, $fn=24);
 			up(12-3.5) {
-				torus(ir=extruder_drive_diam/2-1, or=extruder_drive_diam/2+4, $fn=24);
+				zring(r=(extruder_drive_diam+3)/2, n=40) {
+					scale([1, 0.4, 1]) sphere(d=5, $fn=24);
+				}
 			}
-			down(1) cylinder(h=15, d=motor_shaft_size, $fn=12);
-			up(3.5) yrot(90) cylinder(h=extruder_drive_diam/2+1, d=3, $fn=12);
+			down(1) cylinder(h=15, d=motor_shaft_size, $fn=18);
+			up(3.5) yrot(90) cylinder(h=extruder_drive_diam/2+1, d=3, $fn=18);
 		}
 	}
 }
