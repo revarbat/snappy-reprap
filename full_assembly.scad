@@ -19,10 +19,11 @@ use <lifter_lock_nut_parts.scad>
 use <lifter_rod_coupler_parts.scad>
 use <motor_mount_plate_parts.scad>
 use <platform_support_parts.scad>
-use <rail_endcap_parts.scad>
-use <rail_xy_motor_segment_parts.scad>
-use <rail_z_motor_segment_parts.scad>
 use <rail_segment_parts.scad>
+use <rail_xy_motor_segment_parts.scad>
+use <rail_y_endcap_parts.scad>
+use <rail_z_endcap_parts.scad>
+use <rail_z_motor_segment_parts.scad>
 use <ramps_mount_parts.scad>
 use <sled_endcap_parts.scad>
 use <spool_holder_parts.scad>
@@ -267,7 +268,7 @@ module y_axis_assembly_7(slidepos=0, explode=0, arrows=false)
 
 	zrot(90) zring(r=(motor_rail_length+2*rail_length+3*explode)/2) {
 		if (hide_endcaps == false) {
-			zrot(90) rail_endcap();
+			zrot(90) rail_y_endcap();
 		}
 	}
 	y_axis_assembly_6(slidepos=slidepos) {
@@ -1042,28 +1043,28 @@ module final_assembly_2(explode=0, arrows=false)
 		}
 	}
 }
-!final_assembly_2(explode=100, arrows=true);
+//!final_assembly_2(explode=100, arrows=true);
 
 
 module final_assembly_3(explode=0, arrows=false)
 {
-	// view: [0, 0, 240] [55, 0, 25] 3000
-	// desc: Attach the Z tower endcap.
-	xpos = 100*cos(360*$t);
-	ypos = 100*sin(360*$t);
-	zpos = (rail_length*2-platform_length)/3*cos(240+360*$t);
+	// view: [0, 0, 240] [60, 0, 125] 400
+	// desc: Attach a limit microswitch, with wiring, to the Z rail endcap.
+	rail_z_endcap();
+	up(rail_height+groove_height-endstop_length/2-2) {
+		left(rail_width/2-joiner_width-endstop_thick/2) {
+			back(explode-endstop_depth/2) {
+				zrot(180) xrot(90) microswitch();
+			}
+		}
+	}
 
-	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
-		extruder_bridge_assembly_13();
-		up(explode*2) {
-			yrot(90) zrot(-90) rail_endcap();
-
-			// Construction arrows.
-			if(arrows && explode>50) {
-				down(explode*1.0) {
-					right(rail_height/2+groove_height/2) {
-						yrot(-90) arrow(size=explode/2);
-					}
+	// Construction arrows.
+	if(arrows && explode>50) {
+		up(rail_height+groove_height-endstop_length/2-2) {
+			left(rail_width/2-joiner_width-endstop_thick/2) {
+				back(explode/2-endstop_depth/2) {
+					zrot(90) arrow(size=explode/4);
 				}
 			}
 		}
@@ -1075,18 +1076,15 @@ module final_assembly_3(explode=0, arrows=false)
 module final_assembly_4(explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [55, 0, 25] 3000
-	// desc: Attach the spool holder to the top of the other Z tower.
+	// desc: Attach the Z tower endcap.
 	xpos = 100*cos(360*$t);
 	ypos = 100*sin(360*$t);
 	zpos = (rail_length*2-platform_length)/3*cos(240+360*$t);
 
 	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
 		extruder_bridge_assembly_13();
-		yrot(90) zrot(-90) rail_endcap();
-		nil();
-
 		up(explode*2) {
-			right(rail_height/2) spool_holder();
+			yrot(90) zrot(-90) final_assembly_3();
 
 			// Construction arrows.
 			if(arrows && explode>50) {
@@ -1105,6 +1103,36 @@ module final_assembly_4(explode=0, arrows=false)
 module final_assembly_5(explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [55, 0, 25] 3000
+	// desc: Attach the spool holder to the top of the other Z tower.
+	xpos = 100*cos(360*$t);
+	ypos = 100*sin(360*$t);
+	zpos = (rail_length*2-platform_length)/3*cos(240+360*$t);
+
+	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
+		extruder_bridge_assembly_13();
+		yrot(90) zrot(-90) final_assembly_3();
+		nil();
+
+		up(explode*2) {
+			right(rail_height/2) spool_holder();
+
+			// Construction arrows.
+			if(arrows && explode>50) {
+				down(explode*1.0) {
+					right(rail_height/2+groove_height/2) {
+						yrot(-90) arrow(size=explode/2);
+					}
+				}
+			}
+		}
+	}
+}
+//!final_assembly_5(explode=100, arrows=true);
+
+
+module final_assembly_6(explode=0, arrows=false)
+{
+	// view: [0, 0, 240] [55, 0, 25] 3000
 	// desc: Attach the RAMPS motherboard mount to the end of the printer base.
 	xpos = 100*cos(360*$t);
 	ypos = 100*sin(360*$t);
@@ -1112,7 +1140,7 @@ module final_assembly_5(explode=0, arrows=false)
 
 	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
 		extruder_bridge_assembly_13();
-		yrot(90) zrot(-90) rail_endcap();
+		yrot(90) zrot(-90) final_assembly_3();
 		fwd(explode*2) {
 			ramps_mount();
 
@@ -1130,10 +1158,10 @@ module final_assembly_5(explode=0, arrows=false)
 	}
 	//cable_chain_xy_joiner_mount();
 }
-//!final_assembly_5(explode=100, arrows=true);
+//!final_assembly_6(explode=100, arrows=true);
 
 
-module final_assembly_6(explode=0, arrows=false)
+module final_assembly_7(explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [80, 0, 20] 2500
 	// desc: Clip the glass build platform to the build platform supports using four binder clips.
@@ -1143,7 +1171,7 @@ module final_assembly_6(explode=0, arrows=false)
 
 	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
 		extruder_bridge_assembly_13();
-		yrot(90) zrot(-90) rail_endcap();
+		yrot(90) zrot(-90) final_assembly_3();
 		ramps_mount();
 
 		right(rail_height/2) spool_holder();
@@ -1163,10 +1191,10 @@ module final_assembly_6(explode=0, arrows=false)
 	}
 	//cable_chain_xy_joiner_mount();
 }
-//!final_assembly_6(explode=100, arrows=true);
+//!final_assembly_7(explode=100, arrows=true);
 
 
-module final_assembly_7(explode=0, arrows=false)
+module final_assembly_8(explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [80, 0, 20] 2500
 	// desc: Cradle the spool axle in the spool holder top.
@@ -1176,7 +1204,7 @@ module final_assembly_7(explode=0, arrows=false)
 
 	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
 		extruder_bridge_assembly_13();
-		yrot(90) zrot(-90) rail_endcap();
+		yrot(90) zrot(-90) final_assembly_3();
 		ramps_mount();
 
 		right(rail_height/2) {
@@ -1193,7 +1221,7 @@ module final_assembly_7(explode=0, arrows=false)
 	}
 	//cable_chain_xy_joiner_mount();
 }
-//!final_assembly_7(explode=100, arrows=true);
+//!final_assembly_8(explode=100, arrows=true);
 
 
 module full_rendering()
@@ -1204,7 +1232,7 @@ module full_rendering()
 
 	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
 		extruder_bridge_assembly_13();
-		yrot(90) zrot(-90) rail_endcap();
+		yrot(90) zrot(-90) final_assembly_3();
 		ramps_mount();
 
 		right(rail_height/2) {

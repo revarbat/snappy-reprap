@@ -3,7 +3,7 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-module rail_endcap()
+module rail_z_endcap()
 {
 	joiner_length=40;
 	base_height = rail_height+groove_height;
@@ -78,16 +78,16 @@ module rail_endcap()
 		}
 	}
 }
-//!rail_endcap();
+//!rail_z_endcap();
 
 
 
-module rail_endcap_parts() { // make me
-	zrot(-90) rail_endcap();
+module rail_z_endcap_parts() { // make me
+	zrot(-90) rail_z_endcap();
 }
 
 
-rail_endcap_parts();
+rail_z_endcap_parts();
 
 
 

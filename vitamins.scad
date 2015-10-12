@@ -137,12 +137,17 @@ module microswitch()
 {
 	color([0.3, 0.3, 0.3]) {
 		difference() {
+			// Body
 			cube([endstop_thick, endstop_length, endstop_depth], center=true);
+
+			// Bevel
 			xrot(-5) {
 				up(endstop_depth) {
 					cube([endstop_thick+1, endstop_length, endstop_depth], center=true);
 				}
 			}
+
+			// Screwholes
 			down(endstop_hole_inset/2-endstop_click_voff/2) {
 				yspread(endstop_hole_spacing) {
 					yrot(90) cylinder(h=endstop_thick+1, d=endstop_screw_size, center=true, $fn=12);
@@ -151,9 +156,12 @@ module microswitch()
 		}
 	}
 	up(endstop_depth/2) {
+		// Switch bump
 		color([0.3, 0.3, 0.3]) {
 			yrot(90) cylinder(h=endstop_thick*0.75, d=1, center=true, $fn=12);
 		}
+
+		// Lever arm
 		color("silver") {
 			fwd(endstop_length*0.9/2) xrot(5) back(endstop_length*0.9/2) {
 				cube([endstop_thick, endstop_length*0.9, 0.1], center=true);
@@ -168,9 +176,13 @@ module microswitch()
 					}
 				}
 			}
+		}
+
+		// Terminals
+		color("silver") {
 			grid_of(ya=[-endstop_length/2+2, -endstop_length/8, endstop_length/2-2]) {
-				down(endstop_depth+5/2) {
-					cube([endstop_thick*0.5, 0.2, 5], center=true);
+				down(endstop_depth+7/2) {
+					cube([0.2, endstop_thick*0.5, 7], center=true);
 				}
 			}
 		}
