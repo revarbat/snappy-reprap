@@ -85,7 +85,7 @@ module motor_mount_assembly(explode=0, arrows=false)
 module xy_motor_segment_assembly(explode=0, arrows=false)
 {
 	// view: [0, 0, 135] [72, 0, 23] 900
-	// desc: Seat the stepper motor with drive gear in the X/Y motor rail segment. Clamp it into place with a motor mount plate with micro-switch. Repeat this to make a second XY motor segment assembly.
+	// desc: Seat the stepper motor with drive gear in the X/Y motor rail segment. Clamp it into place with a motor mount plate with micro-switch. Repeat this to make a second XY motor segment assembly. On one, route the wiring out a side wiring access hole opposite the limit switch, and on the other, route it out one end.
 	motor_width = nema_motor_width(17)+printer_slop*2;
 
 	rail_xy_motor_segment();
@@ -117,7 +117,7 @@ module xy_motor_segment_assembly(explode=0, arrows=false)
 module y_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [45, 0, 240] 1800
-	// desc: Join a rail segment to each end of another motor rail assembly. Route wiring out the side wiring access hole on the motor rail segment.
+	// desc: Join a rail segment to each end of another motor rail assembly.
 	platform_vert_off = rail_height+groove_height/2;
 
 	xy_motor_segment_assembly();
