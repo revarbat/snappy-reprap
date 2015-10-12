@@ -393,7 +393,7 @@ module x_axis_assembly_4(slidepos=0, explode=0, arrows=false)
 module x_axis_assembly_5(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 {
 	// view: [150, 0, 110] [50, 0, 330] 2500
-	// desc: Connect the Y axis assembly to the XY joiner on the X axis partial assembly.
+	// desc: Connect the Y axis assembly to the XY joiner on the X axis partial assembly. Route the Y axis wiring through the front hole in the XY joiner.
 	x_axis_assembly_4(slidepos=xslidepos) {
 		if ($children>0) children(0); else nil();
 		if ($children>1) children(1); else nil();
@@ -408,7 +408,7 @@ module x_axis_assembly_5(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 			// Construction arrows.
 			if(arrows && explode>75) {
 				left(explode*1.25) {
-					arrow(size=explode/3);
+					arrow(size=2*explode/3);
 				}
 			}
 		}
@@ -445,7 +445,7 @@ module x_axis_assembly_6(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 module z_tower_assembly_1(slidepos=0, explode=0, arrows=false)
 {
 	// view: [72, 125, -25] [345, 20, 0] 1200
-	// desc: Seat the stepper motor in the Z motor rail segment. Clamp it into place with a motor mount plate without micro-switch. Repeat this to make a second Z motor segment assembly.
+	// desc: Seat the stepper motor in the Z motor rail segment. Clamp it into place with a motor mount plate without micro-switch.
 	motor_width = nema_motor_width(17)+printer_slop*2;
 
 	rail_z_motor_segment();
@@ -541,7 +541,7 @@ module z_tower_assembly_3(explode=0, arrows=false)
 module z_tower_assembly_4(slidepos=0, explode=0, arrows=false)
 {
 	// view: [80, 195, 40] [0, 0, 0] 1500
-	// desc: Press-fit the lifter rod assembly to the mounted motor shaft. Make sure the flatted side of the shaft is aligned with the flat of the shaft hole. Repeat this with the other Z motor segment assembly.
+	// desc: Press-fit the lifter rod assembly to the mounted motor shaft. Make sure the flatted side of the shaft is aligned with the flat of the shaft hole.
 	z_tower_assembly_1(slidepos=slidepos) {
 		up(explode*1.2) {
 			z_tower_assembly_3();
@@ -562,7 +562,7 @@ module z_tower_assembly_4(slidepos=0, explode=0, arrows=false)
 module z_tower_assembly_5(slidepos=0, explode=0, arrows=false)
 {
 	// view: [15, 80, 300] [60, 0, 60] 1900
-	// desc: Attach two rail segments to the top of the motor Z lifter assembly. Repeat this with the other motor Z lifter assembly.
+	// desc: Attach two rail segments to the top of the motor Z lifter assembly.
 	up(motor_rail_length/2) {
 		yrot(90) zrot(90) z_tower_assembly_4(slidepos=slidepos) {
 			if ($children > 0) zrot(-90) children(0);
@@ -630,7 +630,7 @@ module z_tower_assembly_6(explode=0, arrows=false)
 module z_tower_assembly_7(slidepos=0, explode=0, arrows=false)
 {
 	// view: [20, 50, 270] [70, 0, 30] 1700
-	// desc: Attach the Z rail assembly to the top of the YZ joiner assembly.
+	// desc: Attach the Z rail assembly to the top of the YZ joiner assembly. Repeat steps 1 through 7 to make a second Z tower.
 	left(platform_length) {
 		z_tower_assembly_6() {
 			if ($children > 2) children(2);
