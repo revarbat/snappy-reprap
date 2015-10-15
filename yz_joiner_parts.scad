@@ -60,6 +60,15 @@ module yz_joiner()
 							}
 						}
 					}
+
+					// Wiring access hole frame
+					if (wall_style == "corrugated") {
+						up(rail_thick+rail_height/4/2) {
+							back(rail_thick/2) {
+								cube([16+4, rail_thick, rail_height/4+4], center=true);
+							}
+						}
+					}
 				}
 
 				// Shrinkage stress relief

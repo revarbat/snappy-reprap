@@ -80,6 +80,17 @@ module rail_xy_motor_segment(explode=0, connectby="")
 					up(motor_top_z-motor_length/2) {
 						xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=motor_top_z-motor_length/2, a=joiner_angle);
 					}
+
+					// Side wiring access hole frame
+					if (wall_style == "corrugated") {
+						up(10/2+rail_thick) {
+							xspread(rail_width-joiner_width) {
+								yspread(motor_rail_length-2*28) {
+									cube(size=[joiner_width, 16+4, 10+4], center=true);
+								}
+							}
+						}
+					}
 				}
 
 				// Wiring access holes.
