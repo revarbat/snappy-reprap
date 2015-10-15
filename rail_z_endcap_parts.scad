@@ -3,9 +3,9 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-module rail_endcap()
+module rail_z_endcap()
 {
-	joiner_length=30;
+	joiner_length=40;
 	base_height = rail_height+groove_height;
 
 	color("YellowGreen")
@@ -47,7 +47,7 @@ module rail_endcap()
 		translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
 			joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
 		}
-		
+
 		// Endstop clip
 		fwd((endstop_depth+2)/2) {
 			left((rail_width-2*joiner_width-endstop_thick-2+0.05)/2) {
@@ -78,16 +78,16 @@ module rail_endcap()
 		}
 	}
 }
-//!rail_endcap();
+//!rail_z_endcap();
 
 
 
-module rail_endcap_parts() { // make me
-	zrot(-90) rail_endcap();
+module rail_z_endcap_parts() { // make me
+	zrot(-90) rail_z_endcap();
 }
 
 
-rail_endcap_parts();
+rail_z_endcap_parts();
 
 
 

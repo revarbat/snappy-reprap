@@ -104,6 +104,17 @@ module rail_z_motor_segment()
 						}
 					}
 				}
+
+				// Side wiring access hole frame
+				if (wall_style == "corrugated") {
+					up(10/2+rail_thick) {
+						xspread(rail_width-joiner_width) {
+							back((motor_rail_length-2*28)/2) {
+								cube(size=[joiner_width, 16+4, 10+4], center=true);
+							}
+						}
+					}
+				}
 			}
 
 			// Clear space for joiners.

@@ -10,7 +10,7 @@ module yz_joiner()
 	endstop_delta = platform_length - base_height;
 	motor_mount_spacing=43+joiner_width+10;
 
-	color("Turquoise")
+	color([0.5, 0.7, 1.0])
 	prerender(convexity=10)
 	difference() {
 		union() {
@@ -57,6 +57,15 @@ module yz_joiner()
 							translate([0, rail_height, rail_height-0.05]) {
 								translate([0, (platform_length-rail_height)/2, groove_height/2])
 									cube(size=[joiner_width, platform_length-rail_height, groove_height], center=true);
+							}
+						}
+					}
+
+					// Wiring access hole frame
+					if (wall_style == "corrugated") {
+						up(rail_thick+rail_height/4/2) {
+							back(rail_thick/2) {
+								cube([16+4, rail_thick, rail_height/4+4], center=true);
 							}
 						}
 					}
