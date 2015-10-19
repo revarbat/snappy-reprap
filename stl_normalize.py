@@ -12,20 +12,26 @@ import subprocess
 
 
 guiscad_template = """\
-use <{modulename}.scad>
-lines = [
-{linedata}
-];
-for (line = lines) {{
-  delta = line[1]-line[0];
-  dist = norm(delta);
-  theta = atan2(delta[1],delta[0]);
-  phi = atan2(delta[2],norm([delta[0],delta[1]]));
-  translate(line[0])
-    rotate([0, 90-phi, theta])
-      color("Red") cylinder(d=0.5, h=dist);
+module showlines(clr, lines) {{
+    for (line = lines) {{
+        delta = line[1]-line[0];
+        dist = norm(delta);
+        theta = atan2(delta[1],delta[0]);
+        phi = atan2(delta[2],norm([delta[0],delta[1]]));
+        translate(line[0]) {{
+            rotate([0, 90-phi, theta]) {{
+                color(clr) cylinder(d=0.5, h=dist);
+            }}
+        }}
+    }}
 }}
-color([1.0, 1.0, 0.0, 0.2]) {modulename}();
+showlines([1.0, 0.0, 1.0], [
+{dupsdata}
+]);
+showlines([1.0, 0.0, 0.0], [
+{holedata}
+]);
+color([0.0, 1.0, 0.0, 0.2]) import("{filename}", convexity=100);
 
 """
 
@@ -341,7 +347,8 @@ class StlData(object):
 
     def check_manifold(self, verbose=False, gui=False):
         is_manifold = True
-        linedata = ""
+        dupsdata = ""
+        holedata = ""
         for edge, count in self.edgehash.iteritems():
             if count != 2:
                 is_manifold = False
@@ -352,9 +359,14 @@ class StlData(object):
                 print("NON-MANIFOLD EDGE! [{0}] {3}: {1} - {2}".format(
                       count, v1, v2, self.filename))
                 if gui:
-                    if linedata:
-                        linedata += ",\n"
-                    linedata += "  [{0}, {1}]".format(v1, v2)
+                    if count == 1:
+                        if holedata:
+                            holedata += ",\n"
+                        holedata += "  [{0}, {1}]".format(v1, v2)
+                    else:
+                        if dupsdata:
+                            dupsdata += ",\n"
+                        dupsdata += "  [{0}, {1}]".format(v1, v2)
         if is_manifold:
             if gui or verbose:
                 print("%s is manifold." % self.filename)
@@ -367,8 +379,10 @@ class StlData(object):
                 tmpfile = "mani-%s.scad" % (modulename)
                 with open(tmpfile, 'w') as f:
                     f.write(guiscad_template.format(
-                        linedata=linedata,
+                        holedata=holedata,
+                        dupsdata=dupsdata,
                         modulename=modulename,
+                        filename=self.filename,
                     ))
                 subprocess.call(['open', tmpfile])
                 time.sleep(5)
@@ -417,12 +431,12 @@ def main():
             )
         )
 
-    stl.sort_facets()
     if args.check_manifold or args.gui_display:
         if not stl.check_manifold(verbose=args.verbose, gui=args.gui_display):
             sys.exit(-1)
 
     if args.out_file:
+        stl.sort_facets()
         if args.use_binary:
             stl.write_binary_file(args.out_file)
             if args.verbose:
