@@ -324,6 +324,21 @@ class StlData(object):
                 f.write("  endfacet\n")
             f.write("endsolid Model\n")
 
+    def write_binary_file(self, filename):
+        with open(filename, 'wb') as f:
+            f.write('%-80s' % 'Binary STL Model')
+            f.write(struct.pack('<I', len(self.facets)))
+            for facet in self.facets:
+                v1, v2, v3, norm = facet
+                v1 = self.points.point_coords(v1)
+                v2 = self.points.point_coords(v2)
+                v3 = self.points.point_coords(v3)
+                f.write(struct.pack('<3f', *norm))
+                f.write(struct.pack('<3f', *v1))
+                f.write(struct.pack('<3f', *v2))
+                f.write(struct.pack('<3f', *v3))
+                f.write(struct.pack('<H', 0))
+
     def check_manifold(self, verbose=False, gui=False):
         is_manifold = True
         linedata = ""
@@ -381,6 +396,9 @@ def main():
     parser.add_argument('-g', '--gui-display',
                         help='Show non-manifold edges in GUI.',
                         action="store_true")
+    parser.add_argument('-b', '--use-binary',
+                        help='Use binary STL format for output.',
+                        action="store_true")
     parser.add_argument('-o', '--out-file',
                         help='Write normalized STL to file.')
     parser.add_argument('infile', help='Input STL filename.')
@@ -405,9 +423,14 @@ def main():
             sys.exit(-1)
 
     if args.out_file:
-        stl.write_ascii_file(args.out_file)
-        if args.verbose:
-            print("Wrote {0}".format(args.outfile))
+        if args.use_binary:
+            stl.write_binary_file(args.out_file)
+            if args.verbose:
+                print("Wrote {0} (binary)".format(args.out_file))
+        else:
+            stl.write_ascii_file(args.out_file)
+            if args.verbose:
+                print("Wrote {0} (ASCII)".format(args.out_file))
 
     sys.exit(0)
 
