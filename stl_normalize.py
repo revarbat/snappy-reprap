@@ -7,6 +7,7 @@ import math
 import time
 import struct
 import argparse
+import platform
 import itertools
 import subprocess
 
@@ -25,11 +26,21 @@ module showlines(clr, lines) {{
         }}
     }}
 }}
+module showfaces(clr, faces) {{
+    color(clr) {{
+        for (face = faces) {{
+            polyhedron(points=face, faces=[[0, 1, 2], [0, 2, 1]], convexity=2);
+        }}
+    }}
+}}
 showlines([1.0, 0.0, 1.0], [
-{dupsdata}
+{dupe_edges}
 ]);
 showlines([1.0, 0.0, 0.0], [
-{holedata}
+{hole_edges}
+]);
+showfaces([1.0, 0.0, 1.0], [
+{dupe_faces}
 ]);
 color([0.0, 1.0, 0.0, 0.2]) import("{filename}", convexity=100);
 
@@ -163,14 +174,23 @@ class PointCloud(object):
         )
 
 
+class StlEndOfFileException(Exception):
+    pass
+
+
+class StlMalformedLineException(Exception):
+    pass
+
+
 class StlData(object):
     def __init__(self):
         self.points = PointCloud()
         self.facets = []
         self.edgehash = {}
+        self.facehash = {}
         self.filename = ""
 
-    def add_edge(self, vertex1, vertex2):
+    def _mark_edge(self, vertex1, vertex2):
         edge = [vertex1, vertex2]
         edge.sort()
         edge = tuple(edge)
@@ -179,75 +199,65 @@ class StlData(object):
         self.edgehash[edge] += 1
         return self.edgehash[edge]
 
-    def read_ascii_vertex(self, f):
+    def _mark_face(self, vertex1, vertex2, vertex3):
+        self._mark_edge(vertex1, vertex2)
+        self._mark_edge(vertex2, vertex3)
+        self._mark_edge(vertex3, vertex1)
+        face = [vertex1, vertex2, vertex3]
+        face.sort()
+        face = tuple(face)
+        if face not in self.facehash:
+            self.facehash[face] = 0
+        self.facehash[face] += 1
+        return self.facehash[face]
+
+    def _read_ascii_line(self, f, watchwords=None):
         line = f.readline(1024)
         if line == "":
-            return None
+            raise StlEndOfFileException()
         words = line.strip(' \t\n\r').lower().split()
-        if words[0] != 'vertex':
-            return None
-        point = (
-            float(words[1]),
-            float(words[2]),
-            float(words[3]),
-        )
+        if words[0] == 'endsolid':
+            raise StlEndOfFileException()
+        argstart = 0
+        if watchwords:
+            watchwords = watchwords.lower().split()
+            argstart = len(watchwords)
+            for i in xrange(argstart):
+                if words[i] != watchwords[i]:
+                    raise StlMalformedLineException()
+        return [float(val) for val in words[argstart:]]
+
+    def _read_ascii_vertex(self, f):
+        point = self._read_ascii_line(f, watchwords='vertex')
         return self.points.add_or_get_point(*point)
 
-    def read_ascii_facet(self, f):
+    def _read_ascii_facet(self, f):
         while True:
-            line = f.readline(1024)
-            if line == "":
-                return None  # End of file.
+            try:
+                normal = self._read_ascii_line(f, watchwords='facet normal')
+                self._read_ascii_line(f, watchwords='outer loop')
+                vertex1 = self._read_ascii_vertex(f)
+                vertex2 = self._read_ascii_vertex(f)
+                vertex3 = self._read_ascii_vertex(f)
+                self._read_ascii_line(f, watchwords='endloop')
+                self._read_ascii_line(f, watchwords='endfacet')
+                if vertex1 == vertex2:
+                    continue  # zero area facet.  Skip to next facet.
+                if vertex2 == vertex3:
+                    continue  # zero area facet.  Skip to next facet.
+                if vertex3 == vertex1:
+                    continue  # zero area facet.  Skip to next facet.
 
-            words = line.strip(' \t\n\r').lower().split()
-            if words[0] == 'endsolid':
-                return None  # No more facets to read
-            if words[0] != 'facet' or words[1] != 'normal':
-                continue  # Haven't found start of facet yet
+            except StlEndOfFileException:
+                return None
 
-            normal = (
-                float(words[2]),
-                float(words[3]),
-                float(words[4]),
-            )
-
-            line = f.readline(1024)
-            if line == "":
-                return None  # End of file.
-            if line.strip(' \t\n\r').lower() != "outer loop":
-                continue  # File is corrupt.  Skip to next facet.
-
-            vertex1 = self.read_ascii_vertex(f)
-            if vertex1 is None:
-                continue  # File is corrupt.  Skip to next facet.
-
-            vertex2 = self.read_ascii_vertex(f)
-            if vertex2 is None:
-                continue  # File is corrupt.  Skip to next facet.
-
-            vertex3 = self.read_ascii_vertex(f)
-            if vertex3 is None:
-                continue  # File is corrupt.  Skip to next facet.
-
-            if vertex1 == vertex2 or vertex2 == vertex3 or vertex3 == vertex1:
-                continue  # zero area facet.
-
-            line = f.readline(1024)
-            if line == "":
-                return None  # End of file.
-            if line.strip(' \t\n\r').lower() != "endloop":
-                continue  # File is corrupt.  Skip to next facet.
-
-            line = f.readline(1024)
-            if line == "":
-                return None  # End of file.
-            if line.strip(' \t\n\r').lower() != "endfacet":
-                continue  # File is corrupt.  Skip to next facet.
+            except StlMalformedLineException:
+                continue  # Skip to next facet.
 
             return (vertex1, vertex2, vertex3, normal)
 
-    def read_binary_facet(self, f):
-        data = struct.unpack('<3f 3f 3f 3f H', f.read(4*4*3))
+    def _read_binary_facet(self, f):
+        data = struct.unpack('<3f 3f 3f 3f H', f.read(4*4*3+2))
         normal = data[0:3]
         vertex1 = data[3:6]
         vertex2 = data[6:9]
@@ -270,7 +280,7 @@ class StlData(object):
                 p1, p3, p2 = (p1, p2, p3)
         else:
             # If no normal was specified, we should calculate it, relative
-            # to the counter-clockwise vetices (as seen from outside).
+            # to the counter-clockwise vertices (as seen from outside).
             norm = cross(vsub(p3, p1), vsub(p2, p1))
             if dist(norm) > 1e-6:
                 norm = normalize(norm)
@@ -289,31 +299,33 @@ class StlData(object):
                 return  # End of file.
             if line[0:6].lower() == "solid ":
                 while True:
-                    facet = self.read_ascii_facet(f)
+                    facet = self._read_ascii_facet(f)
                     if facet is None:
                         break
                     facet = self.sort_facet(facet)
                     vertex1, vertex2, vertex3, normal = facet
                     self.facets.append(facet)
-                    self.add_edge(vertex1, vertex2)
-                    self.add_edge(vertex2, vertex3)
-                    self.add_edge(vertex3, vertex1)
+                    self._mark_face(vertex1, vertex2, vertex3)
             else:
                 chunk = f.read(4)
                 facets = struct.unpack('<I', chunk)[0]
                 while facets > 0:
                     facets -= 1
-                    facet = self.read_binary_facet(f)
+                    facet = self._read_binary_facet(f)
                     if facet is None:
                         break
                     facet = self.sort_facet(facet)
                     vertex1, vertex2, vertex3, normal = facet
                     self.facets.append(facet)
-                    self.add_edge(vertex1, vertex2)
-                    self.add_edge(vertex2, vertex3)
-                    self.add_edge(vertex3, vertex1)
+                    self._mark_face(vertex1, vertex2, vertex3)
 
-    def write_ascii_file(self, filename):
+    def write_file(self, filename, binary=False):
+        if binary:
+            self._write_binary_file(filename)
+        else:
+            self._write_ascii_file(filename)
+
+    def _write_ascii_file(self, filename):
         with open(filename, 'wb') as f:
             f.write("solid Model\n")
             for facet in self.facets:
@@ -330,7 +342,7 @@ class StlData(object):
                 f.write("  endfacet\n")
             f.write("endsolid Model\n")
 
-    def write_binary_file(self, filename):
+    def _write_binary_file(self, filename):
         with open(filename, 'wb') as f:
             f.write('%-80s' % 'Binary STL Model')
             f.write(struct.pack('<I', len(self.facets)))
@@ -345,48 +357,94 @@ class StlData(object):
                 f.write(struct.pack('<3f', *v3))
                 f.write(struct.pack('<H', 0))
 
+    def _gui_display_manifold(self, hole_edges, dupe_edges, dupe_faces):
+        global guiscad_template
+        modulename = os.path.basename(self.filename)
+        if modulename.endswith('.stl'):
+            modulename = modulename[:-4]
+        tmpfile = "mani-{0}.scad".format(modulename)
+        with open(tmpfile, 'w') as f:
+            f.write(guiscad_template.format(
+                hole_edges=hole_edges,
+                dupe_edges=dupe_edges,
+                dupe_faces=dupe_faces,
+                modulename=modulename,
+                filename=self.filename,
+            ))
+        if platform.system() == 'Darwin':
+            subprocess.call(['open', tmpfile])
+            time.sleep(5)
+        else:
+            subprocess.call(['openscad', tmpfile])
+            time.sleep(5)
+        os.remove(tmpfile)
+
+    def _check_manifold_duplicate_faces(self):
+        found = []
+        for face, count in self.facehash.iteritems():
+            if count != 1:
+                v1 = vertex_fmt2(self.points.point_coords(face[0]))
+                v2 = vertex_fmt2(self.points.point_coords(face[1]))
+                v3 = vertex_fmt2(self.points.point_coords(face[2]))
+                found.append((v1, v2, v3))
+        return found
+
+    def _check_manifold_hole_edges(self):
+        found = []
+        for edge, count in self.edgehash.iteritems():
+            if count == 1:
+                v1 = vertex_fmt2(self.points.point_coords(edge[0]))
+                v2 = vertex_fmt2(self.points.point_coords(edge[1]))
+                found.append((v1, v2))
+        return found
+
+    def _check_manifold_excess_edges(self):
+        found = []
+        for edge, count in self.edgehash.iteritems():
+            if count > 2:
+                v1 = vertex_fmt2(self.points.point_coords(edge[0]))
+                v2 = vertex_fmt2(self.points.point_coords(edge[1]))
+                found.append((v1, v2))
+        return found
+
     def check_manifold(self, verbose=False, gui=False):
         is_manifold = True
-        dupsdata = ""
-        holedata = ""
-        for edge, count in self.edgehash.iteritems():
-            if count != 2:
-                is_manifold = False
-                v1 = self.points.point_coords(edge[0])
-                v2 = self.points.point_coords(edge[1])
-                v1 = vertex_fmt2(v1)
-                v2 = vertex_fmt2(v2)
-                print("NON-MANIFOLD EDGE! [{0}] {3}: {1} - {2}".format(
-                      count, v1, v2, self.filename))
-                if gui:
-                    if count == 1:
-                        if holedata:
-                            holedata += ",\n"
-                        holedata += "  [{0}, {1}]".format(v1, v2)
-                    else:
-                        if dupsdata:
-                            dupsdata += ",\n"
-                        dupsdata += "  [{0}, {1}]".format(v1, v2)
+
+        faces = self._check_manifold_duplicate_faces()
+        for v1, v2, v3 in faces:
+            is_manifold = False
+            print("NON-MANIFOLD DUPLICATE FACE! {3}: {0} - {1} - {2}"
+                  .format(v1, v2, v3, self.filename))
+        if gui:
+            dupe_faces = ",\n".join(
+                ["  [{0}, {1}, {2}]".format(*coords) for coords in faces]
+            )
+
+        edges = self._check_manifold_hole_edges()
+        for v1, v2 in edges:
+            is_manifold = False
+            print("NON-MANIFOLD HOLE EDGE! {2}: {0} - {1}"
+                  .format(v1, v2, self.filename))
+        if gui:
+            hole_edges = ",\n".join(
+                ["  [{0}, {1}]".format(*coords) for coords in edges]
+            )
+
+        edges = self._check_manifold_excess_edges()
+        for v1, v2 in edges:
+            is_manifold = False
+            print("NON-MANIFOLD DUPLICATE EDGE! {2}: {0} - {1}"
+                  .format(v1, v2, self.filename))
+        if gui:
+            dupe_edges = ",\n".join(
+                ["  [{0}, {1}]".format(*coords) for coords in edges]
+            )
+
         if is_manifold:
             if gui or verbose:
                 print("%s is manifold." % self.filename)
-        else:
-            if gui:
-                global guiscad_template
-                modulename = os.path.basename(self.filename)
-                if modulename.endswith('.stl'):
-                    modulename = modulename[:-4]
-                tmpfile = "mani-%s.scad" % (modulename)
-                with open(tmpfile, 'w') as f:
-                    f.write(guiscad_template.format(
-                        holedata=holedata,
-                        dupsdata=dupsdata,
-                        modulename=modulename,
-                        filename=self.filename,
-                    ))
-                subprocess.call(['open', tmpfile])
-                time.sleep(5)
-                os.remove(tmpfile)
+        elif gui:
+                self._gui_display_manifold(hole_edges, dupe_edges, dupe_faces)
         return is_manifold
 
     def sort_facets(self):
@@ -410,10 +468,10 @@ def main():
     parser.add_argument('-g', '--gui-display',
                         help='Show non-manifold edges in GUI.',
                         action="store_true")
-    parser.add_argument('-b', '--use-binary',
+    parser.add_argument('-b', '--write-binary',
                         help='Use binary STL format for output.',
                         action="store_true")
-    parser.add_argument('-o', '--out-file',
+    parser.add_argument('-o', '--outfile',
                         help='Write normalized STL to file.')
     parser.add_argument('infile', help='Input STL filename.')
     args = parser.parse_args()
@@ -421,30 +479,25 @@ def main():
     stl = StlData()
     stl.read_file(args.infile)
     if args.verbose:
-        print(
-            "Read {0} ({1:.1f} x {2:.1f} x {3:.1f})"
-            .format(
-                args.infile,
-                (stl.points.maxx-stl.points.minx),
-                (stl.points.maxy-stl.points.miny),
-                (stl.points.maxz-stl.points.minz),
-            )
-        )
+        print("Read {0} ({1:.1f} x {2:.1f} x {3:.1f})".format(
+            args.infile,
+            (stl.points.maxx-stl.points.minx),
+            (stl.points.maxy-stl.points.miny),
+            (stl.points.maxz-stl.points.minz),
+        ))
 
     if args.check_manifold or args.gui_display:
         if not stl.check_manifold(verbose=args.verbose, gui=args.gui_display):
             sys.exit(-1)
 
-    if args.out_file:
+    if args.outfile:
         stl.sort_facets()
-        if args.use_binary:
-            stl.write_binary_file(args.out_file)
-            if args.verbose:
-                print("Wrote {0} (binary)".format(args.out_file))
-        else:
-            stl.write_ascii_file(args.out_file)
-            if args.verbose:
-                print("Wrote {0} (ASCII)".format(args.out_file))
+        stl.write_file(args.outfile, binary=args.write_binary)
+        if args.verbose:
+            print("Wrote {0} ({1})".format(
+                args.outfile,
+                ("binary" if args.write_binary else "ASCII"),
+            ))
 
     sys.exit(0)
 
