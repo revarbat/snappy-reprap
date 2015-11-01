@@ -67,6 +67,11 @@ module drive_gear() {
 				}
 			}
 
+			// chamfer bottom of shaft hole.
+			down(rack_height/2+10) {
+				cylinder(h=4, d1=shaft+3, d2=shaft-1, center=true);
+			}
+
 			right(motor_shaft_size/2+1.5) {
 				down(rack_height/2+gear_base/2) {
 					yrot(90) {
