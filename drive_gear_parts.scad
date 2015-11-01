@@ -7,13 +7,16 @@ $fa = 2;
 $fs = 2;
 
 module drive_gear() {
+	pi = 3.1415926535;
 	shaft = motor_shaft_size + printer_slop;
-	rack_module = rack_tooth_size / 3.1415926535;
+	rack_module = rack_tooth_size / pi;
 	gear_pcd = gear_teeth * rack_module;
 	addendum = rack_module;
 	dedendum = (2.4*rack_module) - addendum;
 	gear_id = gear_pcd - 2*dedendum;
 	gear_od = gear_pcd + 2*addendum;
+	CA = 30;
+	twist = 360*0.5*rack_height*tan(CA) / (gear_pcd * pi);
 
 	color("Salmon")
 	prerender(convexity=10)
@@ -27,9 +30,10 @@ module drive_gear() {
 						number_of_teeth = gear_teeth,
 						thickness       = rack_height/2,
 						hole_diameter   = shaft,
-						twist           = 15,
+						twist           = twist,
 						teeth_to_hide   = 0,
-						pressure_angle  = 20
+						pressure_angle  = 20,
+						backlash        = gear_backlash
 					);
 				}
 			}
@@ -61,6 +65,11 @@ module drive_gear() {
 					right(1.4*shaft)
 						cube(size=[shaft*2, shaft*2, (rack_height+gear_base)*3], center=true);
 				}
+			}
+
+			// chamfer bottom of shaft hole.
+			down(rack_height/2+10) {
+				cylinder(h=4, d1=shaft+3, d2=shaft-1, center=true);
 			}
 
 			right(motor_shaft_size/2+1.5) {

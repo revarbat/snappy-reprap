@@ -22,7 +22,7 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 								thickness=h/2+0.005,
 								height=w,
 								pressure_angle=20,
-								backlash=0
+								backlash=gear_backlash
 							);
 						}
 					}
@@ -32,7 +32,7 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 		}
 	}
 }
-//!herringbone_rack(l=100, h=10, tooth_size=5, CA=30);
+//!herringbone_rack(l=100, h=10, tooth_size=5);
 
 
 
@@ -68,10 +68,10 @@ module xy_sled()
 				// Drive rack
 				rack_module = rack_tooth_size / 3.1415926535;
 				rack_pcd = gear_teeth * rack_module;
-				left(rack_pcd/2+printer_slop) {
+				left(rack_pcd/2) {
 					up(platform_thick+rack_base+rack_height/2) {
 						difference() {
-							zrot(-90) herringbone_rack(l=platform_length, h=rack_height+0.1, w=10, tooth_size=rack_tooth_size, CA=30);
+							zrot(-90) herringbone_rack(l=platform_length, h=rack_height+0.1, w=10, tooth_size=rack_tooth_size);
 							up(rack_height/2) {
 								left(rack_tooth_size/2) {
 									yrot(15) up(2) {
