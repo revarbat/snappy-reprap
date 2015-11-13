@@ -17,7 +17,7 @@ l = 150;
 joiner_length = board_thick + rail_thick;
 
 
-module ramps_mount() {
+module rambo_mount() {
     color("LightBlue")
     prerender(convexity=20)
     difference() {
@@ -85,19 +85,19 @@ module ramps_mount() {
         }
     }
 }
-//!ramps_mount();
+//!rambo_mount();
 
 
-module ramps_mount_parts() { // make me
+module rambo_mount_parts() { // make me
 	up(joiner_length+rail_thick/2) {
 		back(l/2) {
-			xrot(90) ramps_mount();
+			xrot(90) rambo_mount();
 		}
 	}
 }
 
 
-ramps_mount_parts();
+rambo_mount_parts();
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
