@@ -8,13 +8,13 @@ $fs = 2;
 
 
 // Motherboard dimensions (RAMBo)
-board_width         =  53.55;  // mm
-board_length        = 101.55;  // mm
+board_width         = 101.55;  // mm
+board_length        =  53.55;  // mm
 board_thick         =  50.0;  // mm
 
 
-// l = board_length + rail_height + 5;
-l = board_length + 10;
+l = board_length + rail_height + 5;
+//l = board_length + 10;
 joiner_length = board_thick + rail_thick;
 
 
@@ -27,7 +27,10 @@ module ramps_mount() {
             // Back.
 			fwd(joiner_length) {
 				up(l/2) {
-					zrot(90) sparse_strut(h=l, l=rail_width, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
+					zrot(90) sparse_strut(h=l, l=rail_width, thick=rail_thick, maxang=60, strut=10, max_bridge=500);
+					cube([10, rail_thick, l], center=true);
+				}
+				up(rail_height+5/2+board_length/2) {
 					cube([rail_width, rail_thick, 10], center=true);
 				}
 			}
@@ -53,7 +56,7 @@ module ramps_mount() {
 
 			// Motherboard standoffs
 			fwd(joiner_length-10/2) {
-				up(l/2+5/2) {
+				up(rail_height+5/2+board_length/2) {
 					xspread(board_width) {
 						cube([5, rail_thick+10, 10], center=true);
 					}
@@ -65,7 +68,7 @@ module ramps_mount() {
         }
 
 		// Motherboard clip clearance
-		up(l/2+5/2) {
+		up(rail_height+5/2+board_length/2) {
 			fwd(joiner_length-10/2-2) {
 				xrot(-90) trapezoid([board_width, board_length], [board_width-0.5, board_length-0.5], h=10);
 			}
