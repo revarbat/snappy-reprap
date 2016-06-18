@@ -3,6 +3,57 @@
 import re
 import sys
 
+html_header_string = """\
+<html>
+<head>
+<title>Snappy Assembly</title>
+<style>
+BODY {
+  margin-bottom: 200px;
+}
+TABLE TD {
+  vertical-align: middle;
+}
+H2 {
+  margin-bottom: 5px;
+  margin-top: 24px;
+  font-size: 20pt;
+}
+LI.section {
+  font-size: 20pt;
+  font-weight: bold;
+}
+H3 {
+  margin-left: -15px;
+  margin-bottom: 5px;
+  margin-top: 18px;
+  font-size: 16pt;
+}
+LI.step {
+  padding-left: 15px;
+  margin-left: 0;
+  font-size: 16pt;
+  font-weight: bold;
+  list-style-type: none;
+}
+DIV.desc {
+  margin-bottom: 15px;
+  font-size: 12pt;
+  font-weight: normal;
+}
+OL {
+  margin-left: 30px;
+}
+UL {
+  padding-left: 5px;
+}
+</style>
+</head>
+<body>
+<h1>Snappy RepRap Assembly Instructions</h1>
+<ol>
+"""
+
 
 class GenAssemblyIndex(object):
     indexfile = "docs/assembly/index.html"
@@ -13,56 +64,7 @@ class GenAssemblyIndex(object):
 
     def write_index(self):
         with open(self.indexfile, "w") as f:
-            f.write("""\
-<html>
-<head>
-<title>Snappy Assembly</title>
-<style>
-BODY {
-    margin-bottom: 200px;
-}
-TABLE TD {
-    vertical-align: middle;
-}
-H2 {
-    margin-bottom: 5px;
-    margin-top: 24px;
-    font-size: 20pt;
-}
-LI.section {
-    font-size: 20pt;
-    font-weight: bold;
-}
-H3 {
-    margin-left: -15px;
-    margin-bottom: 5px;
-    margin-top: 18px;
-    font-size: 16pt;
-}
-LI.step {
-    padding-left: 15px;
-    margin-left: 0;
-    font-size: 16pt;
-    font-weight: bold;
-    list-style-type: none;
-}
-DIV.desc {
-    margin-bottom: 15px;
-    font-size: 12pt;
-    font-weight: normal;
-}
-OL {
-    margin-left: 30px;
-}
-UL {
-    padding-left: 5px;
-}
-</style>
-</head>
-<body>
-<h1>Snappy RepRap Assembly Instructions</h1>
-<ol>
-""")
+            f.write(html_header_string)
 
             for mod_eng in self.modules:
                 f.write('<li class="section">')
@@ -81,7 +83,9 @@ UL {
                         '<div class="desc">{desc}</div>\n'
                         '<table>'
                         '<tr>'
-                        '<td class="befor"><img src="{module}_before.png"></td>'
+                        '<td class="befor">'
+                        '<img src="{module}_before.png">'
+                        '</td>'
                         '<td class="arrow"><img src="arrow.png"></td>'
                         '<td class="after"><img src="{module}_after.png"></td>'
                         '</tr>'

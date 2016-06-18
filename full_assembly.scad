@@ -3,6 +3,7 @@ $do_prerender=true;
 include <config.scad>
 include <GDMUtils.scad>
 use <NEMA.scad>
+use <wiring.scad>
 use <acme_screw.scad>
 use <vitamins.scad>
 
@@ -83,10 +84,10 @@ module motor_mount_assembly(explode=0, arrows=false)
 //!motor_mount_assembly(explode=100, arrows=true);
 
 
-module xy_motor_segment_assembly(explode=0, arrows=false)
+module y_motor_segment_assembly(explode=0, arrows=false)
 {
 	// view: [0, 0, 135] [72, 0, 23] 900
-	// desc: Seat the stepper motor with drive gear in the X/Y motor rail segment. Clamp it into place with a motor mount plate with micro-switch. Repeat this to make a second XY motor segment assembly. On one, route the wiring out a side wiring access hole opposite the limit switch, and on the other, route it out one end.
+	// desc: Seat the stepper motor with drive gear in the X/Y motor rail segment. Clamp it into place with a motor mount plate with micro-switch. Route the wiring out a side wiring access hole opposite the limit switch.
 	motor_width = nema_motor_width(17)+printer_slop*2;
 
 	rail_xy_motor_segment();
@@ -95,9 +96,34 @@ module xy_motor_segment_assembly(explode=0, arrows=false)
 	up(motor_top_z) {
 		up(explode*2.2-motor_length/2) {
 			motor_mount_assembly();
+			up(3) {
+				off = (motor_mount_spacing+joiner_width+endstop_thick)/2+endstop_standoff;
+				right(off) {
+					wiring([
+						[0, -10, 10],
+						[0, -10, -12],
+						[0, -motor_rail_length/3.5, -12],
+						[-rail_width/1.5-off, -motor_rail_length/3.5, -12],
+						[-rail_width/1.5-off, -motor_rail_length/2-25, -12],
+						[-rail_width/1.5-off-10, -motor_rail_length/2-25, -19],
+						[-rail_width/1.5-off-28, -motor_rail_length/2-25, -19],
+					], 2, wirenum=4);
+				}
+			}
 		}
 		up(explode*1.1) {
 			xy_motor_assembly();
+			down(motor_length-3) {
+				wiring([
+					[0, 0, 0],
+					[0, -motor_rail_length/3.5-2, 0],
+					[-10, -motor_rail_length/3.5-2, 5],
+					[-rail_width/1.5, -motor_rail_length/3.5-2, 5],
+					[-rail_width/1.5, -motor_rail_length/2-23, 5],
+					[-rail_width/1.5-10, -motor_rail_length/2-23, 0],
+					[-rail_width/1.5-30, -motor_rail_length/2-23, 0],
+				], 4);
+			}
 		}
 	}
 
@@ -111,8 +137,8 @@ module xy_motor_segment_assembly(explode=0, arrows=false)
 		}
 	}
 }
-//!xy_motor_segment_assembly(explode=100, arrows=true);
-//!xy_motor_segment_assembly();
+//!y_motor_segment_assembly(explode=100, arrows=true);
+//!y_motor_segment_assembly();
 
 
 module y_axis_assembly_1(slidepos=0, explode=0, arrows=false)
@@ -121,7 +147,7 @@ module y_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 	// desc: Join a rail segment to each end of another motor rail assembly.
 	platform_vert_off = rail_height+groove_height/2;
 
-	xy_motor_segment_assembly();
+	y_motor_segment_assembly();
 	zrot(90) {
 		zring(r=(motor_rail_length+rail_length+2*explode)/2, n=2) {
 			zrot(90) rail_segment();
@@ -235,6 +261,7 @@ module y_axis_assembly_5(slidepos=0, explode=0, arrows=false)
 	}
 }
 //!y_axis_assembly_5(slidepos=0, explode=100, arrows=true);
+//!y_axis_assembly_5();
 
 
 module y_axis_assembly_6(slidepos=0, explode=0, arrows=false)
@@ -257,7 +284,8 @@ module y_axis_assembly_6(slidepos=0, explode=0, arrows=false)
 		up(0) children();
 	}
 }
-//!y_axis_assembly_6(slidepos=0, explode=0, arrows=true);
+//!y_axis_assembly_6(slidepos=0, explode=100, arrows=true);
+//!y_axis_assembly_6();
 
 
 module y_axis_assembly_7(slidepos=0, explode=0, arrows=false)
@@ -285,7 +313,60 @@ module y_axis_assembly_7(slidepos=0, explode=0, arrows=false)
 	}
 }
 //!y_axis_assembly_7(explode=100, arrows=true);
+//!y_axis_assembly_7();
 //!y_axis_assembly_7(slidepos=90) y_sled_assembly();
+
+
+module x_motor_segment_assembly(explode=0, arrows=false)
+{
+	// view: [0, 0, 135] [55, 0, 340] 900
+	// desc: Seat the stepper motor with drive gear in the X/Y motor rail segment. Clamp it into place with a motor mount plate with micro-switch. Route the wiring out one end.
+	motor_width = nema_motor_width(17)+printer_slop*2;
+
+	rail_xy_motor_segment();
+
+	// Stepper Motor
+	up(motor_top_z) {
+		up(explode*2.2-motor_length/2) {
+			motor_mount_assembly();
+			up(3) {
+				off=(motor_mount_spacing+joiner_width+endstop_thick)/2+endstop_standoff;
+				right(off) {
+					wiring([
+						[0, -10, 10],
+						[0, -10, -12],
+						[0, -motor_rail_length/4, -12],
+						[-off, -motor_rail_length/4, -12],
+						[-off, -motor_rail_length/2-20, -12],
+					], 2, wirenum=4);
+				}
+			}
+		}
+		up(explode*1.1) {
+			xy_motor_assembly();
+			down(motor_length-3) {
+				wiring([
+					[0, 0, 0],
+					[0, -motor_rail_length/3.5, 0],
+					[0, -motor_rail_length/2+20, 5],
+					[0, -motor_rail_length/2-20, 5],
+				], 4);
+			}
+		}
+	}
+
+	// Construction arrows.
+	if(arrows && explode>10) {
+		up(rail_height+groove_height+explode/8) {
+			yrot(-90) arrow(size=explode/3);
+			up(motor_length+explode) {
+				yrot(-90) arrow(size=explode/3);
+			}
+		}
+	}
+}
+//!x_motor_segment_assembly(explode=100, arrows=true);
+//!x_motor_segment_assembly();
 
 
 module x_axis_assembly_1(slidepos=0, explode=0, arrows=false)
@@ -294,9 +375,17 @@ module x_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 	// desc: Join a rail segment to each end of a motor rail assembly, to make the X axis slider. Route the wiring to one end of the slider assembly.
 	platform_vert_off = rail_height+groove_height/2;
 
-	zrot(90) xy_motor_segment_assembly();
+	zrot(-90) x_motor_segment_assembly();
 	zring(r=(motor_rail_length+rail_length+2*explode)/2, n=2) {
 		zrot(90) rail_segment();
+	}
+
+	up(12) {
+		wiring([
+			[-motor_rail_length/2, 0, 0],
+			[-(rail_length+explode), 0, 0],
+			[-(rail_length+explode+motor_rail_length/2)-30, 0, 0],
+		], 6);
 	}
 
 	// Construction arrows.
@@ -326,6 +415,7 @@ module x_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 	}
 }
 //!x_axis_assembly_1(slidepos=100, explode=100, arrows=true);
+//!x_axis_assembly_1(slidepos=0) {sphere(1); sphere(1); sphere(1);}
 //!x_axis_assembly_1(slidepos=0) {sphere(1); sphere(1); x_sled_assembly();}
 
 
@@ -351,24 +441,54 @@ module x_axis_assembly_3(explode=0, arrows=false)
 {
 	// view: [-55, 60, 65] [55, 0, 55] 1500
 	// desc: Join an X sled endcap assembly to one end of the X sled central assembly.
-	x_axis_assembly_2();
 	up(groove_height/2+rail_offset) {
-		left(platform_length+0.5+explode) {
+		left(explode/2) {
 			zrot(-90) xy_joiner();
+			right(explode+0.3) {
+				fwd((platform_width-joiner_width)/2) {
+					zrot(90) {
+						//cable_chain_xy_joiner_mount();
+						cable_chain_x_sled_mount();
+					}
+				}
+			}
 		}
 	}
 
 	// Construction arrows.
 	if(arrows && explode>20) {
-		left(platform_length+explode*0.5) {
+		up(groove_height/2+rail_offset+rail_height/4) {
+			fwd(platform_width/2) {
+				arrow(size=explode/3);
+			}
+		}
+	}
+}
+//!x_axis_assembly_3(explode=100, arrows=true);
+//!x_axis_assembly_3();
+
+
+module x_axis_assembly_4(explode=0, arrows=false)
+{
+	// view: [-55, 60, 65] [55, 0, 55] 1500
+	// desc: Join an X sled endcap assembly to one end of the X sled central assembly.
+	x_axis_assembly_2();
+	left(platform_length+0.3+explode) {
+		x_axis_assembly_3();
+	}
+
+	// Construction arrows.
+	if(arrows && explode>20) {
+		left(platform_length+explode*0.3) {
 			zrot(180) arrow(size=explode/3);
 		}
 	}
 }
-//!x_axis_assembly_3(explode=0, arrows=true);
+//!x_axis_assembly_4(explode=100, arrows=true);
+//!x_axis_assembly_4();
 
 
-module x_axis_assembly_4(slidepos=0, explode=0, arrows=false)
+module x_axis_assembly_5(slidepos=0, explode=0, arrows=false)
 {
 	// view: [-155, -50, 25] [55, 0, 55] 2500
 	// desc: Slide the X sled partial assembly onto the X axis rails assembly, so that it is centered.
@@ -376,7 +496,7 @@ module x_axis_assembly_4(slidepos=0, explode=0, arrows=false)
 		if ($children>0) children(0); else nil();
 		if ($children>1) children(1); else nil();
 		left(explode*4) {
-			x_axis_assembly_3();
+			x_axis_assembly_4();
 			if ($children>2) children(2); else nil();
 
 			// Construction arrows.
@@ -388,14 +508,15 @@ module x_axis_assembly_4(slidepos=0, explode=0, arrows=false)
 		}
 	}
 }
-//!x_axis_assembly_4(slidepos=0, explode=100, arrows=true);
+//!x_axis_assembly_5(slidepos=0, explode=100, arrows=true);
+//!x_axis_assembly_5();
 
 
-module x_axis_assembly_5(xslidepos=0, yslidepos=0, explode=0, arrows=false)
+module x_axis_assembly_6(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 {
 	// view: [150, 0, 110] [50, 0, 330] 2500
 	// desc: Connect the Y axis assembly to the XY joiner on the X axis partial assembly. Route the Y axis wiring through the front hole in the XY joiner.
-	x_axis_assembly_4(slidepos=xslidepos) {
+	x_axis_assembly_5(slidepos=xslidepos) {
 		if ($children>0) children(0); else nil();
 		if ($children>1) children(1); else nil();
 		right(explode*4) {
@@ -415,14 +536,15 @@ module x_axis_assembly_5(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 		}
 	}
 }
-//!x_axis_assembly_5(explode=100, arrows=true);
+//!x_axis_assembly_6(explode=100, arrows=true);
+//!x_axis_assembly_6();
 
 
-module x_axis_assembly_6(xslidepos=0, yslidepos=0, explode=0, arrows=false)
+module x_axis_assembly_7(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 {
 	// view: [85, 70, 40] [55, 0, 25] 2500
 	// desc: Join the other X sled endcap assembly to the end of the X sled assembly, fixing the Y sled assembly in place.
-	x_axis_assembly_5(xslidepos=xslidepos, yslidepos=yslidepos) {
+	x_axis_assembly_6(xslidepos=xslidepos, yslidepos=yslidepos) {
 		if ($children>0) children(0); else nil();
 		if ($children>1) children(1); else nil();
 		right(platform_length+0.5+explode*3) {
@@ -440,7 +562,80 @@ module x_axis_assembly_6(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 		if ($children>2) children(2);
 	}
 }
-//!x_axis_assembly_6(xslidepos=0, yslidepos=0, explode=100, arrows=true);
+//!x_axis_assembly_7(xslidepos=0, yslidepos=0, explode=100, arrows=true);
+//!x_axis_assembly_7(xslidepos=platform_length*sin($t*360), yslidepos=0, explode=0, arrows=false);
+
+
+module x_axis_assembly_8(xslidepos=0, yslidepos=0, explode=0, arrows=false)
+{
+	// view: [-10, 0, 75] [55, 0, 325] 1100
+	// desc: Attach the cable chain joiner mount to the X motor segment, on the same side as the X sled cable chain joiner and Y axis wiring.
+	x_axis_assembly_7(xslidepos=xslidepos, yslidepos=yslidepos) {
+		if ($children>0) children(0); else nil();
+		if ($children>1) children(1); else nil();
+		if ($children>2) children(2);
+	}
+	fwd(rail_width/2+2+explode/2) {
+		left(side_mount_spacing/2) {
+			// Construction arrows.
+			if(arrows && explode>75) {
+				up(rail_height/2/2) {
+					zrot(-90) arrow(size=explode/3);
+				}
+			}
+			fwd(explode/2) {
+				zrot(90) cable_chain_joiner_mount();
+			}
+		}
+	}
+}
+//!x_axis_assembly_8(xslidepos=0, yslidepos=0, explode=100, arrows=true);
+//!x_axis_assembly_8(xslidepos=platform_length*sin($t*360), yslidepos=0, explode=0, arrows=false);
+
+
+module x_axis_assembly_9(xslidepos=0, yslidepos=0, explode=0, arrows=false)
+{
+	// view: [-88, 0, 75] [58, 0, 350] 1100
+	// desc: Attach the cable-chain assembly (with 13 or 14 links) to the cable chain mounts on the X axis assembly, making sure to feed the Y-axis wiring through the cable chain.  Route the wiring in through the wiring access hole beside the cable chain mount, then out through the end of the X axis assembly.
+	x_axis_assembly_8(xslidepos=xslidepos, yslidepos=yslidepos) {
+		if ($children>0) children(0); else nil();
+		if ($children>1) children(1); else nil();
+		if ($children>2) children(2);
+	}
+	vert_off = rail_height + groove_height + rail_offset + cable_chain_height/2;
+	left(explode*1.5) {
+		fwd(platform_width/2+cable_chain_width/2+2) {
+			// Construction arrows.
+			if(arrows && explode>75) {
+				left(platform_length) {
+					up(vert_off) zrot(180) arrow(size=explode/3);
+				}
+				left(side_mount_spacing/2) {
+					up(cable_chain_height/2) zrot(180) arrow(size=explode/3);
+				}
+			}
+			left(explode/2) {
+				cable_chain_assembly(
+					[-platform_length-1, 0, vert_off],
+					[-side_mount_spacing/2-cable_chain_length/2+cable_chain_height/3, 0, cable_chain_height/2],
+					[-1,0,0],
+					platform_length*2,
+					xslidepos,
+					wires=6
+				);
+			}
+		}
+	}
+	wiring([
+		[-side_mount_spacing/2-cable_chain_length/2+cable_chain_height/3, -(platform_width/2+cable_chain_width/2+2), cable_chain_height/2],
+		[-motor_rail_length/3+10, -(platform_width/2+cable_chain_width/2+2), cable_chain_height/2],
+		[-motor_rail_length/3+5, -(rail_width/2+joiner_width/2), rail_thick+5],
+		[-motor_rail_length/3+5, -rail_width/3, rail_thick+5],
+		[-rail_length-motor_rail_length/2-30, -rail_width/3, rail_thick+5],
+	], 6);
+}
+//!x_axis_assembly_9(xslidepos=0, yslidepos=0, explode=100, arrows=true);
+!x_axis_assembly_9(xslidepos=platform_length*sin($t*360), yslidepos=0, explode=0, arrows=false);
 
 
 module z_tower_assembly_1(slidepos=0, explode=0, arrows=false)
@@ -981,7 +1176,7 @@ module final_assembly_1(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 {
 	// view: [0, 0, 240] [70, 0, 30] 2800
 	// desc: Attach the two Z tower assemblies to either end of the XY axes assembly.
-	x_axis_assembly_6(xslidepos=xslidepos, yslidepos=yslidepos) {
+	x_axis_assembly_9(xslidepos=xslidepos, yslidepos=yslidepos) {
 		left(explode*2) {
 			z_tower_assembly_7(slidepos=zslidepos) {
 				if ($children > 0) children(0);
@@ -1156,7 +1351,6 @@ module final_assembly_6(explode=0, arrows=false)
 
 		right(rail_height/2) spool_holder();
 	}
-	//cable_chain_xy_joiner_mount();
 }
 //!final_assembly_6(explode=100, arrows=true);
 

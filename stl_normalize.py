@@ -458,7 +458,7 @@ class StlData(object):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog='myprogram')
+    parser = argparse.ArgumentParser(prog='stl_normalize')
     parser.add_argument('-v', '--verbose',
                         help='Show verbose output.',
                         action="store_true")

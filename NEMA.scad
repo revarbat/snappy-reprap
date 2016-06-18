@@ -127,7 +127,7 @@ module nema17_stepper(h=34, shaft=5, shaft_len=20)
 
 	difference() {
 		color([0.4, 0.4, 0.4]) {
-			translate([0, 0, -h/2]) {
+			down(h/2) {
 				rrect(size=[motor_width, motor_width, h], r=2, center=true);
 			}
 		}
@@ -139,6 +139,18 @@ module nema17_stepper(h=34, shaft=5, shaft_len=20)
 	color([0.4, 0.4, 0.4])
 		up(plinth_height/2)
 			cylinder(h=plinth_height, r=plinth_diam/2, center=true);
+	color([0.9, 0.9, 0.9]) {
+		down(h-motor_width/12) {
+			fwd(motor_width/2+motor_width/24/2-0.1) {
+				difference() {
+					cube(size=[motor_width/8, motor_width/24, motor_width/8], center=true);
+					xrot(90) {
+						cylinder(d=motor_width/8-2, h=motor_width/6, center=true, $fn=12);
+					}
+				}
+			}
+		}
+	}
 	color("silver") {
 		difference() {
 			cylinder(h=shaft_len, r=shaft/2, $fn=max(12,segs(shaft/2)));
