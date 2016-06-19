@@ -635,7 +635,7 @@ module x_axis_assembly_9(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 	], 6);
 }
 //!x_axis_assembly_9(xslidepos=0, yslidepos=0, explode=100, arrows=true);
-!x_axis_assembly_9(xslidepos=platform_length*sin($t*360), yslidepos=0, explode=0, arrows=false);
+//!x_axis_assembly_9(xslidepos=platform_length*sin($t*360), yslidepos=0, explode=0, arrows=false);
 
 
 module z_tower_assembly_1(slidepos=0, explode=0, arrows=false)
