@@ -78,11 +78,11 @@ module xy_joiner()
 		}
 
 		// endstop trigger
-		translate([0, -joiner_length/2, 0]) {
+		fwd(joiner_length/2) {
 			mirror_copy([1, 0, 0]) {
 				translate([motor_mount_spacing/2+joiner_width/2+2, 0, 0]) {
 					translate([10/2, 0, -(platform_thick+rail_offset+groove_height/2+3)/2]) {
-						xrot(90) chamfcube(chamfer=2, size=[10, platform_thick+rail_offset+groove_height/2+3, joiner_length], chamfaxes=[1,0,1], center=true);
+						xrot(90) chamfcube(chamfer=2, size=[10, platform_thick+groove_height/2+3+shaft_clear, joiner_length], chamfaxes=[1,0,1], center=true);
 					}
 				}
 			}

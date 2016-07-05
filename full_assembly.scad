@@ -334,10 +334,10 @@ module x_motor_segment_assembly(explode=0, arrows=false)
 				right(off) {
 					wiring([
 						[0, -10, 10],
-						[0, -10, -12],
-						[0, -motor_rail_length/4, -12],
-						[-off, -motor_rail_length/4, -12],
-						[-off, -motor_rail_length/2-20, -12],
+						[0, -10.01, -11],
+						[0, -motor_rail_length/4, -11],
+						[-off, -motor_rail_length/4, -11],
+						[-off, -motor_rail_length/2-20, -11],
 					], 2, wirenum=4);
 				}
 			}
@@ -440,11 +440,11 @@ module x_axis_assembly_2(explode=0, arrows=false)
 module x_axis_assembly_3(explode=0, arrows=false)
 {
 	// view: [-55, 60, 65] [55, 0, 55] 1500
-	// desc: Join an X sled endcap assembly to one end of the X sled central assembly.
+	// desc: Join the X sled cable-chain mount to the front/left side of the X sled endstop.
 	up(groove_height/2+rail_offset) {
 		left(explode/2) {
 			zrot(-90) xy_joiner();
-			right(explode+0.3) {
+			right(explode*1.25+0.3) {
 				fwd((platform_width-joiner_width)/2) {
 					zrot(90) {
 						//cable_chain_xy_joiner_mount();
@@ -458,8 +458,10 @@ module x_axis_assembly_3(explode=0, arrows=false)
 	// Construction arrows.
 	if(arrows && explode>20) {
 		up(groove_height/2+rail_offset+rail_height/4) {
-			fwd(platform_width/2) {
-				arrow(size=explode/3);
+			fwd(platform_width/2-joiner_width/2) {
+				right(explode/3) {
+					arrow(size=explode/3);
+				}
 			}
 		}
 	}
@@ -479,7 +481,7 @@ module x_axis_assembly_4(explode=0, arrows=false)
 
 	// Construction arrows.
 	if(arrows && explode>20) {
-		left(platform_length+explode*0.3) {
+		left(platform_length+explode*0.6) {
 			zrot(180) arrow(size=explode/3);
 		}
 	}
@@ -641,7 +643,7 @@ module x_axis_assembly_9(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 module z_tower_assembly_1(slidepos=0, explode=0, arrows=false)
 {
 	// view: [72, 125, -25] [345, 20, 0] 1200
-	// desc: Seat the stepper motor in the Z motor rail segment. Clamp it into place with a motor mount plate without micro-switch.
+	// desc: Seat the stepper motor in the Z motor rail segment.  Clamp it into place with a motor mount plate without micro-switch.  Route the motor wiring out the bottom of the rail.
 	motor_width = nema_motor_width(17)+printer_slop*2;
 
 	rail_z_motor_segment();
@@ -653,7 +655,16 @@ module z_tower_assembly_1(slidepos=0, explode=0, arrows=false)
 				motor_mount_plate();
 			}
 			up(motor_length/2+explode*1.8) {
-				nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
+				zrot(180) {
+					nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
+					down(motor_length-3) {
+						wiring([
+							[0, 0.01, 0],
+							[0, -motor_rail_length/3.5-5, 0],
+							[0, -motor_rail_length/3.5-5.01, -motor_rail_length/2+5],
+						], 4);
+					}
+				}
 				up(motor_shaft_length-2+2.1+explode) {
 					zrot(180+slidepos*360/lifter_rod_pitch) {
 						if ($children > 0) children(0);
@@ -790,6 +801,7 @@ module z_tower_assembly_5(slidepos=0, explode=0, arrows=false)
 }
 //!z_tower_assembly_5(slidepos=0, explode=0, arrows=true) z_sled();
 //!z_tower_assembly_5(explode=100, arrows=true);
+//!z_tower_assembly_5();
 
 
 module z_tower_assembly_6(explode=0, arrows=false)
@@ -821,16 +833,22 @@ module z_tower_assembly_6(explode=0, arrows=false)
 }
 //!z_tower_assembly_6(slidepos=0, explode=0, arrows=true) z_sled();
 //!z_tower_assembly_6(explode=100, arrows=true);
+//!z_tower_assembly_6();
 
 
-module z_tower_assembly_7(slidepos=0, explode=0, arrows=false)
+module left_z_tower_assembly(slidepos=0, explode=0, arrows=false)
 {
-	// view: [20, 50, 270] [70, 0, 30] 1700
-	// desc: Attach the Z rail assembly to the top of the YZ joiner assembly. Repeat steps 1 through 7 to make a second Z tower.
+	// view: [-55, 0, 285] [70, 0, 65] 1700
+	// desc: Attach the Z rail assembly to the top of a YZ joiner assembly. Route the wires through the back of the YZ joiner.
 	left(platform_length) {
 		z_tower_assembly_6() {
 			if ($children > 2) children(2);
 		}
+		wiring([
+			[rail_thick+6, -1, rail_height+explode+2],
+			[rail_thick+6, 0, rail_thick+5],
+			[-10, 0, rail_thick+5],
+		], 4);
 		up(rail_height+groove_height+explode) {
 			z_tower_assembly_5(slidepos=slidepos) {
 				if ($children > 0) children(0);
@@ -848,8 +866,45 @@ module z_tower_assembly_7(slidepos=0, explode=0, arrows=false)
 		}
 	}
 }
-//!z_tower_assembly_7(slidepos=0, explode=0, arrows=true) z_sled();
-//!z_tower_assembly_7(explode=100, arrows=true);
+//!left_z_tower_assembly(slidepos=0, explode=0, arrows=true) z_sled();
+//!left_z_tower_assembly(explode=100, arrows=true);
+//!left_z_tower_assembly();
+
+
+module right_z_tower_assembly(slidepos=0, explode=0, arrows=false)
+{
+	// view: [-55, 0, 285] [60, 0, 120] 1700
+	// desc: Attach the Z rail assembly to the top of the YZ joiner assembly. Route the wires through the front of the YZ joiner.
+	left(platform_length) {
+		z_tower_assembly_6() {
+			if ($children > 2) children(2);
+		}
+		wiring([
+			[rail_thick+4, 1, rail_height+explode+2],
+			[rail_thick+4, 1, rail_thick+5],
+			[motor_rail_length/2, -rail_width/3, rail_thick+5],
+			[platform_length+10, -rail_width/3, rail_thick+5],
+		], 4);
+		up(rail_height+groove_height+explode) {
+			z_tower_assembly_5(slidepos=slidepos) {
+				if ($children > 0) children(0);
+				if ($children > 1) children(1);
+			}
+		}
+
+		// Construction arrows.
+		if (arrows && explode>10) {
+			right(rail_height/2+groove_height/2) {
+				up(rail_height+groove_height+explode*0.5) {
+					yrot(-90) arrow(size=explode/3);
+				}
+			}
+		}
+	}
+}
+//!right_z_tower_assembly(slidepos=0, explode=0, arrows=true) z_sled();
+//!right_z_tower_assembly(explode=100, arrows=true);
+//!right_z_tower_assembly();
 
 
 module extruder_bridge_assembly_1(explode=0, arrows=false)
@@ -904,8 +959,14 @@ module extruder_bridge_assembly_3(explode=0, arrows=false)
 {
 	// view: [40, 20, 10] [55, 0, 25] 700
 	// desc: Attach the extruder drive gear onto the stepper motor shaft.
-	yrot(90) zrot(-90) {
+	xrot(180) yrot(90) zrot(-90) {
 		nema17_stepper(h=motor_length, shaft_len=motor_shaft_length);
+		wiring([
+			[0.5, 0, -motor_length+3],
+			[0, -25, -motor_length+3],
+			[5, -20.01, -(motor_length+16)],
+			[5, -20, -(motor_length+26)],
+		], 4, fillet=3);
 		up(4+explode) extruder_drive_gear();
 	}
 
@@ -917,23 +978,25 @@ module extruder_bridge_assembly_3(explode=0, arrows=false)
 	}
 }
 //!extruder_bridge_assembly_3(explode=100, arrows=true);
+//!extruder_bridge_assembly_3();
 
 
 module extruder_bridge_assembly_4(explode=0, arrows=false)
 {
-	// view: [0, 0, 0] [80, 0, 70] 900
-	// desc: Slide the JHead extruder hot end into the slot in the bottom of the JHead platform.
+	// view: [0, 0, 0] [50, 0, 80] 900
+	// desc: Slide the JHead extruder hot end into the slot in the bottom of the JHead platform.  Route the wiring up through the wiring access slot, and along the back of the extruder platform.
 	jhead_platform();
 	down(explode) jhead_hotend();
 
 	// Construction arrows.
 	if (arrows && explode>50) {
-		down(explode*0.5) {
-			yrot(90)arrow(size=0.5*explode/3);
+		down(explode*0.25) {
+			yrot(90) arrow(size=0.5*explode/3);
 		}
 	}
 }
 //!extruder_bridge_assembly_4(explode=100, arrows=true);
+//!extruder_bridge_assembly_4();
 
 
 module extruder_bridge_assembly_5(explode=0, arrows=false)
@@ -971,6 +1034,7 @@ module extruder_bridge_assembly_5(explode=0, arrows=false)
 	}
 }
 //!extruder_bridge_assembly_5(explode=100, arrows=true);
+//!extruder_bridge_assembly_5();
 
 
 module extruder_bridge_assembly_6(explode=0, arrows=false)
@@ -996,6 +1060,7 @@ module extruder_bridge_assembly_6(explode=0, arrows=false)
 	}
 }
 //!extruder_bridge_assembly_6(explode=100, arrows=true);
+//!extruder_bridge_assembly_6();
 
 
 module extruder_bridge_assembly_7(explode=0, arrows=false)
@@ -1020,6 +1085,7 @@ module extruder_bridge_assembly_7(explode=0, arrows=false)
 	}
 }
 //!extruder_bridge_assembly_7(explode=100, arrows=true);
+//!extruder_bridge_assembly_7();
 
 
 module extruder_bridge_assembly_8(explode=0, arrows=false)
@@ -1043,12 +1109,13 @@ module extruder_bridge_assembly_8(explode=0, arrows=false)
 	}
 }
 //!extruder_bridge_assembly_8(explode=100, arrows=true);
+//!extruder_bridge_assembly_8();
 
 
 module extruder_bridge_assembly_9(explode=0, arrows=false)
 {
 	// view: [0, 0, 110] [55, 0, 0] 1200
-	// desc: Clip a cooling fan to the top of the extruder fan shroud using the extruder fan clip part.
+	// desc: Clip a cooling fan to the top of the extruder fan shroud using the extruder fan clip part.  Route the wiring along the back side of the extruder platform.
 	extruder_bridge_assembly_8() {
 		children();
 	}
@@ -1057,6 +1124,14 @@ module extruder_bridge_assembly_9(explode=0, arrows=false)
 			up(explode) {
 				up(explode/2) {
 					cooling_fan();
+					translate([-(extruder_fan_size/2-5), 0, extruder_fan_thick/4]) {
+						wiring([
+							[0, extruder_fan_size/2, 0],
+							[0, extruder_fan_size/2+10, 0],
+							[-10, rail_width/3+0.01, 0],
+							[-100, rail_width/3+0.01, 0],
+						], 2, fillet=5, wirenum=4);
+					}
 					up(12-extruder_fan_thick+2+0.05+explode/2) {
 						up(explode/2) {
 							zrot(90) extruder_fan_clip();
@@ -1078,6 +1153,7 @@ module extruder_bridge_assembly_9(explode=0, arrows=false)
 	}
 }
 //!extruder_bridge_assembly_9(explode=100, arrows=true);
+//!extruder_bridge_assembly_9();
 
 
 module extruder_bridge_assembly_10(explode=0, arrows=false)
@@ -1085,7 +1161,19 @@ module extruder_bridge_assembly_10(explode=0, arrows=false)
 	// view: [90, 70, 95] [55, 0, 25] 1200
 	// desc: Attach a cooling fan to the cooling fan shroud.
 	cooling_fan_shroud() {
-		up(explode) cooling_fan();
+		up(explode) {
+			cooling_fan();
+			translate([-(extruder_fan_size/2-5), 0, extruder_fan_thick/4]) {
+				wiring([
+					[0, extruder_fan_size/2, 0],
+					[0, extruder_fan_size/2+10, 0],
+					[-35, 27.01, 25],
+					[-35, 27.01, 45],
+					[-55, rail_width/3, 51],
+					[-(extruder_length/2+40), rail_width/3, 65],
+				], 2, fillet=5, wirenum=6);
+			}
+		}
 
 		// Construction arrows.
 		if (arrows && explode>50) {
@@ -1094,12 +1182,13 @@ module extruder_bridge_assembly_10(explode=0, arrows=false)
 	}
 }
 //!extruder_bridge_assembly_10(explode=100, arrows=true);
+//!extruder_bridge_assembly_10();
 
 
 module extruder_bridge_assembly_11(explode=0, arrows=false)
 {
 	// view: [32, -6, -50] [100, 0, 10] 1000
-	// desc: Attach the cooling fan shroud assembly to the bottom of the extruder fan shroud.
+	// desc: Attach the cooling fan shroud assembly to the bottom of the extruder fan shroud.  Route the wiring up through the wiring access slot, and along the back side of the extruder platform.
 	extruder_bridge_assembly_9() {
 		down(explode) extruder_bridge_assembly_10();
 
@@ -1112,15 +1201,32 @@ module extruder_bridge_assembly_11(explode=0, arrows=false)
 	}
 }
 //!extruder_bridge_assembly_11(explode=100, arrows=true);
+//!extruder_bridge_assembly_11();
 
 
 module extruder_bridge_assembly_12(explode=0, arrows=false)
 {
 	// view: [0, 70, 55] [55, 0, 25] 1850
-	// desc: Attach rail segments to either end of the extruder platform assembly.
+	// desc: Attach rail segments to either end of the extruder platform assembly.  Route the wiring through the left side rail segment, and out the front-left wiring access hole.
 	extruder_bridge_assembly_11();
 	xspread(extruder_length+rail_length+2*explode) {
 		zrot(90) rail_segment();
+	}
+	up(rail_thick+4) {
+		left(extruder_length/2+rail_length/2+explode) {
+			wiring([
+				[rail_length/2+explode, rail_width/3, 0],
+				[rail_length/2-20, rail_width/3, 0],
+				[-(motor_rail_length/2-29), -rail_width/3, 0],
+				[-(motor_rail_length/2-29), -(rail_width/2+5), 0],
+			], 8);
+			wiring([
+				[rail_length/2+explode, 0, 0],
+				[rail_length/2-20, 0, 0],
+				[-(motor_rail_length/2-26), -rail_width/3, 0],
+				[-(motor_rail_length/2-26), -(rail_width/2+5), 0],
+			], 4, wirenum=8);
+		}
 	}
 
 	// Construction arrows.
@@ -1139,10 +1245,36 @@ module extruder_bridge_assembly_12(explode=0, arrows=false)
 module extruder_bridge_assembly_13(explode=0, arrows=false)
 {
 	// view: [0, 0, 18] [55, 0, 25] 2100
-	// desc: Attach rail segments to either end of the extruder platform assembly.
+	// desc: Attach a vertical cable-chain mount to the front left side of the extruder bridge.
+	extruder_bridge_assembly_12();
+	left(extruder_length/2+rail_length-10) {
+		fwd(rail_width/2+explode*2) {
+			zrot(90) cable_chain_joiner_vertical_mount();
+		}
+	}
+
+	// Construction arrows.
+	if(arrows && explode>50) {
+		up(rail_height/4) {
+			left(extruder_length/2+rail_length-10) {
+				fwd(rail_width/2+explode) {
+					zrot(-90) arrow(size=explode/3);
+				}
+			}
+		}
+	}
+}
+//!extruder_bridge_assembly_13(explode=100, arrows=true);
+//!extruder_bridge_assembly_13();
+
+
+module extruder_bridge_assembly_14(explode=0, arrows=false)
+{
+	// view: [0, 0, 18] [55, 0, 25] 2100
+	// desc: Attach Z sled segments to either end of the extruder bridge assembly.
 	down(platform_length/2) {
 		right((extruder_length+rail_length*2+cantilever_length*2)/2) {
-			extruder_bridge_assembly_12();
+			extruder_bridge_assembly_13();
 			zring(r=(extruder_length+2*rail_length+2*cantilever_length+3*explode)/2, n=2) {
 				zrot(180) z_sled();
 			}
@@ -1158,8 +1290,8 @@ module extruder_bridge_assembly_13(explode=0, arrows=false)
 		}
 	}
 }
-//!extruder_bridge_assembly_13(explode=100, arrows=true);
-//!extruder_bridge_assembly_13();
+//!extruder_bridge_assembly_14(explode=100, arrows=true);
+//!extruder_bridge_assembly_14();
 
 
 // Borosilicate Glass.  Render last to allow transparency to work.
@@ -1174,25 +1306,12 @@ module build_platform() {
 
 module final_assembly_1(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
 {
-	// view: [0, 0, 240] [70, 0, 30] 2800
-	// desc: Attach the two Z tower assemblies to either end of the XY axes assembly.
+	// view: [140, 0, 235] [40, 0, 335] 2200
+	// desc: Attach the right Z tower assembly to the right end of the XY axes assembly.  Route the right tower wiring through the rear X axis wiring access holes.
 	x_axis_assembly_9(xslidepos=xslidepos, yslidepos=yslidepos) {
-		left(explode*2) {
-			z_tower_assembly_7(slidepos=zslidepos) {
-				if ($children > 0) children(0);
-				if ($children > 1) children(1);
-				if ($children > 2) children(2);
-			}
-
-			// Construction arrows.
-			if (arrows && explode>50) {
-				up((rail_height+groove_height)/2) {
-					right(explode*1.0) zrot(180) arrow(size=2*explode/3);
-				}
-			}
-		}
+		nil();
 		right(explode*2) {
-			zrot(180) z_tower_assembly_7(slidepos=zslidepos) {
+			zrot(180) right_z_tower_assembly(slidepos=zslidepos) {
 				nil();
 				if ($children > 3) children(3);
 				if ($children > 4) children(4);
@@ -1207,12 +1326,71 @@ module final_assembly_1(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 		}
 		if ($children > 5) children(5);
 	}
+	wiring([
+		[-(motor_rail_length/2+rail_length+30), rail_width/3, rail_thick+5],
+		[0, rail_width/3, rail_thick+5],
+		[(motor_rail_length/2+rail_length+2*explode+10), rail_width/3, rail_thick+5],
+	], 4);
 }
 //!final_assembly_1(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=true) z_sled();
-//!final_assembly_1(explode=0, arrows=true);
+//!final_assembly_1(explode=100, arrows=true);
+//!final_assembly_1();
 
 
-module final_assembly_2(explode=0, arrows=false)
+module final_assembly_2(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
+{
+	// view: [-100, 0, 235] [45, 0, 45] 2400
+	// desc: Attach the left Z tower assembly to the left end of the XY axes assembly.  Route all wiring out the back of the left Z tower base.
+	x_axis_assembly_9(xslidepos=xslidepos, yslidepos=yslidepos) {
+		left(explode*2) {
+			left_z_tower_assembly(slidepos=zslidepos) {
+				if ($children > 0) children(0);
+				if ($children > 1) children(1);
+				if ($children > 2) children(2);
+			}
+
+			// Construction arrows.
+			if (arrows && explode>50) {
+				up((rail_height+groove_height)/2) {
+					right(explode*1.0) zrot(180) arrow(size=2*explode/3);
+				}
+			}
+		}
+		right(0) {
+			zrot(180) right_z_tower_assembly(slidepos=zslidepos) {
+				nil();
+				if ($children > 3) children(3);
+				if ($children > 4) children(4);
+			}
+		}
+		if ($children > 5) children(5);
+	}
+	wiring([
+		[-(motor_rail_length/2+rail_length+2*explode+platform_length+100), 5, rail_thick+5],
+		[-(motor_rail_length/2+rail_length+2*explode+platform_length-5), 5, rail_thick+5],
+		[-(motor_rail_length/2+rail_length+2*explode+15), rail_width/3, rail_thick+5],
+		[0, rail_width/3, rail_thick+5],
+		[(motor_rail_length/2+rail_length+10), rail_width/3, rail_thick+5],
+	], 4);
+	wiring([
+		[-(motor_rail_length/2+rail_length+2*explode+platform_length+100), 0, rail_thick+10],
+		[-(motor_rail_length/2+rail_length+2*explode+platform_length-5), 0, rail_thick+10],
+		[-(motor_rail_length/2+rail_length+2*explode+15), 0, rail_thick+5],
+		[-motor_rail_length/2, 0, rail_thick+5],
+	], 4);
+	wiring([
+		[-(motor_rail_length/2+rail_length+2*explode+platform_length+100), +5, rail_thick+5],
+		[-(motor_rail_length/2+rail_length+2*explode+platform_length-5), +5, rail_thick+5],
+		[-(motor_rail_length/2+rail_length+2*explode+15), -rail_width/3, rail_thick+5],
+		[-motor_rail_length/2, -rail_width/3, rail_thick+5],
+	], 4);
+}
+//!final_assembly_2(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=true) z_sled();
+//!final_assembly_2(explode=100, arrows=true);
+//!final_assembly_2();
+
+
+module final_assembly_3(explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [55, 0, 25] 3000
 	// desc: Lower the extruder bridge down into the Z tower grooves, screwing the lifter rods into the Z sleds evenly.
@@ -1220,9 +1398,9 @@ module final_assembly_2(explode=0, arrows=false)
 	ypos = 100*sin(360*$t);
 	zpos = (rail_length*2-platform_length)/3*cos(240+360*$t);
 
-	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
-		up(explode*4) {
-			extruder_bridge_assembly_13();
+	final_assembly_2(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
+		up(explode*6) {
+			extruder_bridge_assembly_14();
 
 			// Construction arrows.
 			if(arrows && explode>50) {
@@ -1238,10 +1416,11 @@ module final_assembly_2(explode=0, arrows=false)
 		}
 	}
 }
-//!final_assembly_2(explode=100, arrows=true);
+//!final_assembly_3(explode=100, arrows=true);
+//!final_assembly_3();
 
 
-module final_assembly_3(explode=0, arrows=false)
+module final_assembly_4(explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [60, 0, 125] 400
 	// desc: Attach a limit microswitch, with wiring, to the Z rail endcap.
@@ -1249,7 +1428,21 @@ module final_assembly_3(explode=0, arrows=false)
 	up(rail_height+groove_height-endstop_length/2-2) {
 		left(rail_width/2-joiner_width-endstop_thick/2) {
 			back(explode-endstop_depth/2) {
-				zrot(180) xrot(90) microswitch();
+				zrot(180) xrot(90) {
+					microswitch();
+					wiring([
+						[0, -2.5, -12],
+						[-1, -3, -25],
+						[-7.5, -40, -25],
+						[-7.5, -40.01, 20],
+					], 1, fillet=5, wirenum=4);
+					wiring([
+						[0, -8, -12],
+						[0, -8.01, -25],
+						[-5.5, -40, -25],
+						[-5.5, -40.01, 20],
+					], 1, fillet=5, wirenum=5);
+				}
 			}
 		}
 	}
@@ -1265,21 +1458,22 @@ module final_assembly_3(explode=0, arrows=false)
 		}
 	}
 }
-//!final_assembly_3(explode=100, arrows=true);
+//!final_assembly_4(explode=100, arrows=true);
+//!final_assembly_4();
 
 
-module final_assembly_4(explode=0, arrows=false)
+module final_assembly_5(explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [55, 0, 25] 3000
-	// desc: Attach the Z tower endcap.
+	// desc: Attach the Z tower endcap to the left Z tower.  Route the limit switch wiring down through the wiring access holes in the left Z tower, and out the back of the base with the other wiring.
 	xpos = 100*cos(360*$t);
 	ypos = 100*sin(360*$t);
 	zpos = (rail_length*2-platform_length)/3*cos(240+360*$t);
 
-	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
-		extruder_bridge_assembly_13();
+	final_assembly_2(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
+		extruder_bridge_assembly_14();
 		up(explode*2) {
-			yrot(90) zrot(-90) final_assembly_3();
+			yrot(90) zrot(-90) final_assembly_4();
 
 			// Construction arrows.
 			if(arrows && explode>50) {
@@ -1291,11 +1485,21 @@ module final_assembly_4(explode=0, arrows=false)
 			}
 		}
 	}
+	left(motor_rail_length/2+rail_length+platform_length) {
+		wiring([
+			[rail_thick+5, rail_width/3, 2*rail_length+motor_rail_length+rail_height+2*explode],
+			[rail_thick+5, rail_width/3, rail_length+motor_rail_length+rail_height-10],
+			[rail_thick+5, 0, motor_rail_length+rail_height+30],
+			[rail_thick+5, 0, rail_thick+5],
+			[-100, 0, rail_thick+5],
+		], 2, fillet=9, wirenum=4);
+	}
 }
-//!final_assembly_4(explode=100, arrows=true);
+//!final_assembly_5(explode=100, arrows=true);
+//!final_assembly_5();
 
 
-module final_assembly_5(explode=0, arrows=false)
+module final_assembly_6(explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [55, 0, 25] 3000
 	// desc: Attach the spool holder to the top of the other Z tower.
@@ -1303,9 +1507,9 @@ module final_assembly_5(explode=0, arrows=false)
 	ypos = 100*sin(360*$t);
 	zpos = (rail_length*2-platform_length)/3*cos(240+360*$t);
 
-	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
-		extruder_bridge_assembly_13();
-		yrot(90) zrot(-90) final_assembly_3();
+	final_assembly_2(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
+		extruder_bridge_assembly_14();
+		yrot(90) zrot(-90) final_assembly_4();
 		nil();
 
 		up(explode*2) {
@@ -1321,11 +1525,21 @@ module final_assembly_5(explode=0, arrows=false)
 			}
 		}
 	}
+	left(motor_rail_length/2+rail_length+platform_length) {
+		wiring([
+			[rail_thick+5, rail_width/3, 2*rail_length+motor_rail_length+rail_height],
+			[rail_thick+5, rail_width/3, rail_length+motor_rail_length+rail_height-10],
+			[rail_thick+5, 0, motor_rail_length+rail_height+30],
+			[rail_thick+5, 0, rail_thick+5],
+			[-100, 0, rail_thick+5],
+		], 2, fillet=9, wirenum=4);
+	}
 }
-//!final_assembly_5(explode=100, arrows=true);
+//!final_assembly_6(explode=100, arrows=true);
+//!final_assembly_6();
 
 
-module final_assembly_6(explode=0, arrows=false)
+module final_assembly_7(explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [55, 0, 25] 3000
 	// desc: Attach the RAMPS motherboard mount to the end of the printer base.
@@ -1333,9 +1547,9 @@ module final_assembly_6(explode=0, arrows=false)
 	ypos = 100*sin(360*$t);
 	zpos = (rail_length*2-platform_length)/3*cos(240+360*$t);
 
-	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
-		extruder_bridge_assembly_13();
-		yrot(90) zrot(-90) final_assembly_3();
+	final_assembly_2(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
+		extruder_bridge_assembly_14();
+		yrot(90) zrot(-90) final_assembly_4();
 		fwd(explode*2) {
 			ramps_mount();
 
@@ -1351,11 +1565,21 @@ module final_assembly_6(explode=0, arrows=false)
 
 		right(rail_height/2) spool_holder();
 	}
+	left(motor_rail_length/2+rail_length+platform_length) {
+		wiring([
+			[rail_thick+5, rail_width/3, 2*rail_length+motor_rail_length+rail_height],
+			[rail_thick+5, rail_width/3, rail_length+motor_rail_length+rail_height-10],
+			[rail_thick+5, 0, motor_rail_length+rail_height+30],
+			[rail_thick+5, 0, rail_thick+5],
+			[-100, 0, rail_thick+5],
+		], 2, fillet=9, wirenum=4);
+	}
 }
-//!final_assembly_6(explode=100, arrows=true);
+//!final_assembly_7(explode=100, arrows=true);
+//!final_assembly_7();
 
 
-module final_assembly_7(explode=0, arrows=false)
+module final_assembly_8(explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [80, 0, 20] 2500
 	// desc: Clip the glass build platform to the build platform supports using four binder clips.
@@ -1363,9 +1587,9 @@ module final_assembly_7(explode=0, arrows=false)
 	ypos = 0;
 	zpos = (rail_length*2-platform_length)/2;
 
-	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
-		extruder_bridge_assembly_13();
-		yrot(90) zrot(-90) final_assembly_3();
+	final_assembly_2(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
+		extruder_bridge_assembly_14();
+		yrot(90) zrot(-90) final_assembly_4();
 		ramps_mount();
 
 		right(rail_height/2) spool_holder();
@@ -1384,11 +1608,21 @@ module final_assembly_7(explode=0, arrows=false)
 		}
 	}
 	//cable_chain_xy_joiner_mount();
+	left(motor_rail_length/2+rail_length+platform_length) {
+		wiring([
+			[rail_thick+5, rail_width/3, 2*rail_length+motor_rail_length+rail_height],
+			[rail_thick+5, rail_width/3, rail_length+motor_rail_length+rail_height-10],
+			[rail_thick+5, 0, motor_rail_length+rail_height+30],
+			[rail_thick+5, 0, rail_thick+5],
+			[-100, 0, rail_thick+5],
+		], 2, fillet=9, wirenum=4);
+	}
 }
-//!final_assembly_7(explode=100, arrows=true);
+//!final_assembly_8(explode=100, arrows=true);
+//!final_assembly_8();
 
 
-module final_assembly_8(explode=0, arrows=false)
+module final_assembly_9(explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [80, 0, 20] 2500
 	// desc: Cradle the spool axle in the spool holder top.
@@ -1396,9 +1630,9 @@ module final_assembly_8(explode=0, arrows=false)
 	ypos = 100*sin(360*$t);
 	zpos = (rail_length*2-platform_length)/3*cos(240+360*$t);
 
-	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
-		extruder_bridge_assembly_13();
-		yrot(90) zrot(-90) final_assembly_3();
+	final_assembly_2(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
+		extruder_bridge_assembly_14();
+		yrot(90) zrot(-90) final_assembly_4();
 		ramps_mount();
 
 		right(rail_height/2) {
@@ -1414,8 +1648,18 @@ module final_assembly_8(explode=0, arrows=false)
 		build_platform();
 	}
 	//cable_chain_xy_joiner_mount();
+	left(motor_rail_length/2+rail_length+platform_length) {
+		wiring([
+			[rail_thick+5, rail_width/3, 2*rail_length+motor_rail_length+rail_height],
+			[rail_thick+5, rail_width/3, rail_length+motor_rail_length+rail_height-10],
+			[rail_thick+5, 0, motor_rail_length+rail_height+30],
+			[rail_thick+5, 0, rail_thick+5],
+			[-100, 0, rail_thick+5],
+		], 2, fillet=9, wirenum=4);
+	}
 }
-//!final_assembly_8(explode=100, arrows=true);
+//!final_assembly_9(explode=100, arrows=true);
+//!final_assembly_9();
 
 
 module full_rendering()
@@ -1424,9 +1668,9 @@ module full_rendering()
 	ypos = 100*sin(360*$t);
 	zpos = (rail_length*2-platform_length)/3*cos(240+360*$t);
 
-	final_assembly_1(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
-		extruder_bridge_assembly_13();
-		yrot(90) zrot(-90) final_assembly_3();
+	final_assembly_2(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos) {
+		extruder_bridge_assembly_14();
+		yrot(90) zrot(-90) final_assembly_4();
 		ramps_mount();
 
 		right(rail_height/2) {
@@ -1445,7 +1689,6 @@ module full_rendering()
 
 
 full_rendering();
-
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap

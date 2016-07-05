@@ -4,7 +4,7 @@ CONVERT=convert
 PARTFILES=$(sort $(wildcard *_parts.scad))
 TARGETS=$(patsubst %.scad,STLs/%.stl,${PARTFILES})
 ROTFILES=$(shell seq -f 'wiki/snappy_rot%03g.png' 0 10 359.99)
-ASM_MODULES=$(shell grep 'module [a-z0-9_]*_assembly' full_assembly.scad | sed 's/^module //' | sed 's/[^a-z0-9_].*$$//')
+ASM_MODULES=$(shell grep 'module [a-z0-9_]*_assembly' full_assembly.scad | sed 's/^module //' | sed 's/[^a-z0-9_].*$$//' | sed '1!G;h;$$!d')
 ASM_BEFORE_TARGETS=$(patsubst %,docs/assembly/%_before.png,${ASM_MODULES})
 ASM_AFTER_TARGETS=$(patsubst %,docs/assembly/%_after.png,${ASM_MODULES})
 

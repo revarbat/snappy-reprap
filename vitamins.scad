@@ -1,5 +1,6 @@
 include <config.scad>
 include <GDMUtils.scad>
+include <wiring.scad>
 
 
 $fa = 2;
@@ -55,7 +56,7 @@ module jhead_hotend()
 					cube(jhead_block_size, center=true);
 				}
 				left(jhead_block_off) {
-					xrot(90) cylinder(h=100, d=6, center=true);
+					xrot(90) cylinder(h=100, d=6.0, center=true);
 				}
 				cylinder(h=100, d=2, center=true, $fn=12);
 			}
@@ -69,6 +70,34 @@ module jhead_hotend()
 				cylinder(h=50, d=0.4, center=true, $fn=8);
 			}
 		}
+		color("goldenrod")
+		down((jhead_length+block_h)/2) {
+			left(jhead_block_off) {
+				xrot(90) cylinder(h=jhead_block_size[0]+1, d=6, center=true);
+			}
+		}
+		down((jhead_length+block_h)/2) {
+			left(jhead_block_off+1) {
+				wiring([
+					[0, jhead_block_size[0]/2-2, 0],
+					[0, jhead_block_size[0]/2+5, 0],
+					[24, jhead_block_size[0]+12, jhead_length-10],
+					[24.01, jhead_block_size[0]+12, jhead_length],
+				], 2, fillet=8);
+			}
+			wiring([
+				[0, jhead_block_size[0]/2-2, 0],
+				[0, jhead_block_size[0]/2+5, 0],
+				[18, jhead_block_size[0]+12, jhead_length-10],
+				[18.01, jhead_block_size[0]+12, jhead_length],
+			], 2, fillet=8, wirenum=2);
+		}
+		wiring([
+			[16.01, 30, 15],
+			[16, 30, 20],
+			[0, rail_width/3, 20],
+			[-extruder_length/2-10, rail_width/3, 20],
+		], 4, fillet=5);
 	}
 	color("silver")
 	up(jhead_groove_thick+jhead_shelf_thick) {
@@ -189,7 +218,6 @@ module microswitch()
 	}
 }
 //!microswitch();
-
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap

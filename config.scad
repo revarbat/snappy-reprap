@@ -15,7 +15,6 @@ platform_thick  =   7.0;  // mm
 rail_length     = 133.3;  // mm
 rail_height     =  50.0;  // mm
 rail_thick      =   7.0;  // mm
-rail_offset     =  12.0;  // mm
 
 motor_rail_length = 133.3; // mm
 
@@ -33,7 +32,7 @@ gear_teeth          =  8;
 set_screw_size      =  3;    // mm size of set screw in drive gears, couplers, etc
 motor_length        = 39.25; // mm length of NEMA17 motor.
 motor_shaft_size    =  5;    // mm diameter of NEMA17 motor shaft.
-motor_shaft_length  = 20;    // mm length of NEMA17 motor shaft.
+motor_shaft_length  = 20;    // mm length of exposed NEMA17 motor shaft.
 motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
 
 // Currently configured for 3/8" ACME threaded rod.
@@ -124,6 +123,8 @@ gear_backlash = printer_slop/2;
 
 
 // Commonly used derived values.  Don't change these.
+shaft_clear = max(20.0, motor_shaft_length)-20.0;
+rail_offset = shaft_clear+12.0;
 rail_spacing = platform_width - joiner_width*4 - 10;
 rail_width = rail_spacing + joiner_width*2;
 motor_mount_spacing=43+joiner_width+10;

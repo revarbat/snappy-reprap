@@ -69,7 +69,7 @@ module xy_sled()
 				rack_module = rack_tooth_size / 3.1415926535;
 				rack_pcd = gear_teeth * rack_module;
 				left(rack_pcd/2) {
-					up(platform_thick+rack_base+rack_height/2) {
+					up(platform_thick+rack_base+shaft_clear+rack_height/2) {
 						difference() {
 							zrot(-90) herringbone_rack(l=platform_length, h=rack_height+0.1, w=10, tooth_size=rack_tooth_size);
 							up(rack_height/2) {
@@ -84,9 +84,9 @@ module xy_sled()
 
 					// rack base
 					addendum = rack_module;
-					up(platform_thick/2+rack_base/2) {
+					up((platform_thick+shaft_clear+rack_base)/2) {
 						left(10/2-addendum) {
-							cube(size=[10,platform_length,platform_thick+rack_base], center=true);
+							cube(size=[10,platform_length,platform_thick+rack_base+shaft_clear], center=true);
 						}
 					}
 				}
