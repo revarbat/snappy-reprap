@@ -11,7 +11,7 @@ $fs = 2;
 module cable_chain_joiner_mount()
 {
 	joiner_length=15;
-	color([0.5, 0.5, 1.0])
+	color([1.0, 1.0, 1.0])
 	prerender(convexity=10)
 	union () {
 		left(joiner_length+cable_chain_width/2-0.05) {
@@ -36,7 +36,7 @@ module cable_chain_joiner_mount()
 module cable_chain_joiner_vertical_mount()
 {
 	joiner_length=10;
-	color([0.5, 0.5, 1.0])
+	color([1.0, 1.0, 1.0])
 	prerender(convexity=10)
 	union () {
 		left(joiner_length+cable_chain_width/2+5-0.05) {
@@ -71,7 +71,7 @@ module cable_chain_joiner_vertical_mount()
 module cable_chain_xy_joiner_mount()
 {
 	joiner_length=10;
-	color([0.5, 0.5, 1.0])
+	color([1.0, 1.0, 1.0])
 	prerender(convexity=10)
 	union () {
 		translate([-(joiner_length+cable_chain_width/2-3), -joiner_length, 0]) {
