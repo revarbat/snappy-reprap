@@ -261,9 +261,7 @@ module zflip_copy() {children(); mirror([0,0,1]) children();}
 //     translate([6,0,0]) cube(size=[9,1,4], center=true);
 module rot_copies(rots=[[0,0,0]])
 {
-	for (rot = rots)
-		rotate(rot)
-			children();
+	for (rot = rots) rotate(rot) children();
 }
 
 
@@ -352,9 +350,7 @@ module zrot_copies(rots=[0], offset=0, count=undef)
 //     sphere(r=3,center=true);
 module translate_copies(offsets=[[0,0,0]])
 {
-	for (off = offsets)
-		translate(off)
-			children();
+	for (off = offsets) translate(off) children();
 }
 module place_copies(a=[[0,0,0]]) {for (p = a) translate(p) children();}
 
@@ -633,28 +629,74 @@ module chamfer(chamfer=1, size=[1,1,1], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]])
 }
 
 
-// Creates a shape that can be used to fillet a 90 degree edge.
+// Creates a shape that can be used to fillet a vertical 90 degree edge.
 // Difference it from the object to be filletted.  The center of the mask
 // object should align exactly with the edge to be filletted.
-module fillet_mask(h=1.0, r=1.0)
+//   h = height of vertical mask.
+//   r = radius of the fillet.
+//   center = If true, vertically center mask.
+// Example:
+//   difference() {
+//       cube(size=100, center=false);
+//       up(50) fillet_mask(h=100.1, r=10.0);
+//   }
+module fillet_mask(h=1.0, r=1.0, center=true)
 {
-	render(convexity=4)
-	difference() {
-		cube(size=[r*2, r*2, h], center=true);
-		grid_of(count=[2,2], spacing=r*2-0.05) {
-			cylinder(h=h+1, r=r, center=true);
-		}
+	n = ceil(segs(r)/4)*4;
+	linear_extrude(height=h, convexity=4, center=center) {
+		polygon(
+			points=concat(
+				[for (a = [  0:360/n: 90]) [r*cos(a)-r, r*sin(a)-r]],
+				[for (a = [270:360/n:360]) [r*cos(a)-r, r*sin(a)+r]],
+				[for (a = [180:360/n:270]) [r*cos(a)+r, r*sin(a)+r]],
+				[for (a = [ 90:360/n:180]) [r*cos(a)+r, r*sin(a)-r]]
+			)
+		);
 	}
 }
 
 
+// Creates a vertical mask that can be used to fillet the edge where two
+// face meet, at any arbitrary angle.  Difference it from the object to
+// be filletted.  The center of the mask should align exactly with the
+// edge to be filletted.
+//   h = height of vertical mask.
+//   r = radius of the fillet.
+//   ang = angle that the planes meet at.
+//   center = If true, vertically center mask.
+// Example:
+//   fillet_planes_joint_mask(h=50.0, r=10.0, ang=120, $fn=32);
+module fillet_planes_joint_mask(h=1.0, r=1.0, ang=90, center=true)
+{
+	sweep = 180-ang;
+	n = ceil(segs(r)*sweep/360);
+	x = r*sin(90-(ang/2))/sin(ang/2);
+	linear_extrude(height=h, convexity=4, center=center) {
+		polygon(
+			points=concat(
+				[for (i = [0:n]) let (a=90+ang+i*sweep/n) [r*cos(a)+x, r*sin(a)+r]],
+				[for (i = [0:n]) let (a=90+i*sweep/n) [r*cos(a)+x, r*sin(a)-r]],
+				[
+					[min(-1, r*cos(270-ang)+x-1), r*sin(270-ang)-r],
+					[min(-1, r*cos(90+ang)+x-1), r*sin(90+ang)+r],
+				]
+			)
+		);
+	}
+}
+
+
+// Creates a shape that can be used to fillet the corner of an angle.
+// Difference it from the object to be filletted.  The center of the mask
+// object should align exactly with the point of the corner to be filletted.
+//   fillet = radius of the fillet.
+//   ang = angle between planes that you need to fillet the corner of.
 // Example:
 //   fillet_edge_joint_mask(fillet=100, ang=90);
 module fillet_edge_joint_mask(fillet=1.0, ang=90)
 {
 	dy = fillet * tan(ang/2);
 	th = max(dy, fillet*2);
-	render(convexity=4)
 	difference() {
 		down(dy) {
 			up(th/2) {
@@ -679,23 +721,6 @@ module fillet_edge_joint_mask(fillet=1.0, ang=90)
 }
 
 
-// Creates a shape that can be used to fillet a convex edge at any angle.
-// Difference it from the object to be filletted.  The center of the mask
-// object should align exactly with the edge to be filletted.
-module fillet_planes_joint_mask(h=1.0, r=1.0, ang=90)
-{
-	x = r*sin(90-(ang/2))/sin(ang/2);
-	render(convexity=4)
-	difference() {
-		cylinder(h=h, r=abs(x), center=true, $fn=32);
-		translate([x, r, 0]) {
-			cylinder(h=h+1, r=r, center=true);
-		}
-	}
-}
-//!fillet_planes_joint_mask(h=50.0, r=10.0, ang=240, $fn=32);
-
-
 // Creates a shape that you can use to round 90 degree corners on a fillet.
 // Difference it from the object to be filletted.  The center of the mask
 // object should align exactly with the corner to be filletted.
@@ -711,7 +736,6 @@ module fillet_planes_joint_mask(h=1.0, r=1.0, ang=90)
 //   }
 module corner_fillet_mask(r=1.0)
 {
-	render(convexity=4)
 	difference() {
 		cube(size=r*2, center=true);
 		grid_of(count=[2,2,2], spacing=r*2-0.05) {
@@ -719,6 +743,7 @@ module corner_fillet_mask(r=1.0)
 		}
 	}
 }
+//!corner_fillet_mask(r=10.0);
 
 
 // Create a mask that can be used to round the end of a cylinder.
@@ -875,19 +900,25 @@ module chamfcube(
 //   rrect(size=[5,7,3], r=1, $fn=24);
 module rrect(size=[1,1,1], r=0.25, center=false)
 {
-	$fn = ($fn==undef)?max(18,floor(180/asin(1/r)/2)*2):$fn;
-	xoff=abs(size[0])/2-r;
-	yoff=abs(size[1])/2-r;
-	offset = center?[0,0,0]:size/2;
-	translate(offset) {
-		union(){
-			grid_of([-xoff,xoff],[-yoff,yoff])
-				cylinder(r=r,h=size[2],center=true,$fn=$fn);
-			cube(size=[xoff*2,size[1],size[2]], center=true);
-			cube(size=[size[0],yoff*2,size[2]], center=true);
+	w = size[0];
+	l = size[1];
+	h = size[2];
+	up(center? 0 : h/2) {
+		linear_extrude(height=h, convexity=2, center=true) {
+			left(w/2-r) {
+				back(l/2-r) circle(r=r, center=true);
+				fwd(l/2-r) circle(r=r, center=true);
+			}
+			right(w/2-r) {
+				back(l/2-r) circle(r=r, center=true);
+				fwd(l/2-r) circle(r=r, center=true);
+			}
+			square(size=[w, l-r*2], center=true);
+			square(size=[w-r*2, l], center=true);
 		}
 	}
 }
+
 
 
 // Makes a cube with rounded (filletted) edges and corners.
@@ -927,63 +958,69 @@ module rcube(size=[1,1,1], r=0.25, center=false)
 // Creates a cylinder with chamferred edges.
 //   h = height of cylinder. (Default: 1.0)
 //   r = radius of cylinder. (Default: 1.0)
-//   chamfer = X axis inset of the edge chamfer. (Default: 0.25)
+//   d = diameter of cylinder. (use instead of r)
+//   chamfer = radial inset of the edge chamfer. (Default: 0.25)
+//   chamfedge = length of the chamfer edge. (Use instead of chamfer)
 //   center = boolean.  If true, cylinder is centered. (Default: false)
 //   top = boolean.  If true, chamfer the top edges. (Default: True)
 //   bottom = boolean.  If true, chamfer the bottom edges. (Default: True)
 // Example:
 //   chamferred_cylinder(h=50, r=20, chamfer=5, angle=45, bottom=false, center=true);
-module chamferred_cylinder(h=1, r=1, chamfer=0.25, angle=45, center=false, top=true, bottom=true)
+//   chamferred_cylinder(h=50, r=20, chamfedge=10, angle=30, center=true);
+module chamferred_cylinder(h=1, r=1, d=undef, chamfer=0.25, chamfedge=undef, angle=45, center=false, top=true, bottom=true)
 {
-	off = center? 0 : h/2;
-	up(off) {
-		difference() {
-			cylinder(r=r, h=h, center=true);
-			if (top) {
-				translate([0, 0, h/2]) {
-					rotate_extrude(convexity = 4) {
-						translate([r, 0, 0]) {
-							scale([1, tan(angle), 1]) {
-								zrot(45) square(size=sqrt(2)*chamfer, center=true);
-							}
-						}
-					}
-				}
-			}
-			if (bottom) {
-				translate([0, 0, -h/2]) {
-					rotate_extrude(convexity = 4) {
-						translate([r, 0, 0]) {
-							scale([1, tan(angle), 1]) {
-								zrot(45) square(size=sqrt(2)*chamfer, center=true);
-							}
-						}
-					}
-				}
-			}
+	chamf = (chamfedge == undef)? chamfer * sqrt(2) : chamfedge;
+	x = (chamfedge == undef)? chamfer : (chamfedge * sin(angle));
+	y = (chamfedge == undef)? chamfer*sin(90-angle)/sin(angle) : (chamfedge * sin(90-angle));
+	rad = d == undef? r : d / 2.0;
+	up(center? 0 : h/2) {
+		rotate_extrude(angle=360, convexity=2) {
+			polygon(
+				points=[
+					[0, h/2],
+					[rad-x*(top?1:0), h/2],
+					[rad, h/2-y*(top?1:0)],
+					[rad, -h/2+y*(bottom?1:0)],
+					[rad-x*(bottom?1:0), -h/2],
+					[0, -h/2],
+					[0, h/2],
+				]
+			);
 		}
 	}
 }
+
+module chamf_cyl(h=1, r=1, d=undef, chamfer=0.25, chamfedge=undef, angle=45, center=false, top=true, bottom=true)
+	chamferred_cylinder(h=h, r=d, d=d, chamfer=chamfer, chamfedge=chamfedge, angle=angle, center=center, top=top, bottom=bottom);
+//!chamf_cyl(h=20, d=20, chamfedge=10, angle=30, center=true, $fn=36);
 
 
 // Creates a cylinder with filletted (rounded) ends.
 //   h = height of cylinder. (Default: 1.0)
 //   r = radius of cylinder. (Default: 1.0)
+//   d = diameter of cylinder. (Use instead of r)
 //   fillet = radius of the edge filleting. (Default: 0.25)
 //   center = boolean.  If true, cylinder is centered. (Default: false)
 // Example:
 //   rcylinder(h=50, r=20, fillet=5, center=true, $fa=1, $fs=1);
-module rcylinder(h=1, r=1, fillet=0.25, center=false)
+module rcylinder(h=1, r=1, d=undef, fillet=0.25, center=false)
 {
-	off = center? 0 : h/2;
-	up(off) {
-		grid_of(count=[1,1,2], spacing=h-2*fillet) {
-			torus(or=r, ir=r-2*fillet);
-			cylinder(r=r-fillet, h=fillet*2, center=true);
+	d = (d == undef)? r * 2.0 : d;
+	up(center? 0 : h/2) {
+		rotate_extrude(angle=360, convexity=2) {
+			left(d/2-fillet) {
+				back(h/2-fillet) circle(r=fillet, center=true);
+				fwd(h/2-fillet) circle(r=fillet, center=true);
+			}
+			left(d/2/2) square(size=[d/2, h-fillet*2], center=true);
+			left((d/2-fillet)/2) square(size=[d/2-fillet, h], center=true);
 		}
-		cylinder(r=r, h=h-2*fillet, center=true);
 	}
 }
+
+module filleted_cylinder(h=1, r=1, d=undef, fillet=0.25, center=false)
+	rcylinder(h=h, r=r, d=d, fillet=fillet, center=center);
+
 
 
 // Creates a pyramidal prism with a given number of sides.
@@ -1020,6 +1057,40 @@ module prism(n=3, h=1, l=1, r=undef, d=undef, circum=false, center=false)
 }
 
 
+// Creates a right triangle, with the hypotenuse on the right (X+) side.
+//   size = [width, thickness, height]
+//   center = true if triangle will be centered.
+// Examples:
+//   right_triangle([4, 1, 6], center=true);
+//   right_triangle([4, 1, 9]);
+module right_triangle(size=[1, 1, 1], center=false)
+{
+	w = size[0];
+	thick = size[1];
+	h = size[2];
+	translate(center? [-w/2, -thick/2, -h/2] : [0, 0, 0]) {
+		polyhedron(
+			points=[
+				[0, 0, 0],
+				[0, 0, h],
+				[w, 0, 0],
+				[0, thick, 0],
+				[0, thick, h],
+				[w, thick, 0]
+			],
+			faces=[
+				[0, 1, 2],
+				[0, 2, 5, 3],
+				[0, 3, 4, 1],
+				[1, 4, 5, 2],
+				[3, 5, 4]
+			],
+			convexity=2
+		);
+	}
+}
+
+
 // Creates a trapezoidal prism.
 //   size1 = [width, length] of the bottom of the prism.
 //   size2 = [width, length] of the top of the prism.
@@ -1030,42 +1101,62 @@ module prism(n=3, h=1, l=1, r=undef, d=undef, circum=false, center=false)
 //   trapezoid(size1=[2,6], size2=[4,0], h=4, center=false);
 module trapezoid(size1=[1,1], size2=[1,1], h=1, center=false)
 {
-	ave = (size1 + size2)/2;
-	render(convexity=3)
+	s1 = [max(size1[0], 0.001), max(size1[1], 0.001)];
+	s2 = [max(size2[0], 0.001), max(size2[1], 0.001)];
 	up(center? 0 : h/2) {
-		linear_extrude(height=h/2, scale=[size2[0]/ave[0],size2[1]/ave[1]])
-			square(ave, center=true);
-		mirror([0,0,1])
-			linear_extrude(height=h/2, scale=[size1[0]/ave[0],size1[1]/ave[1]])
-				square(ave, center=true);
+		polyhedron(
+			points=[
+				[+s2[0]/2, +s2[1]/2, +h/2],
+				[+s2[0]/2, -s2[1]/2, +h/2],
+				[-s2[0]/2, -s2[1]/2, +h/2],
+				[-s2[0]/2, +s2[1]/2, +h/2],
+				[+s1[0]/2, +s1[1]/2, -h/2],
+				[+s1[0]/2, -s1[1]/2, -h/2],
+				[-s1[0]/2, -s1[1]/2, -h/2],
+				[-s1[0]/2, +s1[1]/2, -h/2],
+			],
+			faces=[
+				[0, 1, 2, 3],
+				[0, 4, 5, 1],
+				[1, 5, 6, 2],
+				[2, 6, 7, 3],
+				[3, 7, 4, 0],
+				[4, 7, 6, 5],
+			],
+			convexity=2
+		);
 	}
 }
 
 
+// Created a sphere with a conical hat, to make a 3D teardrop.
+//   r = radius of spherical portion of the bottom. (Default: 1)
+//   d = diameter of spherical portion of bottom. (Use instead of r)
+//   h = height above sphere center to truncate teardrop shape. (Default: 1)
+//   maxang = angle of cone on top from vertical.
+// Example:
+//   onion(h=15, r=10, maxang=30);
 module onion(h=1, r=1, d=undef, maxang=45)
 {
 	rr = (d!=undef)? (d/2.0) : r;
 	xx = rr*cos(maxang);
 	yy = rr*sin(maxang);
-	hh = h-yy;
-	if (maxang < 0.01) {
-		cylinder(h=h, r=rr);
-		sphere(r=rr);
-	} else if (hh <= 0) {
-		up(h) bottom_half(2.1*rr) down(h) sphere(r=rr);
-	} else {
-		x2 = hh/tan(90-maxang);
-		if (x2 <= xx) {
-			up(yy) {
-				bottom_half(2.1*rr) down(yy) sphere(r=rr);
-				down(0.05) cylinder(h=hh+0.05, r1=xx, r2=xx-x2);
+	tipy = xx*sin(90-maxang)/sin(maxang) + yy;
+	rotate_extrude(angle=360, convexity=4) {
+		difference() {
+			union() {
+				circle(r=rr, center=true);
+				polygon(
+					points=[
+						[0, 0],
+						[0, tipy],
+						[xx, yy],
+						[rr, 0]
+					]
+				);
 			}
-		} else {
-			h2 = xx*tan(90-maxang);
-			up(yy) {
-				bottom_half(2.1*rr) down(yy) sphere(r=rr);
-				down(0.05) cylinder(h=h2+0.05, r1=xx, r2=0);
-			}
+			back(tipy/2+h) square(size=[rr*2, tipy], center=true);
+			left(rr) square(size=rr*2, center=true);
 		}
 	}
 }
@@ -1124,16 +1215,11 @@ module slot(
 	r1 = (r1 != undef)? r1 : ((d1 != undef)? (d1/2) : r);
 	r2 = (r2 != undef)? r2 : ((d2 != undef)? (d2/2) : r);
 	delta = p2 - p1;
-	echo(delta);
 	theta = atan2(delta[1], delta[0]);
-	echo(theta);
 	xydist = sqrt(pow(delta[0],2) + pow(delta[1],2));
 	phi = atan2(delta[2], xydist);
-	echo(phi);
 	dist = sqrt(pow(delta[2],2) + xydist*xydist);
-	echo(dist);
 	$fn = quantup(segs(max(r1,r2)),4);
-	echo($fn);
 	translate(p1) {
 		zrot(theta) {
 			yrot(phi) {
@@ -1178,7 +1264,7 @@ module arced_slot(
 		translate([r, 0, 0]) cylinder(h=h, r1=sr1, r2=sr2, center=true);
 		difference() {
 			angle_pie_mask(h=h, r1=(r+sr1), r2=(r+sr2), ang=da);
-			cylinder(h=h+1, r1=(r-sr1), r2=(r-sr2), center=true);
+			cylinder(h=h+0.05, r1=(r-sr1), r2=(r-sr2), center=true);
 		}
 		zrot(da) {
 			translate([r, 0, 0]) cylinder(h=h, r1=sr1, r2=sr2, center=true);
@@ -1225,16 +1311,17 @@ module teardrop(r=1, h=1, ang=45, $fn=undef)
 //   narrowing_strut(w=10, l=100, wall=5, ang=30);
 module narrowing_strut(w=10, l=100, wall=5, ang=30)
 {
-	union() {
-		translate([0, 0, wall/2])
-			cube(size=[w, l, wall], center=true);
-		difference() {
-			translate([0, 0, wall])
-				scale([1, 1, 1/tan(ang)]) yrot(45)
-					cube(size=[w/sqrt(2), l, w/sqrt(2)], center=true);
-			translate([0, 0, -w+0.05])
-				cube(size=[w+1, l+1, w*2], center=true);
-		}
+	tipy = wall + (w/2)*sin(90-ang)/sin(ang);
+	xrot(90) linear_extrude(height=l, center=true, steps=2) {
+		polygon(
+			points=[
+				[-w/2, 0],
+				[-w/2, wall],
+				[0, tipy],
+				[w/2, wall],
+				[w/2, 0]
+			]
+		);
 	}
 }
 
@@ -1264,7 +1351,7 @@ module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=3, bracing=true
 				intersection() {
 					cube(size=[thick, l, h], center=true);
 					xrot_copies([-dang,dang]) {
-						grid_of(za=[-strut/4, strut/4]) {
+						zspread(strut/2) {
 							scale([1,1,1.5]) yrot(45) {
 								cube(size=[thick/sqrt(2), dlen, thick/sqrt(2)], center=true);
 							}
@@ -1367,9 +1454,9 @@ module sparse_strut(h=50, l=100, thick=4, maxang=30, strut=5, max_bridge = 20)
 	len = zstep / cos(ang);
 
 	union() {
-		grid_of(za=[-zoff, zoff])
+		zspread(zoff*2)
 			cube(size=[thick, l, strut], center=true);
-		grid_of(ya=[-yoff, yoff])
+		yspread(yoff*2)
 			cube(size=[thick, strut, h], center=true);
 		grid_of(ya=[-yoff+ystep/2:ystep:yoff], za=[-zoff+zstep/2:zstep:zoff]) {
 			xrot( ang) cube(size=[thick, strut, len], center=true);
@@ -1395,14 +1482,13 @@ module corrugated_wall(h=50, l=100, thick=5, strut=5, wall=2)
 	spacing = thick*sqrt(3);
 	corr_count = floor(innerlen/spacing/2)*2;
 
-	grid_of(ya=[-(l-strut)/2, (l-strut)/2]) {
+	yspread(l-strut) {
 		cube(size=[thick, strut, h], center=true);
 	}
-	grid_of(za=[-(h-wall)/2, (h-wall)/2]) {
+	zspread(h-wall) {
 		cube(size=[thick, l, wall], center=true);
 	}
 
-	prerender(convexity=corr_count*4+4)
 	difference() {
 		for (ypos = [-innerlen/2:spacing:innerlen/2]) {
 			translate([0, ypos, 0]) {
@@ -1412,10 +1498,10 @@ module corrugated_wall(h=50, l=100, thick=5, strut=5, wall=2)
 					zrot(45) cube(size=[wall, thick*sqrt(2), inner_height], center=true);
 			}
 		}
-		grid_of(xa=[-thick, thick]) {
+		xspread(2*thick) {
 			cube(size=[thick, l, h], center=true);
 		}
-		grid_of(ya=[-l, l]) {
+		yspread(2*l) {
 			cube(size=[thick*2, l, h], center=true);
 		}
 	}
@@ -2001,11 +2087,12 @@ module extrude_2dpath_along_spiral(polyline, h, r, twist=360) {
 //   polyline = Array of points of a polyline path, to be extruded.
 //   path = Array of points of a polyline path, to extrude along.
 //   tilt = True if extrusion should tilt vertically when following path.
+//   convexity = max number of surfaces any single ray can pass through.
 // Example:
 //   shape = [ [-15, 0], [25, -15], [-5, 10], [0, 10], [5, 10], [10, 5], [15, 0], [10, -5], [5, -10], [0, -10], [-5, -10], [-10, -5], [-15, 0] ];
 //   path = [ [0, 0, 0], [33, 33, 33], [66, -33, -33], [100, 0, 0] ];
 //   extrude_2dpath_along_3dpath(shape, path, tilt=false);
-module extrude_2dpath_along_3dpath(polyline, path, tilt=true) {
+module extrude_2dpath_along_3dpath(polyline, path, tilt=true, convexity=10) {
 	pline_count = len(polyline);
 	path_count = len(path);
 
@@ -2043,7 +2130,7 @@ module extrude_2dpath_along_3dpath(polyline, path, tilt=true) {
 		[[for (b = [0:pline_count-1]) b+(path_count-1)*pline_count]]
 	);
 
-	polyhedron(points=poly_points, faces=poly_faces, convexity=10);
+	polyhedron(points=poly_points, faces=poly_faces, convexity=convexity);
 }
 
 
