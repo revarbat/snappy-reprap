@@ -78,22 +78,23 @@ module gear (
 	t  = mm_per_tooth/2-backlash/2;               //tooth thickness at pitch circle
 	k  = -iang(b, p) - t/2/p/pi*180;              //angle to where involute meets base circle on each side of tooth
 	difference() {
-		for (i = [0:number_of_teeth-teeth_to_hide-1] )
-			rotate([0,0,i*360/number_of_teeth])
-				linear_extrude(height = thickness, center = true, convexity = 10, twist = twist)
+		linear_extrude(height = thickness, center = true, convexity = 10, twist = twist)
+			for (i = [0:number_of_teeth-teeth_to_hide-1] )
+				rotate([0,0,i*360/number_of_teeth])
 					polygon(
 						points=[
-							[0, -hole_diameter/10],
+							polar(hole_diameter/10, -181/number_of_teeth),
 							polar(r, -181/number_of_teeth),
 							polar(r, r<b ? k : -180/number_of_teeth),
 							q7(0/5,r,b,c,k, 1),q7(1/5,r,b,c,k, 1),q7(2/5,r,b,c,k, 1),q7(3/5,r,b,c,k, 1),q7(4/5,r,b,c,k, 1),q7(5/5,r,b,c,k, 1),
 							q7(5/5,r,b,c,k,-1),q7(4/5,r,b,c,k,-1),q7(3/5,r,b,c,k,-1),q7(2/5,r,b,c,k,-1),q7(1/5,r,b,c,k,-1),q7(0/5,r,b,c,k,-1),
 							polar(r, r<b ? -k : 180/number_of_teeth),
-							polar(r, 181/number_of_teeth)
+							polar(r, 181/number_of_teeth),
+							polar(hole_diameter/10, 181/number_of_teeth),
 						],
-						paths=[[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]]
+						paths=[[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]]
 					);
-		cylinder(h=2*thickness+1, r=hole_diameter/2, center=true, $fn=20);
+		cylinder(h=2*thickness+1, r=hole_diameter/2, center=true);
 	}
 };	
 //these 4 functions are used by gear
@@ -115,9 +116,9 @@ module rack (
 	pi = 3.1415926;
 	a = mm_per_tooth / pi; //addendum
 	t = a*cos(pressure_angle)-1;         //tooth side is tilted so top/bottom corners move this amount
-	for (i = [0:number_of_teeth-1] )
-		translate([i*mm_per_tooth,0,0])
-			linear_extrude(height = thickness, center = true, convexity = 10)
+	linear_extrude(height = thickness, center = true, convexity = 10)
+		for (i = [0:number_of_teeth-1] )
+			translate([i*mm_per_tooth,0,0])
 				polygon(
 					points=[
 						[-mm_per_tooth * 3/4,                 a-height],
