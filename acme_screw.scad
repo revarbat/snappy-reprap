@@ -14,14 +14,14 @@ module acme_threaded_rod(
 	astep = 360/segs(d/2);
 	asteps = ceil(360/astep);
 	threads = ceil(l/pitch)+2;
-	pa_delta = (thread_depth*1.25)*sin(thread_angle)/2;
+	pa_delta = min(pitch/4.1,(thread_depth+0.05)*tan(thread_angle)/2);
 	poly_points = [
 		for (
 			thread = [0 : threads-1],
 			astep = [0 : asteps-1],
 			i = [0 : 3]
 		) let (
-			r = max(0, d/2 - ((i==1||i==2)? 0 : (thread_depth*1.25))),
+			r = max(0, d/2 - ((i==1||i==2)? 0 : (thread_depth+0.05))),
 			a = astep / asteps,
 			rx = r * cos(360 * a),
 			ry = r * sin(360 * a),
@@ -31,11 +31,12 @@ module acme_threaded_rod(
 	point_count = len(poly_points);
 	poly_faces = concat(
 		[
-			for (thread = [0 : threads-1])
-			for (astep = [0 : asteps-1])
-			for (j = [0 : 3])
-			for (i = [0 : 1])
-			let(
+			for (
+				thread = [0 : threads-1],
+				astep = [0 : asteps-1],
+				j = [0 : 3],
+				i = [0 : 1]
+			) let(
 				p0 = (thread*asteps + astep)*4 + j,
 				p1 = p0 + 4,
 				p2 = (thread*asteps + astep)*4 + ((j+1)%4),
@@ -54,12 +55,13 @@ module acme_threaded_rod(
 	intersection() {
 		union() {
 			polyhedron(points=poly_points, faces=poly_faces, convexity=10);
-			cylinder(h=(threads+0.5)*pitch, d=d-2*thread_depth, center=true);
+			cylinder(h=(threads+0.5)*pitch, d=d-2*thread_depth, center=true, $fn=asteps);
 		}
 		cube([d+1, d+1, l], center=true);
 	}
 }
 //!acme_threaded_rod(d=3/8*25.4, l=20, pitch=1/8*25.4, thread_depth=1.3, thread_angle=29, $fn=32);
+//!acme_threaded_rod(d=60, l=16, pitch=8, thread_depth=3, thread_angle=45, $fa=2, $fs=2);
 
 
 module acme_threaded_nut(
