@@ -23,14 +23,23 @@ module lifter_screw(d=50, h=10, thread_depth=3, pitch=10, hole=30, pa=50) {
 			up(3) {
 				difference() {
 					cylinder(h=h+0.1, d=d-2*thread_depth-5, center=true);
-					cylinder(h=h+0.1, d=motor_shaft_size+15, center=true);
+					cylinder(h=h+0.1, d=motor_shaft_size+12, center=true);
+				}
+			}
+			hole_diam = (d-2*thread_depth-5-(motor_shaft_size+12))/2 - 2;
+			down(h/2-3/2) {
+				zrot(360/5/2) {
+					zring(r=(d-2*thread_depth-5+motor_shaft_size+12)/2/2, n=5) {
+						cylinder(d=hole_diam, h=3.1, center=true);
+						zflip_copy() down(3/2+0.05) cylinder(d1=hole_diam+2, d2=hole_diam, h=1, center=false);
+					}
 				}
 			}
 			down(h/2-2/2) {
 				cylinder(h=2+0.05, d1=motor_shaft_size+2, d2=motor_shaft_size, center=true);
 			}
 			up(h/2-1) {
-				left(motor_shaft_size/2+2) {
+				left(motor_shaft_size/2+1) {
 					hull() {
 						up(h/4/2) {
 							zspread(h/4) {
