@@ -12,11 +12,11 @@ platform_width  = 150.0;  // mm
 platform_height =  40.0;  // mm
 platform_thick  =   7.0;  // mm
 
-rail_length     = 133.3;  // mm
+rail_length     = 136.0;  // mm  Must be a multiple of lifter_gear_pitch
 rail_height     =  50.0;  // mm
 rail_thick      =   7.0;  // mm
 
-motor_rail_length = 133.3; // mm
+motor_rail_length = 128.0; // mm
 
 groove_angle    =  30;   // degrees
 groove_height   =  12;   // mm
@@ -36,9 +36,10 @@ motor_shaft_length  = 20;    // mm length of exposed NEMA17 motor shaft.
 motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
 
 // Currently configured for 3/8" ACME threaded rod.
-lifter_rod_diam     =   9.5;   // mm
-lifter_rod_length   = 300.0;   // mm
-lifter_rod_pitch    =   3.175; // mm lift per revolution
+lifter_gear_diam   = 60.0; // mm
+lifter_gear_thick  = 16.0; // mm
+lifter_gear_pitch  =  8.0; // mm lift per revolution
+lifter_gear_angle  = 50.0; // degrees tooth face angle
 
 // Mechanical endstop bare microswitch.
 endstop_hole_spacing =  9.5; // mm
