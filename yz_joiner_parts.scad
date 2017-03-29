@@ -128,7 +128,11 @@ module yz_joiner()
 
 			// Top joiners.
 			translate([0, rail_height/2, rail_height+groove_height]) {
-				xrot(90) joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+				xrot(90) {
+					xspread(rail_spacing+joiner_width) {
+						joiner(h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+					}
+				}
 			}
 
 			translate([0, platform_length-joiner_length, rail_height/4]) {

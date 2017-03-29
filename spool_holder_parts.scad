@@ -55,7 +55,9 @@ module spool_holder()
 
 			// Clear space for joiners.
 			up(0.05) {
-				yrot(-90) zrot(90) joiner_pair_clear(spacing=rail_width-joiner_width, h=rail_height, w=joiner_width, a=joiner_angle, clearance=5);
+				yrot(90) zrot(-90) {
+					joiner_pair_clear(spacing=rail_width-joiner_width, h=rail_height, w=joiner_width, a=joiner_angle, clearance=5);
+				}
 			}
 
 			// Spool Dowel notch
@@ -70,9 +72,14 @@ module spool_holder()
 		}
 
 		// Joiner clip.
-		yrot(-90) zrot(90) joiner_pair(spacing=rail_width-joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+		yspread(rail_width-joiner_width) {
+			yrot(90) zrot(-90) {
+				joiner(h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+			}
+		}
 	}
 }
+//!spool_holder();
 
 
 module spool_axle()

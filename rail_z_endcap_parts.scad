@@ -45,7 +45,9 @@ module rail_z_endcap()
 
 		// Joiner clips.
 		translate([0, 0, base_height/2-(base_height-rail_height)/2]) {
-			joiner_pair(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+			xspread(rail_spacing+joiner_width) {
+				joiner(h=rail_height, w=joiner_width, l=joiner_length, a=joiner_angle);
+			}
 		}
 
 		// Endstop clip
