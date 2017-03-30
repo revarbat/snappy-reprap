@@ -57,7 +57,7 @@ UL {
 
 class GenAssemblyIndex(object):
     indexfile = "docs/assembly/index.html"
-    markdownfile = "wiki/Assembly.md"
+    markdownfile = "wiki/v1.1-Assembly.md"
     sourcefile = "full_assembly.scad"
     modules = []
     modinfo = {}

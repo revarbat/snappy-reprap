@@ -1,4 +1,4 @@
-![Snappy Full Rendering](https://github.com/revarbat/snappy-reprap/wiki/snappy_small.png)
+![Snappy Full Rendering](https://github.com/revarbat/snappy-reprap/wiki/v1.1-snappy_small.png)
 
 Snappy-Reprap v1.1
 ==================
@@ -11,8 +11,8 @@ What                 | URL
 -------------------- | -------------------------------------------------------
 GitHub Repository    | https://github.com/revarbat/snappy-reprap
 Project Wiki         | https://github.com/revarbat/snappy-reprap/wiki
-Bill of Materials    | https://github.com/revarbat/snappy-reprap/wiki/BOM
-How to Assemble      | https://github.com/revarbat/snappy-reprap/wiki/Assembly
+Bill of Materials    | https://github.com/revarbat/snappy-reprap/wiki/v1.1-BOM
+How to Assemble      | https://github.com/revarbat/snappy-reprap/wiki/v1.1-Assembly
 RepRap.org Wiki Page | http://reprap.org/wiki/Snappy
 Dev Forum            | https://groups.google.com/forum/#!forum/snappy-reprap-dev
 
