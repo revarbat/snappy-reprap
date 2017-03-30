@@ -110,7 +110,7 @@ class GenAssemblyIndex(object):
             f.write("# Snappy RepRap Assembly Instructions\n\n")
 
             for mod_eng in self.modules:
-                f.write('##%s\n\n' % mod_eng)
+                f.write('## %s\n\n' % mod_eng)
 
                 stepcnt = len(self.modinfo[mod_eng])
                 for stepinfo in self.modinfo[mod_eng]:
