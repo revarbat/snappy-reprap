@@ -29,7 +29,7 @@ module z_rail(explode=0, connectby="")
 				union() {
 					// Bottom.
 					up(rail_thick/2) yrot(90)
-						sparse_strut(h=rail_width, l=l, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
+						sparse_strut(h=rail_width, l=l-0.1, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
 
 					// Walls.
 					zrot_copies([0, 180]) {
@@ -112,13 +112,13 @@ module z_rail(explode=0, connectby="")
 
 				// Clear space for joiners.
 				up(rail_height/2) {
-					joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=l-0.05, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
+					joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=l-0.1, h=rail_height, w=joiner_width, clearance=5, a=joiner_angle);
 				}
 
 
 				// Clear space for Side half joiners
 				up(rail_height/2/2) {
-					yspread(l-20) {
+					yspread(l-2*joiner_width-0.05) {
 						zring(r=rail_spacing/2+joiner_width+side_joiner_len-0.05, n=2) {
 							zrot(-90) {
 								chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
@@ -156,7 +156,7 @@ module z_rail(explode=0, connectby="")
 			// Side half joiners
 			up(rail_height/2/2) {
 				yspread(l-20) {
-					zring(r=rail_spacing/2+joiner_width+side_joiner_len, n=2) {
+					zring(r=rail_spacing/2+joiner_width+side_joiner_len+0.1, n=2) {
 						zrot(-90) {
 							chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
 								half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);

@@ -17,13 +17,13 @@ module sled_endcap()
 					difference() {
 						// Bottom
 						translate([0, -joiner_length/2, -platform_thick/2]) {
-							cube(size=[platform_width-joiner_width, joiner_length, platform_thick], center=true);
+							cube(size=[platform_width-joiner_width*2+0.1, joiner_length-0.05, platform_thick], center=true);
 						}
 
 						// Clear for joiners.
-						down(platform_height/2) {
+						down(platform_height/2-0.05) {
 							fwd(0.05) {
-								joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height, clearance=5, w=joiner_width, a=joiner_angle);
+								joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height, clearance=1, w=joiner_width, a=joiner_angle);
 							}
 						}
 					}

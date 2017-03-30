@@ -19,7 +19,7 @@ module yz_joiner()
 					// Bottom.
 					up(rail_thick/2) {
 						back(platform_length/2) {
-							yrot(90) sparse_strut(h=rail_width, l=platform_length, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
+							yrot(90) sparse_strut(h=rail_width, l=platform_length-0.1, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
 						}
 					}
 
