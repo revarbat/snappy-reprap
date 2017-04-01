@@ -5,7 +5,12 @@ use <acme_screw.scad>
 $fa=2;
 $fs=2;
 
-module lifter_screw(d=50, h=10, thread_depth=3, pitch=10, hole=30, pa=50) {
+module lifter_screw() {
+	d = lifter_screw_diam;
+	h = lifter_screw_thick;
+	thread_depth = lifter_screw_pitch/3.2;
+	pitch = lifter_screw_pitch;
+	pa = lifter_screw_angle;
 	up(h/2) {
 		difference() {
 			union() {
@@ -58,13 +63,7 @@ module lifter_screw(d=50, h=10, thread_depth=3, pitch=10, hole=30, pa=50) {
 //!lifter_screw(d=20, h=20, thread_depth=3, pitch=8);
 
 module lifter_screw_parts() { // make me
-	lifter_screw(
-		d=lifter_gear_diam,
-		h=lifter_gear_thick,
-		thread_depth=lifter_gear_pitch/3.2,
-		pitch=lifter_gear_pitch,
-		pa=lifter_gear_angle
-	);
+	lifter_screw();
 }
 lifter_screw_parts();
 

@@ -101,8 +101,7 @@ STLs/extruder_fan_shroud_parts.stl: joiners.scad
 STLs/extruder_idler_parts.stl: joiners.scad
 STLs/extruder_motor_clip_parts.stl: joiners.scad
 STLs/jhead_platform_parts.stl: joiners.scad
-STLs/lifter_lock_nut_parts.stl: joiners.scad
-STLs/lifter_rod_coupler_parts.stl: joiners.scad
+STLs/lifter_screw_parts.stl: joiners.scad
 STLs/motor_mount_plate_parts.stl: joiners.scad NEMA.scad
 STLs/platform_support_parts.stl: joiners.scad
 STLs/rail_endcap_parts.stl: joiners.scad

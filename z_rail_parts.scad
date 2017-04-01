@@ -4,8 +4,8 @@ use <sliders.scad>
 use <joiners.scad>
 use <acme_screw.scad>
 
-$fa=5;
-$fs=3;
+$fa=2;
+$fs=2;
 
 // connectby valid options: "", "fwd", "back"
 module z_rail(explode=0, connectby="")
@@ -33,12 +33,12 @@ module z_rail(explode=0, connectby="")
 
 					// Walls.
 					zrot_copies([0, 180]) {
-						up(rail_height/2) {
+						up(rail_height/2+0.05) {
 							right((rail_spacing+joiner_width)/2) {
 								if (wall_style == "crossbeams")
-									sparse_strut(h=rail_height, l=l-10, thick=joiner_width, strut=5);
+									sparse_strut(h=rail_height+0.1, l=l-10, thick=joiner_width, strut=5);
 								if (wall_style == "thinwall")
-									thinning_wall(h=rail_height, l=l-10, thick=joiner_width, strut=5, bracing=false);
+									thinning_wall(h=rail_height+0.1, l=l-10, thick=joiner_width, strut=5, bracing=false);
 								if (wall_style == "corrugated")
 									corrugated_wall(h=rail_height, l=l-10, thick=joiner_width, strut=5);
 							}
@@ -53,12 +53,12 @@ module z_rail(explode=0, connectby="")
 					}
 
 					// Screw rack
-					teeth_d = lifter_gear_pitch / 3.2;
-					ang = acos(1 - 2*teeth_d/lifter_gear_diam);
-					teeth_h = sin(ang) * lifter_gear_diam + 6;
+					teeth_d = lifter_screw_pitch / 3.2;
+					ang = acos(1 - 2*teeth_d/lifter_screw_diam);
+					teeth_h = sin(ang) * lifter_screw_diam + 6;
 					render(convexity=10)
 					difference() {
-						xspread(lifter_gear_diam) {
+						xspread(lifter_screw_diam) {
 							up(rail_height/2) {
 								sparse_strut(h=rail_height, l=l, thick=2.0*teeth_d, strut=platform_thick);
 							}
@@ -70,11 +70,11 @@ module z_rail(explode=0, connectby="")
 							up(rail_height+groove_height/2) {
 								xrot(90) {
 									acme_threaded_rod(
-										d=lifter_gear_diam,
+										d=lifter_screw_diam,
 										l=l+0.1,
-										thread_depth=lifter_gear_pitch/3.2,
-										pitch=lifter_gear_pitch,
-										thread_angle=lifter_gear_angle
+										thread_depth=lifter_screw_pitch/3.2,
+										pitch=lifter_screw_pitch,
+										thread_angle=lifter_screw_angle
 									);
 								}
 							}
@@ -91,7 +91,7 @@ module z_rail(explode=0, connectby="")
 								}
 								up(rail_height*3/4 + groove_height/2) {
 									xrot(90) {
-										cylinder(d=lifter_gear_diam+10, h=10, center=true);
+										cylinder(d=lifter_screw_diam+10, h=10, center=true);
 									}
 								}
 							}
@@ -155,7 +155,7 @@ module z_rail(explode=0, connectby="")
 
 			// Side half joiners
 			up(rail_height/2/2) {
-				yspread(l-20) {
+				yspread(l-20.05) {
 					zring(r=rail_spacing/2+joiner_width+side_joiner_len+0.1, n=2) {
 						zrot(-90) {
 							chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
@@ -169,8 +169,10 @@ module z_rail(explode=0, connectby="")
 			// Snap-tab joiners.
 			up(rail_height/2) {
 				xspread(rail_spacing+joiner_width) {
-					fwd(l/2) xrot(180) joiner(h=rail_height, w=joiner_width, l=6, a=joiner_angle);
-					back(l/2) joiner(h=rail_height, w=joiner_width, l=6, a=joiner_angle);
+					yrot(180) {
+						fwd(l/2) xrot(180) joiner(h=rail_height, w=joiner_width, l=6, a=joiner_angle);
+						back(l/2) joiner(h=rail_height, w=joiner_width, l=6, a=joiner_angle);
+					}
 				}
 			}
 		}

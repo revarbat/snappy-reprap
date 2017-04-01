@@ -68,7 +68,7 @@ module rail(l=30, w=joiner_width, h=groove_height, fillet=1.0, ang=groove_angle)
 {
 	difference() {
 		// Rail backing.
-		cube(size=[w, l, h], center=true);
+		down(0.05/2) cube(size=[w, l, h+0.05], center=true);
 
 		xflip_copy() {
 			left(w/2) {

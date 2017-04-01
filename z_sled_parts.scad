@@ -132,7 +132,7 @@ module z_sled(explode=0, arrows=false)
 	}
 
 	// Placeholder lifter screw
-	//#up(rail_height+groove_height/2) cylinder(d=lifter_gear_diam, h=16, center=true);
+	//#up(rail_height+groove_height/2) cylinder(d=lifter_screw_diam, h=16, center=true);
 
 	// Children
 	right(cantilever_length+explode) {

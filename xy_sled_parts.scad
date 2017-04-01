@@ -18,7 +18,7 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 						left(l/2-tooth_size/2) {
 							rack(
 								mm_per_tooth=tooth_size,
-								number_of_teeth=floor(l/tooth_size),
+								number_of_teeth=floor(l/tooth_size)+1,
 								thickness=h/2+0.005,
 								height=w,
 								pressure_angle=20,
@@ -40,7 +40,8 @@ module xy_sled()
 {
 	slider_len = 20;
 	slider_count = 2;
-	slider_spacing = (platform_length-slider_len-15)/(slider_count-1);
+	l = platform_length - 2*printer_slop;
+	slider_spacing = (l-slider_len-15)/(slider_count-1);
 
 	color("MediumSlateBlue")
 	prerender(convexity=10)
@@ -49,18 +50,18 @@ module xy_sled()
 			union() {
 				// Bottom
 				up(platform_thick/2)
-					yrot(90) sparse_strut(h=platform_width, l=platform_length, thick=platform_thick, maxang=45, strut=12, max_bridge=999);
+					yrot(90) sparse_strut(h=platform_width, l=l, thick=platform_thick, maxang=45, strut=12, max_bridge=999);
 
 				// Walls.
 				zrot_copies([0, 180]) {
 					translate([(platform_width-joiner_width)/2, 0, platform_height/2]) {
-						chamfer(chamfer=3, size=[joiner_width, platform_length, platform_height], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+						chamfer(chamfer=3, size=[joiner_width, l, platform_height], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
 							if (wall_style == "crossbeams")
-								sparse_strut(h=platform_height, l=platform_length-10, thick=joiner_width, strut=5);
+								sparse_strut(h=platform_height, l=l-10, thick=joiner_width, strut=5);
 							if (wall_style == "thinwall")
-								thinning_wall(h=platform_height, l=platform_length-10, thick=joiner_width, strut=platform_thick, wall=3, bracing=false);
+								thinning_wall(h=platform_height, l=l-10, thick=joiner_width, strut=platform_thick, wall=3, bracing=false);
 							if (wall_style == "corrugated")
-								corrugated_wall(h=platform_height, l=platform_length-10, thick=joiner_width, strut=platform_thick, wall=3);
+								corrugated_wall(h=platform_height, l=l-10, thick=joiner_width, strut=platform_thick, wall=3);
 						}
 					}
 				}
@@ -71,11 +72,11 @@ module xy_sled()
 				left(rack_pcd/2) {
 					up(platform_thick+rack_base+shaft_clear+rack_height/2) {
 						difference() {
-							zrot(-90) herringbone_rack(l=platform_length, h=rack_height+0.1, w=10, tooth_size=rack_tooth_size);
+							zrot(-90) herringbone_rack(l=l, h=rack_height+0.1, w=10, tooth_size=rack_tooth_size);
 							up(rack_height/2) {
 								left(rack_tooth_size/2) {
 									yrot(15) up(2) {
-										cube(size=[rack_tooth_size*2, platform_length+10, 4], center=true);
+										cube(size=[rack_tooth_size*2, l+10, 4], center=true);
 									}
 								}
 							}
@@ -86,7 +87,7 @@ module xy_sled()
 					addendum = rack_module;
 					up((platform_thick+shaft_clear+rack_base)/2) {
 						left(10/2-addendum) {
-							cube(size=[10,platform_length,platform_thick+rack_base+shaft_clear], center=true);
+							cube(size=[10,l,platform_thick+rack_base+shaft_clear], center=true);
 						}
 					}
 				}
@@ -101,7 +102,7 @@ module xy_sled()
 
 			// Clear space for joiners.
 			translate([0,0,platform_height/2]) {
-				joiner_quad_clear(xspacing=platform_width-joiner_width, yspacing=platform_length-0.1, h=platform_height, w=joiner_width, clearance=5, a=joiner_angle);
+				joiner_quad_clear(xspacing=platform_width-joiner_width, yspacing=l-0.1, h=platform_height, w=joiner_width, clearance=5, a=joiner_angle);
 			}
 
 			// Shrinkage stress relief
@@ -110,7 +111,7 @@ module xy_sled()
 					cube(size=[platform_width+1, 1, platform_thick-2], center=true);
 				}
 				xspread(20, n=7) {
-					yspread(platform_length-10) {
+					yspread(l-10) {
 						cube(size=[1, 20, platform_thick-2], center=true);
 					}
 				}
@@ -120,11 +121,11 @@ module xy_sled()
 		// Snap-tab joiners.
 		up(platform_height/2) {
 			difference() {
-				joiner_quad(xspacing=platform_width-joiner_width, yspacing=platform_length, h=platform_height, w=joiner_width, l=6, a=joiner_angle);
+				joiner_quad(xspacing=platform_width-joiner_width, yspacing=l, h=platform_height, w=joiner_width, l=6, a=joiner_angle);
 				up(platform_height/2) {
 					xspread(platform_width-joiner_width) {
 						xspread(joiner_width) {
-							xrot(90) chamfer_mask(r=3, h=platform_length+10);
+							xrot(90) chamfer_mask(r=3, h=l+10);
 						}
 					}
 				}
