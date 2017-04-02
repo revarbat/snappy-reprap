@@ -3,6 +3,8 @@
 import re
 import sys
 
+snappy_ver = "v1.5"
+
 html_header_string = """\
 <html>
 <head>
@@ -57,7 +59,7 @@ UL {
 
 class GenAssemblyIndex(object):
     indexfile = "docs/assembly/index.html"
-    markdownfile = "wiki/v1.5-Assembly.md"
+    markdownfile = "wiki/%s-Assembly.md" % snappy_ver
     sourcefile = "full_assembly.scad"
     modules = []
     modinfo = {}
@@ -116,7 +118,8 @@ class GenAssemblyIndex(object):
                 for stepinfo in self.modinfo[mod_eng]:
                     stepinfo['base'] = \
                         'https://raw.githubusercontent.com/' \
-                        'revarbat/snappy-reprap/master/docs/assembly/'
+                        'revarbat/snappy-reprap/%s/docs/assembly/' % \
+                        snappy_ver
 
                     if stepcnt > 1:
                         f.write('### Step {step}\n\n'.format(**stepinfo))
