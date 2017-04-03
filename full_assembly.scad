@@ -812,8 +812,8 @@ module extruder_assembly_1(explode=0, arrows=false)
 
 module extruder_assembly_2(explode=0, arrows=false)
 {
-	// view: [0, 15, 15] [75, 0, 20] 1000
-	// desc: Insert the idler axle through the 686 bearing, and lock it into the extruder idler arm with the axle cap.
+	// view: [0, 15, 15] [75, 0, 30] 1000
+	// desc: Insert the idler axle through the 686 bearing, and lock it into the extruder idler arm with the axle clip.
 	extruder_assembly_1();
 	left(printer_slop) {
 		back(extruder_idler_diam/2) {
