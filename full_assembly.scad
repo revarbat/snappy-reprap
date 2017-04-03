@@ -815,12 +815,14 @@ module extruder_assembly_2(explode=0, arrows=false)
 	// view: [0, 15, 15] [75, 0, 20] 1000
 	// desc: Insert the idler axle through the 686 bearing, and lock it into the extruder idler arm with the axle cap.
 	extruder_assembly_1();
-	back(extruder_idler_diam/2) {
-		left(extruder_shaft_len/2/2+1+explode*0.75) {
-			yrot(90) extruder_idler_axle();
-		}
-		right(extruder_shaft_len/2/2+1+explode*0.75) {
-			yrot(-90) extruder_idler_axle_cap();
+	left(printer_slop) {
+		back(extruder_idler_diam/2) {
+			left(extruder_shaft_len/2/2+1+explode*0.75) {
+				xrot(90) yrot(90) extruder_idler_axle();
+			}
+			right(extruder_shaft_len/2/2+1/2+explode*0.75) {
+				xrot(90) yrot(90) extruder_idler_axle_clip();
+			}
 		}
 	}
 
@@ -837,6 +839,7 @@ module extruder_assembly_2(explode=0, arrows=false)
 	}
 }
 //!extruder_assembly_2(explode=100, arrows=true);
+//!extruder_assembly_2();
 
 
 module extruder_assembly_3(explode=0, arrows=false)

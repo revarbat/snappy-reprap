@@ -96,7 +96,7 @@ module extruder_latch()
 	difference() {
 		union() {
 			// Top bar
-			up(topside+topthick/2-1) {
+			up(topside+topthick/2-2) {
 				fwd(backside-10/2) {
 					cube([width, 10, topthick], center=true);
 					down(topthick/2+1/2-0.05) {
@@ -161,16 +161,34 @@ module idler_bearing()
 //!idler_bearing();
 
 
+module extruder_idler_axle_clip() {
+	color("Tan") {
+		difference() {
+			cylinder(h=2, d=extruder_idler_axle+2.5);
+			down(0.05) {
+				cylinder(h=2.1, d1=extruder_idler_axle-2, d2=extruder_idler_axle, $fn=18);
+				hull() {
+					cylinder(h=2.1, d1=extruder_idler_axle-3, d2=extruder_idler_axle-0.5, $fn=18);
+					left(5) cylinder(h=2.1, d1=extruder_idler_axle-3, d2=extruder_idler_axle-0.5, $fn=18);
+				}
+				left(extruder_idler_axle*1.5) cube(size=2*extruder_idler_axle, center=true);
+			}
+		}
+	}
+}
+//!extruder_idler_axle_clip();
+
+
+
 module extruder_idler_axle() {
 	color("Tan") {
 		cylinder(h=1, d=extruder_idler_axle+2);
 		up(1-0.05) {
 			difference() {
-				cylinder(h=width+0.05, d=extruder_idler_axle);
-				up(width*3/4) {
-					cylinder(h=width+0.1, d1=extruder_idler_axle-2.5, d2=extruder_idler_axle-2, $fn=8);
+				cylinder(h=width+printer_slop*2+2.5, d=extruder_idler_axle);
+				up(width+printer_slop*2) {
+					extruder_idler_axle_clip();
 				}
-				cylinder(h=width+2, d=2);
 			}
 		}
 	}
@@ -179,23 +197,15 @@ module extruder_idler_axle() {
 
 
 
-module extruder_idler_axle_cap() {
-	color("Tan") {
-		cylinder(h=1, d=extruder_idler_axle+2);
-		up(1-0.1) cylinder(h=width/4, d1=extruder_idler_axle-2, d2=extruder_idler_axle-2.5, $fn=8);
-	}
-}
-//!extruder_idler_axle_cap();
-
-
-
 module extruder_idler_parts() { // make me
 	up(backside) {
 		right(10) xrot(-90) extruder_idler();
 		left(10) xrot(90) extruder_latch();
 	}
-	left(30) extruder_idler_axle();
-	right(30) extruder_idler_axle_cap();
+	right(25) {
+		fwd(10) extruder_idler_axle();
+		back(10) extruder_idler_axle_clip();
+	}
 }
 
 
