@@ -27,9 +27,21 @@ module z_sled(explode=0, arrows=false)
 				// Back
 				up((rail_height+groove_height)/2) {
 					right(cantilever_length - platform_thick/2 ) {
-						sparse_strut(l=rail_spacing+1, h=rail_height+groove_height, thick=platform_thick, strut=8, maxang=45, max_bridge=999);
+						if (wall_style == "crossbeams")
+							sparse_strut(l=rail_spacing+1, h=rail_height+groove_height, thick=platform_thick, strut=6);
+						if (wall_style == "thinwall")
+							thinning_wall(l=rail_spacing+1, h=rail_height+groove_height, thick=platform_thick, strut=6, bracing=false);
+						if (wall_style == "corrugated") {
+							corrugated_wall(l=rail_spacing+1, h=rail_height+groove_height, thick=platform_thick, strut=6);
+
+							// Wiring access hole frame
+							down(rail_height/2+groove_height/2-(10+8)/2-2) {
+								cube(size=[platform_thick, 16+4, 10+8], center=true);
+							}
+						}
 					}
 				}
+
 
 				difference() {
 					// Motor Cage
@@ -101,6 +113,17 @@ module z_sled(explode=0, arrows=false)
 									}
 								}
 							}
+						}
+					}
+				}
+			}
+
+			// Clear wiring access hole frame
+			if (wall_style != "crossbeams") {
+				up((rail_height+groove_height)/2) {
+					right(cantilever_length - platform_thick/2 ) {
+						down(rail_height/2+groove_height/2-10/2-8) {
+							cube(size=[platform_thick+0.1, 16, 10], center=true);
 						}
 					}
 				}
