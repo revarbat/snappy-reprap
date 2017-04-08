@@ -54,10 +54,11 @@ module z_sled(explode=0, arrows=false)
 							// Clear motor volume
 							cube(size=[motor_width+2*printer_slop, motor_width+2*printer_slop, motor_length+1+printer_slop+0.1], center=true);
 
-							// Snap tabs to hold motor in
+							// Tabs to hold motor in
 							down(motor_length/2) {
 								yspread(motor_width+2*printer_slop) {
 									cube(size=[5, 2, 2], center=true);
+									cube(size=[5, 1, 10], center=true);
 								}
 							}
 						}
