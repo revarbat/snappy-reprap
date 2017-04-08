@@ -37,7 +37,7 @@ motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
 
 // Currently configured for 3/8" ACME threaded rod.
 lifter_screw_diam   = 60.0; // mm
-lifter_screw_thick  = 16.0; // mm
+lifter_screw_thick  = 20.0; // mm
 lifter_screw_pitch  =  8.0; // mm lift per revolution
 lifter_screw_angle  = 50.0; // degrees tooth face angle
 
