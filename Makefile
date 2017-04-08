@@ -58,7 +58,7 @@ ${ROTFILES}: full_assembly.scad $(wildcard *.scad)
 	${OPENSCAD} -o $(subst wiki/v1.5-,tmp_,$@) --imgsize=1024,1024 \
 	    --projection=p --csglimit=2000000 \
 	    -D '$$t=$(shell echo $(patsubst wiki/v1.5-snappy_rot%.png,%/360.0,$@) | bc -l)' \
-	    -D '$$do_prerender=false' --camera=0,0,255,65,0,30,2200 $<
+	    -D '$$do_prerender=true' --camera=0,0,255,65,0,30,2200 $<
 	${CONVERT} -strip -resize 512x512 $(subst wiki/v1.5-,tmp_,$@) $@
 	rm -f  $(subst wiki/v1.5-,tmp_,$@)
 
@@ -69,7 +69,7 @@ wiki/v1.5-%.png: %.scad config.scad GDMUtils.scad
 	rm -f $(subst wiki/v1.5-,tmp_,$@)
 
 wiki/v1.5-snappy_full.png: full_assembly.scad $(wildcard *.scad)
-	${OPENSCAD} -o $(subst wiki/v1.5-,tmp_,$@) --imgsize=3200,3200 --projection=p \
+	${OPENSCAD} -o $(subst wiki/v1.5-,tmp_,$@) --render --imgsize=3200,3200 --projection=p \
 	    --csglimit=2000000 --camera=0,0,245,65,0,30,3000 -D '$$t=0.5' $<
 	${CONVERT} -trim -resize 800x800 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/v1.5-,tmp_,$@) $@
 	rm -f $(subst wiki/v1.5-,tmp_,$@)
