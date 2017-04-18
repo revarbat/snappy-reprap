@@ -30,20 +30,34 @@ module rail_xy_motor_segment(explode=0, connectby="")
 					up(rail_thick/2) {
 						difference() {
 							union() {
-								yrot(90)
-									sparse_strut(h=rail_width, l=motor_rail_length, thick=rail_thick, maxang=75, strut=10, max_bridge=500);
+								yrot(90) sparse_strut(h=rail_width, l=motor_rail_length, thick=rail_thick, maxang=75, strut=10, max_bridge=500);
 								up((motor_top_z-motor_length+6-rail_thick)/2) {
-									cube(size=[motor_mount_spacing+joiner_width, 30+20, motor_top_z-motor_length+6], center=true);
+									cube(size=[motor_width+2*7, motor_width+2*3, motor_top_z-motor_length+6], center=true);
+								}
+								up(motor_top_z-rail_thick/2) {
+									down(motor_length/2) {
+										cube(size=[motor_width+2*7, motor_width+2*3, motor_length+2*1], center=true);
+									}
 								}
 							}
-							cube(size=[motor_mount_spacing-joiner_width, 20, motor_length], center=true);
 
 							// Clearance for NEMA17 stepper motor
-							up(motor_top_z-rail_thick/2) {
-								down(motor_length/2) {
-									cube(size=[motor_width, motor_width, motor_length], center=true);
-									cube(size=[20, motor_rail_length/2+10, motor_length], center=true);
+							up(motor_top_z-rail_thick/2-motor_length/2) {
+								up(2/2+0.05) {
+									difference() {
+										cube(size=[motor_width+2*printer_slop, motor_width+2*printer_slop, motor_length+printer_slop+2], center=true);
+										up(motor_length/2) {
+											yspread(motor_width+2*printer_slop) {
+												cube(size=[5, 2, 2], center=true);
+												cube(size=[5, 1, 8], center=true);
+											}
+										}
+									}
 								}
+								down(5/2) cube(size=[motor_width/2, motor_width+20, motor_length-5], center=true);
+								down(motor_length/2/2) cube(size=[motor_width+20, motor_width/2, motor_length/2], center=true);
+								up(5/2) cube(size=[motor_width+2*4, motor_width/2, motor_length+5], center=true);
+								cylinder(d=motor_width*3/4, h=motor_length*2, center=true);
 							}
 						}
 					}
@@ -76,9 +90,35 @@ module rail_xy_motor_segment(explode=0, connectby="")
 						}
 					}
 
-					// Motor mount joiners.
-					up(motor_top_z-motor_length/2) {
-						xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=motor_top_z-motor_length/2, a=joiner_angle);
+					// Endstop clip
+					zrot_copies([0, 180]) {
+						fwd((endstop_depth+2)/2-8) {
+							right((motor_width+endstop_thick+3+2*7)/2) {
+								up(rail_height+groove_height-2-(endstop_length+2*2)/2) {
+									difference() {
+										left(2/2) cube([endstop_thick+4, endstop_depth+2, endstop_length+2*2], center=true);
+										left(2/2) back(2/2) {
+											cube([endstop_thick+2*printer_slop+0.05, endstop_depth+0.05, endstop_length+2*printer_slop], center=true);
+											cube([endstop_thick+2*printer_slop-2, endstop_depth+10, endstop_length+2*printer_slop-1], center=true);
+										}
+									}
+									down(endstop_length/2+2+endstop_thick*1.8/2-0.05) {
+										left((endstop_thick+4.1)/2) {
+											right_half() trapezoid([0.05, 0.05], [2*(endstop_thick+2)+2, endstop_depth+2], h=endstop_thick*1.8, center=true);
+										}
+									}
+									zspread(endstop_hole_spacing) {
+										right(endstop_thick/2-1.5/2+0.05) {
+											back(endstop_depth/2+2/2-endstop_hole_inset) {
+												scale([0.5, 1, 1]) {
+													sphere(d=endstop_screw_size, center=true, $fn=8);
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 
 					// Side wiring access hole frame
@@ -100,11 +140,6 @@ module rail_xy_motor_segment(explode=0, connectby="")
 							cube(size=[16, 11, 11], center=true);
 						}
 					}
-				}
-
-				// Access for stepper wires.
-				up(15/2) {
-					cube(size=[motor_mount_spacing+joiner_width+1, 20, 15+0.05], center=true);
 				}
 
 				// Clear space for joiners.

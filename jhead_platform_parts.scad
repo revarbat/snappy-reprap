@@ -31,15 +31,20 @@ module jhead_platform()
 				}
 
 				// Walls.
-				xspread(rail_spacing+joiner_width) {
-					up(h/6) {
-						cube(size=[joiner_width, l/3-5, h/3], center=true);
+				up(rail_height/2) {
+					xspread(rail_spacing+joiner_width) {
+						if (wall_style == "crossbeams")
+							sparse_strut(h=rail_height, l=l-10-1, thick=joiner_width, strut=5);
+						if (wall_style == "thinwall")
+							thinning_wall(h=rail_height, l=l-10-1, thick=joiner_width, strut=5, bracing=false);
+						if (wall_style == "corrugated")
+							corrugated_wall(h=rail_height, l=l-10-1, thick=joiner_width, strut=5);
 					}
 				}
 
 				// Rubber band clip
 				right((rail_spacing)/2) {
-					up(h/3-0.05) {
+					up(h-0.05) {
 						difference() {
 							right_half(30) {
 								right(2) {
@@ -57,14 +62,14 @@ module jhead_platform()
 				}
 
 				// Wall Triangles
-				zring(n=2) {
-					xflip_copy() {
-						up((h+groove_height)/2) {
-							fwd(l/2-l/2/2-0+0.05) {
-								right((rail_spacing+joiner_width)/2) {
+				up(rail_height+groove_height/2-0.5) {
+					yflip_copy() {
+						fwd(extruder_length/2-groove_height/2) {
+							xspread(rail_spacing+joiner_width) {
+								fwd((rail_height+groove_height)/2*sin(bridge_arch_angle)) {
 									difference() {
-										thinning_brace(h=h+groove_height, l=l/2, thick=joiner_width, strut=groove_height/sqrt(2));
-										up((h+groove_height)/2) cube([l+1, w+1, 4], center=true);
+										zrot(90) right_triangle(size=[groove_height+(rail_height+groove_height)/2*sin(bridge_arch_angle), joiner_width, groove_height], center=true);
+										up(groove_height/2) cube(size=[groove_height*4, joiner_width*4, 5], center=true);
 									}
 								}
 							}
@@ -75,7 +80,7 @@ module jhead_platform()
 				// Jhead base
 				fwd(extruder_shaft_len/4/2) {
 					up((jhead_shelf_thick+jhead_groove_thick)/2) {
-						cube([rail_width, extruder_shaft_len*0.75, jhead_shelf_thick+jhead_groove_thick], center=true);
+						cube([rail_width-joiner_width, extruder_shaft_len*0.75, jhead_shelf_thick+jhead_groove_thick], center=true);
 					}
 					up(jhead_shelf_thick+jhead_groove_thick) {
 						up(motor_width*0.37/2) {
@@ -226,14 +231,27 @@ module jhead_platform()
 			}
 
 			// Clear space for joiners.
-			up(rail_height/2+0.005) {
-				joiner_quad_clear(xspacing=rail_spacing+joiner_width, yspacing=l+0.001, h=h, w=joiner_width, clearance=5, a=joiner_angle);
+			up(rail_height/2+0.05) {
+				zrot_copies([0, 180]) {
+					back(l/2) {
+						xrot(-bridge_arch_angle) {
+							joiner_pair_clear(spacing=rail_spacing+joiner_width, h=h, w=joiner_width, clearance=1, a=joiner_angle);
+							back(rail_width*1.5) cube(size=rail_width*3, center=true);
+						}
+					}
+				}
 			}
 		}
 
 		// Rail end joiners.
 		up(rail_height/2) {
-			joiner_quad(xspacing=rail_spacing+joiner_width, yspacing=l-0.05, h=h, w=joiner_width, l=10, a=joiner_angle);
+			zrot_copies([0, 180]) {
+				back(l/2) {
+					xrot(-bridge_arch_angle) {
+						back(0.11) joiner_pair(spacing=rail_spacing+joiner_width, h=h, w=joiner_width, l=10, a=joiner_angle);
+					}
+				}
+			}
 		}
 
 		// Motor joiner clips

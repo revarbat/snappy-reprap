@@ -1337,16 +1337,14 @@ module narrowing_strut(w=10, l=100, wall=5, ang=30)
 //   bracing = boolean, denoting that the wall should have diagonal cross-braces.
 // Example:
 //   thinning_wall(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
-module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=3, bracing=true)
+module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2, bracing=true)
 {
 	dang = atan((h-2*strut)/(l-2*strut));
 	dlen = (h-2*strut)/sin(dang);
 	union() {
 		xrot_copies([0, 180]) {
-			translate([0, 0, -h/2])
-				narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
-			translate([0, -l/2, 0])
-				xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
+			down(h/2) narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
+			fwd(l/2) xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
 			if (bracing == true) {
 				intersection() {
 					cube(size=[thick, l, h], center=true);

@@ -17,7 +17,6 @@ use <extruder_idler_parts.scad>
 use <extruder_motor_clip_parts.scad>
 use <jhead_platform_parts.scad>
 use <lifter_screw_parts.scad>
-use <motor_mount_plate_parts.scad>
 use <platform_support_parts.scad>
 use <rail_segment_parts.scad>
 use <rail_xy_motor_segment_parts.scad>
@@ -40,7 +39,7 @@ hide_endcaps = false;
 module xy_motor_assembly(explode=0, arrows=false)
 {
 	// view: [30, 25, 30] [55, 0, 25] 475
-	// desc: Press-fit a drive gear onto the shaft of a stepper motor, making sure to align the flat of the shaft with the flat of the shaft hole. Repeat this with the other drive gear and another stepper.
+	// desc: Press-fit a drive gear onto the shaft of a stepper motor, making sure to align the flat of the shaft with the flat of the shaft hole. Repeat this with the other drive gear and another stepper.  Lubricate the drive gear teeth with mineral oil.
 	nema17_stepper(h=motor_length, shaft_len=motor_shaft_length, $fa=1, $fs=0.5);
 	up(gear_base+rack_height/2+2.1+explode) {
 		drive_gear();
@@ -56,72 +55,28 @@ module xy_motor_assembly(explode=0, arrows=false)
 //!xy_motor_assembly(explode=100, arrows=true);
 
 
-module motor_mount_assembly(explode=0, arrows=false)
+
+module y_motor_segment_assembly_1(explode=0, arrows=false)
 {
-	// view: [50, 50, 50] [55, 0, 25] 675
-	// desc: Attach a limit micro-switch (with wiring) to one of the side clips, with the lever end towards the center. Do this again for a second switch and mount plate.
-	motor_mount_plate();
-	up(motor_length/2+2-endstop_depth/2) {
-		fwd(endstop_hole_hoff) {
-			right((motor_mount_spacing+joiner_width)/2+endstop_standoff+endstop_thick/2+explode) {
-				microswitch();
-			}
-		}
-	}
-
-	// Construction arrow.
-	if(arrows && explode>10) {
-		up(motor_length/2+2-endstop_depth/2) {
-			fwd(endstop_hole_hoff) {
-				right((motor_mount_spacing+joiner_width)/2+endstop_standoff+endstop_thick/2+explode/2) {
-					xrot(-90) arrow(size=0.75*explode/3);
-				}
-			}
-		}
-	}
-}
-//!motor_mount_assembly(explode=100, arrows=true);
-
-
-module y_motor_segment_assembly(explode=0, arrows=false)
-{
-	// view: [0, 0, 135] [72, 0, 23] 900
-	// desc: Seat the stepper motor with drive gear in the X/Y motor rail segment. Clamp it into place with a motor mount plate with micro-switch. Route the wiring out a side wiring access hole opposite the limit switch.
+	// view: [0, 0, 87] [62, 0, 191] 900
+	// desc: Seat the stepper motor with drive gear in the X/Y motor rail segment, with the wiring facing towards the left.  Route the wiring out the front left wiring access hole.
 	motor_width = nema_motor_width(17)+printer_slop*2;
 
 	rail_xy_motor_segment();
 
 	// Stepper Motor
 	up(motor_top_z) {
-		up(explode*2.2-motor_length/2) {
-			motor_mount_assembly();
-			up(3) {
-				off = (motor_mount_spacing+joiner_width+endstop_thick)/2+endstop_standoff;
-				right(off) {
-					wiring([
-						[0, -10, 10],
-						[0, -10, -12],
-						[0, -motor_rail_length/3.5, -12],
-						[-rail_width/1.5-off, -motor_rail_length/3.5, -12],
-						[-rail_width/1.5-off, -motor_rail_length/2-25, -12],
-						[-rail_width/1.5-off-10, -motor_rail_length/2-25, -19],
-						[-rail_width/1.5-off-28, -motor_rail_length/2-25, -19],
-					], 2, wirenum=4);
-				}
-			}
-		}
 		up(explode*1.1) {
-			xy_motor_assembly();
+			zrot(-90) xy_motor_assembly();
 			down(motor_length-3) {
 				wiring([
 					[0, 0, 0],
-					[0, -motor_rail_length/3.5-2, 0],
-					[-10, -motor_rail_length/3.5-2, 5],
+					[-rail_width/2+joiner_width+5, 0, 0],
+					[-rail_width/2+joiner_width+5, -motor_rail_length/3.5-2, 5],
 					[-rail_width/1.5, -motor_rail_length/3.5-2, 5],
-					[-rail_width/1.5, -motor_rail_length/2-23, 5],
-					[-rail_width/1.5-10, -motor_rail_length/2-23, 0],
-					[-rail_width/1.5-30, -motor_rail_length/2-23, 0],
-				], 4);
+					[-rail_width/1.5-10, -motor_rail_length/2-25, 0],
+					[-rail_width/1.5-30, -motor_rail_length/2-25, 0],
+				], 4, wirenum=2);
 			}
 		}
 	}
@@ -130,23 +85,60 @@ module y_motor_segment_assembly(explode=0, arrows=false)
 	if(arrows && explode>10) {
 		up(rail_height+groove_height+explode/8) {
 			yrot(-90) arrow(size=explode/3);
-			up(motor_length+explode) {
-				yrot(-90) arrow(size=explode/3);
+		}
+	}
+}
+//!y_motor_segment_assembly_1(explode=100, arrows=true);
+//!y_motor_segment_assembly_1();
+
+
+module y_motor_segment_assembly_2(explode=0, arrows=false)
+{
+	// view: [-20, -110, 30] [43, 0, 22] 1100
+	// desc: Insert the limit microswitch in the left-side limit switch clip in the X/Y motor rail segment. Route the wiring through the back of the limit switch clip, and out the same front-left wiring access hole as the motor wires.
+	motor_width = nema_motor_width(17)+printer_slop*2;
+
+	y_motor_segment_assembly_1();
+
+	// Limit switch
+	sw_x = motor_width/2+7+endstop_thick/2;
+	sw_y = 8+1-endstop_depth/2;
+	sw_z = motor_top_z+endstop_length/2-5;
+	fwd(explode*2+sw_y) {
+		up(sw_z) left(sw_x) xrot(90) microswitch();
+		wiring([
+			[-sw_x, 10, sw_z-5],
+			[-sw_x, 19, sw_z-5],
+			[-rail_width/2+joiner_width+5, 20, 9],
+			[-rail_width/2+joiner_width+5, -motor_rail_length/3.5-2, 9],
+			[-rail_width/1.5, -motor_rail_length/3.5-2, 9],
+			[-rail_width/1.5-8, -motor_rail_length/2-22, 4],
+			[-rail_width/1.5-30, -motor_rail_length/2-22, 4],
+		], 2);
+	}
+
+	// Construction arrows.
+	if(arrows && explode>10) {
+		up(sw_z) {
+			left(sw_x) {
+				fwd(explode*1.3) {
+					zrot(-90) arrow(size=explode/3);
+				}
 			}
 		}
 	}
 }
-//!y_motor_segment_assembly(explode=100, arrows=true);
-//!y_motor_segment_assembly();
+//!y_motor_segment_assembly_2(explode=100, arrows=true);
+//!y_motor_segment_assembly_2();
 
 
 module y_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [45, 0, 240] 1800
-	// desc: Join a rail segment to each end of another motor rail assembly.
+	// desc: Join a rail segment to each end of another motor rail assembly.  Apply mineral oil to the slider rail V-grooves for lubrication.
 	platform_vert_off = rail_height+groove_height/2;
 
-	y_motor_segment_assembly();
+	y_motor_segment_assembly_1();
 	zrot(90) {
 		zring(r=(motor_rail_length+rail_length+2*explode)/2, n=2) {
 			zrot(90) rail_segment();
@@ -170,7 +162,7 @@ module y_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 	}
 }
 //!y_axis_assembly_1(explode=100, arrows=true);
-//!y_axis_assembly_1(slidepos=90) y_sled_assembly();
+//!y_axis_assembly_1(slidepos=90);
 
 
 module y_axis_assembly_2(explode=0, arrows=false)
@@ -202,7 +194,7 @@ module y_axis_assembly_2(explode=0, arrows=false)
 module y_axis_assembly_3(explode=0, arrows=false)
 {
 	// view: [-40, 10, 40] [55, 0, 55] 1400
-	// desc: Join two XY sled parts together. Make sure the bottom racks line up.
+	// desc: Join two XY sled parts together. Make sure the bottom racks line up.  Lubricate the slider pinchers and gear rack teeth on the underside of the sled with mineral oil.
 	up(groove_height/2+rail_offset) {
 		yspread(platform_length+0.5+explode) {
 			yrot(180) xy_sled();
@@ -313,43 +305,28 @@ module y_axis_assembly_7(slidepos=0, explode=0, arrows=false)
 }
 //!y_axis_assembly_7(explode=100, arrows=true);
 //!y_axis_assembly_7();
-//!y_axis_assembly_7(slidepos=90) y_sled_assembly();
 
 
-module x_motor_segment_assembly(explode=0, arrows=false)
+module x_motor_segment_assembly_1(explode=0, arrows=false)
 {
-	// view: [0, 0, 135] [55, 0, 340] 900
-	// desc: Seat the stepper motor with drive gear in the X/Y motor rail segment. Clamp it into place with a motor mount plate with micro-switch. Route the wiring out one end.
+	// view: [0, 0, 87] [62, 0, 191] 900
+	// desc: Seat the stepper motor with drive gear in the X/Y motor rail segment, with the wiring facing towards the left.  Route the wiring out the front left wiring access hole.
 	motor_width = nema_motor_width(17)+printer_slop*2;
 
 	rail_xy_motor_segment();
 
 	// Stepper Motor
 	up(motor_top_z) {
-		up(explode*2.2-motor_length/2) {
-			motor_mount_assembly();
-			up(3) {
-				off=(motor_mount_spacing+joiner_width+endstop_thick)/2+endstop_standoff;
-				right(off) {
-					wiring([
-						[0, -10, 10],
-						[0, -10.01, -11],
-						[0, -motor_rail_length/4, -11],
-						[-off, -motor_rail_length/4, -11],
-						[-off, -motor_rail_length/2-20, -11],
-					], 2, wirenum=4);
-				}
-			}
-		}
 		up(explode*1.1) {
-			xy_motor_assembly();
+			zrot(-90) xy_motor_assembly();
 			down(motor_length-3) {
 				wiring([
 					[0, 0, 0],
-					[0, -motor_rail_length/3.5, 0],
-					[0, -motor_rail_length/2+20, 5],
+					[-rail_width/2+joiner_width+20, 0, 0],
+					[-rail_width/2+joiner_width+20, -motor_rail_length/3.5-4, 5],
+					[0, -motor_rail_length/3.5-4, 5],
 					[0, -motor_rail_length/2-20, 5],
-				], 4);
+				], 4, wirenum=2);
 			}
 		}
 	}
@@ -358,23 +335,59 @@ module x_motor_segment_assembly(explode=0, arrows=false)
 	if(arrows && explode>10) {
 		up(rail_height+groove_height+explode/8) {
 			yrot(-90) arrow(size=explode/3);
-			up(motor_length+explode) {
-				yrot(-90) arrow(size=explode/3);
+		}
+	}
+}
+//!x_motor_segment_assembly_1(explode=100, arrows=true);
+//!x_motor_segment_assembly_1();
+
+
+module x_motor_segment_assembly_2(explode=0, arrows=false)
+{
+	// view: [-20, -110, 30] [43, 0, 22] 1100
+	// desc: Insert the limit microswitch in the left-side limit switch clip in the X/Y motor rail segment. Route the wiring through the back of the limit switch clip, and out the same front-left wiring access hole as the motor wires.
+	motor_width = nema_motor_width(17)+printer_slop*2;
+
+	x_motor_segment_assembly_1();
+
+	// Limit switch
+	sw_x = motor_width/2+7+endstop_thick/2;
+	sw_y = 8+1-endstop_depth/2;
+	sw_z = motor_top_z+endstop_length/2-5;
+	fwd(explode*2+sw_y) {
+		up(sw_z) left(sw_x) xrot(90) microswitch();
+		wiring([
+			[-sw_x, 10, sw_z-5],
+			[-sw_x-1, 19, sw_z-5],
+			[-sw_x-1, 20, 10],
+			[-sw_x-1, -motor_rail_length/3.5-5+sw_y, 10],
+			[-1, -motor_rail_length/3.5-5+sw_y, 10],
+			[-1, -motor_rail_length/2-20+sw_y, 10],
+		], 2);
+	}
+
+	// Construction arrows.
+	if(arrows && explode>10) {
+		up(sw_z) {
+			left(sw_x) {
+				fwd(explode*1.3) {
+					zrot(-90) arrow(size=explode/3);
+				}
 			}
 		}
 	}
 }
-//!x_motor_segment_assembly(explode=100, arrows=true);
-//!x_motor_segment_assembly();
+//!x_motor_segment_assembly_2(explode=100, arrows=true);
+//!x_motor_segment_assembly_2();
 
 
 module x_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 {
 	// view: [-5, 65, 85] [55, 0,  25] 1750
-	// desc: Join a rail segment to each end of a motor rail assembly, to make the X axis slider. Route the wiring to one end of the slider assembly.
+	// desc: Join a rail segment to each end of a motor rail assembly, to make the X axis slider. Route the wiring to one end of the slider assembly.  Apply mineral oil to the slider rail V-grooves for lubrication.
 	platform_vert_off = rail_height+groove_height/2;
 
-	zrot(-90) x_motor_segment_assembly();
+	zrot(-90) x_motor_segment_assembly_2();
 	zring(r=(motor_rail_length+rail_length+2*explode)/2, n=2) {
 		zrot(90) rail_segment();
 	}
@@ -415,13 +428,12 @@ module x_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 }
 //!x_axis_assembly_1(slidepos=100, explode=100, arrows=true);
 //!x_axis_assembly_1(slidepos=0) {sphere(1); sphere(1); sphere(1);}
-//!x_axis_assembly_1(slidepos=0) {sphere(1); sphere(1); x_sled_assembly();}
 
 
 module x_axis_assembly_2(explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [55, 0, 25] 1000
-	// desc: Join two XY sled parts together. Make sure the bottom racks line up.
+	// desc: Join two XY sled parts together. Make sure the bottom racks line up.  Lubricate the slider pinchers and gear rack teeth on the underside of the sled with mineral oil.
 	up(groove_height/2+rail_offset) {
 		xspread(platform_length+explode) {
 			zrot(90) yrot(180) xy_sled();
@@ -597,7 +609,7 @@ module x_axis_assembly_8(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 module x_axis_assembly_9(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 {
 	// view: [-12, 0, 75] [62, 0, 345] 1400
-	// desc: Attach the cable-chain assembly (with 13 or 14 links) to the cable chain mounts on the X axis assembly, making sure to feed the Y-axis wiring through the cable chain.  Route the wiring in through the wiring access hole beside the cable chain mount, then out through the end of the X axis assembly.
+	// desc: Attach the cable-chain assembly (with 13 or 14 links) to the cable chain mounts on the X axis assembly, making sure to feed the Y-axis wiring through the cable chain.  Route the wiring in through the wiring access hole beside the cable chain mount, then out through the end of the X axis assembly.  You may need to lubricate each cable-chain pivot with mineral oil.
 	x_axis_assembly_8(xslidepos=xslidepos, yslidepos=yslidepos) {
 		if ($children>0) children(0); else nil();
 		if ($children>1) children(1); else nil();
@@ -659,7 +671,7 @@ module x_axis_assembly_9(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 module z_tower_assembly_1(slidepos=0, explode=0, arrows=false)
 {
 	// view: [15, 80, 300] [60, 0, 60] 1900
-	// desc: Attach three Z rail segments together to make a Z tower rail assembly.  Do this again to make a second 3 segment tower. (Six total Z-rail segments in two sets of three.)
+	// desc: Attach three Z rail segments together to make a Z tower rail assembly.  Do this again to make a second 3 segment tower. (Six total Z-rail segments in two sets of three.)  Apply mineral oil to the slider rails, and the lifter screw grooves, for lubrication.
 	up(rail_length*1.5+explode) {
 		zspread(rail_length + explode, n=3) {
 			yrot(90) zrot(90) z_rail();
@@ -1002,7 +1014,7 @@ module extruder_assembly_8(explode=0, arrows=false)
 module extruder_assembly_9(explode=0, arrows=false)
 {
 	// view: [0, 0, 110] [55, 0, 0] 1200
-	// desc: Clip a cooling fan to the top of the extruder fan shroud using the extruder fan clip part.  Route the wiring along the back side of the extruder platform.
+	// desc: Clip a cooling fan to the top of the extruder fan shroud using the extruder fan clip.  Route the wiring along the back side of the extruder platform.  WARNING: This fan MUST be running any time the J-Head hotend is hot, or else the bottom of the mount will warp!  Either hook it up to a constant 12V supply, or make sure your firmware turns it on when the extruder is hot.
 	extruder_assembly_8() {
 		children();
 	}
@@ -1096,22 +1108,31 @@ module bridge_assembly_1(explode=0, arrows=false)
 	// view: [0, 70, 55] [55, 0, 25] 1850
 	// desc: Attach rail segments to either end of the extruder platform assembly.  Route the wiring through the left side rail segment, and out the front-left wiring access hole.
 	extruder_assembly_11();
-	xspread(extruder_length+rail_length+2*explode) {
-		zrot(90) rail_segment();
+	zrot_copies([0,180]) {
+		right((extruder_length+rail_length)/2+explode) {
+			left(rail_length/2) up(rail_height/2) {
+				yrot(bridge_arch_angle) {
+					right(rail_length/2) down(rail_height/2) {
+						zrot(90) rail_segment();
+					}
+				}
+			}
+		}
 	}
 	up(rail_thick+4) {
 		left(extruder_length/2+rail_length/2+explode) {
+			arch_off = (rail_length-20)*sin(bridge_arch_angle);
 			wiring([
 				[rail_length/2+explode, rail_width/3, 0],
 				[rail_length/2-20, rail_width/3, 0],
-				[-(motor_rail_length/2-29), -rail_width/3, 0],
-				[-(motor_rail_length/2-29), -(rail_width/2+5), 0],
+				[-(motor_rail_length/2-29), -rail_width/3, -arch_off],
+				[-(motor_rail_length/2-29), -(rail_width/2+5), -arch_off],
 			], 8);
 			wiring([
 				[rail_length/2+explode, 0, 0],
 				[rail_length/2-20, 0, 0],
-				[-(motor_rail_length/2-26), -rail_width/3, 0],
-				[-(motor_rail_length/2-26), -(rail_width/2+5), 0],
+				[-(motor_rail_length/2-26), -rail_width/3, -arch_off],
+				[-(motor_rail_length/2-26), -(rail_width/2+5), -arch_off],
 			], 4, wirenum=8);
 		}
 	}
@@ -1134,18 +1155,22 @@ module bridge_assembly_2(explode=0, arrows=false)
 	// view: [0, 0, 18] [55, 0, 25] 2100
 	// desc: Attach a vertical cable-chain mount to the front left side of the extruder bridge.
 	bridge_assembly_1();
-	left(extruder_length/2+rail_length-10) {
-		fwd(rail_width/2+explode*2) {
-			zrot(90) cable_chain_joiner_vertical_mount();
-		}
-	}
+	left(extruder_length/2) {
+		up(rail_height/2) {
+			yrot(-bridge_arch_angle) {
+				down(rail_height/2) {
+					left(rail_length-10) {
+						fwd(rail_width/2+explode) {
+							fwd(explode) zrot(90) cable_chain_joiner_vertical_mount();
 
-	// Construction arrows.
-	if(arrows && explode>50) {
-		up(rail_height/4) {
-			left(extruder_length/2+rail_length-10) {
-				fwd(rail_width/2+explode) {
-					zrot(-90) arrow(size=explode/3);
+							// Construction arrows.
+							if(arrows && explode>50) {
+								up(rail_height/4) {
+									zrot(-90) arrow(size=explode/3);
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -1159,7 +1184,8 @@ module bridge_assembly_3(explode=0, arrows=false)
 {
 	// view: [0, 0, 18] [55, 0, 25] 2100
 	// desc: Attach Z sled segments to either end of the extruder bridge assembly.
-	bridge_assembly_2();
+	arch_offset = rail_length*sin(bridge_arch_angle);
+	up(arch_offset) bridge_assembly_2();
 	zring(r=(extruder_length+2*rail_length+2*cantilever_length+3*explode)/2, n=2) {
 		zrot(180) z_sled();
 	}
@@ -1180,7 +1206,7 @@ module bridge_assembly_3(explode=0, arrows=false)
 module bridge_assembly_4(slidepos=0, explode=0, arrows=false)
 {
 	// view: [0, 0, 18] [55, 0, 25] 2100
-	// desc: Attach Z sled segments to either end of the extruder bridge assembly.
+	// desc: Press fit the lifter screw onto the stepper motor shaft, making sure the flatted side matches that on the lifter screw shaft hole.  (The hole on the lifter screw rim is aligned with the flatted side.)  Apply mineral oil to the screw threads for lubrication.
 	nema17_stepper(h=motor_length, shaft_len=motor_shaft_length, $fa=1, $fs=0.5);
 	up(explode+lifter_screw_thick+5.05) {
 		zrot(-360*slidepos/lifter_screw_pitch-90) {
@@ -1204,6 +1230,7 @@ module bridge_assembly_5(slidepos=0, explode=0, arrows=false)
 	// view: [0, -15, -85] [45, 0, 180] 1800
 	// desc: Insert the Z stepper motors into the motor mount cages on the Z-sleds at both ends of the bridge.  Route the wiring to the left-side front wiring access hole with the rest of the extruder wiring.
 	motor_width = nema_motor_width(17)+printer_slop*2;
+	arch_offset = rail_length*sin(bridge_arch_angle);
 	bridge_assembly_3();
 	down(explode*3-1) {
 		zring(r=(extruder_length+2*rail_length+2*cantilever_length)/2, n=2) {
@@ -1214,21 +1241,22 @@ module bridge_assembly_5(slidepos=0, explode=0, arrows=false)
 		wiring([
 			[-motor_spread/2, 0, motor_length-5],
 			[-(motor_spread/2-5), 0, motor_length-5],
-			[-(motor_spread/2+motor_width/2-cantilever_length+5), 0, rail_thick+5],
-			[-(motor_spread/2+motor_width/2-cantilever_length), 0, rail_thick+5],
-			[-(motor_spread/2+motor_width/2-cantilever_length-20), 0, rail_thick+5],
-			[-(extruder_length/2+rail_length-30), -(rail_width-joiner_width)/2, rail_thick+5],
-			[-(extruder_length/2+rail_length-30), -(rail_width+joiner_width)/2, rail_thick+5]
+			[-(motor_spread/2-5), 0, rail_thick+5],
+			[-(extruder_length/2+rail_length), 0, rail_thick+5],
+			[-(extruder_length/2+rail_length-30), 0, rail_thick+5],
+			[-(extruder_length/2+rail_length-30), -(rail_width-joiner_width)/2, rail_thick+10],
+			[-(extruder_length/2+rail_length-30), -(rail_width+joiner_width)/2, rail_thick+10]
 		], 4);
 		wiring([
 			[motor_spread/2, 0, motor_length-5],
 			[(motor_spread/2-5), 0, motor_length-5],
-			[(motor_spread/2+motor_width/2-cantilever_length+5), 0, rail_thick+5],
-			[(motor_spread/2+motor_width/2-cantilever_length), 0, rail_thick+5],
-			[(motor_spread/2+motor_width/2-cantilever_length-20), 0, rail_thick+5],
-			[(extruder_length/2+rail_length-30), -(rail_width-joiner_width)/2+10, rail_thick+5],
-			[-(extruder_length/2+rail_length-36), -(rail_width-joiner_width)/2+10, rail_thick+5],
-			[-(extruder_length/2+rail_length-36), -(rail_width+joiner_width)/2, rail_thick+5],
+			[(motor_spread/2-5), 0, rail_thick+5],
+			[(extruder_length/2+rail_length), 0, rail_thick+5],
+			[(extruder_length/2+rail_length), -(rail_width-joiner_width)/2+10, rail_thick+5],
+			[extruder_length/2, -(rail_width-joiner_width)/2+10, rail_thick+5+arch_offset],
+			[-extruder_length/2, -(rail_width-joiner_width)/2+10, rail_thick+5+arch_offset],
+			[-(extruder_length/2+rail_length-36), -(rail_width-joiner_width)/2+10, rail_thick+10],
+			[-(extruder_length/2+rail_length-36), -(rail_width+joiner_width)/2, rail_thick+10],
 		], 4);
 	}
 
@@ -1463,21 +1491,21 @@ module final_assembly_5(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 module final_assembly_6(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [92, 0, 10] 3000
-	// desc: Attach a cable chain (18 links) from the extruder bridge cable chain mount to the left Z tower cable chain mount.  Route the extruder bridge wiring up through the cable chain, back into the left Z tower through the wiring access hole below the cable chain mount, down the left Z tower, and back out the motor rail segment to where the controller board will be mounted.
+	// desc: Attach a cable chain (18 links) from the extruder bridge cable chain mount to the left Z tower cable chain mount.  Route the extruder bridge wiring up through the cable chain, back into the left Z tower through the wiring access hole below the cable chain mount, down the left Z tower, and back out the motor rail segment to where the controller board will be mounted.  You may need to lubricate each cable-chain pivot with mineral oil.
 	final_assembly_5(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
 		if ($children > 0) children(0);
 		if ($children > 1) children(1);
 		if ($children > 2) children(2);
 		if ($children > 3) children(3);
 	}
-	vert_off = rail_height + groove_height/2 + cantilever_length + cable_chain_height/2 - 2.5;
+	vert_off = rail_height + groove_height/2 + cantilever_length + cable_chain_height/2;
 	up(2*explode+rail_height+groove_height+rail_length+rail_length) {
 		left(motor_rail_length/2+rail_length+platform_length) {
 			fwd(rail_width/2+joiner_width+17.5) {
 				yrot(90) {
 					up(cable_chain_height/2) {
 						cable_chain_assembly(
-							[-cable_chain_length/2-cable_chain_height/4, 0, vert_off],
+							[-cable_chain_length/2-cable_chain_height/4-1, 0, vert_off],
 							[0, 0, 0],
 							[-1, 0, 0],
 							2*rail_length,
@@ -1503,8 +1531,8 @@ module final_assembly_6(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 								[0, 0, 0],
 								[0.01, 0, -explode*2-cable_chain_length/2-10],
 								[20, 0, -explode*2-cable_chain_length/2-10],
-								[20, 15, -explode*2-cable_chain_length/2+10],
-								[20, 30, -explode*2-cable_chain_length/2+10],
+								[20, 15, -explode*2-cable_chain_length/2+15],
+								[20, 30, -explode*2-cable_chain_length/2+15],
 							], 20);
 						}
 					}
