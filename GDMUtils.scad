@@ -557,13 +557,16 @@ module angle_pie_mask(
 }
 
 
-// Creates a shape that can be used to chamfer a 90 degree edge.
+// Creates a shape that can be used to chamfer a 90 degree vertical edge.
 // Difference it from the object to be chamfered.  The center of the mask
 // object should align exactly with the edge to be chamfered.
 module chamfer_mask(h=1.0, r=1.0)
 {
 	zrot(45) cube(size=[r*sqrt(2.0), r*sqrt(2.0), h], center=true);
 }
+module chamfer_mask_x(l=1.0, chamfer=1.0) {yrot(90) chamfer_mask(h=l, r=chamfer);}
+module chamfer_mask_y(l=1.0, chamfer=1.0) {xrot(90) chamfer_mask(h=l, r=chamfer);}
+module chamfer_mask_z(l=1.0, chamfer=1.0) {chamfer_mask(h=l, r=chamfer);}
 
 
 // Chamfers the edges of a cuboid region containing the given children.
@@ -581,49 +584,44 @@ module chamfer_mask(h=1.0, r=1.0)
 //   }
 module chamfer(chamfer=1, size=[1,1,1], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]])
 {
+	eps = 0.1;
+	x = size[0];
+	y = size[1];
+	z = size[2];
+	lx = x + eps;
+	ly = y + eps;
+	lz = z + eps;
 	difference() {
 		union() {
 			children();
 		}
 		union() {
 			if (edges[0][0] != 0)
-				translate([0,  size[1]/2,  size[2]/2])
-					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+				up(z/2) back(y/2) chamfer_mask_x(l=lx, chamfer=chamfer);
 			if (edges[0][1] != 0)
-				translate([0, -size[1]/2,  size[2]/2])
-					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+				up(z/2) fwd(y/2) chamfer_mask_x(l=lx, chamfer=chamfer);
 			if (edges[0][2] != 0)
-				translate([0,  size[1]/2, -size[2]/2])
-					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+				down(z/2) back(y/2) chamfer_mask_x(l=lx, chamfer=chamfer);
 			if (edges[0][3] != 0)
-				translate([0, -size[1]/2, -size[2]/2])
-					xrot(45) cube(size=[size[0]+0.1, chamfer*sqrt(2), chamfer*sqrt(2)], center=true);
+				down(z/2) fwd(y/2) chamfer_mask_x(l=lx, chamfer=chamfer);
 
 			if (edges[1][0] != 0)
-				translate([ size[0]/2, 0,  size[2]/2])
-					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+				up(z/2) right(x/2) chamfer_mask_y(l=ly, chamfer=chamfer);
 			if (edges[1][1] != 0)
-				translate([-size[0]/2, 0,  size[2]/2])
-					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+				up(z/2) left(x/2) chamfer_mask_y(l=ly, chamfer=chamfer);
 			if (edges[1][2] != 0)
-				translate([ size[0]/2, 0, -size[2]/2])
-					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+				down(z/2) right(x/2) chamfer_mask_y(l=ly, chamfer=chamfer);
 			if (edges[1][3] != 0)
-				translate([-size[0]/2, 0, -size[2]/2])
-					yrot(45) cube(size=[chamfer*sqrt(2), size[1]+0.1, chamfer*sqrt(2)], center=true);
+				down(z/2) left(x/2) chamfer_mask_y(l=ly, chamfer=chamfer);
 
 			if (edges[2][0] != 0)
-				translate([ size[0]/2,  size[1]/2, 0])
-					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+				back(y/2) right(x/2) chamfer_mask_z(l=lz, chamfer=chamfer);
 			if (edges[2][1] != 0)
-				translate([-size[0]/2,  size[1]/2, 0])
-					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+				back(y/2) left(x/2) chamfer_mask_z(l=lz, chamfer=chamfer);
 			if (edges[2][2] != 0)
-				translate([ size[0]/2, -size[1]/2, 0])
-					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+				fwd(y/2) right(x/2) chamfer_mask_z(l=lz, chamfer=chamfer);
 			if (edges[2][3] != 0)
-				translate([-size[0]/2, -size[1]/2, 0])
-					zrot(45) cube(size=[chamfer*sqrt(2), chamfer*sqrt(2), size[2]+0.1], center=true);
+				fwd(y/2) left(x/2) chamfer_mask_z(l=lz, chamfer=chamfer);
 		}
 	}
 }
@@ -1334,10 +1332,128 @@ module narrowing_strut(w=10, l=100, wall=5, ang=30)
 //   ang = maximum overhang angle of diagonal brace.
 //   strut = the width of the diagonal brace.
 //   wall = the thickness of the thinned portion of the wall.
-//   bracing = boolean, denoting that the wall should have diagonal cross-braces.
 // Example:
 //   thinning_wall(h=50, l=100, thick=4, ang=30, strut=5, wall=2);
-module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2, bracing=true)
+module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2)
+{
+	l1 = (l[0] == undef)? l : l[0];
+	l2 = (l[1] == undef)? l : l[1];
+
+	trap_ang = atan2((l2-l1)/2, h);
+	corr1 = 1 + sin(trap_ang);
+	corr2 = 1 - sin(trap_ang);
+
+	z1 = h/2;
+	z2 = max(0.1, z1 - strut);
+	z3 = max(0.05, z2 - (thick-wall)/2*sin(90-ang)/sin(ang));
+
+	x1 = l2/2;
+	x2 = max(0.1, x1 - strut*corr1);
+	x3 = max(0.05, x2 - (thick-wall)/2*sin(90-ang)/sin(ang)*corr1);
+	x4 = l1/2;
+	x5 = max(0.1, x4 - strut*corr2);
+	x6 = max(0.05, x5 - (thick-wall)/2*sin(90-ang)/sin(ang)*corr2);
+
+	y1 = thick/2;
+	y2 = y1 - min(z2-z3, x2-x3) * sin(ang);
+
+	zrot(90)
+	polyhedron(
+		points=[
+			[-x4, -y1, -z1],
+			[ x4, -y1, -z1],
+			[ x1, -y1,  z1],
+			[-x1, -y1,  z1],
+
+			[-x5, -y1, -z2],
+			[ x5, -y1, -z2],
+			[ x2, -y1,  z2],
+			[-x2, -y1,  z2],
+
+			[-x6, -y2, -z3],
+			[ x6, -y2, -z3],
+			[ x3, -y2,  z3],
+			[-x3, -y2,  z3],
+
+			[-x4,  y1, -z1],
+			[ x4,  y1, -z1],
+			[ x1,  y1,  z1],
+			[-x1,  y1,  z1],
+
+			[-x5,  y1, -z2],
+			[ x5,  y1, -z2],
+			[ x2,  y1,  z2],
+			[-x2,  y1,  z2],
+
+			[-x6,  y2, -z3],
+			[ x6,  y2, -z3],
+			[ x3,  y2,  z3],
+			[-x3,  y2,  z3],
+		],
+		faces=[
+			[ 4,  5,  1],
+			[ 5,  6,  2],
+			[ 6,  7,  3],
+			[ 7,  4,  0],
+
+			[ 4,  1,  0],
+			[ 5,  2,  1],
+			[ 6,  3,  2],
+			[ 7,  0,  3],
+
+			[ 8,  9,  5],
+			[ 9, 10,  6],
+			[10, 11,  7],
+			[11,  8,  4],
+
+			[ 8,  5,  4],
+			[ 9,  6,  5],
+			[10,  7,  6],
+			[11,  4,  7],
+
+			[11, 10,  9],
+			[20, 21, 22],
+
+			[11,  9,  8],
+			[20, 22, 23],
+
+			[16, 17, 21],
+			[17, 18, 22],
+			[18, 19, 23],
+			[19, 16, 20],
+
+			[16, 21, 20],
+			[17, 22, 21],
+			[18, 23, 22],
+			[19, 20, 23],
+
+			[12, 13, 17],
+			[13, 14, 18],
+			[14, 15, 19],
+			[15, 12, 16],
+
+			[12, 17, 16],
+			[13, 18, 17],
+			[14, 19, 18],
+			[15, 16, 19],
+
+			[ 0,  1, 13],
+			[ 1,  2, 14],
+			[ 2,  3, 15],
+			[ 3,  0, 12],
+
+			[ 0, 13, 12],
+			[ 1, 14, 13],
+			[ 2, 15, 14],
+			[ 3, 12, 15],
+		],
+		convexity=2
+	);
+}
+//!thinning_wall(h=50, l=[100, 80], thick=4, ang=30, strut=5, wall=2);
+
+
+module braced_thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2)
 {
 	dang = atan((h-2*strut)/(l-2*strut));
 	dlen = (h-2*strut)/sin(dang);
@@ -1345,17 +1461,15 @@ module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2, bracing=true
 		xrot_copies([0, 180]) {
 			down(h/2) narrowing_strut(w=thick, l=l, wall=strut, ang=ang);
 			fwd(l/2) xrot(-90) narrowing_strut(w=thick, l=h-0.1, wall=strut, ang=ang);
-			if (bracing == true) {
-				intersection() {
-					cube(size=[thick, l, h], center=true);
-					xrot_copies([-dang,dang]) {
-						zspread(strut/2) {
-							scale([1,1,1.5]) yrot(45) {
-								cube(size=[thick/sqrt(2), dlen, thick/sqrt(2)], center=true);
-							}
+			intersection() {
+				cube(size=[thick, l, h], center=true);
+				xrot_copies([-dang,dang]) {
+					zspread(strut/2) {
+						scale([1,1,1.5]) yrot(45) {
+							cube(size=[thick/sqrt(2), dlen, thick/sqrt(2)], center=true);
 						}
-						cube(size=[thick, dlen, strut/2], center=true);
 					}
+					cube(size=[thick, dlen, strut/2], center=true);
 				}
 			}
 		}
@@ -1419,6 +1533,62 @@ module thinning_brace(h=50, l=100, thick=5, ang=30, strut=5, wall=3)
 {
 	thinning_triangle(h=h, l=l, thick=thick, ang=ang, strut=strut, wall=wall, diagonly=true);
 }
+
+
+// Makes an open rectangular strut with X-shaped cross-bracing, designed with 3D printing in mind.
+//   h = Z size of strut.
+//   w = X size of strut.
+//   l = Y size of strut.
+//   thick = thickness of strut walls.
+//   maxang = maximum overhang angle of cross-braces.
+//   max_bridge = maximum bridging distance between cross-braces.
+//   strut = the width of the cross-braces.
+// Example:
+//   sparse_strut3d(h=40, w=40, l=120, thick=4, maxang=30, strut=5, max_bridge=20);
+module sparse_strut3d(h=50, l=100, w=50, thick=3, maxang=40, strut=3, max_bridge = 20)
+{
+
+	xoff = w - thick;
+	yoff = l - thick;
+	zoff = h - thick;
+
+	xreps = ceil(xoff/yoff);
+	yreps = ceil(yoff/xoff);
+
+	xstep = xoff / xreps;
+	ystep = yoff / yreps;
+
+	cross_ang = atan2(xstep, ystep);
+	cross_len = hypot(xstep, ystep);
+
+	union() {
+		if(xreps>1) {
+			yspread(yoff) {
+				xspread(xstep, n=xreps-1) {
+					cube(size=[thick, thick, h], center=true);
+				}
+			}
+		}
+		if(yreps>1) {
+			xspread(xoff) {
+				yspread(ystep, n=yreps-1) {
+					cube(size=[thick, thick, h], center=true);
+				}
+			}
+		}
+		xspread(xoff) sparse_strut(h=h, l=l, thick=thick, maxang=maxang, strut=strut, max_bridge=max_bridge);
+		yspread(yoff) zrot(90) sparse_strut(h=h, l=w, thick=thick, maxang=maxang, strut=strut, max_bridge=max_bridge);
+		for(xs = [0:xreps-1]) {
+			for(ys = [0:yreps-1]) {
+				translate([(xs+0.5)*xstep-xoff/2, (ys+0.5)*ystep-yoff/2, 0]) {
+					zrot( cross_ang) sparse_strut(h=h, l=cross_len, thick=thick, maxang=maxang, strut=strut, max_bridge=max_bridge);
+					zrot(-cross_ang) sparse_strut(h=h, l=cross_len, thick=thick, maxang=maxang, strut=strut, max_bridge=max_bridge);
+				}
+			}
+		}
+	}
+}
+//!sparse_strut3d(h=40, w=40, l=120, thick=3, strut=3);
 
 
 // Makes an open rectangular strut with X-shaped cross-bracing, designed with 3D printing in mind.

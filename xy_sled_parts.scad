@@ -59,7 +59,7 @@ module xy_sled()
 							if (wall_style == "crossbeams")
 								sparse_strut(h=platform_height, l=l-10, thick=joiner_width, strut=5);
 							if (wall_style == "thinwall")
-								thinning_wall(h=platform_height, l=l-10, thick=joiner_width, strut=platform_thick, wall=3, bracing=false);
+								thinning_wall(h=platform_height, l=l-10, thick=joiner_width, strut=platform_thick, wall=3);
 							if (wall_style == "corrugated")
 								corrugated_wall(h=platform_height, l=l-10, thick=joiner_width, strut=platform_thick, wall=3);
 						}

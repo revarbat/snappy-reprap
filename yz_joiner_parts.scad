@@ -30,7 +30,7 @@ module yz_joiner()
 								if (wall_style == "crossbeams")
 									sparse_strut(h=rail_height+groove_height, l=rail_width-joiner_width/2, thick=rail_thick, strut=5);
 								if (wall_style == "thinwall")
-									thinning_wall(h=rail_height+groove_height, l=rail_width-joiner_width/2, thick=rail_thick, strut=rail_thick, bracing=true);
+									thinning_wall(h=rail_height+groove_height, l=rail_width-joiner_width/2, thick=rail_thick, strut=rail_thick);
 								if (wall_style == "corrugated")
 									corrugated_wall(h=rail_height+groove_height, l=rail_width-joiner_width/2, thick=rail_thick, strut=rail_thick, wall=3);
 							}
@@ -47,7 +47,7 @@ module yz_joiner()
 										sparse_strut(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=5);
 								if (wall_style == "thinwall")
 									up((rail_height+rail_thick)/2)
-										thinning_wall(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=rail_thick, bracing=false);
+										thinning_wall(l=platform_length-joiner_length+1, h=rail_height+rail_thick, thick=joiner_width, strut=rail_thick);
 								if (wall_style == "corrugated")
 									up(rail_height/2)
 										corrugated_wall(l=platform_length-joiner_length+1, h=rail_height, thick=joiner_width, strut=rail_thick, wall=3);

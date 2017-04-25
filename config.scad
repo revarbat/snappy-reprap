@@ -37,7 +37,7 @@ motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
 
 // Currently configured for 3/8" ACME threaded rod.
 lifter_screw_diam   = 60.0; // mm
-lifter_screw_thick  = 12.0; // mm
+lifter_screw_thick  = 20.0; // mm
 lifter_screw_pitch  =  8.0; // mm lift per revolution
 lifter_screw_angle  = 50.0; // degrees tooth face angle
 
@@ -64,7 +64,7 @@ glass_length    = 200;   // mm
 glass_thick     =   3;   // mm
 
 // Cable chain dimensions
-cable_chain_height = 13;  // mm
+cable_chain_height = 15;  // mm
 cable_chain_width  = 25;  // mm
 cable_chain_length = 26;  // mm
 cable_chain_pivot  =  6;  // mm
@@ -124,7 +124,7 @@ gear_backlash = printer_slop/2;
 
 
 // Commonly used derived values.  Don't change these.
-extruder_length = motor_rail_length;
+extruder_length = motor_rail_length + 2*lifter_screw_pitch;
 shaft_clear = max(20.0, motor_shaft_length)-20.0;
 rail_offset = shaft_clear+12.0;
 rail_spacing = platform_width - joiner_width*4 - 10;
@@ -134,6 +134,9 @@ side_mount_spacing = motor_rail_length-10*2;
 platform_z = rail_height+groove_height+rail_offset;
 cantilever_length = (motor_rail_length+2*platform_length-2*rail_height-extruder_length-groove_height)/2;
 motor_top_z = platform_z-platform_thick-rack_base-rack_height-gear_base-2;
+lifter_tooth_depth = lifter_screw_pitch / 3.2;
+z_joiner_spacing = lifter_screw_diam + 2*lifter_tooth_depth + joiner_width;
+z_base_height = rail_height + groove_height + 2*platform_thick;
 
 wall_styles = ["thinwall", "corrugated", "crossbeams"];
 wall_style = wall_styles[wall_styling];

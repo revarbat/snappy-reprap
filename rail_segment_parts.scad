@@ -26,7 +26,7 @@ module rail_segment(explode=0, connectby="")
 				union() {
 					// Bottom.
 					up(rail_thick/2) yrot(90)
-						sparse_strut(h=rail_width, l=l, thick=rail_thick, maxang=45, strut=10, max_bridge=500);
+						sparse_strut(h=rail_width, l=l, thick=rail_thick, maxang=75, strut=10, max_bridge=500);
 
 					// Walls.
 					zrot_copies([0, 180]) {
@@ -35,7 +35,7 @@ module rail_segment(explode=0, connectby="")
 								if (wall_style == "crossbeams")
 									sparse_strut(h=rail_height, l=l-10, thick=joiner_width, strut=5);
 								if (wall_style == "thinwall")
-									thinning_wall(h=rail_height, l=l-10, thick=joiner_width, strut=5, bracing=false);
+									thinning_wall(h=rail_height, l=l-10, thick=joiner_width, strut=5);
 								if (wall_style == "corrugated")
 									corrugated_wall(h=rail_height, l=l-10, thick=joiner_width, strut=5);
 							}
@@ -51,7 +51,7 @@ module rail_segment(explode=0, connectby="")
 
 					// Side Supports
 					up(rail_height/4) {
-						yspread(l-2*5-5) {
+						yspread((l-2*5-5)/2, n=3) {
 							difference() {
 								cube(size=[rail_width-joiner_width, 4, rail_height/2], center=true);
 								xspread(rail_width/3, n=3) {

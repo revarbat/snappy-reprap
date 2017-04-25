@@ -18,6 +18,7 @@ module jhead_platform()
 	motor_width = nema_motor_width(17);
 	idler_backside = (jhead_barrel_diam+8)/2+8;
 	idler_back_thick = 3.5;
+	angle_offset = rail_height*sin(bridge_arch_angle);
 
 	color("SteelBlue")
 	prerender(convexity=10)
@@ -27,18 +28,38 @@ module jhead_platform()
 			union() {
 				// Bottom.
 				up(thick/2) {
-					cube(size=[w, l, thick], center=true);
+					cube(size=[w, l-10.1-angle_offset, thick], center=true);
 				}
 
 				// Walls.
-				up(rail_height/2) {
+				up(rail_height/2-0.005) {
 					xspread(rail_spacing+joiner_width) {
 						if (wall_style == "crossbeams")
-							sparse_strut(h=rail_height, l=l-10-1, thick=joiner_width, strut=5);
+							sparse_strut(h=rail_height-0.01, l=l-10, thick=joiner_width, strut=5);
 						if (wall_style == "thinwall")
-							thinning_wall(h=rail_height, l=l-10-1, thick=joiner_width, strut=5, bracing=false);
+							thinning_wall(h=rail_height-0.01, l=[l-10-angle_offset, l-10+angle_offset], thick=joiner_width, strut=5);
 						if (wall_style == "corrugated")
-							corrugated_wall(h=rail_height, l=l-10-1, thick=joiner_width, strut=5);
+							corrugated_wall(h=rail_height-0.01, l=l-10, thick=joiner_width, strut=5);
+					}
+				}
+
+				// Joiner backing
+				block_w = rail_width/2 - z_joiner_spacing/2 + joiner_width/2;
+				up(rail_height/2) {
+					xflip_copy() {
+						yflip_copy() {
+							fwd((extruder_length-joiner_width)/2) {
+								right((rail_width-block_w)/2) {
+									skew_xy(yang=-bridge_arch_angle) {
+										difference() {
+											cube(size=[block_w-0.1, joiner_width, rail_height], center=true);
+											right(block_w/2) fwd(joiner_width/2) chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
+											left(block_w/2) back(joiner_width/2) chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 
@@ -56,22 +77,6 @@ module jhead_platform()
 							}
 							up(8+1) {
 								xrot(90) fillet_mask(r=joiner_width/2, h=joiner_width*2);
-							}
-						}
-					}
-				}
-
-				// Wall Triangles
-				up(rail_height+groove_height/2-0.5) {
-					yflip_copy() {
-						fwd(extruder_length/2-groove_height/2) {
-							xspread(rail_spacing+joiner_width) {
-								fwd((rail_height+groove_height)/2*sin(bridge_arch_angle)) {
-									difference() {
-										zrot(90) right_triangle(size=[groove_height+(rail_height+groove_height)/2*sin(bridge_arch_angle), joiner_width, groove_height], center=true);
-										up(groove_height/2) cube(size=[groove_height*4, joiner_width*4, 5], center=true);
-									}
-								}
 							}
 						}
 					}
@@ -235,7 +240,7 @@ module jhead_platform()
 				zrot_copies([0, 180]) {
 					back(l/2) {
 						xrot(-bridge_arch_angle) {
-							joiner_pair_clear(spacing=rail_spacing+joiner_width, h=h, w=joiner_width, clearance=1, a=joiner_angle);
+							joiner_pair_clear(spacing=z_joiner_spacing, h=h, w=joiner_width, clearance=1, a=joiner_angle);
 							back(rail_width*1.5) cube(size=rail_width*3, center=true);
 						}
 					}
@@ -246,9 +251,14 @@ module jhead_platform()
 		// Rail end joiners.
 		up(rail_height/2) {
 			zrot_copies([0, 180]) {
-				back(l/2) {
-					xrot(-bridge_arch_angle) {
-						back(0.11) joiner_pair(spacing=rail_spacing+joiner_width, h=h, w=joiner_width, l=10, a=joiner_angle);
+				back(l/2+0.11) {
+					xspread(z_joiner_spacing) {
+						intersection() {
+							xrot(-bridge_arch_angle) {
+								joiner(h=h, w=joiner_width, l=6, a=joiner_angle);
+							}
+							cube([joiner_width, 100, h], center=true);
+						}
 					}
 				}
 			}
@@ -259,7 +269,14 @@ module jhead_platform()
 			fwd(extruder_shaft_len/2+motor_length/2) {
 				difference() {
 					up(jhead_groove_thick+jhead_shelf_thick+motor_width/2) {
-						xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=motor_width/2+jhead_shelf_thick, a=joiner_angle);
+						difference() {
+							xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=motor_width/2+jhead_shelf_thick, a=joiner_angle);
+							yspread(rail_height) {
+								xspread(motor_mount_spacing+joiner_width) {
+									chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
+								}
+							}
+						}
 					}
 					cube([motor_mount_spacing+joiner_width+1, rail_height/3, motor_width*0.75], center=true);
 				}

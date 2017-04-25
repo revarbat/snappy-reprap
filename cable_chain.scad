@@ -12,12 +12,9 @@ module cable_chain_barrel()
 	color("SpringGreen")
 	union () {
 		difference() {
-			translate([0, 0, h/2])
-				cube(size=[w, l-20, h], center=true);
-			translate([0, 0, h/2])
-				chamfcube(size=[w-4*cable_chain_wall, l, h-cable_chain_wall], chamfer=2, center=true);
-			zrot(40)
-				cube(size=[2, (l-15)/cos(40), 2*cable_chain_wall], center=true);
+			up(h/2) cube(size=[w, l-20, h], center=true);
+			up(h/2-2/2) chamfcube(size=[w-4*cable_chain_wall, l, h-cable_chain_wall-2], chamfer=2, center=true);
+			zrot(40) cube(size=[2, (l-15)/cos(40), 2*cable_chain_wall], center=true);
 		}
 	}
 }

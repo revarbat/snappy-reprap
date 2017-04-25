@@ -21,7 +21,7 @@ module lifter_screw() {
 
 			// Motor shaft hole.
 			difference() {
-				cylinder(h=h+10, d=motor_shaft_size+2*printer_slop, center=true, $fn=24);
+				cylinder(h=h+10, d=motor_shaft_size+printer_slop, center=true, $fn=24);
 				if (motor_shaft_flatted) {
 					left(motor_shaft_size-0.5) {
 						cube(size=[motor_shaft_size, motor_shaft_size, h+10.05], center=true);

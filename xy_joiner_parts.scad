@@ -22,7 +22,7 @@ module xy_joiner()
 
 			// Clear for joiners.
 			translate([0,0,-platform_height/2]) {
-				joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height+0.001, w=joiner_width, clearance=5, a=joiner_angle);
+				joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height+0.001, w=joiner_width, clearance=1, a=joiner_angle);
 			}
 		}
 
@@ -38,8 +38,8 @@ module xy_joiner()
 					}
 				}
 			}
-			translate([0, 0, -(platform_height+rail_height/2)/2+rail_height/2]) {
-				grid_of(count=2, spacing=platform_width-joiner_width) {
+			up(rail_height/2-(platform_height+rail_height/2)/2) {
+				xspread(platform_width-joiner_width) {
 					chamfcube(chamfer=3, size=[joiner_width, 90, platform_height+rail_height/2], chamfaxes=[1,1,1]);
 				}
 			}
@@ -62,30 +62,29 @@ module xy_joiner()
 		}
 
 		// Connect top half-joiners.
-		translate([0, platform_thick/2-joiner_length, rail_height/2-platform_thick/2])
-			xrot(90) cube(size=[platform_width-joiner_width, platform_thick, platform_thick], center=true);
+		up(rail_height/2-platform_thick/2) {
+			back(platform_thick-joiner_length) {
+				cube(size=[platform_width-joiner_width, platform_thick*2, platform_thick], center=true);
+			}
+		}
+
+		// Vertical support
+		up(rail_height/2/2-platform_thick/2) {
+			back(platform_thick-joiner_length) {
+				cube(size=[platform_thick, platform_thick*2, rail_height/2], center=true);
+			}
+		}
 
 		// Remove indents on attachment to main body
-		translate([0, -joiner_length/2, 0]) {
-			grid_of(count=2, spacing=side_mount_spacing) {
+		fwd(joiner_length/2) {
+			xspread(side_mount_spacing) {
 				cube(size=[joiner_width, joiner_length, joiner_width], center=true);
 			}
 		}
 
 		// Rack and pinion hard stop.
 		translate([0, -joiner_length+(joiner_length-hardstop_offset)/2, -platform_thick-rail_offset/2]) {
-			cube(size=[motor_mount_spacing+joiner_width+5, joiner_length-hardstop_offset, rail_offset], center=true);
-		}
-
-		// endstop trigger
-		fwd(joiner_length/2) {
-			mirror_copy([1, 0, 0]) {
-				translate([motor_mount_spacing/2+joiner_width/2+2, 0, 0]) {
-					translate([10/2, 0, -(platform_thick+rail_offset+groove_height/2+3)/2]) {
-						xrot(90) chamfcube(chamfer=2, size=[10, platform_thick+groove_height/2+3+shaft_clear, joiner_length], chamfaxes=[1,0,1], center=true);
-					}
-				}
-			}
+			cube(size=[rail_spacing-joiner_width, joiner_length-hardstop_offset, rail_offset], center=true);
 		}
 	}
 }

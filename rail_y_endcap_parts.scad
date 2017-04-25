@@ -22,7 +22,7 @@ module rail_y_endcap()
 					if (wall_style == "crossbeams")
 						sparse_strut(h=base_height, l=rail_width-2*5, thick=rail_thick, strut=5);
 					if (wall_style == "thinwall")
-						thinning_wall(h=base_height, l=rail_width-joiner_width, thick=rail_thick, strut=joiner_width, bracing=false);
+						thinning_wall(h=base_height, l=rail_width-joiner_width, thick=rail_thick, strut=joiner_width);
 					if (wall_style == "corrugated")
 						corrugated_wall(h=base_height, l=rail_width, thick=rail_thick, strut=joiner_width);
 				}

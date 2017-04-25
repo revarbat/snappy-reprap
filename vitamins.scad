@@ -81,22 +81,24 @@ module jhead_hotend()
 				wiring([
 					[0, jhead_block_size[0]/2-2, 0],
 					[0, jhead_block_size[0]/2+5, 0],
-					[24, jhead_block_size[0]+12, jhead_length-10],
-					[24.01, jhead_block_size[0]+12, jhead_length],
+					[28, jhead_block_size[0]+12, jhead_length-10],
+					[28.01, jhead_block_size[0]+12, jhead_length],
 				], 2, fillet=8);
 			}
 			wiring([
 				[0, jhead_block_size[0]/2-2, 0],
 				[0, jhead_block_size[0]/2+5, 0],
-				[18, jhead_block_size[0]+12, jhead_length-10],
-				[18.01, jhead_block_size[0]+12, jhead_length],
+				[21, jhead_block_size[0]+12, jhead_length-10],
+				[21.01, jhead_block_size[0]+12, jhead_length],
 			], 2, fillet=8, wirenum=2);
 		}
 		wiring([
-			[16.01, 30, 15],
-			[16, 30, 20],
-			[0, rail_width/3, 20],
-			[-extruder_length/2-10, rail_width/3, 20],
+			[20.01, 30, 15],
+			[20, 30, 20],
+			[0, rail_width/3-5, 20],
+			[-extruder_length/2+11, rail_width/3-5, 20],
+			[-extruder_length/2+11, 0, 20],
+			[-extruder_length/2-10, 0, 20],
 		], 4, fillet=5);
 	}
 	color("silver")

@@ -45,11 +45,11 @@ module rail_xy_motor_segment(explode=0, connectby="")
 							up(motor_top_z-rail_thick/2-motor_length/2) {
 								up(2/2+0.05) {
 									difference() {
-										cube(size=[motor_width+2*printer_slop, motor_width+2*printer_slop, motor_length+printer_slop+2], center=true);
+										cube(size=[motor_width+printer_slop, motor_width+printer_slop, motor_length+printer_slop+2], center=true);
 										up(motor_length/2) {
 											yspread(motor_width+2*printer_slop) {
-												cube(size=[5, 2, 2], center=true);
-												cube(size=[5, 1, 8], center=true);
+												cube(size=[10, 2, 2], center=true);
+												cube(size=[10, 1, 8], center=true);
 											}
 										}
 									}
@@ -69,7 +69,7 @@ module rail_xy_motor_segment(explode=0, connectby="")
 								if (wall_style == "crossbeams")
 									sparse_strut(h=rail_height, l=motor_rail_length-10, thick=joiner_width, strut=5);
 								if (wall_style == "thinwall")
-									thinning_wall(h=rail_height, l=motor_rail_length-10, thick=joiner_width, strut=5, bracing=false);
+									thinning_wall(h=rail_height, l=motor_rail_length-10, thick=joiner_width, strut=5);
 								if (wall_style == "corrugated")
 									corrugated_wall(h=rail_height, l=motor_rail_length-10, thick=joiner_width, strut=5);
 							}
