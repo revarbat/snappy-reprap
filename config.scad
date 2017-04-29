@@ -35,11 +35,17 @@ motor_shaft_size    =  5;    // mm diameter of NEMA17 motor shaft.
 motor_shaft_length  = 20;    // mm length of exposed NEMA17 motor shaft.
 motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
 
-// Currently configured for 3/8" ACME threaded rod.
 lifter_screw_diam   = 60.0; // mm
 lifter_screw_thick  = 20.0; // mm
 lifter_screw_pitch  =  8.0; // mm lift per revolution
 lifter_screw_angle  = 50.0; // degrees tooth face angle
+
+adjust_screw_diam   =  8.0; // mm
+adjust_screw_pitch  =  3.0; // mm
+adjust_screw_length = 25.0; // mm
+adjust_screw_angle  = 50.0; // mm
+adjust_screw_knob_d = 12.0; // mm
+adjust_screw_knob_h =  5.0; // mm
 
 // Mechanical endstop bare microswitch.
 endstop_hole_spacing =  9.5; // mm
@@ -47,9 +53,9 @@ endstop_hole_inset   =  8.0; // mm
 endstop_hole_hoff    = 10.0; // mm
 endstop_click_voff   =  3.0; // mm
 endstop_screw_size   =  2.5; // mm
-endstop_length       = 19.9; // mm
-endstop_thick        =  6.7; // mm
-endstop_depth        = 11.0; // mm
+endstop_length       = 19.8; // mm
+endstop_thick        =  6.5; // mm
+endstop_depth        = 10.0; // mm
 
 // Standard Mk2b Heated Build Platform from RepRapDiscount.com
 hbp_width       = 215;   // mm
@@ -59,8 +65,8 @@ hbp_hole_length = 208.5; // mm
 hbp_screwsize   =   3;   // mm
 
 // Standard 200mm square borosilicate glass build platform
-glass_width     = 214;   // mm
-glass_length    = 200;   // mm
+glass_width     = 200;   // mm
+glass_length    = 214;   // mm
 glass_thick     =   3;   // mm
 
 // Cable chain dimensions
@@ -137,6 +143,7 @@ motor_top_z = platform_z-platform_thick-rack_base-rack_height-gear_base-2;
 lifter_tooth_depth = lifter_screw_pitch / 3.2;
 z_joiner_spacing = lifter_screw_diam + 2*lifter_tooth_depth + joiner_width;
 z_base_height = rail_height + groove_height + 2*platform_thick;
+adjust_thread_depth = adjust_screw_pitch/3.2;
 
 wall_styles = ["thinwall", "corrugated", "crossbeams"];
 wall_style = wall_styles[wall_styling];

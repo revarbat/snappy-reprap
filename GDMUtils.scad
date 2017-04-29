@@ -1176,7 +1176,7 @@ module tube(h=1, r=1, r1=undef, r2=undef, wall=0.5, center=false)
 	r2 = (r2==undef)? r : r2;
 	difference() {
 		cylinder(h=h, r1=r1, r2=r2, center=center);
-		cylinder(h=h+0.03, r1=r1-wall, r2=r2-wall, center=center);
+		down(0.25) cylinder(h=h+1, r1=r1-wall, r2=r2-wall, center=center);
 	}
 }
 

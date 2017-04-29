@@ -70,7 +70,7 @@ wiki/v1.5-%.png: %.scad config.scad GDMUtils.scad
 
 wiki/v1.5-snappy_full.png: full_assembly.scad $(wildcard *.scad)
 	${OPENSCAD} -o $(subst wiki/v1.5-,tmp_,$@) --imgsize=3200,3200 --projection=p \
-	    --csglimit=2000000 --camera=0,0,245,65,0,30,3000 -D '$$t=0.5' $<
+	    --csglimit=2000000 --camera=0,0,245,65,0,30,3000 -D '$$t=0.0' $<
 	${CONVERT} -trim -resize 800x800 -border 10x10 -bordercolor '#ffffe5' $(subst wiki/v1.5-,tmp_,$@) $@
 	rm -f $(subst wiki/v1.5-,tmp_,$@)
 

@@ -3758,6 +3758,13 @@ solid Model
       vertex -30.5 49.75 5
     endloop
   endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex -35 2 5
+      vertex -35 44 5
+      vertex -35 28 5
+    endloop
+  endfacet
   facet normal 0 0 1
     outer loop
       vertex 30.5 2 5
@@ -3769,7 +3776,7 @@ solid Model
     outer loop
       vertex -35 2 5
       vertex -35 57.75 5
-      vertex -35 28 5
+      vertex -35 44 5
     endloop
   endfacet
   facet normal 0 0 1
@@ -3840,13 +3847,6 @@ solid Model
       vertex 35 28 5
       vertex 35 44 5
       vertex 30.5 49.75 5
-    endloop
-  endfacet
-  facet normal 0 0 0
-    outer loop
-      vertex -35 28 5
-      vertex -35 57.75 5
-      vertex -35 44 5
     endloop
   endfacet
   facet normal 0 0 1

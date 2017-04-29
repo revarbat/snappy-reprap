@@ -18,7 +18,7 @@ module z_sled(explode=0, arrows=false)
 	motor_joiner_h = motor_length * 0.75;
 	motor_joiner_x = motor_width - joiner_width;
 	arch_offset = rail_length * (1-cos(bridge_arch_angle));
-	guide_h = z_joiner_spacing/2-joiner_width/2-motor_width/2-3;
+	guide_h = (z_joiner_spacing-lifter_screw_diam-2*lifter_tooth_depth-4)/2;
 
 	color("MediumSlateBlue")
 	prerender(convexity=10)
@@ -32,11 +32,11 @@ module z_sled(explode=0, arrows=false)
 							difference() {
 								union() {
 									if (wall_style == "crossbeams")
-										sparse_strut(l=z_joiner_spacing, h=rail_height, thick=platform_thick+2, strut=6);
+										sparse_strut(l=z_joiner_spacing+joiner_width, h=rail_height, thick=platform_thick+2, strut=6);
 									if (wall_style == "thinwall")
-										thinning_wall(l=z_joiner_spacing, h=rail_height, thick=platform_thick+2, strut=6);
+										thinning_wall(l=z_joiner_spacing+joiner_width, h=rail_height, thick=platform_thick+2, strut=6);
 									if (wall_style == "corrugated") {
-										corrugated_wall(l=z_joiner_spacing, h=rail_height, thick=platform_thick+2, strut=6);
+										corrugated_wall(l=z_joiner_spacing+joiner_width, h=rail_height, thick=platform_thick+2, strut=6);
 
 										// Wiring access hole frame
 										down(rail_height/2-(10+8)/2-2) {
@@ -120,15 +120,15 @@ module z_sled(explode=0, arrows=false)
 				// Guide sliders
 				yflip_copy() {
 					up(rail_height-slider_len/2) {
-						back(z_joiner_spacing/2-joiner_width/2+guide_h/2+printer_slop+0.01) {
+						back(z_joiner_spacing/2+5/2-2/2+printer_slop) {
 							right(slider_width/2) {
-								zrot(90) yrot(90) {
-									trapezoid(size1=[slider_len-2*guide_h, slider_width-2*guide_h], size2=[slider_len, slider_width], h=guide_h, center=true);
+								fwd(5/2-0.05) {
+									zrot(90) yrot(-90) {
+										trapezoid(size1=[slider_len, slider_width], size2=[slider_len-2*guide_h, slider_width-2*guide_h], h=guide_h, center=false);
+									}
 								}
 								right((motor_width/2+support_len-slider_width)/2) {
-									back(guide_h/2+5/2) {
-										cube(size=[motor_width/2+support_len+0.1, 5, slider_len], center=true);
-									}
+									cube(size=[motor_width/2+support_len+0.1, 5, slider_len], center=true);
 								}
 							}
 						}

@@ -37,6 +37,13 @@ module extruder_motor_clip()
 
 		// Ventilation hole
 		cylinder(h=100, d=motor_width*0.75, center=true);
+
+		// chamfer edges
+		xspread(motor_mount_spacing+joiner_width) {
+			yspread(rail_height) {
+				chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
+			}
+		}
 	}
 }
 //!extruder_motor_clip();

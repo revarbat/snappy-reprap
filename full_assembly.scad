@@ -7,9 +7,11 @@ use <wiring.scad>
 use <acme_screw.scad>
 use <vitamins.scad>
 
+use <adjustment_screw_parts.scad>
 use <bridge_segment_parts.scad>
 use <cable_chain_link_parts.scad>
 use <cable_chain_mount_parts.scad>
+use <compression_screw_parts.scad>
 use <cooling_fan_shroud_parts.scad>
 use <drive_gear_parts.scad>
 use <extruder_fan_clip_parts.scad>
@@ -18,7 +20,7 @@ use <extruder_idler_parts.scad>
 use <extruder_motor_clip_parts.scad>
 use <jhead_platform_parts.scad>
 use <lifter_screw_parts.scad>
-use <platform_support_parts.scad>
+use <glass_bed_support_parts.scad>
 use <rail_segment_parts.scad>
 use <rail_xy_motor_segment_parts.scad>
 use <rail_y_endcap_parts.scad>
@@ -170,14 +172,20 @@ module y_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 module y_axis_assembly_2(explode=0, arrows=false)
 {
 	// view: [0, 75, 25] [55, 0, 140] 1800
-	// desc: Join opposing platform supports to either side of the sled endcap. Point the tabs toward the side with the joiners.
+	// desc: Join opposing glass bed supports to either side of both Y sled endcaps. Screw an adjustment screws into each of the supports, leaving them loose for now.
 	sled_endcap();
 	fwd(20-joiner_width/2) {
 		right(platform_width/2+explode*1.5) {
-			zrot(90) platform_support2();
+			zrot(90) glass_bed_support2();
+			right(glass_width/2-platform_width/2-adjust_screw_diam/2-1) {
+				up(explode*1.0+10+7) xrot(180) adjustment_screw();
+			}
 		}
 		left(platform_width/2+explode*1.5) {
-			zrot(-90) platform_support1();
+			zrot(-90) glass_bed_support1();
+			left(glass_width/2-platform_width/2-adjust_screw_diam/2-1) {
+				up(explode*1.0+10+7) xrot(180) adjustment_screw();
+			}
 		}
 	}
 
@@ -187,10 +195,16 @@ module y_axis_assembly_2(explode=0, arrows=false)
 			zring(r=(platform_width+explode*1.5)/2) {
 				arrow(size=explode/3);
 			}
+			up(explode/2) {
+				xspread(glass_width-adjust_screw_diam-2*1+explode*3) {
+					yrot(-90) arrow(size=explode/3);
+				}
+			}
 		}
 	}
 }
 //!y_axis_assembly_2(explode=100, arrows=true);
+//!y_axis_assembly_2(explode=0);
 
 
 module y_axis_assembly_3(explode=0, arrows=false)
@@ -1003,16 +1017,18 @@ module extruder_assembly_7(explode=0, arrows=false)
 	motor_width = nema_motor_width(17);
 	extruder_assembly_6();
 	up(jhead_groove_thick+jhead_shelf_thick+motor_width/2) {
-		right(explode*2) {
-			extruder_latch();
+		back(30+20.1+explode*1.5) {
+			xrot(90) compression_screw();
 		}
 	}
 
 	// Construction arrows.
 	if (arrows && explode>50) {
-		right(explode*1.25) {
+		back(explode*1.25) {
 			fwd(motor_width/2) {
-				up(10) arrow(size=explode/3);
+				up(jhead_groove_thick+jhead_shelf_thick+motor_width/2) {
+					zrot(90) arrow(size=explode/3);
+				}
 			}
 		}
 	}
@@ -1061,7 +1077,8 @@ module extruder_assembly_9(explode=0, arrows=false)
 						wiring([
 							[0, extruder_fan_size/2, 0],
 							[0, extruder_fan_size/2+10, 0],
-							[-10, rail_width/3-5, 0],
+							[-10, rail_width/3+5, 0],
+							[-30, rail_width/3+5, 0],
 							[-80, rail_width/3-5, 0],
 							[-80, 0, 0],
 							[-100, 0, 0],
@@ -1102,9 +1119,10 @@ module extruder_assembly_10(explode=0, arrows=false)
 				wiring([
 					[0, extruder_fan_size/2, 0],
 					[0, extruder_fan_size/2+10, 0],
-					[-35, 27.01, 25],
-					[-35, 27.01, 45],
-					[-55, rail_width/3-5, 51],
+					[-40, 27.01, 25],
+					[-40, 27.01, 45],
+					[-45, rail_width/3+5, 51],
+					[-65, rail_width/3+5, 51],
 					[-(extruder_length/2+42), rail_width/3-5, 60],
 					[-(extruder_length/2+42), 0, 60],
 					[-(extruder_length/2+62), 0, 60],
@@ -1286,6 +1304,8 @@ module bridge_assembly_5(slidepos=0, explode=0, arrows=false)
 			[(extruder_length/2+rail_length), 0, rail_thick+5],
 			[extruder_length/2-10, 0, rail_thick+5+arch_offset],
 			[extruder_length/2-10, rail_width/3-5, rail_thick+5+arch_offset],
+			[15, rail_width/3+5, rail_thick+10+arch_offset],
+			[-15, rail_width/3+5, rail_thick+10+arch_offset],
 			[-extruder_length/2+10, rail_width/3-5, rail_thick+5+arch_offset],
 			[-extruder_length/2+10, 0, rail_thick+5+arch_offset],
 			[-(extruder_length/2+rail_length/2), 0, rail_thick+5+arch_offset/2],
@@ -1309,9 +1329,9 @@ module bridge_assembly_5(slidepos=0, explode=0, arrows=false)
 
 // Borosilicate Glass.  Render last to allow transparency to work.
 module build_platform() {
-	up(3+glass_thick/2) {
+	up(10+2+glass_thick/2) {
 		color([0.75, 1.0, 1.0, 0.5]) {
-			cube(size=[glass_length, glass_width, glass_thick], center=true);
+			cube(size=[glass_width, glass_length, glass_thick], center=true);
 		}
 	}
 }
@@ -1521,7 +1541,7 @@ module final_assembly_5(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 // Child 1: Right Z tower top spool holder mount.
 // Child 2: Right Z tower motherboard mount.  (not generally used.)
 // Child 3: Build plate mount
-module final_assembly_6(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
+module final_assembly_6(xslidepos=0, yslidepos=0, zslidepos=85, explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [92, 0, 10] 3000
 	// desc: Attach a cable chain (18 links) from the extruder bridge cable chain mount to the left Z tower cable chain mount.  Route the extruder bridge wiring up through the cable chain, back into the left Z tower through the wiring access hole below the cable chain mount, down the left Z tower, and back out the motor rail segment to where the controller board will be mounted.  You may need to lubricate each cable-chain pivot with mineral oil.

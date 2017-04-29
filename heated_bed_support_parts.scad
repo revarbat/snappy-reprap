@@ -5,7 +5,7 @@ use <cable_chain.scad>
 
 
 
-module platform_support1()
+module heated_bed_support1()
 {
 	joiner_length=10;
 	w=20;
@@ -46,11 +46,11 @@ module platform_support1()
 			cylinder(h=h*3, d=hbp_screwsize*1.1, center=true, $fn=8);
 	}
 }
-//!platform_support1();
+//!heated_bed_support1();
 
 
 
-module platform_support2()
+module heated_bed_support2()
 {
 	joiner_length=10;
 	w=20;
@@ -91,11 +91,11 @@ module platform_support2()
 			cylinder(h=h*3, d=hbp_screwsize*1.1, center=true, $fn=8);
 	}
 }
-//!platform_support2();
+//!heated_bed_support2();
 
 
 
-module platform_support3()
+module heated_bed_support3()
 {
 	joiner_length=10;
 	w=20;
@@ -148,25 +148,25 @@ module platform_support3()
 			cylinder(h=h*3, d=hbp_screwsize*1.1, center=true, $fn=8);
 	}
 }
-//!platform_support3();
+//!heated_bed_support3();
 
 
 
-module platform_support_parts() { // make me
+module heated_bed_support_parts() { // make me
 	zring(n=2) {
 		up(3) {
 			back(8) {
-				left(30) xrot(180) platform_support2();
-				right(30) xrot(180) platform_support1();
+				left(30) xrot(180) heated_bed_support2();
+				right(30) xrot(180) heated_bed_support1();
 			}
 		}
 	}
-	up(3) back(50) xrot(180) platform_support3();
+	up(3) back(50) xrot(180) heated_bed_support3();
 }
 
 
 
-platform_support_parts();
+heated_bed_support_parts();
 
 
 

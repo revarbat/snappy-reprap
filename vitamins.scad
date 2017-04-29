@@ -95,7 +95,8 @@ module jhead_hotend()
 		wiring([
 			[20.01, 30, 15],
 			[20, 30, 20],
-			[0, rail_width/3-5, 20],
+			[10, rail_width/3+5, 20],
+			[-10, rail_width/3+5, 20],
 			[-extruder_length/2+11, rail_width/3-5, 20],
 			[-extruder_length/2+11, 0, 20],
 			[-extruder_length/2-10, 0, 20],

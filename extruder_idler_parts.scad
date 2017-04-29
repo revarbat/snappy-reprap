@@ -1,17 +1,18 @@
 include <config.scad>
 use <GDMUtils.scad>
 use <NEMA.scad>
+use <acme_screw.scad>
 use <joiners.scad>
 
 
 $fa = 2;
-$fs = 1.5;
+$fs = 1;
 
 width = extruder_shaft_len/2;
 thick = 3.5;
 topthick = 5;
 motor_width = nema_motor_width(17);
-frontside = (jhead_barrel_diam+8)/2+4;
+frontside = 0*(jhead_barrel_diam+8)/2+4;
 backside = (jhead_barrel_diam+8)/2+8;
 topside = motor_width*0.25+topthick;
 botside = motor_width/2+jhead_shelf_thick-thick;
@@ -70,11 +71,6 @@ module extruder_idler()
 		// Filament hole
 		cylinder(d=filament_diam*2, h=100, $fn=12);
 
-		// spring/rubber-band mount hole
-		fwd(frontside-6) {
-			cube([width-5, 6, 100], center=true);
-		}
-
 		// Clearance for idler bearing
 		back(extruder_idler_diam/2) {
 			yrot(90) cylinder(d=extruder_idler_axle, h=extruder_idler_width+10, center=true, $fs=1);
@@ -84,56 +80,21 @@ module extruder_idler()
 				yrot(90) cylinder(d=extruder_idler_axle+4, h=extruder_idler_width+1.1, center=true, $fs=1);
 			}
 		}
-	}
-}
-//!extruder_idler();
 
-
-module extruder_latch()
-{
-	color([0.6, 0.4, 0.0])
-	prerender(convexity=10)
-	difference() {
-		union() {
-			// Top bar
-			up(topside+topthick/2-2) {
-				fwd(backside-10/2) {
-					cube([width, 10, topthick], center=true);
-					down(topthick/2+1/2-0.05) {
-						back(10/2) {
-							front_half() {
-								trapezoid([width-6, 2], [width-6, 6], h=1, center=true);
-							}
-						}
-					}
-				}
-			}
-
-			// Vertical bar
-			fwd(backside-thick/2) {
-				up((topside+botside+5)/2-botside) {
-					cube([width, thick, topside+botside+5], center=true);
-				}
-			}
-
-			// Bottom clip
-			down(botside) {
-				fwd(backside-thick) {
-					difference() {
-						xrot(45) {
-							union() {
-								yrot(90) cylinder(r=thick, h=width, center=true, $fs=1);
-								up(thick) cube([width, thick*2, thick*2], center=true);
-							}
-						}
-						fwd(3*thick) cube([width+1, 4*thick, 4*thick], center=true);
+		// Strengthening holes
+		up(topside/2-3) {
+			back(backside-thick/2) {
+				zspread(3, n=6) {
+					xspread(3, n=floor(width/3)-1) {
+						xrot(90) cylinder(d=0.5, h=thick+1, center=true, $fn=3);
 					}
 				}
 			}
 		}
 	}
 }
-//!extruder_latch();
+//!extruder_idler();
+
 
 
 module idler_bearing()
@@ -161,24 +122,6 @@ module idler_bearing()
 //!idler_bearing();
 
 
-module extruder_idler_axle_clip() {
-	color("Tan") {
-		difference() {
-			cylinder(h=2, d=extruder_idler_axle+2.5);
-			down(0.05) {
-				cylinder(h=2.1, d1=extruder_idler_axle-2, d2=extruder_idler_axle, $fn=18);
-				hull() {
-					cylinder(h=2.1, d1=extruder_idler_axle-3, d2=extruder_idler_axle-0.5, $fn=18);
-					left(5) cylinder(h=2.1, d1=extruder_idler_axle-3, d2=extruder_idler_axle-0.5, $fn=18);
-				}
-				left(extruder_idler_axle*1.5) cube(size=2*extruder_idler_axle, center=true);
-			}
-		}
-	}
-}
-//!extruder_idler_axle_clip();
-
-
 
 module extruder_idler_axle() {
 	color("Tan") {
@@ -197,17 +140,31 @@ module extruder_idler_axle() {
 
 
 
-module extruder_idler_parts() { // make me
-	up(backside) {
-		right(10) xrot(-90) extruder_idler();
-		left(10) xrot(90) extruder_latch();
+module extruder_idler_axle_clip() {
+	color("Tan") {
+		difference() {
+			cylinder(h=2, d=extruder_idler_axle+4);
+			down(0.05) {
+				cylinder(h=2.1, d1=extruder_idler_axle-2, d2=extruder_idler_axle);
+				hull() {
+					cylinder(h=2.1, d1=extruder_idler_axle-3, d2=extruder_idler_axle-0.5);
+					left(5) cylinder(h=2.1, d1=extruder_idler_axle-3, d2=extruder_idler_axle-0.5);
+				}
+				left(extruder_idler_axle*1.5) cube(size=2*extruder_idler_axle, center=true);
+			}
+		}
 	}
-	right(25) {
+}
+//!extruder_idler_axle_clip();
+
+
+module extruder_idler_parts() { // make me
+	up(backside) xrot(-90) extruder_idler();
+	right(15) {
 		fwd(10) extruder_idler_axle();
 		back(10) extruder_idler_axle_clip();
 	}
 }
-
 
 
 extruder_idler_parts();

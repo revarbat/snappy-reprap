@@ -1,11 +1,12 @@
 include <config.scad>
 use <GDMUtils.scad>
 use <NEMA.scad>
+use <acme_screw.scad>
 use <joiners.scad>
 
 
 $fa = 2;
-$fs = 2;
+$fs = 1;
 
 
 module jhead_platform()
@@ -18,7 +19,7 @@ module jhead_platform()
 	motor_width = nema_motor_width(17);
 	idler_backside = (jhead_barrel_diam+8)/2+8;
 	idler_back_thick = 3.5;
-	angle_offset = rail_height*sin(bridge_arch_angle);
+	angle_offset = (rail_height/2-5)*sin(bridge_arch_angle);
 
 	color("SteelBlue")
 	prerender(convexity=10)
@@ -28,18 +29,13 @@ module jhead_platform()
 			union() {
 				// Bottom.
 				up(thick/2) {
-					cube(size=[w, l-10.1-angle_offset, thick], center=true);
+					cube(size=[w, l-12.1-angle_offset, thick], center=true);
 				}
 
 				// Walls.
-				up(rail_height/2-0.005) {
-					xspread(rail_spacing+joiner_width) {
-						if (wall_style == "crossbeams")
-							sparse_strut(h=rail_height-0.01, l=l-10, thick=joiner_width, strut=5);
-						if (wall_style == "thinwall")
-							thinning_wall(h=rail_height-0.01, l=[l-10-angle_offset, l-10+angle_offset], thick=joiner_width, strut=5);
-						if (wall_style == "corrugated")
-							corrugated_wall(h=rail_height-0.01, l=l-10, thick=joiner_width, strut=5);
+				up((rail_height/2-5)/2-0.005) {
+					xspread(rail_spacing+2*joiner_width-platform_thick) {
+						thinning_wall(h=rail_height/2-5-0.01, l=[l-12-angle_offset, l-12+angle_offset], thick=platform_thick, strut=5);
 					}
 				}
 
@@ -53,30 +49,12 @@ module jhead_platform()
 									skew_xy(yang=-bridge_arch_angle) {
 										difference() {
 											cube(size=[block_w-0.1, joiner_width, rail_height], center=true);
+											right(block_w/2) back(joiner_width/2) chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
 											right(block_w/2) fwd(joiner_width/2) chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
 											left(block_w/2) back(joiner_width/2) chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
 										}
 									}
 								}
-							}
-						}
-					}
-				}
-
-				// Rubber band clip
-				right((rail_spacing)/2) {
-					up(h-0.05) {
-						difference() {
-							right_half(30) {
-								right(2) {
-									scale([1,0.75,1]) {
-										cylinder(h=8, d1=joiner_width, d2=joiner_width+6);
-										up(8) cylinder(h=1, d=joiner_width+6);
-									}
-								}
-							}
-							up(8+1) {
-								xrot(90) fillet_mask(r=joiner_width/2, h=joiner_width*2);
 							}
 						}
 					}
@@ -96,10 +74,25 @@ module jhead_platform()
 
 				// Lower idler mount blocks
 				up(jhead_groove_thick+jhead_shelf_thick) {
-					xspread(jhead_barrel_diam+8+9) {
-						up(5/2-0.05) {
+					xspread(jhead_barrel_diam+8+9+5) {
+						up(12/2-0.05) {
 							fwd(2/2) {
-								cube([15, extruder_shaft_len/2+2, 5], center=true);
+								cube([20, extruder_shaft_len/2+2, 12], center=true);
+							}
+						}
+					}
+				}
+
+				// Adjuster screw block
+				up(motor_width/2+adjust_screw_diam/2-5) {
+					left(32) {
+						difference() {
+							cube([15, adjust_screw_diam+2*2, motor_width/2+adjust_screw_diam+2], center=true);
+							up(motor_width/2/2) {
+								yrot(90) {
+									acme_threaded_rod(d=adjust_screw_diam+2*printer_slop, l=15+0.1, thread_depth=adjust_thread_depth, pitch=adjust_screw_pitch, thread_angle=adjust_screw_angle);
+									cube(size=[adjust_screw_diam+2*2+1, adjust_screw_diam/2, 15+0.1], center=true);
+								}
 							}
 						}
 					}
@@ -118,10 +111,10 @@ module jhead_platform()
 				// Motor supports
 				fwd(motor_length/2+extruder_shaft_len/2) {
 					right(extruder_drive_diam/2-0.5) {
-						up(20/2) {
+						up(22/2) {
 							xspread(motor_width-5) {
 								yspread(rail_height-15) {
-									cube([20, 15, 20], center=true);
+									cube([20, 15, 22], center=true);
 								}
 							}
 						}
@@ -211,23 +204,21 @@ module jhead_platform()
 			}
 
 			// Bottom idler holder
-			xflip_copy() {
-				up(jhead_groove_thick+idler_back_thick+printer_slop/2) {
-					left(idler_backside-idler_back_thick) {
-						intersection() {
-							yrot_copies([0,-98]) {
-								teardrop(r=idler_back_thick+printer_slop/2, h=extruder_shaft_len/2+printer_slop, ang=40, $fs=1);
-							}
-							up(idler_back_thick) {
-								cube([2*idler_back_thick+printer_slop, extruder_shaft_len/2+printer_slop, 4*idler_back_thick+printer_slop], center=true);
-							}
+			up(jhead_groove_thick+idler_back_thick+printer_slop/2) {
+				left(idler_backside-idler_back_thick) {
+					intersection() {
+						yrot_copies([0,-98]) {
+							teardrop(r=idler_back_thick+printer_slop/2, h=extruder_shaft_len/2+printer_slop, ang=40, $fs=1);
 						}
-						down(idler_back_thick/3) {
-							yrot_copies([0,-8]) {
-								left((idler_back_thick+printer_slop/2)/2) {
-									up(50/2) {
-										cube([idler_back_thick+printer_slop/2, extruder_shaft_len/2+printer_slop, 50], center=true);
-									}
+						up(idler_back_thick) {
+							cube([2*idler_back_thick+printer_slop, extruder_shaft_len/2+printer_slop, 4*idler_back_thick+printer_slop], center=true);
+						}
+					}
+					down(idler_back_thick/3) {
+						yrot_copies([0,-8]) {
+							left((idler_back_thick+printer_slop/2)/2) {
+								up(50/2) {
+									cube([idler_back_thick+printer_slop/2, extruder_shaft_len/2+printer_slop, 50], center=true);
 								}
 							}
 						}
