@@ -61,6 +61,19 @@ module xy_joiner()
 			}
 		}
 
+		// braces
+		up(rail_height/2-platform_thick/2) {
+			fwd(10/2+0.1) {
+				xflip_copy() {
+					left(side_mount_spacing/2) {
+						right_half() {
+							xrot(-90) trapezoid([hoff*1.2, platform_thick], [joiner_width/3, platform_thick], h=hoff, center=false);
+						}
+					}
+				}
+			}
+		}
+
 		// Connect top half-joiners.
 		up(rail_height/2-platform_thick/2) {
 			back(platform_thick-joiner_length) {
