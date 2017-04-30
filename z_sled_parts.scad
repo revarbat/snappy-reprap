@@ -18,7 +18,7 @@ module z_sled(explode=0, arrows=false)
 	motor_joiner_h = motor_length * 0.75;
 	motor_joiner_x = motor_width - joiner_width;
 	arch_offset = rail_length * (1-cos(bridge_arch_angle));
-	guide_h = (z_joiner_spacing-lifter_screw_diam-2*lifter_tooth_depth-4)/2;
+	guide_h = 4;
 
 	color("MediumSlateBlue")
 	prerender(convexity=10)
@@ -118,17 +118,17 @@ module z_sled(explode=0, arrows=false)
 				}
 
 				// Guide sliders
-				yflip_copy() {
-					up(rail_height-slider_len/2) {
-						back(z_joiner_spacing/2+5/2-2/2+printer_slop) {
-							right(slider_width/2) {
-								fwd(5/2-0.05) {
-									zrot(90) yrot(-90) {
-										trapezoid(size1=[slider_len, slider_width], size2=[slider_len-2*guide_h, slider_width-2*guide_h], h=guide_h, center=false);
-									}
+				up(rail_height-slider_len/2) {
+					right(slider_width/2) {
+						yflip_copy() {
+							back(lifter_screw_diam/2+lifter_tooth_depth+printer_slop) {
+								zrot(90) yrot(90) {
+									trapezoid(size2=[slider_len, slider_width], size1=[slider_len-2*guide_h, slider_width-2*guide_h], h=guide_h, center=false);
 								}
-								right((motor_width/2+support_len-slider_width)/2) {
-									cube(size=[motor_width/2+support_len+0.1, 5, slider_len], center=true);
+								back(guide_h+5/2) {
+									right((motor_width/2+support_len-slider_width)/2) {
+										cube(size=[motor_width/2+support_len+0.1, 5, slider_len], center=true);
+									}
 								}
 							}
 						}

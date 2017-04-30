@@ -1644,15 +1644,6 @@ module final_assembly_7(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 		if ($children > 1) children(1);
 		if ($children > 2) children(2);
 	}
-	left(motor_rail_length/2+rail_length+platform_length) {
-		wiring([
-			[rail_thick+5, rail_width/3, 2*rail_length+motor_rail_length+rail_height],
-			[rail_thick+5, rail_width/3, rail_length+motor_rail_length+rail_height-10],
-			[rail_thick+5, 0, motor_rail_length+rail_height+30],
-			[rail_thick+5, 0, rail_thick+5],
-			[-100, 0, rail_thick+5],
-		], 2, fillet=9, wirenum=4);
-	}
 }
 //!final_assembly_7(explode=100, arrows=true);
 //!final_assembly_7();
@@ -1682,15 +1673,6 @@ module final_assembly_8(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 		if ($children > 1) children(1);
 		if ($children > 2) children(2);
 	}
-	left(motor_rail_length/2+rail_length+platform_length) {
-		wiring([
-			[rail_thick+5, rail_width/3, 2*rail_length+motor_rail_length+rail_height],
-			[rail_thick+5, rail_width/3, rail_length+motor_rail_length+rail_height-10],
-			[rail_thick+5, 0, motor_rail_length+rail_height+30],
-			[rail_thick+5, 0, rail_thick+5],
-			[-100, 0, rail_thick+5],
-		], 2, fillet=9, wirenum=4);
-	}
 }
 //!final_assembly_8(explode=100, arrows=true);
 //!final_assembly_8();
@@ -1698,10 +1680,10 @@ module final_assembly_8(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 
 // Child 0: Right Z tower motherboard mount.  (not generally used.)
 // Child 1: Right Z tower spool axle mount.
-module final_assembly_9(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
+module final_assembly_9(xslidepos=0, yslidepos=0, zslidepos=80, explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [80, 0, 20] 2500
-	// desc: Clip the glass build platform to the build platform supports using four binder clips.
+	// desc: Lower the glass build platform into the support corner clips on the Y sled.  You should be able to carefully work the clips around the glass plate's corners.
 	final_assembly_8(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
 		if ($children > 0) children(0);
 
@@ -1719,15 +1701,6 @@ module final_assembly_9(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 		}
 
 		if ($children > 1) children(1);
-	}
-	left(motor_rail_length/2+rail_length+platform_length) {
-		wiring([
-			[rail_thick+5, rail_width/3, 2*rail_length+motor_rail_length+rail_height],
-			[rail_thick+5, rail_width/3, rail_length+motor_rail_length+rail_height-10],
-			[rail_thick+5, 0, motor_rail_length+rail_height+30],
-			[rail_thick+5, 0, rail_thick+5],
-			[-100, 0, rail_thick+5],
-		], 2, fillet=9, wirenum=4);
 	}
 }
 //!final_assembly_9(explode=100, arrows=true);
@@ -1747,15 +1720,6 @@ module final_assembly_10(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrow
 			}
 		}
 	}
-	left(motor_rail_length/2+rail_length+platform_length) {
-		wiring([
-			[rail_thick+5, rail_width/3, 2*rail_length+motor_rail_length+rail_height],
-			[rail_thick+5, rail_width/3, rail_length+motor_rail_length+rail_height-10],
-			[rail_thick+5, 0, motor_rail_length+rail_height+30],
-			[rail_thick+5, 0, rail_thick+5],
-			[-100, 0, rail_thick+5],
-		], 2, fillet=9, wirenum=4);
-	}
 }
 //!final_assembly_10(explode=100, arrows=true);
 //!final_assembly_10();
@@ -1765,7 +1729,7 @@ module full_rendering()
 {
 	xpos = 100*cos(360*$t+120);
 	ypos = 100*sin(360*$t+120);
-	zpos = 0.9*(rail_length-(rail_height+groove_height)/2)*cos(360*$t) - (rail_height + groove_height)/2;
+	zpos = 0.9*(rail_length-rail_height/2)*cos(360*$t) - rail_height/2;
 
 	final_assembly_10(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos);
 }
