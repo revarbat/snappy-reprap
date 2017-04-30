@@ -1596,7 +1596,7 @@ module final_assembly_6(xslidepos=0, yslidepos=0, zslidepos=85, explode=0, arrow
 						fwd(15) {
 							yrot(-90) arrow(size=explode/2);
 							right(vert_off) {
-								down(rail_height) {
+								up(zslidepos) {
 									yrot(-90) arrow(size=explode/2);
 								}
 							}
