@@ -122,19 +122,19 @@ module zrot(a=0) { rotate([0, 0, a]) children(); }
 // Scales children by the given factor in the X axis.
 // Example:
 //   xscale(3) sphere(r=100, center=true);
-module xscale(x) {scale([x,0,0]) children();}
+module xscale(x) {scale([x,1,1]) children();}
 
 
 // Scales children by the given factor in the Y axis.
 // Example:
 //   yscale(3) sphere(r=100, center=true);
-module yscale(y) {scale([0,y,0]) children();}
+module yscale(y) {scale([1,y,1]) children();}
 
 
 // Scales children by the given factor in the Z axis.
 // Example:
 //   zscale(3) sphere(r=100, center=true);
-module zscale(z) {scale([0,0,z]) children();}
+module zscale(z) {scale([1,1,z]) children();}
 
 
 // Mirrors the children along the X axis, kind of like xscale(-1)
@@ -819,6 +819,11 @@ module fillet_hole_mask(r=1.0, fillet=0.25, xtilt=0, ytilt=0)
 
 // For when you MUST pass a child to a module, but you want it to be nothing.
 module nil() difference() {cube(0.1, center=true); cube(0.2, center=true);}
+
+
+// Makes a cube that is centered in X and Y axes, and has its bottom aligned with Z=0.
+module upcube(size=[1,1,1]) {up(size[2]/2) cube(size, center=true);}
+
 
 
 // Makes a cube with chamfered edges.
