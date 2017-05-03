@@ -103,6 +103,12 @@ class GenAssemblyIndex(object):
 
                 f.write('</li>\n')
 
+            f.write('<li class="section">\n')
+            f.write('<h2>%s</h2>\n' % "RAMPS Wiring")
+            f.write('<div class="desc">Heres a diagram of what needs to be connected where on a RAMPS 1.4 controller board.</div>\n')
+            f.write('<img src="RAMPS_Wiring_For_Snappy.png">')
+            f.write('</li>\n')
+
             f.write('</ol>\n')
             f.write('</body>\n')
             f.write('</html>\n')
@@ -134,6 +140,10 @@ class GenAssemblyIndex(object):
                         '({base}{module}_after.png)\n\n'
                         .format(**stepinfo)
                     )
+            f.write('## %s\n\n' % "RAMPS Wiring")
+            f.write('Heres a diagram of what needs to be connected where on a RAMPS 1.4 controller board.\n\n')
+            f.write('![RAMPS 1.4 Wiring Diagram](v1.5-RAMPS_Wiring_For_Snappy.png)\n\n')
+
 
     def process_module(self, module, desc):
         print("module: %s" % module)
