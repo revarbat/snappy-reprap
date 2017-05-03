@@ -34,7 +34,7 @@ conn_slot_hoff = 0;
 
 // Control Dial
 dial_diam = 8;
-dial_height = 6.5;
+dial_height = 7;
 dial_voff = -35.25;
 dial_hoff = 36.5;
 
@@ -175,7 +175,7 @@ module rrd_graphic_lcd_case_top()
 		// Reset button hole
 		left(reset_hoff) {
 			back(reset_voff) {
-				down(printer_slop/2) {
+				down(1+printer_slop/2) {
 					reset_button(slop=3*printer_slop);
 				}
 			}

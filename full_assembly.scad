@@ -29,6 +29,7 @@ use <ramps_mount_parts.scad>
 use <sled_endcap_parts.scad>
 use <spool_holder_parts.scad>
 use <support_leg_parts.scad>
+use <wire_clip_parts.scad>
 use <xy_joiner_parts.scad>
 use <xy_sled_parts.scad>
 use <yz_joiner_parts.scad>
@@ -1723,6 +1724,28 @@ module final_assembly_10(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrow
 }
 //!final_assembly_10(explode=100, arrows=true);
 //!final_assembly_10();
+
+
+module final_assembly_11(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
+{
+	// view: [50, 0, 0] [60, 0, 0] 600
+	// desc: Optionally clean up wiring using the wiring clips.
+	wiring([
+		for (a=[-15:5:15]) [100*cos(a)-100, 100*sin(a), a]
+	], 19);
+	right(explode) {
+		xrot(-60) down(5) zrot(-45) wire_clip(d=9.5);
+
+		// Construction arrows.
+		if(arrows && explode>50) {
+			left(explode*0.5) {
+				arrow(size=explode/3);
+			}
+		}
+	}
+}
+//!final_assembly_11(explode=100, arrows=true);
+//!final_assembly_11();
 
 
 module full_rendering()

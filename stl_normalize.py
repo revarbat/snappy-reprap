@@ -101,7 +101,7 @@ def facet_cmp(f1, f2):
 
 
 def float_fmt(val):
-    s = "%.4f" % val
+    s = "%.3f" % val
     while len(s) > 1 and s[-1:] in '0.':
         if s[-1:] == '.':
             s = s[:-1]
@@ -154,7 +154,7 @@ class PointCloud(object):
             round(y, 4),
             round(z, 4),
         )
-        key = "%.4f %.4f %.4f" % pt
+        key = "%.3f %.3f %.3f" % pt
         if key in self.pointhash:
             return self.pointhash[key]
         idx = len(self.points)
