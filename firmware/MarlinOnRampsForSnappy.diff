@@ -9,7 +9,7 @@ index 980efc5..4638936 100644
 -#ifndef MOTHERBOARD
 -  #define MOTHERBOARD BOARD_ULTIMAKER
 -#endif
-+#define MOTHERBOARD BOARD_RAMPS_13_EFF
++#define MOTHERBOARD BOARD_RAMPS_13_EFB
  
  // Define this to set a custom name for your generic Mendel,
 -// #define CUSTOM_MENDEL_NAME "This Mendel"
@@ -30,7 +30,8 @@ index 980efc5..4638936 100644
 +#define TEMP_SENSOR_0 1
 +#define TEMP_SENSOR_1 0
  #define TEMP_SENSOR_2 0
- #define TEMP_SENSOR_BED 0
+-#define TEMP_SENSOR_BED 0
++#define TEMP_SENSOR_BED 1
  
 @@ -156,9 +154,9 @@
  
@@ -146,15 +147,6 @@ index 980efc5..4638936 100644
                            // When defined, it will:
                            // - Allow Z homing only after X and Y homing AND stepper drivers still enabled
                            // - If stepper drivers timeout, it will need X and Y homing again before Z homing
-@@ -465,7 +472,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
- // For deltabots this means top and center of the Cartesian print volume.
- #define MANUAL_X_HOME_POS 0
- #define MANUAL_Y_HOME_POS 0
--#define MANUAL_Z_HOME_POS 0
-+#define MANUAL_Z_HOME_POS 175
- //#define MANUAL_Z_HOME_POS 402 // For delta: Distance between nozzle and print surface after homing.
- 
- //// MOVEMENT SETTINGS
 @@ -474,11 +481,11 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
  
  // default settings
@@ -163,11 +155,11 @@ index 980efc5..4638936 100644
 -#define DEFAULT_MAX_FEEDRATE          {500, 500, 5, 25}    // (mm/sec)
 -#define DEFAULT_MAX_ACCELERATION      {9000,9000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
 +#define DEFAULT_AXIS_STEPS_PER_UNIT   {80, 80, 400, 96.0}  // default steps per unit for ultimaker
-+#define DEFAULT_MAX_FEEDRATE          {150, 150, 10, 30}    // (mm/sec)
++#define DEFAULT_MAX_FEEDRATE          {150, 150, 5, 30}    // (mm/sec)
 +#define DEFAULT_MAX_ACCELERATION      {2000,2000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
  
 -#define DEFAULT_ACCELERATION          3000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
-+#define DEFAULT_ACCELERATION          500    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
++#define DEFAULT_ACCELERATION          200    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
  #define DEFAULT_RETRACT_ACCELERATION  3000   // X, Y, Z and E max acceleration in mm/s^2 for retracts
  
  // Offset of the extruders (uncomment if using more than one and relying on firmware to position when changing).
@@ -206,26 +198,6 @@ diff --git a/Marlin/Configuration_adv.h b/Marlin/Configuration_adv.h
 index 50c4581..4db5d4f 100644
 --- a/Marlin/Configuration_adv.h
 +++ b/Marlin/Configuration_adv.h
-@@ -61,8 +61,8 @@
- //This is for controlling a fan to cool down the stepper drivers
- //it will turn on when any driver is enabled
- //and turn off after the set amount of seconds from last driver being disabled again
--#define CONTROLLERFAN_PIN -1 //Pin used for the fan to cool controller (-1 to disable)
--#define CONTROLLERFAN_SECS 60 //How many seconds, after all motors were disabled, the fan should run
-+#define CONTROLLERFAN_PIN 10 //Pin used for the fan to cool controller (-1 to disable)
-+#define CONTROLLERFAN_SECS 300 //How many seconds, after all motors were disabled, the fan should run
- #define CONTROLLERFAN_SPEED 255  // == full speed
- 
- // When first starting the main fan, run it at full speed for the
-@@ -75,7 +75,7 @@
- // extruder temperature is above/below EXTRUDER_AUTO_FAN_TEMPERATURE.
- // Multiple extruders can be assigned to the same pin in which case
- // the fan will turn on when any selected extruder is above the threshold.
--#define EXTRUDER_0_AUTO_FAN_PIN   -1
-+#define EXTRUDER_0_AUTO_FAN_PIN   10
- #define EXTRUDER_1_AUTO_FAN_PIN   -1
- #define EXTRUDER_2_AUTO_FAN_PIN   -1
- #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
 @@ -273,7 +273,7 @@
  #define MICROSTEP_MODES {16,16,16,16,16} // [1,2,4,8,16]
  
@@ -235,12 +207,3 @@ index 50c4581..4db5d4f 100644
  
  // uncomment to enable an I2C based DIGIPOT like on the Azteeg X3 Pro
  //#define DIGIPOT_I2C
-@@ -373,7 +373,7 @@ const unsigned int dropsegments=5; //everything with less than this number of st
- // You can get round this by connecting a push button or single throw switch to the pin defined as SDCARDCARDDETECT
- // in the pins.h file.  When using a push button pulling the pin to ground this will need inverted.  This setting should
- // be commented out otherwise
--#define SDCARDDETECTINVERTED
-+//#define SDCARDDETECTINVERTED
- 
- #ifdef ULTIPANEL
-  #undef SDCARDDETECTINVERTED
