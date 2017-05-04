@@ -94,7 +94,7 @@ module drive_gear() {
 
 module drive_gear_parts() { // make me
 	up(gear_base+rack_height/2) {
-		xspread(30) drive_gear();
+		drive_gear();
 	}
 }
 

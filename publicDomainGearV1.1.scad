@@ -70,7 +70,7 @@ module gear (
 	clearance       = 0.0,  //gap between top of a tooth on one gear and bottom of valley on a meshing gear (in millimeters)
 	backlash        = 0.0   //gap between two meshing teeth, in the direction along the circumference of the pitch circle
 ) {
-	pi = 3.1415926;
+	pi = 3.141592653589793236;
 	p  = mm_per_tooth * number_of_teeth / pi / 2; //radius of pitch circle
 	c  = p + mm_per_tooth / pi - clearance;       //radius of outer circle
 	b  = p*cos(pressure_angle);                   //radius of base circle
@@ -109,26 +109,27 @@ module rack (
 	mm_per_tooth    = 3,    //this is the "circular pitch", the circumference of the pitch circle divided by the number of teeth
 	number_of_teeth = 11,   //total number of teeth along the rack
 	thickness       = 6,    //thickness of rack in mm (affects each tooth)
-	height          = 120,   //height of rack in mm, from tooth top to far side of rack.
+	height          = 120,  //height of rack in mm, from tooth top to back of rack.
 	pressure_angle  = 28,   //Controls how straight or bulged the tooth sides are. In degrees.
 	backlash        = 0.0   //gap between two meshing teeth, in the direction along the circumference of the pitch circle
 ) {
-	pi = 3.1415926;
-	a = mm_per_tooth / pi; //addendum
-	t = a*cos(pressure_angle)-1;         //tooth side is tilted so top/bottom corners move this amount
+	a = adendum(mm_per_tooth);
+	d = dedendum(mm_per_tooth);
+	xa = a * sin(pressure_angle);
+	xd = d * sin(pressure_angle);
 	linear_extrude(height = thickness, center = true, convexity = 10)
 		for (i = [0:number_of_teeth-1] )
 			translate([i*mm_per_tooth,0,0])
 				polygon(
 					points=[
-						[-mm_per_tooth * 3/4,                 a-height],
-						[-mm_per_tooth * 3/4 - backlash,     -a],
-						[-mm_per_tooth * 1/4 + backlash - t, -a],
-						[-mm_per_tooth * 1/4 + backlash + t,  a],
-						[ mm_per_tooth * 1/4 - backlash - t,  a],
-						[ mm_per_tooth * 1/4 - backlash + t, -a],
-						[ mm_per_tooth * 3/4 + backlash,     -a],
-						[ mm_per_tooth * 3/4,                 a-height],
+						[-1/2 * mm_per_tooth - 0.01,          a-height],
+						[-1/2 * mm_per_tooth,                 -d],
+						[-1/4 * mm_per_tooth + backlash - xd, -d],
+						[-1/4 * mm_per_tooth + backlash + xa,  a],
+						[ 1/4 * mm_per_tooth - backlash - xa,  a],
+						[ 1/4 * mm_per_tooth - backlash + xd, -d],
+						[ 1/2 * mm_per_tooth,                 -d],
+						[ 1/2 * mm_per_tooth + 0.01,          a-height],
 					],
 					paths=[[0,1,2,3,4,5,6,7]]
 				);
@@ -138,8 +139,10 @@ module rack (
 //A gear fits within a circle of radius outer_radius, and two gears should have
 //their centers separated by the sum of their pictch_radius.
 function circular_pitch  (mm_per_tooth=3) = mm_per_tooth;                     //tooth density expressed as "circular pitch" in millimeters
-function diametral_pitch (mm_per_tooth=3) = 3.1415926 / mm_per_tooth;         //tooth density expressed as "diametral pitch" in teeth per millimeter
-function module_value    (mm_per_tooth=3) = mm_per_tooth / pi;                //tooth density expressed as "module" or "modulus" in millimeters
+function diametral_pitch (mm_per_tooth=3) = 3.141592653589793236 / mm_per_tooth;         //tooth density expressed as "diametral pitch" in teeth per millimeter
+function adendum         (mm_per_tooth=3) = module_value(mm_per_tooth);
+function dedendum        (mm_per_tooth=3) = 1.25 * module_value(mm_per_tooth);
+function module_value    (mm_per_tooth=3) = mm_per_tooth / 3.141592653589793236;                //tooth density expressed as "module" or "modulus" in millimeters
 function pitch_radius    (mm_per_tooth=3,number_of_teeth=11) = mm_per_tooth * number_of_teeth / 3.1415926 / 2;
 function outer_radius    (mm_per_tooth=3,number_of_teeth=11,clearance=0.1)    //The gear fits entirely within a cylinder of this radius.
 	= mm_per_tooth*(1+number_of_teeth/2)/3.1415926  - clearance;              
