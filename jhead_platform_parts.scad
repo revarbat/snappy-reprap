@@ -87,11 +87,13 @@ module jhead_platform()
 				up(motor_width/2+adjust_screw_diam/2-5) {
 					left(32) {
 						difference() {
-							cube([15, adjust_screw_diam+2*2, motor_width/2+adjust_screw_diam+2], center=true);
+							cube([15, adjust_screw_diam+2*2, motor_width/2+adjust_screw_diam+3], center=true);
 							up(motor_width/2/2) {
 								yrot(90) {
 									acme_threaded_rod(d=adjust_screw_diam+2*printer_slop, l=15+0.1, thread_depth=adjust_thread_depth, pitch=adjust_screw_pitch, thread_angle=adjust_screw_angle);
-									cube(size=[adjust_screw_diam+2*2+1, adjust_screw_diam/2, 15+0.1], center=true);
+									left((adjust_screw_diam+2*printer_slop)/2/2) {
+										cube(size=[(adjust_screw_diam+2*printer_slop)/2, adjust_screw_diam/2, 15+0.1], center=true);
+									}
 								}
 							}
 						}
