@@ -13,7 +13,7 @@ lcd_voff = 8.25;
 
 // SD card slot (left side)
 sd_slot_width = 28;
-sd_slot_height = 5;
+sd_slot_height = 4;
 sd_slot_voff = 8.25;
 
 // Full board
