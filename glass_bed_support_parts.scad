@@ -16,7 +16,7 @@ module glass_bed_support1()
 	w = glass_xoff + backing_diam/2 + 10;
 	h = glass_thick + 3;
 	l2 = l - backing_diam/2;
-	spring_h = 10;
+	spring_h = 12;
 	spring_w = 60;
 	spring_thick = 1.4;
 
@@ -30,9 +30,9 @@ module glass_bed_support1()
 
 				// Clip platform
 				fwd(l2) {
-					up(platform_height/2+spring_h+spring_thick/2) {
+					up(platform_height/2+spring_h-spring_thick/2) {
 						cube(size=[backing_diam, backing_diam, spring_thick], center=true);
-						up(h/2) {
+						up(h/2-0.25) {
 							difference() {
 								left(w/2-backing_diam/2) {
 									cube(size=[w, backing_diam, h], center=true);
@@ -47,7 +47,7 @@ module glass_bed_support1()
 								}
 
 								// Screw head clearance
-								up(2.5) right(2/2) cube(size=[adjust_screw_knob_d+3, backing_diam+1, h], center=true);
+								up(1.5) right(2/2) cube(size=[adjust_screw_knob_d+3, backing_diam+1, h], center=true);
 							}
 						}
 					}
@@ -61,7 +61,7 @@ module glass_bed_support1()
 				// Leaf spring
 				spring_r = spring_h/4 + spring_w * spring_w / 4 / spring_h;
 				fwd(l2) {
-					up(spring_h/2+platform_height/2) {
+					up(platform_height/2+spring_h/2-spring_thick) {
 						xrot(90) {
 							difference() {
 								yflip_copy() {
@@ -112,7 +112,7 @@ module glass_bed_support2()
 	w = glass_xoff + backing_diam/2 + 10;
 	h = glass_thick + 3;
 	l2 = l - backing_diam/2;
-	spring_h = 10;
+	spring_h = 12;
 	spring_w = 60;
 	spring_thick = 1.5;
 
@@ -126,9 +126,9 @@ module glass_bed_support2()
 
 				// Clip platform
 				fwd(l2) {
-					up(platform_height/2+spring_h+spring_thick/2) {
+					up(platform_height/2+spring_h-spring_thick/2) {
 						cube(size=[backing_diam, backing_diam, spring_thick], center=true);
-						up(h/2) {
+						up(h/2-0.25) {
 							difference() {
 								right(w/2-backing_diam/2) {
 									cube(size=[w, backing_diam, h], center=true);
@@ -143,7 +143,7 @@ module glass_bed_support2()
 								}
 
 								// Screw head clearance
-								up(2.5) left(2/2) cube(size=[adjust_screw_knob_d+3, backing_diam+1, h], center=true);
+								up(1.5) left(2/2) cube(size=[adjust_screw_knob_d+3, backing_diam+1, h], center=true);
 							}
 						}
 					}
@@ -157,7 +157,7 @@ module glass_bed_support2()
 				// Leaf spring
 				spring_r = spring_h/4 + spring_w * spring_w / 4 / spring_h;
 				fwd(l2) {
-					up(spring_h/2+platform_height/2) {
+					up(platform_height/2+spring_h/2-spring_thick) {
 						xrot(90) {
 							difference() {
 								yflip_copy() {
