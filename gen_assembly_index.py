@@ -142,7 +142,8 @@ class GenAssemblyIndex(object):
                     )
             f.write('## %s\n\n' % "RAMPS Wiring")
             f.write('Heres a diagram of what needs to be connected where on a RAMPS 1.4 controller board.\n\n')
-            f.write('![RAMPS 1.4 Wiring Diagram](v1.5-RAMPS_Wiring_For_Snappy.png)\n\n')
+            f.write('[![RAMPS 1.4 Wiring Diagram](v1.5-RAMPS_Wiring_For_Snappy.png)](v1.5-RAMPS_Wiring_For_Snappy.png)\n')
+            f.write('Click to enlarge.\n\n')
 
 
     def process_module(self, module, desc):
