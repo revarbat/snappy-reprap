@@ -42,6 +42,9 @@ module xy_sled()
 	slider_count = 2;
 	l = platform_length - 2*printer_slop;
 	slider_spacing = (l-slider_len-15)/(slider_count-1);
+	rack_module = rack_tooth_size / pi;
+	rack_pcd = gear_teeth * rack_module;
+	addendum = rack_module;
 
 	color("MediumSlateBlue")
 	prerender(convexity=10)
@@ -67,8 +70,6 @@ module xy_sled()
 				}
 
 				// Drive rack
-				rack_module = rack_tooth_size / 3.1415926535;
-				rack_pcd = gear_teeth * rack_module;
 				left(rack_pcd/2) {
 					up(platform_thick+rack_base+shaft_clear+rack_height/2) {
 						difference() {
@@ -84,10 +85,9 @@ module xy_sled()
 					}
 
 					// rack base
-					addendum = rack_module;
 					up((platform_thick+shaft_clear+rack_base)/2) {
 						left(10/2-addendum) {
-							cube(size=[10,l,platform_thick+rack_base+shaft_clear], center=true);
+							cube(size=[10, l, platform_thick+rack_base+shaft_clear], center=true);
 						}
 					}
 				}

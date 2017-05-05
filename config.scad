@@ -130,6 +130,7 @@ gear_backlash = printer_slop/2;
 
 
 // Commonly used derived values.  Don't change these.
+pi = 3.141592653589793236+0.0;
 extruder_length = motor_rail_length + 2*lifter_screw_pitch;
 shaft_clear = max(20.0, motor_shaft_length)-20.0;
 rail_offset = shaft_clear+12.0;
@@ -144,6 +145,7 @@ lifter_tooth_depth = lifter_screw_pitch / 3.2;
 z_joiner_spacing = lifter_screw_diam + 2*lifter_tooth_depth + joiner_width;
 z_base_height = rail_height + groove_height + 2*platform_thick;
 adjust_thread_depth = adjust_screw_pitch/3.2;
+drive_gear_diam = (gear_teeth+2)*rack_tooth_size/pi;
 
 wall_styles = ["thinwall", "corrugated", "crossbeams"];
 wall_style = wall_styles[wall_styling];

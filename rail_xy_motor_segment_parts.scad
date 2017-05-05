@@ -92,7 +92,7 @@ module rail_xy_motor_segment(explode=0, connectby="")
 
 					// Endstop clip
 					zrot_copies([0, 180]) {
-						fwd((endstop_depth+2)/2-8) {
+						fwd((endstop_depth+2)/2-drive_gear_diam/2) {
 							right((motor_width+endstop_thick+3+2*7)/2) {
 								up(rail_height+groove_height-2-(endstop_length+2*2)/2) {
 									difference() {

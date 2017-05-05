@@ -3,7 +3,6 @@ use <GDMUtils.scad>
 use <cable_chain.scad>
 use <wiring.scad>
 
-pi = 3.1415926535;
 
 module cable_chain_link()
 {

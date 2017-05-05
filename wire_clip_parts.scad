@@ -4,7 +4,6 @@ use <GDMUtils.scad>
 $fa=2;
 $fs=1.5;
 
-pi = 3.141592653589793236;
 
 module wire_clip(
 	d = 8,

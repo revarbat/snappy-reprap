@@ -3,8 +3,8 @@ use <GDMUtils.scad>
 use <joiners.scad>
 
 
-joiner_length=15;
-hardstop_offset=8;
+joiner_length = 20;
+hardstop_offset = drive_gear_diam/2;
 
 
 module xy_joiner()
@@ -63,11 +63,11 @@ module xy_joiner()
 
 		// braces
 		up(rail_height/2-platform_thick/2) {
-			fwd(10/2+0.1) {
+			fwd(joiner_length-platform_thick*2+0.01) {
 				xflip_copy() {
 					left(side_mount_spacing/2) {
-						right_half() {
-							xrot(-90) trapezoid([hoff*1.2, platform_thick], [joiner_width/3, platform_thick], h=hoff, center=false);
+						right_half(200) {
+							xrot(-90) trapezoid([hoff*1.2, platform_thick], [joiner_width/3, platform_thick], h=hoff+joiner_length-platform_thick*2-6, center=false);
 						}
 					}
 				}
