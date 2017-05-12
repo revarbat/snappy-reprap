@@ -46,7 +46,7 @@ module xy_motor_assembly(explode=0, arrows=false)
 	// view: [30, 25, 30] [55, 0, 25] 475
 	// desc: Press-fit a drive gear onto the shaft of a stepper motor, making sure to align the flat of the shaft with the flat of the shaft hole. Repeat this with the other drive gear and another stepper.  Lubricate the drive gear teeth with mineral oil.
 	nema17_stepper(h=motor_length, shaft_len=motor_shaft_length, $fa=1, $fs=0.5);
-	up(gear_base+rack_height/2+2.1+explode) {
+	up(1+2.1+explode) {
 		drive_gear();
 	}
 
@@ -58,6 +58,7 @@ module xy_motor_assembly(explode=0, arrows=false)
 	}
 }
 //!xy_motor_assembly(explode=100, arrows=true);
+//!xy_motor_assembly();
 
 
 
@@ -100,26 +101,36 @@ module y_motor_segment_assembly_1(explode=0, arrows=false)
 module y_motor_segment_assembly_2(explode=0, arrows=false)
 {
 	// view: [-20, -110, 30] [43, 0, 22] 1100
-	// desc: Insert the limit microswitch in the left-side limit switch clip in the X/Y motor rail segment. Route the wiring through the back of the limit switch clip, and out the same front-left wiring access hole as the motor wires.
+	// desc: Insert the limit microswitch in the left-side limit switch clip in the X/Y motor rail segment. Orient the switch with the arm leaning outwards on top. Route the wiring through the back of the limit switch clip, and out the same front-left wiring access hole as the motor wires.
 	motor_width = nema_motor_width(17)+printer_slop*2;
 
 	y_motor_segment_assembly_1();
 
 	// Limit switch
 	sw_x = motor_width/2+7+endstop_thick/2;
-	sw_y = 8+1-endstop_depth/2;
+	sw_y = drive_gear_diam/2+1-endstop_depth/2;
 	sw_z = motor_top_z+endstop_length/2-5;
 	fwd(explode*2+sw_y) {
 		up(sw_z) left(sw_x) xrot(90) microswitch();
 		wiring([
-			[-sw_x, 10, sw_z-5],
-			[-sw_x, 19, sw_z-5],
-			[-rail_width/2+joiner_width+5, 20, 9],
-			[-rail_width/2+joiner_width+5, -motor_rail_length/3.5-2, 9],
-			[-rail_width/1.5, -motor_rail_length/3.5-2, 9],
-			[-rail_width/1.5-8, -motor_rail_length/2-22, 4],
-			[-rail_width/1.5-30, -motor_rail_length/2-22, 4],
-		], 2);
+			[-sw_x, 10, sw_z+8],
+			[-sw_x, 19, sw_z+8],
+			[-sw_x-2, 19, sw_z-8],
+			[-rail_width/2+joiner_width+3, 20, 4],
+			[-rail_width/2+joiner_width+3, -motor_rail_length/3.5+9, 9],
+			[-rail_width/1.5, -motor_rail_length/3.5+9, 9],
+			[-rail_width/1.5-8, -motor_rail_length/2-14, 4.5],
+			[-rail_width/1.5-30, -motor_rail_length/2-14, 4.5],
+		], 1);
+		wiring([
+			[-sw_x, 10, sw_z-8],
+			[-sw_x, 19, sw_z-8],
+			[-rail_width/2+joiner_width+5, 20, 4],
+			[-rail_width/2+joiner_width+5, -motor_rail_length/3.5+7, 9],
+			[-rail_width/1.5+2, -motor_rail_length/3.5+7, 9],
+			[-rail_width/1.5-7, -motor_rail_length/2-16, 4.5],
+			[-rail_width/1.5-30, -motor_rail_length/2-16, 4.5],
+		], 1, wirenum=1);
 	}
 
 	// Construction arrows.
@@ -326,7 +337,7 @@ module y_axis_assembly_7(slidepos=0, explode=0, arrows=false)
 
 module x_motor_segment_assembly_1(explode=0, arrows=false)
 {
-	// view: [0, 0, 87] [62, 0, 191] 900
+	// view: [0, 0, 87] [62, 0, 11] 900
 	// desc: Seat the stepper motor with drive gear in the X/Y motor rail segment, with the wiring facing towards the left.  Route the wiring out the front left wiring access hole.
 	motor_width = nema_motor_width(17)+printer_slop*2;
 
@@ -369,18 +380,26 @@ module x_motor_segment_assembly_2(explode=0, arrows=false)
 
 	// Limit switch
 	sw_x = motor_width/2+7+endstop_thick/2;
-	sw_y = 8+1-endstop_depth/2;
+	sw_y = drive_gear_diam/2+1-endstop_depth/2;
 	sw_z = motor_top_z+endstop_length/2-5;
 	fwd(explode*2+sw_y) {
 		up(sw_z) left(sw_x) xrot(90) microswitch();
 		wiring([
-			[-sw_x, 10, sw_z-5],
-			[-sw_x-1, 19, sw_z-5],
-			[-sw_x-1, 20, 10],
+			[-sw_x, 10, sw_z-8],
+			[-sw_x-1, 18, sw_z-8],
+			[-sw_x-1, 19, 10],
 			[-sw_x-1, -motor_rail_length/3.5-5+sw_y, 10],
-			[-1, -motor_rail_length/3.5-5+sw_y, 10],
+			[1, -motor_rail_length/3.5-5+sw_y, 10],
+			[1, -motor_rail_length/2-20+sw_y, 10],
+		], 1);
+		wiring([
+			[-sw_x, 10, sw_z+8],
+			[-sw_x-3, 18, sw_z+8],
+			[-sw_x-3, 19, 10],
+			[-sw_x-3, -motor_rail_length/3.5-5+sw_y-2, 10],
+			[-1, -motor_rail_length/3.5-5+sw_y-2, 10],
 			[-1, -motor_rail_length/2-20+sw_y, 10],
-		], 2);
+		], 1, wirenum=1);
 	}
 
 	// Construction arrows.
@@ -1461,7 +1480,7 @@ module final_assembly_3(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 module final_assembly_4(explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [60, 0, 125] 400
-	// desc: Attach a limit microswitch, with wiring, to the Z rail endcap.
+	// desc: Attach a limit microswitch, with wiring, to the Z rail endcap.  Orient the switch as shown.
 	rail_z_endcap();
 	up(rail_height-endstop_length/2-2) {
 		left(z_joiner_spacing/2-joiner_width/2-5-endstop_thick/2) {
@@ -1469,13 +1488,13 @@ module final_assembly_4(explode=0, arrows=false)
 				zrot(180) xrot(90) {
 					microswitch();
 					wiring([
-						[0, -2.5, -12],
-						[-1, -3, -25],
+						[0, 8, -10],
+						[-1, 7.9, -25],
 						[-18.5, -30, -25],
 						[-18.5, -30.01, 20],
 					], 1, fillet=5, wirenum=4);
 					wiring([
-						[0, -8, -12],
+						[0, -8, -10],
 						[0, -8.01, -25],
 						[-16.5, -30, -25],
 						[-16.5, -30.01, 20],

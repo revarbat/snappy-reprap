@@ -190,19 +190,19 @@ module microswitch()
 	up(endstop_depth/2) {
 		// Switch bump
 		color([0.3, 0.3, 0.3]) {
-			yrot(90) cylinder(h=endstop_thick*0.75, d=1, center=true, $fn=12);
+			yrot(90) cylinder(h=endstop_thick*0.75, d=2, center=true, $fn=12);
 		}
 
 		// Lever arm
 		color("silver") {
-			fwd(endstop_length*0.9/2) xrot(5) back(endstop_length*0.9/2) {
-				cube([endstop_thick, endstop_length*0.9, 0.1], center=true);
+			fwd(endstop_length*0.9/2) xrot(10) back(endstop_length*0.9/2) {
+				cube([endstop_thick, endstop_length*0.9, 0.5], center=true);
 				back(endstop_length*0.9/2+1) {
 					top_half() {
 						yrot(90) {
 							difference() {
-								cylinder(h=endstop_thick, r=1, center=true, $fn=12);
-								cylinder(h=endstop_thick+1, r=0.8, center=true, $fn=12);
+								cylinder(h=endstop_thick, r=1.5, center=true, $fn=12);
+								cylinder(h=endstop_thick+1, r=1.0, center=true, $fn=12);
 							}
 						}
 					}
@@ -212,9 +212,15 @@ module microswitch()
 
 		// Terminals
 		color("silver") {
+			tab_width = 3;
+			tab_length = 6;
 			grid_of(ya=[-endstop_length/2+2, -endstop_length/8, endstop_length/2-2]) {
-				down(endstop_depth+7/2) {
-					cube([0.2, endstop_thick*0.5, 7], center=true);
+				down(endstop_depth+tab_length/2) {
+					difference() {
+						cube([0.2, tab_width, tab_length], center=true);
+						down(tab_length/2-2) yrot(90) cylinder(h=1, d=1, center=true, $fn=8);
+						down(tab_length/2) yspread(tab_width) chamfer_mask_x(l=1, chamfer=1);
+					}
 				}
 			}
 		}

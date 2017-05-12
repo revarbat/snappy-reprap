@@ -24,11 +24,10 @@ groove_height   =  12;   // mm
 joiner_angle    =  30;   // degrees
 joiner_width    =  10;   // mm
 
-rack_tooth_size     =  5;    // mm per tooth.
-rack_height         = 10;    // mm
-rack_base           =  2;    // mm
+rack_tooth_size     = 10/3;    // mm per tooth.
+rack_height         = 15;    // mm
 gear_base           = 10;    // mm
-gear_teeth          = 16;
+gear_teeth          = 24;
 set_screw_size      =  3;    // mm size of set screw in drive gears, couplers, etc
 motor_length        = 39.25; // mm length of NEMA17 motor.
 motor_shaft_size    =  5;    // mm diameter of NEMA17 motor shaft.
@@ -122,25 +121,26 @@ cooling_duct_height  =  18.0;  // mm
 filament_diam        =   1.75; // mm
 
 // This is the slop needed to make parts fit more exactly, and might be
-// printer dependant.  Printing a slop calibration plate should help
-// dial this setting in for your printer.
-printer_slop =   0.25;  // mm
-gear_backlash = printer_slop/2;
+// printer and slicer dependant.  Printing a slop calibration block should
+// help dial this setting in for your printer.
+printer_slop = 0.20;  // mm
+gear_backlash = 0;  // mm
 
 
 
 // Commonly used derived values.  Don't change these.
 pi = 3.141592653589793236+0.0;
 extruder_length = motor_rail_length + 2*lifter_screw_pitch;
-shaft_clear = max(20.0, motor_shaft_length)-20.0;
-rail_offset = shaft_clear+12.0;
+shaft_clear = max(0, motor_shaft_length - (rack_height + gear_base));
+rail_offset = shaft_clear + platform_thick + rack_height/2 + 2.0;
 rail_spacing = platform_width - joiner_width*4 - 10;
 rail_width = rail_spacing + joiner_width*2;
-motor_mount_spacing=43+joiner_width+10;
-side_mount_spacing = motor_rail_length-10*2;
-platform_z = rail_height+groove_height+rail_offset;
-cantilever_length = (motor_rail_length+2*platform_length-2*rail_height-extruder_length-groove_height)/2;
-motor_top_z = platform_z-platform_thick-rack_base-rack_height-gear_base-2;
+rack_base = rail_offset - platform_thick + groove_height/2 - rack_height;
+motor_mount_spacing = 43 + joiner_width + 10;
+side_mount_spacing = motor_rail_length - 10*2;
+platform_z = rail_height + groove_height + rail_offset;
+cantilever_length = (motor_rail_length + 2*platform_length - 2*rail_height - extruder_length - groove_height)/2;
+motor_top_z = rail_height + groove_height - rack_height/2 - gear_base - 2;
 lifter_tooth_depth = lifter_screw_pitch / 3.2;
 z_joiner_spacing = lifter_screw_diam + 2*lifter_tooth_depth + joiner_width;
 z_base_height = rail_height + groove_height + 2*platform_thick;

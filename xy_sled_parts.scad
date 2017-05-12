@@ -38,10 +38,10 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 
 module xy_sled()
 {
-	slider_len = 20;
+	slider_len = platform_length/5;
 	slider_count = 2;
 	l = platform_length - 2*printer_slop;
-	slider_spacing = (l-slider_len-15)/(slider_count-1);
+	slider_spacing = (l-slider_len-15)/max(1,slider_count-1);
 	rack_module = rack_tooth_size / pi;
 	rack_pcd = gear_teeth * rack_module;
 	addendum = rack_module;
@@ -62,7 +62,7 @@ module xy_sled()
 							if (wall_style == "crossbeams")
 								sparse_strut(h=platform_height, l=l-10, thick=joiner_width, strut=5);
 							if (wall_style == "thinwall")
-								thinning_wall(h=platform_height, l=l-10, thick=joiner_width, strut=platform_thick, wall=3);
+								thinning_wall(h=platform_height, l=l-10, thick=joiner_width, strut=platform_thick);
 							if (wall_style == "corrugated")
 								corrugated_wall(h=platform_height, l=l-10, thick=joiner_width, strut=platform_thick, wall=3);
 						}
@@ -71,13 +71,15 @@ module xy_sled()
 
 				// Drive rack
 				left(rack_pcd/2) {
-					up(platform_thick+rack_base+shaft_clear+rack_height/2) {
-						difference() {
-							zrot(-90) herringbone_rack(l=l, h=rack_height+0.1, w=10, tooth_size=rack_tooth_size);
-							up(rack_height/2) {
-								left(rack_tooth_size/2) {
-									yrot(15) up(2) {
-										cube(size=[rack_tooth_size*2, l+10, 4], center=true);
+					up(rail_offset+groove_height/2-rack_height/2-0.01) {
+						back(rack_height*sin(30)/3) {
+							difference() {
+								zrot(-90) herringbone_rack(l=l, h=rack_height+0.1, w=10, tooth_size=rack_tooth_size);
+								up(rack_height/2) {
+									left(rack_tooth_size/2) {
+										yrot(15) up(2) {
+											cube(size=[rack_tooth_size*2, l+10, 4], center=true);
+										}
 									}
 								}
 							}
@@ -103,18 +105,6 @@ module xy_sled()
 			// Clear space for joiners.
 			translate([0,0,platform_height/2]) {
 				joiner_quad_clear(xspacing=platform_width-joiner_width, yspacing=l-0.1, h=platform_height, w=joiner_width, clearance=5, a=joiner_angle);
-			}
-
-			// Shrinkage stress relief
-			up(platform_thick/2) {
-				yspread(18, n=5) {
-					cube(size=[platform_width+1, 1, platform_thick-2], center=true);
-				}
-				xspread(20, n=7) {
-					yspread(l-10) {
-						cube(size=[1, 20, platform_thick-2], center=true);
-					}
-				}
 			}
 		}
 

@@ -1,5 +1,6 @@
 include <config.scad>
 use <GDMUtils.scad>
+use <sliders.scad>
 use <joiners.scad>
 
 
@@ -24,8 +25,8 @@ module sled_endcap()
 
 						// Clear for joiners.
 						down(platform_height/2-0.05) {
-							fwd(0.05) {
-								joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height, clearance=1, w=joiner_width, a=joiner_angle);
+							fwd(0.01) {
+								joiner_pair_clear(spacing=platform_width-joiner_width, h=platform_height, clearance=-0.01, w=joiner_width, a=joiner_angle);
 							}
 						}
 					}
@@ -77,9 +78,10 @@ module sled_endcap()
 			}
 
 			// Rack and pinion hard stop.
-			down(platform_thick+rail_offset/2-0.05) {
+			endstop_h = platform_z - motor_top_z - 5 - 2;
+			down(endstop_h/2-0.05) {
 				fwd(joiner_length-(joiner_length-hardstop_offset)/2) {
-					cube(size=[rail_spacing-joiner_width, joiner_length-hardstop_offset, rail_offset], center=true);
+					cube(size=[rail_spacing-joiner_width+1, joiner_length-hardstop_offset, endstop_h], center=true);
 				}
 			}
 		}

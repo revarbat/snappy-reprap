@@ -1,5 +1,6 @@
 include <config.scad>
 use <GDMUtils.scad>
+use <sliders.scad>
 use <joiners.scad>
 
 
@@ -96,8 +97,11 @@ module xy_joiner()
 		}
 
 		// Rack and pinion hard stop.
-		translate([0, -joiner_length+(joiner_length-hardstop_offset)/2, -platform_thick-rail_offset/2]) {
-			cube(size=[rail_spacing-joiner_width, joiner_length-hardstop_offset, rail_offset], center=true);
+		endstop_h = platform_z - motor_top_z - 5 - 2;
+		down(endstop_h/2-0.05) {
+			fwd(joiner_length-(joiner_length-hardstop_offset)/2) {
+				cube(size=[rail_spacing-joiner_width+1, joiner_length-hardstop_offset, endstop_h], center=true);
+			}
 		}
 	}
 }
