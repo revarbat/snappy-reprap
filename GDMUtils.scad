@@ -829,11 +829,13 @@ module upcube(size=[1,1,1]) {up(size[2]/2) cube(size, center=true);}
 // Makes a cube with chamfered edges.
 //   size = size of cube [X,Y,Z].  (Default: [1,1,1])
 //   chamfer = chamfer inset along axis.  (Default: 0.25)
+// Example:
+//   chamfcube(size=[10,30,50], chamfer=1, chamfaxes=[1,1,1], chamfcorners=true);
 module chamfcube(
-		size=[1,1,1],
-		chamfer=0.25,
-		chamfaxes=[1,1,1],
-		chamfcorners=false
+	size=[1,1,1],
+	chamfer=0.25,
+	chamfaxes=[1,1,1],
+	chamfcorners=false
 ) {
 	ch_width = sqrt(2)*chamfer;
 	ch_offset = 1;
@@ -1362,98 +1364,99 @@ module thinning_wall(h=50, l=100, thick=5, ang=30, strut=5, wall=2)
 	y1 = thick/2;
 	y2 = y1 - min(z2-z3, x2-x3) * sin(ang);
 
-	zrot(90)
-	polyhedron(
-		points=[
-			[-x4, -y1, -z1],
-			[ x4, -y1, -z1],
-			[ x1, -y1,  z1],
-			[-x1, -y1,  z1],
+	zrot(90) {
+		polyhedron(
+			points=[
+				[-x4, -y1, -z1],
+				[ x4, -y1, -z1],
+				[ x1, -y1,  z1],
+				[-x1, -y1,  z1],
 
-			[-x5, -y1, -z2],
-			[ x5, -y1, -z2],
-			[ x2, -y1,  z2],
-			[-x2, -y1,  z2],
+				[-x5, -y1, -z2],
+				[ x5, -y1, -z2],
+				[ x2, -y1,  z2],
+				[-x2, -y1,  z2],
 
-			[-x6, -y2, -z3],
-			[ x6, -y2, -z3],
-			[ x3, -y2,  z3],
-			[-x3, -y2,  z3],
+				[-x6, -y2, -z3],
+				[ x6, -y2, -z3],
+				[ x3, -y2,  z3],
+				[-x3, -y2,  z3],
 
-			[-x4,  y1, -z1],
-			[ x4,  y1, -z1],
-			[ x1,  y1,  z1],
-			[-x1,  y1,  z1],
+				[-x4,  y1, -z1],
+				[ x4,  y1, -z1],
+				[ x1,  y1,  z1],
+				[-x1,  y1,  z1],
 
-			[-x5,  y1, -z2],
-			[ x5,  y1, -z2],
-			[ x2,  y1,  z2],
-			[-x2,  y1,  z2],
+				[-x5,  y1, -z2],
+				[ x5,  y1, -z2],
+				[ x2,  y1,  z2],
+				[-x2,  y1,  z2],
 
-			[-x6,  y2, -z3],
-			[ x6,  y2, -z3],
-			[ x3,  y2,  z3],
-			[-x3,  y2,  z3],
-		],
-		faces=[
-			[ 4,  5,  1],
-			[ 5,  6,  2],
-			[ 6,  7,  3],
-			[ 7,  4,  0],
+				[-x6,  y2, -z3],
+				[ x6,  y2, -z3],
+				[ x3,  y2,  z3],
+				[-x3,  y2,  z3],
+			],
+			faces=[
+				[ 4,  5,  1],
+				[ 5,  6,  2],
+				[ 6,  7,  3],
+				[ 7,  4,  0],
 
-			[ 4,  1,  0],
-			[ 5,  2,  1],
-			[ 6,  3,  2],
-			[ 7,  0,  3],
+				[ 4,  1,  0],
+				[ 5,  2,  1],
+				[ 6,  3,  2],
+				[ 7,  0,  3],
 
-			[ 8,  9,  5],
-			[ 9, 10,  6],
-			[10, 11,  7],
-			[11,  8,  4],
+				[ 8,  9,  5],
+				[ 9, 10,  6],
+				[10, 11,  7],
+				[11,  8,  4],
 
-			[ 8,  5,  4],
-			[ 9,  6,  5],
-			[10,  7,  6],
-			[11,  4,  7],
+				[ 8,  5,  4],
+				[ 9,  6,  5],
+				[10,  7,  6],
+				[11,  4,  7],
 
-			[11, 10,  9],
-			[20, 21, 22],
+				[11, 10,  9],
+				[20, 21, 22],
 
-			[11,  9,  8],
-			[20, 22, 23],
+				[11,  9,  8],
+				[20, 22, 23],
 
-			[16, 17, 21],
-			[17, 18, 22],
-			[18, 19, 23],
-			[19, 16, 20],
+				[16, 17, 21],
+				[17, 18, 22],
+				[18, 19, 23],
+				[19, 16, 20],
 
-			[16, 21, 20],
-			[17, 22, 21],
-			[18, 23, 22],
-			[19, 20, 23],
+				[16, 21, 20],
+				[17, 22, 21],
+				[18, 23, 22],
+				[19, 20, 23],
 
-			[12, 13, 17],
-			[13, 14, 18],
-			[14, 15, 19],
-			[15, 12, 16],
+				[12, 13, 17],
+				[13, 14, 18],
+				[14, 15, 19],
+				[15, 12, 16],
 
-			[12, 17, 16],
-			[13, 18, 17],
-			[14, 19, 18],
-			[15, 16, 19],
+				[12, 17, 16],
+				[13, 18, 17],
+				[14, 19, 18],
+				[15, 16, 19],
 
-			[ 0,  1, 13],
-			[ 1,  2, 14],
-			[ 2,  3, 15],
-			[ 3,  0, 12],
+				[ 0,  1, 13],
+				[ 1,  2, 14],
+				[ 2,  3, 15],
+				[ 3,  0, 12],
 
-			[ 0, 13, 12],
-			[ 1, 14, 13],
-			[ 2, 15, 14],
-			[ 3, 12, 15],
-		],
-		convexity=2
-	);
+				[ 0, 13, 12],
+				[ 1, 14, 13],
+				[ 2, 15, 14],
+				[ 3, 12, 15],
+			],
+			convexity=2
+		);
+	}
 }
 //!thinning_wall(h=50, l=[100, 80], thick=4, ang=30, strut=5, wall=2);
 
@@ -2245,10 +2248,10 @@ module extrude_2dpath_along_spiral(polyline, h, r, twist=360) {
 				p1 = p * pline_count + b2,
 				p2 = (p+1) * pline_count + b2,
 				p3 = (p+1) * pline_count + b,
-				pt = (i==0)? [p0, p1, p2] : [p0, p2, p3]
+				pt = (i==0)? [p0, p2, p1] : [p0, p3, p2]
 			) pt
 		],
-		[[for (b = [0:pline_count-1]) b+(steps)*pline_count]]
+		[[for (b = [pline_count-1:-1:0]) b+(steps)*pline_count]]
 	);
 
 	polyhedron(points=poly_points, faces=poly_faces, convexity=10);
@@ -2262,8 +2265,8 @@ module extrude_2dpath_along_spiral(polyline, h, r, twist=360) {
 //   tilt = True if extrusion should tilt vertically when following path.
 //   convexity = max number of surfaces any single ray can pass through.
 // Example:
-//   shape = [ [-15, 0], [25, -15], [-5, 10], [0, 10], [5, 10], [10, 5], [15, 0], [10, -5], [5, -10], [0, -10], [-5, -10], [-10, -5], [-15, 0] ];
-//   path = [ [0, 0, 0], [33, 33, 33], [66, -33, -33], [100, 0, 0] ];
+//   shape = [ [-15, 0], [0, 0], [-5, 10], [0, 10], [5, 10], [10, 5], [15, 0], [10, -5], [5, -10], [0, -10], [-5, -10], [-10, -5], [-15, 0] ];
+//   path = [ [0, 0, 0], [100, 33, 33], [200, -33, -33], [300, 0, 0] ];
 //   extrude_2dpath_along_3dpath(shape, path, tilt=false);
 module extrude_2dpath_along_3dpath(polyline, path, tilt=true, convexity=10) {
 	pline_count = len(polyline);
@@ -2297,10 +2300,10 @@ module extrude_2dpath_along_3dpath(polyline, path, tilt=true, convexity=10) {
 				p1 = p * pline_count + b2,
 				p2 = (p+1) * pline_count + b2,
 				p3 = (p+1) * pline_count + b,
-				pt = (i==0)? [p0, p1, p2] : [p0, p2, p3]
+				pt = (i==0)? [p0, p2, p1] : [p0, p3, p2]
 			) pt
 		],
-		[[for (b = [0:pline_count-1]) b+(path_count-1)*pline_count]]
+		[[for (b = [pline_count-1:-1:0]) b+(path_count-1)*pline_count]]
 	);
 
 	polyhedron(points=poly_points, faces=poly_faces, convexity=convexity);
