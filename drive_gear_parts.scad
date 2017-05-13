@@ -7,7 +7,7 @@ $fa = 2;
 $fs = 2;
 
 module drive_gear() {
-	shaft = motor_shaft_size + printer_slop;
+	shaft = motor_shaft_size;
 	rack_module = rack_tooth_size / pi;
 	gear_pcd = gear_teeth * rack_module;
 	addendum = rack_module;

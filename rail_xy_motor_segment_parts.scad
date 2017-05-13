@@ -78,8 +78,8 @@ module rail_xy_motor_segment(explode=0, connectby="")
 
 					// Rails.
 					xspread(rail_spacing+joiner_width) {
-						up(rail_height+groove_height/2-0.05) {
-							rail(l=motor_rail_length, w=joiner_width, h=groove_height);
+						up(rail_height+groove_height/2-0.01) {
+							rail(l=motor_rail_length, w=joiner_width-0.01, h=groove_height);
 						}
 					}
 

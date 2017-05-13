@@ -44,8 +44,8 @@ module rail_segment(explode=0, connectby="")
 
 					// Rails.
 					xspread(rail_spacing+joiner_width) {
-						up(rail_height+groove_height/2-0.05) {
-							rail(l=l, w=joiner_width, h=groove_height);
+						up(rail_height+groove_height/2-0.01) {
+							rail(l=l, w=joiner_width-0.01, h=groove_height);
 						}
 					}
 
@@ -99,18 +99,6 @@ module rail_segment(explode=0, connectby="")
 							yspread(motor_rail_length-2*28) {
 								cube(size=[joiner_width+1, 16, 10], center=true);
 							}
-						}
-					}
-				}
-
-				// Shrinkage stress relief
-				up(rail_thick/2) {
-					yspread(17.5, n=7) {
-						cube(size=[rail_width+1, 1, rail_thick-2], center=true);
-					}
-					xspread(22, n=5) {
-						yspread(l-10) {
-							cube(size=[1, 17.5*2, rail_thick-2], center=true);
 						}
 					}
 				}
