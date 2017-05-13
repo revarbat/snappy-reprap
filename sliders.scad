@@ -69,18 +69,23 @@ module rail(l=30, w=joiner_width, h=groove_height, chamfer=1.0, ang=groove_angle
 	attack_ang = 30;
 	attack_len = 2;
 
+	fudge = 1.177;
+	chamf = sqrt(2) * chamfer;
+	cosa = cos(ang*fudge);
+	sina = sin(ang*fudge);
+
 	z1 = h/2;
-	z2 = z1 - chamfer * cos(ang);
+	z2 = z1 - chamf * cosa;
 	z3 = z1 - attack_len * sin(attack_ang);
 	z4 = 0;
 
 	x1 = w/2;
-	x2 = x1 - chamfer * sin(ang);
-	x3 = x1 - chamfer;
+	x2 = x1 - chamf * sina;
+	x3 = x1 - chamf;
 	x4 = x1 - attack_len * sin(attack_ang);
 	x5 = x2 - attack_len * sin(attack_ang);
-	x6 = x1 - z1 * sin(ang);
-	x7 = x4 - z1 * sin(ang);
+	x6 = x1 - z1 * sina;
+	x7 = x4 - z1 * sina;
 
 	y1 = l/2;
 	y2 = y1 - attack_len * cos(attack_ang);
@@ -91,32 +96,32 @@ module rail(l=30, w=joiner_width, h=groove_height, chamfer=1.0, ang=groove_angle
 			[-x5, -y1,  z3],
 			[ x5, -y1,  z3],
 			[ x7, -y1,  z4],
-			[ x4, -y1, -z1],
-			[-x4, -y1, -z1],
+			[ x4, -y1, -z1-0.05],
+			[-x4, -y1, -z1-0.05],
 			[-x7, -y1,  z4],
 
 			[-x3, -y2,  z1],
 			[ x3, -y2,  z1],
 			[ x2, -y2,  z2],
 			[ x6, -y2,  z4],
-			[ x1, -y2, -z1],
-			[-x1, -y2, -z1],
+			[ x1, -y2, -z1-0.05],
+			[-x1, -y2, -z1-0.05],
 			[-x6, -y2,  z4],
 			[-x2, -y2,  z2],
 
 			[ x5,  y1,  z3],
 			[-x5,  y1,  z3],
 			[-x7,  y1,  z4],
-			[-x4,  y1, -z1],
-			[ x4,  y1, -z1],
+			[-x4,  y1, -z1-0.05],
+			[ x4,  y1, -z1-0.05],
 			[ x7,  y1,  z4],
 
 			[ x3,  y2,  z1],
 			[-x3,  y2,  z1],
 			[-x2,  y2,  z2],
 			[-x6,  y2,  z4],
-			[-x1,  y2, -z1],
-			[ x1,  y2, -z1],
+			[-x1,  y2, -z1-0.05],
+			[ x1,  y2, -z1-0.05],
 			[ x6,  y2,  z4],
 			[ x2,  y2,  z2],
 		],
@@ -182,6 +187,104 @@ module rail(l=30, w=joiner_width, h=groove_height, chamfer=1.0, ang=groove_angle
 }
 //!rail(l=30, w=joiner_width, h=groove_height);
 
+
+module old_rail(l=30, w=joiner_width, h=groove_height, fillet=1.0, ang=groove_angle)
+{
+	difference() {
+		// Rail backing.
+		down(0.05/2) cube(size=[w, l, h+0.05], center=true);
+
+		xflip_copy() {
+			left(w/2) {
+				up(h/2) {
+					zflip() {
+						xrot(90) fillet_planes_joint_mask(h=l+1, r=fillet, ang=90-ang, $fn=6);
+					}
+				}
+			}
+		}
+
+		// Rail grooves.
+		xflip_copy() {
+			right(w/2) {
+				// main groove
+				scale([tan(ang),1,1]) yrot(45) {
+					cube(size=[h*sqrt(2)/2,l+1,h*sqrt(2)/2], center=true);
+				}
+
+				// fillets
+				endfacets = 1;
+				facelen = h/2/cos(ang);
+				inset = h/2*tan(ang);
+				yflip_copy() {
+					fwd(l/2) {
+						scale([1, 2, 1]) {
+							up(h/2) {
+								// top end fillets
+								difference() {
+									cube([w*2, fillet*2, fillet*2], center=true);
+									back(fillet) down(fillet) {
+										yrot(90) cylinder(r=fillet, h=w*3, center=true, $fn=endfacets*4);
+									}
+								}
+
+								// top corner end fillets
+								down(fillet/sin(ang)) {
+									yrot(45+ang/2) {
+										difference() {
+											cube([w*2, fillet*2, fillet*2], center=true);
+											back(fillet) down(fillet) {
+												yrot(90) cylinder(r=fillet, h=w*3, center=true, $fn=endfacets*4);
+											}
+										}
+									}
+								}
+							}
+
+							// groove fillets
+							left(inset) {
+								difference() {
+									zflip_copy() {
+										left(fillet/cos(ang)) {
+											yrot(-ang) {
+												right(fillet) {
+													down(facelen*1.5/2) {
+														cube([fillet*2, fillet*2, facelen*1.5], center=true);
+													}
+												}
+											}
+										}
+									}
+									zflip_copy() {
+										left(fillet/cos(ang)) {
+											yrot(-ang) {
+												right(fillet) {
+													down(facelen) {
+														back(fillet) left(fillet) {
+															cylinder(r=fillet, h=facelen*3, center=true, $fn=endfacets*4);
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+/*
+difference() {
+	rail(l=30, w=joiner_width, h=groove_height, chamfer=1.0, ang=groove_angle);
+	old_rail(l=30, w=joiner_width, h=groove_height, fillet=1.0, ang=groove_angle);
+}
+*/
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
