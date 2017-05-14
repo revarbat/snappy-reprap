@@ -103,6 +103,13 @@ module xy_joiner()
 				cube(size=[rail_spacing-joiner_width+1, joiner_length-hardstop_offset, endstop_h], center=true);
 			}
 		}
+
+		// Horizontal Bracing
+		down((rail_offset-3)/2-0.05) {
+			fwd(joiner_length-(joiner_length-hardstop_offset)/2) {
+				cube(size=[platform_width-2*joiner_width+1, joiner_length-hardstop_offset, rail_offset-3], center=true);
+			}
+		}
 	}
 }
 //!xy_joiner();

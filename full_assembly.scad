@@ -280,7 +280,7 @@ module y_axis_assembly_5(slidepos=0, explode=0, arrows=false)
 	}
 }
 //!y_axis_assembly_5(slidepos=0, explode=100, arrows=true);
-//!y_axis_assembly_5();
+!y_axis_assembly_5();
 
 
 module y_axis_assembly_6(slidepos=0, explode=0, arrows=false)
