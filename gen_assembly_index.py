@@ -3,7 +3,7 @@
 import re
 import sys
 
-snappy_ver = "v1.5"
+snappy_ver = "v2.0"
 
 html_header_string = """\
 <html>
@@ -142,7 +142,7 @@ class GenAssemblyIndex(object):
                     )
             f.write('## %s\n\n' % "RAMPS Wiring")
             f.write('Heres a diagram of what needs to be connected where on a RAMPS 1.4 controller board.\n\n')
-            f.write('[![RAMPS 1.4 Wiring Diagram](v1.5-RAMPS_Wiring_For_Snappy.png)](v1.5-RAMPS_Wiring_For_Snappy.png)\n')
+            f.write('[![RAMPS 1.4 Wiring Diagram](%s-RAMPS_Wiring_For_Snappy.png)](%s-RAMPS_Wiring_For_Snappy.png)\n' % (snappy_ver, snappy_ver))
             f.write('Click to enlarge.\n\n')
 
 

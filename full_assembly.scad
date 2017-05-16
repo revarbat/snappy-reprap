@@ -1315,9 +1315,9 @@ module bridge_assembly_5(slidepos=0, explode=0, arrows=false)
 			[-(motor_spread/2-5), 0, motor_length-5],
 			[-(motor_spread/2-5), 0, rail_thick+5],
 			[-(extruder_length/2+rail_length), 0, rail_thick+5],
-			[-(extruder_length/2+rail_length-33), 0, rail_thick+5],
-			[-(extruder_length/2+rail_length-33), -(z_joiner_spacing-joiner_width)/2, rail_thick+10],
-			[-(extruder_length/2+rail_length-33), -(z_joiner_spacing+joiner_width)/2, rail_thick+10]
+			[-(extruder_length/2+rail_length-30), 0, rail_thick+5],
+			[-(extruder_length/2+rail_length-30), -(z_joiner_spacing-joiner_width)/2, rail_thick+10],
+			[-(extruder_length/2+rail_length-30), -(z_joiner_spacing+joiner_width)/2, rail_thick+10]
 		], 4);
 		wiring([
 			[motor_spread/2, 0, motor_length-5],
@@ -1331,8 +1331,8 @@ module bridge_assembly_5(slidepos=0, explode=0, arrows=false)
 			[-extruder_length/2+10, rail_width/3-5, rail_thick+5+arch_offset],
 			[-extruder_length/2+10, 0, rail_thick+5+arch_offset],
 			[-(extruder_length/2+rail_length/2), 0, rail_thick+5+arch_offset/2],
-			[-(extruder_length/2+rail_length-36), -(z_joiner_spacing-joiner_width)/2, rail_thick+12],
-			[-(extruder_length/2+rail_length-36), -(z_joiner_spacing+joiner_width)/2, rail_thick+12],
+			[-(extruder_length/2+rail_length-38), -(z_joiner_spacing-joiner_width)/2, rail_thick+12],
+			[-(extruder_length/2+rail_length-38), -(z_joiner_spacing+joiner_width)/2, rail_thick+12],
 		], 4);
 	}
 
