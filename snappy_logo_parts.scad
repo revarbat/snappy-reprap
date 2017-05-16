@@ -25,7 +25,7 @@ module snappy_logo() {
 		}
 	}
 	up(10) {
-		xspread(rail_length-2*printer_slop-2*joiner_width-1) {
+		xspread(extruder_length-30) {
 			difference() {
 				xrot(90) half_joiner(h=rail_height/2, w=joiner_width, l=8, a=joiner_angle);
 				xspread(joiner_width) {
