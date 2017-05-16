@@ -117,5 +117,7 @@ STLs/support_leg_parts.stl: joiners.scad
 STLs/xy_joiner_parts.stl: joiners.scad
 STLs/xy_sled_parts.stl: joiners.scad publicDomainGearV1.1.scad sliders.scad
 STLs/yz_joiner_parts.stl: joiners.scad
-STLs/z_sled_parts.stl: joiners.scad publicDomainGearV1.1.scad acme_screw.scad sliders.scad
+STLs/z_base_parts.stl: joiners.scad
+STLs/z_rail_parts.stl: joiners.scad acme_screw.scad
+STLs/z_sled_parts.stl: joiners.scad
 
