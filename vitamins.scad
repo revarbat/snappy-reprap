@@ -77,30 +77,19 @@ module jhead_hotend()
 			}
 		}
 		down((jhead_length+block_h)/2) {
-			left(jhead_block_off+1) {
-				wiring([
-					[0, jhead_block_size[0]/2-2, 0],
-					[0, jhead_block_size[0]/2+5, 0],
-					[28, jhead_block_size[0]+12, jhead_length-10],
-					[28.01, jhead_block_size[0]+12, jhead_length],
-				], 2, fillet=8);
-			}
+			wiring([
+				[-(jhead_block_off+1), jhead_block_size[0]/2-2, 0],
+				[-(jhead_block_off+1), jhead_block_size[0]/2+5, 0],
+				[-extruder_length/4, -1, jhead_length+2],
+				[-extruder_length/2, -1, jhead_length+2],
+			], 2, fillet=8);
 			wiring([
 				[0, jhead_block_size[0]/2-2, 0],
 				[0, jhead_block_size[0]/2+5, 0],
-				[21, jhead_block_size[0]+12, jhead_length-10],
-				[21.01, jhead_block_size[0]+12, jhead_length],
+				[-extruder_length/4, -3, jhead_length+2],
+				[-extruder_length/2, -3, jhead_length+2],
 			], 2, fillet=8, wirenum=2);
 		}
-		wiring([
-			[20.01, 30, 15],
-			[20, 30, 20],
-			[10, rail_width/3+5, 20],
-			[-10, rail_width/3+5, 20],
-			[-extruder_length/2+11, rail_width/3-5, 20],
-			[-extruder_length/2+11, 0, 20],
-			[-extruder_length/2-10, 0, 20],
-		], 4, fillet=5);
 	}
 	color("silver")
 	up(jhead_groove_thick+jhead_shelf_thick) {

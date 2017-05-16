@@ -11,6 +11,7 @@ $fs = 1;
 
 module jhead_platform()
 {
+	side_joiner_len = 2;
 	platform_vert_off = rail_height+groove_height+rail_offset;
 	l = extruder_length;
 	w = rail_width;
@@ -29,7 +30,7 @@ module jhead_platform()
 			union() {
 				// Bottom.
 				up(thick/2) {
-					cube(size=[w, l-12.1-angle_offset, thick], center=true);
+					cube(size=[w, l-6.1-angle_offset, thick], center=true);
 				}
 
 				// Walls.
@@ -39,8 +40,18 @@ module jhead_platform()
 					}
 				}
 
+				// Center bracing
+				difference() {
+					upcube([rail_width-platform_thick, adjust_screw_diam+2*2, rail_height/2-5]);
+					xspread(rail_width-2*2-18) {
+						up(jhead_shelf_thick+jhead_groove_thick) {
+							upcube([18, adjust_screw_diam+2*2+1, 7]);
+						}
+					}
+				}
+
 				// Joiner backing
-				block_w = rail_width/2 - z_joiner_spacing/2 + joiner_width/2;
+				block_w = joiner_width;
 				up(rail_height/2) {
 					xflip_copy() {
 						yflip_copy() {
@@ -49,9 +60,28 @@ module jhead_platform()
 									skew_xy(yang=-bridge_arch_angle) {
 										difference() {
 											cube(size=[block_w-0.1, joiner_width, rail_height], center=true);
-											right(block_w/2) back(joiner_width/2) chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
-											right(block_w/2) fwd(joiner_width/2) chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
-											left(block_w/2) back(joiner_width/2) chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
+											xspread(block_w) back(joiner_width/2) chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				// Joiner bracing triangles
+				tri_w = platform_thick;
+				tri_h = rail_height - (rail_height/2-5);
+				up(rail_height/2-5-0.05) {
+					xflip_copy() {
+						yflip_copy() {
+							fwd((extruder_length-joiner_width)/2) {
+								right((rail_width-tri_w)/2) {
+									skew_xy(yang=-bridge_arch_angle) {
+										zrot(90) {
+											right_half() {
+												trapezoid([tri_h*2, platform_thick], [0.1, platform_thick], h=tri_h, center=false);
+											}
 										}
 									}
 								}
@@ -63,7 +93,7 @@ module jhead_platform()
 				// Jhead base
 				fwd(extruder_shaft_len/4/2) {
 					up((jhead_shelf_thick+jhead_groove_thick)/2) {
-						cube([rail_width-joiner_width, extruder_shaft_len*0.75, jhead_shelf_thick+jhead_groove_thick], center=true);
+						cube([rail_width-platform_thick, extruder_shaft_len*0.75, jhead_shelf_thick+jhead_groove_thick], center=true);
 					}
 					up(jhead_shelf_thick+jhead_groove_thick) {
 						up(motor_width*0.37/2) {
@@ -233,8 +263,19 @@ module jhead_platform()
 				zrot_copies([0, 180]) {
 					back(l/2) {
 						xrot(-bridge_arch_angle) {
-							joiner_pair_clear(spacing=z_joiner_spacing, h=h, w=joiner_width, clearance=1, a=joiner_angle);
+							joiner_pair_clear(spacing=(rail_spacing+joiner_width), h=h, w=joiner_width, clearance=1, a=joiner_angle);
 							back(rail_width*1.5) cube(size=rail_width*3, center=true);
+						}
+					}
+				}
+			}
+
+			// Clear space for Side half joiners
+			up(rail_height/2/2) {
+				yspread(l-20) {
+					zring(r=rail_spacing/2+joiner_width+side_joiner_len-0.05, n=2) {
+						zrot(-90) {
+							half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle);
 						}
 					}
 				}
@@ -245,7 +286,7 @@ module jhead_platform()
 		up(rail_height/2) {
 			zrot_copies([0, 180]) {
 				back(l/2+0.11) {
-					xspread(z_joiner_spacing) {
+					xspread(rail_spacing+joiner_width) {
 						intersection() {
 							xrot(-bridge_arch_angle) {
 								joiner(h=h, w=joiner_width, l=6, a=joiner_angle);
@@ -281,6 +322,19 @@ module jhead_platform()
 			back(extruder_length/4) {
 				xspread(extruder_fan_size+2*joiner_width) {
 					xrot(90) half_joiner2(h=extruder_fan_size/2, w=joiner_width, a=joiner_angle);
+				}
+			}
+		}
+
+		// Side half joiners
+		up(rail_height/2/2) {
+			yspread(l-20) {
+				zring(r=rail_spacing/2+joiner_width+side_joiner_len, n=2) {
+					zrot(-90) {
+						chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
+							half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
+						}
+					}
 				}
 			}
 		}

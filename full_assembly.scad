@@ -150,11 +150,11 @@ module y_motor_segment_assembly_2(explode=0, arrows=false)
 
 module y_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 {
-	// view: [0, 0, 0] [45, 0, 240] 1800
+	// view: [0, 0, 0] [45, 0, 310] 1800
 	// desc: Join a rail segment to each end of another motor rail assembly.  Apply mineral oil to the slider rail V-grooves for lubrication.
 	platform_vert_off = rail_height+groove_height/2;
 
-	y_motor_segment_assembly_1();
+	y_motor_segment_assembly_2();
 	zrot(90) {
 		zring(r=(motor_rail_length+rail_length+2*explode)/2, n=2) {
 			zrot(90) rail_segment();
@@ -221,7 +221,7 @@ module y_axis_assembly_2(explode=0, arrows=false)
 
 module y_axis_assembly_3(explode=0, arrows=false)
 {
-	// view: [-40, 10, 40] [55, 0, 55] 1400
+	// view: [-40, 10, 40] [55, 0, 230] 1400
 	// desc: Join two XY sled parts together. Make sure the bottom racks line up.  Lubricate the slider pinchers and gear rack teeth on the underside of the sled with mineral oil.
 	up(groove_height/2+rail_offset) {
 		yspread(platform_length+0.5+explode) {
@@ -236,11 +236,12 @@ module y_axis_assembly_3(explode=0, arrows=false)
 	}
 }
 //!y_axis_assembly_3(explode=100, arrows=true);
+//!y_axis_assembly_3();
 
 
 module y_axis_assembly_4(explode=0, arrows=false)
 {
-	// view: [0, -60, 0] [40, 0, 25] 1500
+	// view: [0, -60, 0] [40, 0, 230] 1500
 	// desc: Join a Y sled endcap assembly to one end of the Y sled central assembly.
 	up(groove_height/2+rail_offset) {
 		fwd(platform_length+0.5+explode) {
@@ -257,46 +258,47 @@ module y_axis_assembly_4(explode=0, arrows=false)
 	}
 }
 //!y_axis_assembly_4(explode=100, arrows=true);
+//!y_axis_assembly_4();
 
 
 module y_axis_assembly_5(slidepos=0, explode=0, arrows=false)
 {
-	// view: [-70, -70, -50] [55, 0, 55] 1800
-	// desc: Slide the Y sled partial assembly onto the Y axis rails assembly, so that it is centered.
+	// view: [0, 0, 0] [55, 0, 310] 2200
+	// desc: Slide the Y sled partial assembly onto the Y axis rails assembly, so that it is centered.  The gear rack should slide between the limit switch on the left, and the drive gear.  Adjust the drive gear if necessary, so that it aligns exactly with the herringbone rack.
 	y_axis_assembly_1(slidepos=slidepos) {
-		fwd(explode*5) {
+		back(explode*4) {
 			if ($children>1) children(0);
-			y_axis_assembly_4() {
+			zrot(180) y_axis_assembly_4() {
 				if ($children>1) children(1);
 			}
 
 			// Construction arrows.
 			if(arrows && explode>75) {
-				back(platform_width+explode*0.25) {
-					zrot(-90) arrow(size=explode/3);
+				fwd(platform_length+explode/2) {
+					zrot(90) arrow(size=explode/3);
 				}
 			}
 		}
 	}
 }
 //!y_axis_assembly_5(slidepos=0, explode=100, arrows=true);
-!y_axis_assembly_5();
+//!y_axis_assembly_5();
 
 
 module y_axis_assembly_6(slidepos=0, explode=0, arrows=false)
 {
-	// view: [-15, 75, 75] [55, 0, 55] 1800
+	// view: [0, 0, 0] [55, 0, 310] 2200
 	// desc: Join the other Y sled endcap assembly to the end of the Y sled partial assembly.
 	y_axis_assembly_5(slidepos=slidepos) {
-		back(platform_length+0.5+explode*2) {
+		fwd(platform_length+0.5+explode*3) {
 			up(groove_height/2+rail_offset) {
-				zrot(180) y_axis_assembly_2();
+				y_axis_assembly_2();
 			}
 
 			// Construction arrows.
 			if(arrows && explode>75) {
-				fwd(explode*0.5) {
-					zrot(90) arrow(size=explode/3);
+				back(explode) {
+					zrot(-90) arrow(size=explode/3);
 				}
 			}
 		}
@@ -309,8 +311,8 @@ module y_axis_assembly_6(slidepos=0, explode=0, arrows=false)
 
 module y_axis_assembly_7(slidepos=0, explode=0, arrows=false)
 {
-	// view: [0, 0, 0] [45, 0, 50] 2200
-	// desc: Join a rail endcap to each end of the Y axis with completed sled assembly.
+	// view: [0, 0, 0] [55, 0, 310] 2200
+	// desc: Optionally join a rail endcap to each end of the Y axis.
 	platform_vert_off = rail_height+groove_height/2;
 
 	zrot(90) zring(r=(motor_rail_length+2*rail_length+3*explode)/2) {
@@ -419,7 +421,7 @@ module x_motor_segment_assembly_2(explode=0, arrows=false)
 
 module x_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 {
-	// view: [-5, 65, 85] [55, 0,  25] 1750
+	// view: [-5, 65, 85] [50, 0,  310] 1750
 	// desc: Join a rail segment to each end of a motor rail assembly, to make the X axis slider. Route the wiring to one end of the slider assembly.  Apply mineral oil to the slider rail V-grooves for lubrication.
 	platform_vert_off = rail_height+groove_height/2;
 
@@ -468,7 +470,7 @@ module x_axis_assembly_1(slidepos=0, explode=0, arrows=false)
 
 module x_axis_assembly_2(explode=0, arrows=false)
 {
-	// view: [0, 0, 0] [55, 0, 25] 1000
+	// view: [0, 0, 0] [50, 0, 310] 1000
 	// desc: Join two XY sled parts together. Make sure the bottom racks line up.  Lubricate the slider pinchers and gear rack teeth on the underside of the sled with mineral oil.
 	up(groove_height/2+rail_offset) {
 		xspread(platform_length+explode) {
@@ -520,7 +522,7 @@ module x_axis_assembly_3(explode=0, arrows=false)
 module x_axis_assembly_4(explode=0, arrows=false)
 {
 	// view: [-55, 60, 65] [55, 0, 55] 1500
-	// desc: Join an X sled endcap assembly to one end of the X sled central assembly.
+	// desc: Join an X-Y joiner endcap to one end of the X sled central assembly.
 	x_axis_assembly_2();
 	left(platform_length+0.3+explode) {
 		x_axis_assembly_3();
@@ -539,18 +541,18 @@ module x_axis_assembly_4(explode=0, arrows=false)
 
 module x_axis_assembly_5(slidepos=0, explode=0, arrows=false)
 {
-	// view: [-155, -50, 25] [55, 0, 55] 2500
+	// view: [-155, -50, 25] [50, 0, 310] 2500
 	// desc: Slide the X sled partial assembly onto the X axis rails assembly, so that it is centered.
 	x_axis_assembly_1(slidepos=slidepos) {
 		if ($children>0) children(0); else nil();
 		if ($children>1) children(1); else nil();
-		left(explode*4) {
+		left(explode*5) {
 			x_axis_assembly_4();
 			if ($children>2) children(2); else nil();
 
 			// Construction arrows.
 			if(arrows && explode>75) {
-				right(platform_width+explode*0.1) {
+				right(platform_length+explode) {
 					zrot(180) arrow(size=explode/3);
 				}
 			}
@@ -563,7 +565,7 @@ module x_axis_assembly_5(slidepos=0, explode=0, arrows=false)
 
 module x_axis_assembly_6(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 {
-	// view: [150, 0, 110] [50, 0, 330] 2500
+	// view: [150, 0, 110] [50, 0, 310] 2500
 	// desc: Connect the Y axis assembly to the XY joiner on the X axis partial assembly. Route the Y axis wiring through the front hole in the XY joiner.
 	x_axis_assembly_5(slidepos=xslidepos) {
 		if ($children>0) children(0); else nil();
@@ -591,7 +593,7 @@ module x_axis_assembly_6(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 
 module x_axis_assembly_7(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 {
-	// view: [85, 70, 40] [55, 0, 25] 2500
+	// view: [85, 70, 40] [50, 0, 15] 2500
 	// desc: Join the other X sled endcap assembly to the end of the X sled assembly, fixing the Y sled assembly in place.
 	x_axis_assembly_6(xslidepos=xslidepos, yslidepos=yslidepos) {
 		if ($children>0) children(0); else nil();
@@ -617,7 +619,7 @@ module x_axis_assembly_7(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 
 module x_axis_assembly_8(xslidepos=0, yslidepos=0, explode=0, arrows=false)
 {
-	// view: [-10, 0, 75] [55, 0, 325] 1100
+	// view: [-10, 0, 75] [55, 0, 310] 1100
 	// desc: Attach the cable chain joiner mount to the X motor segment, on the same side as the X sled cable chain joiner and Y axis wiring.
 	x_axis_assembly_7(xslidepos=xslidepos, yslidepos=yslidepos) {
 		if ($children>0) children(0); else nil();
@@ -1083,7 +1085,7 @@ module extruder_assembly_8(explode=0, arrows=false)
 
 module extruder_assembly_9(explode=0, arrows=false)
 {
-	// view: [0, 0, 110] [55, 0, 0] 1200
+	// view: [0, 0, 110] [55, 0, 10] 1200
 	// desc: Clip a cooling fan to the top of the extruder fan shroud using the extruder fan clip.  Route the wiring along the back side of the extruder platform.  WARNING: This fan MUST be running any time the J-Head hotend is hot, or else the bottom of the mount will warp!  Either hook it up to a constant 12V supply, or make sure your firmware turns it on when the extruder is hot.
 	extruder_assembly_8() {
 		children();
@@ -1099,9 +1101,9 @@ module extruder_assembly_9(explode=0, arrows=false)
 							[0, extruder_fan_size/2+10, 0],
 							[-10, rail_width/3+5, 0],
 							[-30, rail_width/3+5, 0],
-							[-80, rail_width/3-5, 0],
-							[-80, 0, 0],
-							[-100, 0, 0],
+							[-76, rail_width/3-5, 0],
+							[-76, 0, 0],
+							[-95, 0, 0],
 						], 2, fillet=5, wirenum=4);
 					}
 					up(12-extruder_fan_thick+2+0.05+explode/2) {
@@ -1143,8 +1145,8 @@ module extruder_assembly_10(explode=0, arrows=false)
 					[-40, 27.01, 45],
 					[-45, rail_width/3+5, 51],
 					[-65, rail_width/3+5, 51],
-					[-(extruder_length/2+42), rail_width/3-5, 60],
-					[-(extruder_length/2+42), 0, 60],
+					[-(extruder_length/2+47), rail_width/3-5, 60],
+					[-(extruder_length/2+47), 0, 60],
 					[-(extruder_length/2+62), 0, 60],
 				], 2, fillet=5, wirenum=6);
 			}
@@ -1771,7 +1773,7 @@ module full_rendering()
 {
 	xpos = 100*cos(360*$t+120);
 	ypos = 100*sin(360*$t+120);
-	zpos = 0.9*(rail_length-rail_height/2)*cos(360*$t) - rail_height/2;
+	zpos = 0.65*(rail_length-rail_height/2)*cos(360*$t);
 
 	final_assembly_10(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos);
 }

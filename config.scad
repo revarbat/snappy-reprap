@@ -130,7 +130,7 @@ gear_backlash = 0;  // mm
 
 // Commonly used derived values.  Don't change these.
 pi = 3.141592653589793236+0.0;
-extruder_length = motor_rail_length + 2*lifter_screw_pitch;
+extruder_length = motor_rail_length;
 shaft_clear = max(0, motor_shaft_length - (rack_height + gear_base));
 rail_offset = shaft_clear + platform_thick + rack_height/2 + 2.0;
 rail_spacing = platform_width - joiner_width*4 - 10;

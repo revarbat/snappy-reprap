@@ -69,15 +69,29 @@ module bridge_segment(explode=0, connectby="")
 								}
 							}
 
-							// Side Supports
+							// Wide end cross support
+							up(rail_height/2) {
+								back(l/2-joiner_width/2) {
+									difference() {
+										zrot(90) thinning_wall(l=rail_spacing+2*joiner_width-0.1, thick=joiner_width, h=rail_height, strut=platform_thick);
+										down(rail_height/2-rail_thick-10/2-0.05) {
+											cube(size=[16, 11, 10], center=true);
+										}
+									}
+								}
+							}
+
+							// Center cross support
 							up(wall_h/2) {
-								yspread(l-2*5.5-5) {
+								fwd((l-2*5.5-5)/2) {
 									difference() {
 										cube(size=[spacing-0.1, 4, wall_h], center=true);
 										down(wall_h/2-rail_thick-10/2-0.05) cube(size=[16, 11, 10], center=true);
 									}
 								}
 							}
+
+							// Thin end cross support
 							up(wall_h/2) {
 								difference() {
 									cube(size=[spacing-0.1, 4, wall_h], center=true);
@@ -85,13 +99,13 @@ module bridge_segment(explode=0, connectby="")
 								}
 							}
 
-							// Bracing
+							// Triangle Bracing
 							up(rail_height/2-0.05) {
 								xspread(spacing) {
 									yflip_copy() {
-										back(l/2-10) {
+										back(l/2-6) {
 											front_half() {
-												trapezoid([2*lifter_tooth_depth, rail_height/2], [2*lifter_tooth_depth, 0.1], h=rail_height/4, center=false);
+												trapezoid([2*lifter_tooth_depth, rail_height], [2*lifter_tooth_depth, 0.1], h=rail_height/2, center=false);
 											}
 										}
 									}
@@ -102,25 +116,23 @@ module bridge_segment(explode=0, connectby="")
 						// Clear space for joiners.
 						up(rail_height/2) {
 							fwd(l/2-0.05) zrot(180) xspread(spacing) joiner_clear(h=rail_height, w=joiner_width, clearance=1, a=joiner_angle);
-							back(l/2-0.05) xspread(spacing) yrot(180) joiner_clear(h=rail_height, w=joiner_width, clearance=1, a=joiner_angle);
+							back(l/2-0.05) xspread(rail_spacing+joiner_width) yrot(180) joiner_clear(h=rail_height, w=joiner_width, clearance=1, a=joiner_angle);
 						}
 					}
 
 					// Snap-tab joiners.
 					up(rail_height/2+0.05) {
 						fwd(l/2) zrot(180) xspread(spacing) joiner(h=rail_height, w=joiner_width, l=10, a=joiner_angle);
-						back(l/2) xspread(spacing) yrot(180) joiner(h=rail_height, w=joiner_width, l=10, a=joiner_angle);
+						back(l/2) xspread(rail_spacing+joiner_width) yrot(180) joiner(h=rail_height, w=joiner_width, l=10, a=joiner_angle);
 					}
 				}
 
 				// Clear space for Side half joiners
 				up(rail_height/2/2) {
-					yspread(l-2*joiner_width-1-0.05) {
+					fwd((l-2*joiner_width-1-0.05)/2) {
 						zring(r=spacing/2+joiner_width/2+side_joiner_len+0.05, n=2) {
 							zrot(-90) {
-								chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-									half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle, clearance=0);
-								}
+								half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle, clearance=0);
 							}
 						}
 					}
@@ -128,7 +140,7 @@ module bridge_segment(explode=0, connectby="")
 			}
 			// Side half joiners
 			up(rail_height/2/2) {
-				yspread(l-2*joiner_width-1-0.05) {
+				fwd((l-2*joiner_width-1-0.05)/2) {
 					zring(r=spacing/2+joiner_width/2+side_joiner_len+0.1, n=2) {
 						zrot(-90) {
 							chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
