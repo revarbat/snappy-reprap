@@ -1,5 +1,6 @@
 include <config.scad>
 use <GDMUtils.scad>
+use <NEMA.scad>
 use <joiners.scad>
 use <acme_screw.scad>
 
@@ -11,6 +12,7 @@ module z_rail(explode=0, connectby="")
 {
 	side_joiner_len = 2;
 	l = rail_length - 2 * printer_slop;
+	motor_width = nema_motor_width(17);
 
 	up(
 		(connectby=="fwd")? -rail_height/2 :
@@ -70,7 +72,7 @@ module z_rail(explode=0, connectby="")
 								down(rail_height/2-rail_thick-10/2) cube(size=[16, 11, 10], center=true);
 								up(rail_height/2 + groove_height/2) {
 									xrot(90) {
-										cylinder(d=lifter_screw_diam+6, h=10, center=true);
+										cylinder(d=(motor_width+6)*sqrt(2)+2*1, h=10, center=true);
 									}
 								}
 							}
