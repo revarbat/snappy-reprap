@@ -67,14 +67,15 @@ hbp_screwsize   =   3;   // mm
 glass_width     = 200;   // mm
 glass_length    = 214;   // mm
 glass_thick     =   3;   // mm
+//glass_thick     =   4.6;   // mm  3mm glass and 1.6mm heated bed.  Print supports in ABS.
 
 // Cable chain dimensions
 cable_chain_height = 15;  // mm
 cable_chain_width  = 25;  // mm
 cable_chain_length = 26;  // mm
-cable_chain_pivot  =  6;  // mm
-cable_chain_bump   =  1;  // mm
-cable_chain_wall   =  3;  // mm
+cable_chain_pivot  =  5;  // mm
+cable_chain_bump   =  1.5;  // mm
+cable_chain_wall   =  3.25;  // mm
 
 spool_holder_length = 140.0;  // mm
 
