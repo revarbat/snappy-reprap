@@ -8,6 +8,8 @@ use <acme_screw.scad>
 use <vitamins.scad>
 
 use <adjustment_screw_parts.scad>
+use <bridge_brace_parts.scad>
+use <bridge_brace_center_parts.scad>
 use <bridge_segment_parts.scad>
 use <cable_chain_link_parts.scad>
 use <cable_chain_mount_parts.scad>
@@ -1359,6 +1361,92 @@ module build_platform() {
 }
 
 
+module top_brace_assembly_1(explode=0, arrows=false)
+{
+	// view: [0, -25, 55] [60, 0, 135] 400
+	// desc: Attach a limit microswitch, with wiring, to the Z rail endcap.  Orient the switch as shown.  Do this again to make another Z endcap.
+	rail_z_endcap();
+	up(rail_height-endstop_length/2-2) {
+		left(z_joiner_spacing/2-joiner_width/2-5-endstop_thick/2) {
+			back(explode-endstop_depth/2) {
+				zrot(180) xrot(90) {
+					microswitch();
+					wiring([
+						[0, 8, -10],
+						[-1, 7.9, -25],
+						[-25, -30, -25],
+						[-25, -30.01, 100],
+					], 1, fillet=10, wirenum=4);
+					wiring([
+						[0, -8, -10],
+						[0, -8.01, -25],
+						[-23, -30, -25],
+						[-23, -30.01, 100],
+					], 1, fillet=10, wirenum=5);
+				}
+			}
+		}
+	}
+
+	// Construction arrows.
+	if(arrows && explode>50) {
+		up(rail_height+groove_height-endstop_length/2-2) {
+			left(z_joiner_spacing/2-joiner_width/2-5-endstop_thick/2) {
+				back(explode/2-endstop_depth/2) {
+					zrot(90) arrow(size=explode/4);
+				}
+			}
+		}
+	}
+}
+//!top_brace_assembly_1(explode=100, arrows=true);
+//!top_brace_assembly_1();
+
+
+module top_brace_assembly_2(explode=0, arrows=false)
+{
+	// view: [0, 0, 0] [55, 0, 25] 1200
+	// desc: Attach a bridge side brace onto either side of a bridge center brace.
+	bridge_brace_center();
+	xspread(rail_length+motor_rail_length+2*explode) {
+		bridge_brace();
+	}
+
+	// Construction arrows.
+	if(arrows && explode>50) {
+		zring(r=motor_rail_length/2+explode/2, n=2) {
+			arrow(size=explode/4);
+		}
+	}
+}
+//!top_brace_assembly_2(explode=100, arrows=true);
+//!top_brace_assembly_2();
+
+
+module top_brace_assembly_3(explode=0, arrows=false)
+{
+	// view: [0, 0, 0] [55, 0, 25] 1700
+	// desc: Attach a Z rail endstop onto either side of the bridge brace assembly.
+	up(rail_height-joiner_width/2) {
+		top_brace_assembly_2();
+	}
+	zring(r=motor_rail_length/2+rail_length+platform_length+explode, n=2) {
+		yrot(-90) zrot(90) top_brace_assembly_1();
+	}
+
+	// Construction arrows.
+	if(arrows && explode>50) {
+		up(rail_height-joiner_width/2) {
+			zring(r=motor_rail_length/2+rail_length+explode/2, n=2) {
+				arrow(size=explode/4);
+			}
+		}
+	}
+}
+//!top_brace_assembly_3(explode=100, arrows=true);
+//!top_brace_assembly_3();
+
+
 module final_assembly_1(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
 {
 	// view: [140, 0, 235] [40, 0, 335] 2200
@@ -1479,65 +1567,25 @@ module final_assembly_3(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 //!final_assembly_3(zslidepos=0);
 
 
-module final_assembly_4(explode=0, arrows=false)
-{
-	// view: [0, 0, 240] [60, 0, 125] 400
-	// desc: Attach a limit microswitch, with wiring, to the Z rail endcap.  Orient the switch as shown.
-	rail_z_endcap();
-	up(rail_height-endstop_length/2-2) {
-		left(z_joiner_spacing/2-joiner_width/2-5-endstop_thick/2) {
-			back(explode-endstop_depth/2) {
-				zrot(180) xrot(90) {
-					microswitch();
-					wiring([
-						[0, 8, -10],
-						[-1, 7.9, -25],
-						[-18.5, -30, -25],
-						[-18.5, -30.01, 20],
-					], 1, fillet=5, wirenum=4);
-					wiring([
-						[0, -8, -10],
-						[0, -8.01, -25],
-						[-16.5, -30, -25],
-						[-16.5, -30.01, 20],
-					], 1, fillet=5, wirenum=5);
-				}
-			}
-		}
-	}
-
-	// Construction arrows.
-	if(arrows && explode>50) {
-		up(rail_height+groove_height-endstop_length/2-2) {
-			left(z_joiner_spacing/2-joiner_width/2-5-endstop_thick/2) {
-				back(explode/2-endstop_depth/2) {
-					zrot(90) arrow(size=explode/4);
-				}
-			}
-		}
-	}
-}
-//!final_assembly_4(explode=100, arrows=true);
-//!final_assembly_4();
-
-
 // Child 0: Left Z tower motherboard mount point.
 // Child 1: Right Z tower top spool holder mount.
 // Child 2: Right Z tower motherboard mount.  (not generally used.)
 // Child 3: Build plate mount
-module final_assembly_5(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
+module final_assembly_4(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [55, 0, 25] 3000
-	// desc: Attach the Z tower endcap to the left Z tower.  Route the limit switch wiring down through the wiring access holes in the left Z tower, and out the back of the base with the other wiring.
+	// desc: Attach the bridge brace assembly onto the top of both towers.  Route each limit switch's wiring down through the wiring access holes in their respective Z tower, and out the back of the base of the left tower with the other wiring.
 	final_assembly_3(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
 		up(explode*2) {
-			yrot(90) zrot(-90) final_assembly_4();
+			right(motor_rail_length/2+rail_length+platform_length) {
+				top_brace_assembly_3();
 
-			// Construction arrows.
-			if(arrows && explode>50) {
-				down(explode*1.0) {
-					right(rail_height/2+groove_height/2) {
-						yrot(-90) arrow(size=explode/2);
+				// Construction arrows.
+				if(arrows && explode>50) {
+					down(explode*1.0) {
+						xspread(motor_rail_length+2*rail_length+2*platform_length-rail_height) {
+							yrot(-90) arrow(size=explode/2);
+						}
 					}
 				}
 			}
@@ -1549,25 +1597,32 @@ module final_assembly_5(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 	}
 	left(motor_rail_length/2+rail_length+platform_length) {
 		wiring([
-			[rail_thick+5, 0, rail_height+groove_height+z_base_height+2*rail_length+2*explode],
+			[rail_thick+5.01, 0, rail_height+groove_height+z_base_height+2*rail_length+2*explode-95],
 			[rail_thick+5, 0, rail_thick+5],
 			[-100, 0, rail_thick+5],
 		], 2, fillet=9, wirenum=4);
 	}
+	right(motor_rail_length/2+rail_length+platform_length) {
+		wiring([
+			[-(rail_thick+5), 0, rail_height+groove_height+z_base_height+2*rail_length+2*explode-95],
+			[-(rail_thick+5.01), 0, rail_thick+5],
+			[-100, 0, rail_thick+5],
+		], 2, fillet=9, wirenum=4);
+	}
 }
-//!final_assembly_5(explode=100, arrows=true);
-//!final_assembly_5();
+//!final_assembly_4(explode=100, arrows=true);
+//!final_assembly_4();
 
 
 // Child 0: Left Z tower motherboard mount point.
 // Child 1: Right Z tower top spool holder mount.
 // Child 2: Right Z tower motherboard mount.  (not generally used.)
 // Child 3: Build plate mount
-module final_assembly_6(xslidepos=0, yslidepos=0, zslidepos=85, explode=0, arrows=false)
+module final_assembly_5(xslidepos=0, yslidepos=0, zslidepos=85, explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [92, 0, 10] 3000
 	// desc: Attach a cable chain (18 links) from the extruder bridge cable chain mount to the left Z tower cable chain mount.  Route the extruder bridge wiring up through the cable chain, back into the left Z tower through the wiring access hole below the cable chain mount, down the left Z tower, and back out the motor rail segment to where the controller board will be mounted.  You may need to lubricate each cable-chain pivot with mineral oil.
-	final_assembly_5(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
+	final_assembly_4(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
 		if ($children > 0) children(0);
 		if ($children > 1) children(1);
 		if ($children > 2) children(2);
@@ -1629,23 +1684,23 @@ module final_assembly_6(xslidepos=0, yslidepos=0, zslidepos=85, explode=0, arrow
 		}
 	}
 }
-//!final_assembly_6(explode=100, arrows=true);
-//!final_assembly_6(zslidepos=-166/2+10);
-//!final_assembly_6();
+//!final_assembly_5(explode=100, arrows=true);
+//!final_assembly_5(zslidepos=-166/2+10);
+//!final_assembly_5();
 
 
 // Child 0: Left Z tower motherboard mount point.
 // Child 1: Right Z tower motherboard mount.  (not generally used.)
 // Child 2: Build plate mount
 // Child 3: Right Z tower spool axle mount.
-module final_assembly_7(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
+module final_assembly_6(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [55, 0, 25] 3000
-	// desc: Attach the spool holder to the top of the other Z tower.
-	final_assembly_6(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
+	// desc: Attach the spool holder to the top of the right Z tower.
+	final_assembly_5(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
 		if ($children > 0) children(0);
 
-		up(explode*2) {
+		up(rail_height+explode*2) {
 			right(rail_height/2) {
 				spool_holder();
 				up(spool_holder_length-15/2*cos(30)+0.25) {
@@ -1667,18 +1722,18 @@ module final_assembly_7(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 		if ($children > 2) children(2);
 	}
 }
-//!final_assembly_7(explode=100, arrows=true);
-//!final_assembly_7();
+//!final_assembly_6(explode=100, arrows=true);
+//!final_assembly_6();
 
 
 // Child 0: Right Z tower motherboard mount.  (not generally used.)
 // Child 1: Build plate mount
 // Child 2: Right Z tower spool axle mount.
-module final_assembly_8(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
+module final_assembly_7(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
 {
 	// view: [0, 0, 240] [55, 0, 25] 3000
 	// desc: Attach the RAMPS motherboard mount to the end of the printer base.
-	final_assembly_7(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
+	final_assembly_6(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
 		fwd(explode*2) {
 			ramps_mount();
 
@@ -1696,17 +1751,17 @@ module final_assembly_8(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 		if ($children > 2) children(2);
 	}
 }
-//!final_assembly_8(explode=100, arrows=true);
-//!final_assembly_8();
+//!final_assembly_7(explode=100, arrows=true);
+//!final_assembly_7();
 
 
 // Child 0: Right Z tower motherboard mount.  (not generally used.)
 // Child 1: Right Z tower spool axle mount.
-module final_assembly_9(xslidepos=0, yslidepos=0, zslidepos=80, explode=0, arrows=false)
+module final_assembly_8(xslidepos=0, yslidepos=0, zslidepos=80, explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [80, 0, 20] 2500
 	// desc: Lower the glass build platform into the support corner clips on the Y sled.  You should be able to carefully work the clips around the glass plate's corners.
-	final_assembly_8(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
+	final_assembly_7(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
 		if ($children > 0) children(0);
 
 		up(explode) {
@@ -1725,15 +1780,15 @@ module final_assembly_9(xslidepos=0, yslidepos=0, zslidepos=80, explode=0, arrow
 		if ($children > 1) children(1);
 	}
 }
-//!final_assembly_9(explode=100, arrows=true);
-//!final_assembly_9();
+//!final_assembly_8(explode=100, arrows=true);
+//!final_assembly_8();
 
 
-module final_assembly_10(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
+module final_assembly_9(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [80, 0, 20] 2500
 	// desc: Cradle the spool axle in the spool holder top.
-	final_assembly_9(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
+	final_assembly_8(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
 		nil();
 		up(explode) {
 			spool_axle();
@@ -1743,11 +1798,11 @@ module final_assembly_10(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrow
 		}
 	}
 }
-//!final_assembly_10(explode=100, arrows=true);
-//!final_assembly_10();
+//!final_assembly_9(explode=100, arrows=true);
+//!final_assembly_9();
 
 
-module final_assembly_11(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
+module final_assembly_10(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows=false)
 {
 	// view: [50, 0, 0] [60, 0, 0] 600
 	// desc: Optionally clean up wiring using the wiring clips.
@@ -1765,8 +1820,8 @@ module final_assembly_11(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrow
 		}
 	}
 }
-//!final_assembly_11(explode=100, arrows=true);
-//!final_assembly_11();
+//!final_assembly_10(explode=100, arrows=true);
+//!final_assembly_10();
 
 
 module full_rendering()
@@ -1775,7 +1830,7 @@ module full_rendering()
 	ypos = 100*sin(360*$t+120);
 	zpos = 0.65*(rail_length-rail_height/2)*cos(360*$t);
 
-	final_assembly_10(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos);
+	final_assembly_9(xslidepos=xpos, yslidepos=ypos, zslidepos=zpos);
 }
 
 
