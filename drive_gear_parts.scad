@@ -60,7 +60,7 @@ module drive_gear() {
 					right(motor_shaft_size/2+1.5) {
 						yrot(90) {
 							// Nut Slot
-							scale([1.1, 1.1, 1.1]) hull() {
+							scale([1.1, 1.04, 1.04]) hull() {
 								metric_nut(size=set_screw_size, hole=false);
 								right(base/2) metric_nut(size=set_screw_size, hole=false);
 							}
