@@ -43,13 +43,67 @@ use <z_sled_parts.scad>
 hide_endcaps = false;
 
 
-module xy_motor_assembly(explode=0, arrows=false)
+module xy_motor_assembly_1(explode=0, arrows=false)
+{
+	// view: [0, 0, 0] [225, 0, 330] 140
+	// desc: Print a drive gear with high (around 50%) infill density.  Insert a 3mm nut into the slot on the bottom of the drive gear.  Push it down the slot until the holes line up with the hole in the nut.
+	drive_gear();
+	down(explode/2-(gear_base-1)/2) {
+		right(motor_shaft_size/2+1.5) {
+			yrot(90) {
+				color("silver") metric_nut(size=set_screw_size, hole=true);
+			}
+		}
+	}
+
+	// Construction arrow.
+	if(arrows && explode>10) {
+		down(explode/4) {
+			right(motor_shaft_size/2+1.5) {
+				yrot(90) arrow(size=explode/6);
+			}
+		}
+	}
+}
+//!xy_motor_assembly_1(explode=100, arrows=true);
+//!xy_motor_assembly_1();
+
+
+
+module xy_motor_assembly_2(explode=0, arrows=false)
+{
+	// view: [0, 0, 0] [235, 0, 305] 140
+	// desc: Thread a 3mm diam (12mm long) bolt just through the inserted nut.
+	xy_motor_assembly_1();
+	up((gear_base-1)/2) {
+		right(explode/2+motor_shaft_size/2+11.5) {
+			yrot(90) {
+				color("silver") screw(screwsize=set_screw_size, screwlen=12, headsize=set_screw_size*2, headlen=set_screw_size);
+			}
+		}
+	}
+
+	// Construction arrow.
+	if(arrows && explode>10) {
+		up((gear_base-1)/2) {
+			right(explode/5+motor_shaft_size/2+11.5) {
+				arrow(size=explode/6);
+			}
+		}
+	}
+}
+//!xy_motor_assembly_2(explode=100, arrows=true);
+//!xy_motor_assembly_2();
+
+
+
+module xy_motor_assembly_3(explode=0, arrows=false)
 {
 	// view: [30, 25, 30] [55, 0, 25] 475
-	// desc: Press-fit a drive gear onto the shaft of a stepper motor, making sure to align the flat of the shaft with the flat of the shaft hole. Repeat this with the other drive gear and another stepper.  Lubricate the drive gear teeth with mineral oil.
+	// desc: Slide a drive gear onto the shaft of a stepper motor, making sure to align the flat of the shaft with the flat of the shaft hole. Tighten the set screw onto the shaft flat. Repeat this with the other drive gear and another stepper.  Lubricate the drive gear teeth with mineral oil.
 	nema17_stepper(h=motor_length, shaft_len=motor_shaft_length, $fa=1, $fs=0.5);
 	up(1+2.1+explode) {
-		drive_gear();
+		xy_motor_assembly_2();
 	}
 
 	// Construction arrow.
@@ -59,8 +113,8 @@ module xy_motor_assembly(explode=0, arrows=false)
 		}
 	}
 }
-//!xy_motor_assembly(explode=100, arrows=true);
-//!xy_motor_assembly();
+//!xy_motor_assembly_3(explode=100, arrows=true);
+//!xy_motor_assembly_3();
 
 
 
@@ -75,7 +129,7 @@ module y_motor_segment_assembly_1(explode=0, arrows=false)
 	// Stepper Motor
 	up(motor_top_z) {
 		up(explode*1.1) {
-			zrot(-90) xy_motor_assembly();
+			zrot(-90) xy_motor_assembly_3();
 			down(motor_length-3) {
 				wiring([
 					[0, 0, 0],
@@ -350,7 +404,7 @@ module x_motor_segment_assembly_1(explode=0, arrows=false)
 	// Stepper Motor
 	up(motor_top_z) {
 		up(explode*1.1) {
-			zrot(-90) xy_motor_assembly();
+			zrot(-90) xy_motor_assembly_3();
 			down(motor_length-3) {
 				wiring([
 					[0, 0, 0],

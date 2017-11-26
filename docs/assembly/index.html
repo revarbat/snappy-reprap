@@ -47,8 +47,20 @@ UL {
 <h1>Snappy RepRap Assembly Instructions</h1>
 <ol>
 <li class="section"><h2>XY Motor Assembly</h2>
-<div class="desc">Press-fit a drive gear onto the shaft of a stepper motor, making sure to align the flat of the shaft with the flat of the shaft hole. Repeat this with the other drive gear and another stepper.  Lubricate the drive gear teeth with mineral oil.</div>
-<table><tr><td class="befor"><img src="xy_motor_assembly_before.png"></td><td class="arrow"><img src="arrow.png"></td><td class="after"><img src="xy_motor_assembly_after.png"></td></tr></table>
+<ul>
+<li class="step"><h3>Step 1</h3>
+<div class="desc">Print a drive gear with high (around 50%) infill density.  Insert a 3mm nut into the slot on the bottom of the drive gear.  Push it down the slot until the holes line up with the hole in the nut.</div>
+<table><tr><td class="befor"><img src="xy_motor_assembly_1_before.png"></td><td class="arrow"><img src="arrow.png"></td><td class="after"><img src="xy_motor_assembly_1_after.png"></td></tr></table>
+</li>
+<li class="step"><h3>Step 2</h3>
+<div class="desc">Thread a 3mm diam (12mm long) bolt just through the inserted nut.</div>
+<table><tr><td class="befor"><img src="xy_motor_assembly_2_before.png"></td><td class="arrow"><img src="arrow.png"></td><td class="after"><img src="xy_motor_assembly_2_after.png"></td></tr></table>
+</li>
+<li class="step"><h3>Step 3</h3>
+<div class="desc">Slide a drive gear onto the shaft of a stepper motor, making sure to align the flat of the shaft with the flat of the shaft hole. Tighten the set screw onto the shaft flat. Repeat this with the other drive gear and another stepper.  Lubricate the drive gear teeth with mineral oil.</div>
+<table><tr><td class="befor"><img src="xy_motor_assembly_3_before.png"></td><td class="arrow"><img src="arrow.png"></td><td class="after"><img src="xy_motor_assembly_3_after.png"></td></tr></table>
+</li>
+</ul>
 </li>
 <li class="section"><h2>Y Motor Segment Assembly</h2>
 <ul>
@@ -304,8 +316,19 @@ UL {
 </li>
 <li class="section">
 <h2>RAMPS Wiring</h2>
-<div class="desc">Heres a diagram of what needs to be connected where on a RAMPS 1.4 controller board.</div>
-<img src="RAMPS_Wiring_For_Snappy.png"></li>
+<div class="desc">
+<p>Heres a diagram of what needs to be connected where on a RAMPS 1.4 controller board.</p>
+<p><a href="RAMPS_Wiring_For_Snappy.png"><img width="800" height="600" src="RAMPS_Wiring_For_Snappy.png"></a></p><p>Click on the image to enlarge.</p>
+
+</div>
+</li>
+<li class="section">
+<h2>Marlin Firmware for RAMPS</h2>
+<div class="desc">
+You can find Marlin firmware pre-configured for the Snappy with a RAMPS 1.4 controller at
+<a href="https://github.com/revarbat/snappy-reprap/tree/v2.0/firmware">https://github.com/revarbat/snappy-reprap/tree/v2.0/firmware</a>
+</div>
+</li>
 </ol>
 </body>
 </html>

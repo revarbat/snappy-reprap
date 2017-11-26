@@ -59,7 +59,7 @@ UL {
 
 class GenAssemblyIndex(object):
     indexfile = "docs/assembly/index.html"
-    markdownfile = "wiki/%s-Assembly.md" % snappy_ver
+    markdownfile = "wiki/{0}-Assembly.md".format(snappy_ver)
     sourcefile = "full_assembly.scad"
     modules = []
     modinfo = {}
@@ -70,7 +70,7 @@ class GenAssemblyIndex(object):
 
             for mod_eng in self.modules:
                 f.write('<li class="section">')
-                f.write('<h2>%s</h2>\n' % mod_eng)
+                f.write('<h2>{0}</h2>\n'.format(mod_eng))
 
                 stepcnt = len(self.modinfo[mod_eng])
                 if stepcnt > 1:
@@ -104,9 +104,20 @@ class GenAssemblyIndex(object):
                 f.write('</li>\n')
 
             f.write('<li class="section">\n')
-            f.write('<h2>%s</h2>\n' % "RAMPS Wiring")
-            f.write('<div class="desc">Heres a diagram of what needs to be connected where on a RAMPS 1.4 controller board.</div>\n')
-            f.write('<img src="RAMPS_Wiring_For_Snappy.png">')
+            f.write('<h2>{0}</h2>\n'.format("RAMPS Wiring"))
+            f.write('<div class="desc">\n')
+            f.write('<p>Heres a diagram of what needs to be connected where on a RAMPS 1.4 controller board.</p>\n')
+            f.write('<p><a href="RAMPS_Wiring_For_Snappy.png"><img width="800" height="600" src="RAMPS_Wiring_For_Snappy.png"></a></p>')
+            f.write('<p>Click on the image to enlarge.</p>\n\n')
+            f.write('</div>\n')
+            f.write('</li>\n')
+
+            f.write('<li class="section">\n')
+            f.write('<h2>{0}</h2>\n'.format("Marlin Firmware for RAMPS"))
+            f.write('<div class="desc">\n')
+            f.write('You can find Marlin firmware pre-configured for the Snappy with a RAMPS 1.4 controller at\n')
+            f.write('<a href="https://github.com/revarbat/snappy-reprap/tree/v2.0/firmware">https://github.com/revarbat/snappy-reprap/tree/v2.0/firmware</a>\n')
+            f.write('</div>\n')
             f.write('</li>\n')
 
             f.write('</ol>\n')
@@ -118,14 +129,14 @@ class GenAssemblyIndex(object):
             f.write("# Snappy RepRap Assembly Instructions\n\n")
 
             for mod_eng in self.modules:
-                f.write('## %s\n\n' % mod_eng)
+                f.write('## {0}\n\n'.format(mod_eng))
 
                 stepcnt = len(self.modinfo[mod_eng])
                 for stepinfo in self.modinfo[mod_eng]:
-                    stepinfo['base'] = \
-                        'https://raw.githubusercontent.com/' \
-                        'revarbat/snappy-reprap/%s/docs/assembly/' % \
-                        snappy_ver
+                    stepinfo['base'] = (
+                        'https://raw.githubusercontent.com/'
+                        'revarbat/snappy-reprap/{0}/docs/assembly/'
+                    ).format(snappy_ver)
 
                     if stepcnt > 1:
                         f.write('### Step {step}\n\n'.format(**stepinfo))
@@ -140,14 +151,19 @@ class GenAssemblyIndex(object):
                         '({base}{module}_after.png)\n\n'
                         .format(**stepinfo)
                     )
-            f.write('## %s\n\n' % "RAMPS Wiring")
+            f.write('## {0}\n\n'.format("RAMPS Wiring"))
             f.write('Heres a diagram of what needs to be connected where on a RAMPS 1.4 controller board.\n\n')
-            f.write('[![RAMPS 1.4 Wiring Diagram](%s-RAMPS_Wiring_For_Snappy.png)](%s-RAMPS_Wiring_For_Snappy.png)\n' % (snappy_ver, snappy_ver))
-            f.write('Click to enlarge.\n\n')
+            f.write('[![RAMPS 1.4 Wiring Diagram]({0}-RAMPS_Wiring_For_Snappy.png)]({0}-RAMPS_Wiring_For_Snappy.png)\n'.format(snappy_ver))
+            f.write('Click on the image to enlarge.\n\n')
+
+            f.write('## {0}\n\n'.format("Marlin Firmware for RAMPS"))
+            f.write('You can find Marlin firmware pre-configured for the Snappy with a RAMPS 1.4 controller at\n')
+            f.write('https://github.com/revarbat/snappy-reprap/tree/{0}/firmware\n'.format(snappy_ver))
+
 
 
     def process_module(self, module, desc):
-        print("module: %s" % module)
+        print("module: {0}".format(module))
         step = 1
         mod_eng = module.replace('_', ' ') \
             .title() \
