@@ -147,7 +147,7 @@ module rail_segment(explode=0, connectby="")
 
 
 module rail_segment_parts() { // make me
-	rail_segment();
+	zrot(90) rail_segment();
 }
 
 

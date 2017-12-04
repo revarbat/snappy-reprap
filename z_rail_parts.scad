@@ -122,7 +122,7 @@ module z_rail(explode=0, connectby="")
 						zring(r=z_joiner_spacing/2+joiner_width/2+side_joiner_len+0.05, n=2) {
 							zrot(-90) {
 								chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-									half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle, clearance=0);
+									half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle, clearance=0.01);
 								}
 							}
 						}
@@ -177,7 +177,7 @@ module z_rail(explode=0, connectby="")
 
 
 module z_rail_parts() { // make me
-	z_rail();
+	zrot(90) z_rail();
 }
 
 

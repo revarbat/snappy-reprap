@@ -114,9 +114,11 @@ module cable_chain_assembly(topend, botend, vect, travel, off, wires=0)
 
 
 module cable_chain_link_parts() { // make me
-	xspread(cable_chain_width+2, n=4) {
-		yspread(cable_chain_length+2, n=4) {
-			cable_chain_link();
+	zrot(90) {
+		xspread(cable_chain_width+2, n=4) {
+			yspread(cable_chain_length+2, n=4) {
+				cable_chain_link();
+			}
 		}
 	}
 }

@@ -89,9 +89,11 @@ module rambo_mount() {
 
 
 module rambo_mount_parts() { // make me
-	up(joiner_length+rail_thick/2) {
-		back(l/2) {
-			xrot(90) rambo_mount();
+	zrot(90) {
+		up(joiner_length+rail_thick/2) {
+			back(l/2) {
+				xrot(90) rambo_mount();
+			}
 		}
 	}
 }

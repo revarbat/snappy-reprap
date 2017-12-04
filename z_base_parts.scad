@@ -203,7 +203,7 @@ module z_base(explode=0, connectby="")
 
 
 module z_base_parts() { // make me
-	z_base();
+	zrot(90) z_base();
 }
 
 

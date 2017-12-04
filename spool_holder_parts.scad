@@ -120,14 +120,14 @@ module spool() {
 
 
 module spool_holder_parts() { // make me
-	back(spool_holder_length/2) {
+	left(spool_holder_length/2) {
 		up(rail_height/2) {
-			xrot(90) {
-				zrot(90) spool_holder();
+			yrot(90) {
+				spool_holder();
 			}
 		}
 	}
-	fwd(10) spool_axle();
+	right(10) zrot(90) spool_axle();
 }
 
 

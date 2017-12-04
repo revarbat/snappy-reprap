@@ -185,7 +185,7 @@ module bridge_segment(explode=0, connectby="")
 
 
 module bridge_segment_parts() { // make me
-	bridge_segment();
+	zrot(90) bridge_segment();
 }
 
 
