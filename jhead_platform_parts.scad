@@ -14,13 +14,12 @@ module jhead_platform()
 	side_joiner_len = 5.01;
 	platform_vert_off = rail_height+groove_height+rail_offset;
 	l = extruder_length;
-	w = rail_width;
+	w = rail_width-20;
 	h = rail_height;
 	thick = jhead_groove_thick;
 	motor_width = nema_motor_width(17);
 	idler_backside = (jhead_barrel_diam+8)/2+8;
 	idler_back_thick = 3.5;
-	angle_offset = (rail_height/2-5)*sin(bridge_arch_angle);
 
 	color("SteelBlue")
 	prerender(convexity=10)
@@ -30,39 +29,49 @@ module jhead_platform()
 			union() {
 				difference() {
 					union() {
-						// Bottom.
 						up(thick/2) {
-							cube(size=[w, l-6.1-angle_offset, thick], center=true);
-						}
+							difference() {
+								// Bottom.
+								cube(size=[w, l-7.1, thick], center=true);
 
-						// Walls.
-						up((rail_height/2-5)/2-0.005) {
-							xspread(rail_spacing+2*joiner_width-platform_thick) {
-								thinning_wall(h=rail_height/2-5-0.01, l=[l-12-angle_offset, l-12+angle_offset], thick=platform_thick, strut=5);
+								// chamfer corners of base
+								xspread(w) {
+									yspread(l-6.1) {
+										chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
+									}
+								}
 							}
 						}
 
 						// Center bracing
 						difference() {
-							upcube([rail_width-platform_thick, adjust_screw_diam+2*2, rail_height/2-5]);
-							xspread(rail_width-2*2-18) {
+							upcube([w-platform_thick, adjust_screw_diam+2*2, rail_height/2-5]);
+							xspread(w-platform_thick-2*2-18) {
 								up(jhead_shelf_thick+jhead_groove_thick) {
 									upcube([18, adjust_screw_diam+2*2+1, 7]);
 								}
 							}
 						}
 
+						// Walls.
+						up((rail_height/2-5)/2-0.005) {
+							xspread(w-platform_thick) {
+								thinning_wall(h=rail_height/2-5-0.01, l=[l-15, l-12], thick=platform_thick, strut=5);
+							}
+						}
+
 						// Joiner backing
-						block_w = joiner_width;
+						block_w = (w + joiner_width - z_joiner_spacing)/2;
 						up(rail_height/2) {
 							xflip_copy() {
 								yflip_copy() {
-									fwd((extruder_length-joiner_width)/2) {
-										right((rail_width-block_w)/2) {
+									fwd((extruder_length-platform_thick)/2) {
+										right((w-block_w)/2) {
 											skew_xy(yang=-bridge_arch_angle) {
 												difference() {
-													cube(size=[block_w-0.1, joiner_width, rail_height], center=true);
-													xspread(block_w) back(joiner_width/2) chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
+													cube(size=[block_w-0.1, platform_thick, rail_height], center=true);
+													left(block_w/2) back(platform_thick/2) chamfer_mask_z(l=rail_height*2, chamfer=platform_thick/2);
+													right(block_w/2) fwd(platform_thick/2) chamfer_mask_z(l=rail_height*2, chamfer=platform_thick/2);
 												}
 											}
 										}
@@ -78,11 +87,11 @@ module jhead_platform()
 							xflip_copy() {
 								yflip_copy() {
 									fwd((extruder_length-joiner_width)/2) {
-										right((rail_width-tri_w)/2) {
+										right((w-tri_w)/2) {
 											skew_xy(yang=-bridge_arch_angle) {
 												zrot(90) {
 													right_half() {
-														trapezoid([tri_h*2, platform_thick], [0.1, platform_thick], h=tri_h, center=false);
+														trapezoid([tri_h*2, tri_w], [0.1, tri_w], h=tri_h, center=false);
 													}
 												}
 											}
@@ -95,7 +104,7 @@ module jhead_platform()
 						// Jhead base
 						fwd(extruder_shaft_len/4/2) {
 							up((jhead_shelf_thick+jhead_groove_thick)/2) {
-								cube([rail_width-platform_thick, extruder_shaft_len*0.75, jhead_shelf_thick+jhead_groove_thick], center=true);
+								cube([w-platform_thick, extruder_shaft_len*0.75, jhead_shelf_thick+jhead_groove_thick], center=true);
 							}
 							up(jhead_shelf_thick+jhead_groove_thick) {
 								up(motor_width*0.37/2) {
@@ -141,15 +150,12 @@ module jhead_platform()
 							}
 						}
 
-
 						// Motor supports
 						fwd(motor_length/2+extruder_shaft_len/2) {
 							right(extruder_drive_diam/2-0.5) {
-								up(22/2) {
-									xspread(motor_width-5) {
-										yspread(rail_height-15) {
-											cube([20, 15, 22], center=true);
-										}
+								xspread(motor_width-5) {
+									yspread(rail_height-15) {
+										upcube([20, 15, 20]);
 									}
 								}
 							}
@@ -230,10 +236,10 @@ module jhead_platform()
 
 						// Wire access slot
 						back(extruder_length/4-extruder_fan_size/2+8/2) {
-							xspread(w*0.5) {
+							xspread(extruder_fan_size+2*joiner_width) {
 								cylinder(h=jhead_shelf_thick+jhead_groove_thick+1, d=8, center=true);
 							}
-							cube([w*0.5, 8, jhead_shelf_thick+jhead_groove_thick+1], center=true);
+							cube([extruder_fan_size+2*joiner_width, 8, jhead_shelf_thick+jhead_groove_thick+1], center=true);
 						}
 					}
 
@@ -261,12 +267,11 @@ module jhead_platform()
 					}
 
 					// Clear space for joiners.
-					up(rail_height/2+0.05) {
-						zrot_copies([0, 180]) {
-							back(l/2) {
-								xrot(-bridge_arch_angle) {
-									joiner_pair_clear(spacing=(rail_spacing+joiner_width), h=h, w=joiner_width, clearance=1, a=joiner_angle);
-									back(rail_width*1.5) cube(size=rail_width*3, center=true);
+					zrot_copies([0, 180]) {
+						back(l/2) {
+							xrot(-bridge_arch_angle) {
+								up(rail_height/2+0.05) {
+									joiner_pair_clear(spacing=z_joiner_spacing, h=h, w=joiner_width, clearance=1, a=joiner_angle);
 								}
 							}
 						}
@@ -274,15 +279,17 @@ module jhead_platform()
 				}
 
 				// Rail end joiners.
-				up(rail_height/2) {
-					zrot_copies([0, 180]) {
-						back(l/2+0.11) {
-							xspread(rail_spacing+joiner_width) {
-								intersection() {
-									xrot(-bridge_arch_angle) {
-										joiner(h=h, w=joiner_width, l=6, a=joiner_angle);
+				zrot_copies([0, 180]) {
+					back(l/2+0.11) {
+						top_half() {
+							xrot(-bridge_arch_angle) {
+								up(rail_height/2) {
+									joiner_pair(spacing=z_joiner_spacing, h=h, w=joiner_width, l=7, a=joiner_angle);
+								}
+								down(joiner_width/2) {
+									xspread(z_joiner_spacing) {
+										fwd(joiner_width/2) cube(joiner_width, center=true);
 									}
-									cube([joiner_width, 100, h], center=true);
 								}
 							}
 						}
@@ -295,7 +302,7 @@ module jhead_platform()
 						difference() {
 							up(jhead_groove_thick+jhead_shelf_thick+motor_width/2) {
 								difference() {
-									xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=motor_width/2+jhead_shelf_thick, a=joiner_angle);
+									xrot(90) joiner_pair(spacing=motor_mount_spacing, h=rail_height, w=joiner_width, l=motor_width/2+jhead_shelf_thick+platform_thick/2, a=joiner_angle);
 									yspread(rail_height) {
 										xspread(motor_mount_spacing+joiner_width) {
 											chamfer_mask_z(l=rail_height*2, chamfer=joiner_width/3);
@@ -303,7 +310,7 @@ module jhead_platform()
 									}
 								}
 							}
-							cube([motor_mount_spacing+joiner_width+1, rail_height/3, motor_width*0.75], center=true);
+							cube([motor_mount_spacing+joiner_width+1, rail_height*0.4, motor_width*0.75], center=true);
 						}
 					}
 				}
@@ -321,7 +328,7 @@ module jhead_platform()
 			// Clear space for Side half joiners
 			up(rail_height/2/2) {
 				yspread(extruder_length-30) {
-					zring(r=rail_spacing/2+joiner_width+side_joiner_len-0.05, n=2) {
+					zring(r=w/2+side_joiner_len-0.05, n=2) {
 						zrot(-90) {
 							half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle);
 						}
@@ -333,7 +340,7 @@ module jhead_platform()
 		// Side half joiners
 		up(rail_height/2/2) {
 			yspread(extruder_length-30) {
-				zring(r=rail_spacing/2+joiner_width+side_joiner_len, n=2) {
+				zring(r=w/2+side_joiner_len, n=2) {
 					zrot(-90) {
 						chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
 							half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);

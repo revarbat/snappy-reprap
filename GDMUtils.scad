@@ -818,7 +818,7 @@ module fillet_hole_mask(r=1.0, fillet=0.25, xtilt=0, ytilt=0)
 
 
 // For when you MUST pass a child to a module, but you want it to be nothing.
-module nil() difference() {cube(0.1, center=true); cube(0.2, center=true);}
+module nil() union();
 
 
 // Makes a cube that is centered in X and Y axes, and has its bottom aligned with Z=0.
@@ -1085,9 +1085,12 @@ module right_triangle(size=[1, 1, 1], center=false)
 			],
 			faces=[
 				[0, 1, 2],
-				[0, 2, 5, 3],
-				[0, 3, 4, 1],
-				[1, 4, 5, 2],
+				[0, 2, 5],
+				[0, 5, 3],
+				[0, 3, 4],
+				[0, 4, 1],
+				[1, 4, 5],
+				[1, 5, 2],
 				[3, 5, 4]
 			],
 			convexity=2

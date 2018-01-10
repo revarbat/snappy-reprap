@@ -12,7 +12,7 @@ platform_width  = 150.0;  // mm
 platform_height =  40.0;  // mm
 platform_thick  =   5.0;  // mm
 
-rail_length     = 136.0;  // mm  Must be a multiple of lifter_screw_pitch
+rail_length     = 136.0;  // mm  Should match lifter_rod_length
 rail_height     =  50.0;  // mm
 rail_thick      =   5.0;  // mm
 
@@ -34,10 +34,12 @@ motor_shaft_size    =  5;    // mm diameter of NEMA17 motor shaft.
 motor_shaft_length  = 20;    // mm length of exposed NEMA17 motor shaft.
 motor_shaft_flatted = true;  // Is motor shaft keyed? (RECOMMENDED)
 
-lifter_screw_diam   = 60.0; // mm
-lifter_screw_thick  = 20.0; // mm
-lifter_screw_pitch  =  8.0; // mm lift per revolution
-lifter_screw_angle  = 50.0; // degrees tooth face angle
+lifter_rod_diam     =  25; // mm
+lifter_rod_pitch    =   8; // mm lift per revolution
+lifter_rod_length   = 136; // mm. Must be a multiple of lifter_rod_pitch
+lifter_rod_angle    =  50; // degrees tooth face angle
+lifter_tang_length  =  12; // mm
+lifter_tang_width   =   5; // mm
 
 adjust_screw_diam   =  8.0; // mm
 adjust_screw_pitch  =  3.0; // mm
@@ -142,9 +144,9 @@ side_mount_spacing = motor_rail_length - 10*2;
 platform_z = rail_height + groove_height + rail_offset;
 cantilever_length = (motor_rail_length + 2*platform_length - 2*rail_height - extruder_length - groove_height)/2;
 motor_top_z = rail_height + groove_height - rack_height/2 - gear_base - 2;
-lifter_tooth_depth = lifter_screw_pitch / 3.2;
-z_joiner_spacing = lifter_screw_diam + 2*lifter_tooth_depth + joiner_width;
-z_base_height = rail_height + groove_height + 2*platform_thick;
+lifter_tooth_depth = lifter_rod_pitch / 3.2;
+z_joiner_spacing = lifter_rod_diam + 20 + joiner_width;
+z_base_height = platform_z + rail_offset - groove_height/2;
 adjust_thread_depth = adjust_screw_pitch/3.2;
 drive_gear_diam = (gear_teeth+2)*rack_tooth_size/pi;
 

@@ -22,7 +22,7 @@ module extruder_fan_clip()
 				up(h-inset+thick/2) {
 					difference() {
 						union() {
-							chamfcube([extruder_fan_size+8, extruder_fan_size+8, thick], chamfer=5, chamfaxes=[0,0,1], center=true);
+							chamfcube([extruder_fan_size+8, extruder_fan_size+8, thick], chamfer=12, chamfaxes=[0,0,1], center=true);
 							cube([extruder_fan_size+3*joiner_width, extruder_fan_size/2, thick], center=true);
 						}
 						cylinder(d=extruder_fan_size, h=100, center=true);
