@@ -34,9 +34,7 @@ module bridge_segment(explode=0, connectby="")
 								sparse_strut(h=spacing, l=l-1, thick=rail_thick, maxang=70, strut=7, max_bridge=500);
 							}
 
-							// Screw rack
-							ang = acos(1 - 2*lifter_tooth_depth/lifter_screw_diam);
-							teeth_h = sin(ang) * lifter_screw_diam + 6;
+							// Side walls
 							xspread(spacing) {
 								up(wall_h/2) {
 									difference() {
@@ -121,7 +119,7 @@ module bridge_segment(explode=0, connectby="")
 					}
 
 					// Snap-tab joiners.
-					up(rail_height/2+0.05) {
+					up(rail_height/2+0.04) {
 						fwd(l/2) zrot(180) xspread(spacing) joiner(h=rail_height, w=joiner_width, l=10, a=joiner_angle);
 						back(l/2) xspread(rail_spacing+joiner_width) yrot(180) joiner(h=rail_height, w=joiner_width, l=10, a=joiner_angle);
 					}
@@ -129,7 +127,7 @@ module bridge_segment(explode=0, connectby="")
 
 				// Clear space for Side half joiners
 				up(rail_height/2/2) {
-					fwd((l-2*joiner_width-1-0.05)/2) {
+					fwd((l-2*joiner_width-1-0.03)/2) {
 						zring(r=spacing/2+joiner_width/2+side_joiner_len+0.05, n=2) {
 							zrot(-90) {
 								half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle, clearance=0);
