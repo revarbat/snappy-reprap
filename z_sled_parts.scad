@@ -3,6 +3,7 @@ use <GDMUtils.scad>
 use <NEMA.scad>
 use <joiners.scad>
 use <sliders.scad>
+use <acme_screw.scad>
 
 
 
@@ -13,182 +14,86 @@ module z_sled(explode=0, arrows=false)
 {
 	slider_len = 15;
 	slider_width = 12;
-	motor_width = nema_motor_width(17);
-	plinth_diam = nema_motor_plinth_diam(17);
-	motor_joiner_h = motor_length * 0.75;
-	motor_joiner_x = motor_width - joiner_width;
-	arch_offset = rail_length * (1-cos(bridge_arch_angle));
-	guide_h = 4;
+	thread_depth = lifter_rod_pitch/3.2;
+	pitch = lifter_rod_pitch;
 
 	color("MediumSlateBlue")
 	prerender(convexity=10)
 	union() {
 		difference() {
 			union() {
-				// Back
-				up(rail_height/2) {
-					right(cantilever_length - platform_thick/2 - 3) {
-						skew_xy(xang=-bridge_arch_angle) {
-							difference() {
-								union() {
-									if (wall_style == "crossbeams")
-										sparse_strut(l=z_joiner_spacing+joiner_width, h=rail_height, thick=platform_thick+2, strut=6);
-									if (wall_style == "thinwall")
-										thinning_wall(l=z_joiner_spacing+joiner_width, h=rail_height, thick=platform_thick+2, strut=6);
-									if (wall_style == "corrugated") {
-										corrugated_wall(l=z_joiner_spacing+joiner_width, h=rail_height, thick=platform_thick+2, strut=6);
-
-										// Wiring access hole frame
-										down(rail_height/2-(10+8)/2-2) {
-											cube(size=[platform_thick+2, 16+4, 10+8], center=true);
-										}
-									}
-								}
-
-								// Clear wiring access hole frame
-								if (wall_style != "crossbeams") {
-									down(rail_height/2-(10+8)/2-2) {
-										cube(size=[platform_thick+3, 16, 10], center=true);
+				// Threaded socket
+				socket_h = rail_height;
+				up(socket_h/2) {
+					difference() {
+						union() {
+							cylinder(d=lifter_rod_diam*1.5, h=socket_h, center=true);
+							right((cantilever_length - platform_thick/2)/2) {
+								down(socket_h/2) {
+									yspread(lifter_rod_diam*1.5-rail_thick) {
+										upcube([cantilever_length - platform_thick/2, rail_thick, socket_h]);
 									}
 								}
 							}
-						}
 
-						// joiner backing.
-						right(rail_height*sin(bridge_arch_angle)+arch_offset/2) {
-							yspread(z_joiner_spacing-0.05) {
-								skew_xy(xang=-bridge_arch_angle) {
-									cube(size=[20, joiner_width, rail_height], center=true);
-								}
-							}
-						}
-					}
-				}
-
-
-				difference() {
-					// Motor Cage
-					up(rail_height/2) {
-						cube(size=[motor_width+6, motor_width+6, rail_height], center=true);
-					}
-
-					// Chamfer motor cage corners
-					up(rail_height/2) {
-						left((motor_width+6)/2) {
-							yspread(motor_width+6) {
-								chamfer_mask_z(l=rail_height+1, chamfer=5);
-							}
-						}
-					}
-
-					up((motor_length+1+printer_slop)/2) {
-						difference() {
-							// Clear motor volume
-							cube(size=[motor_width+2*printer_slop, motor_width+2*printer_slop, motor_length+1+printer_slop+0.1], center=true);
-
-							// Chamfer motor volume
-							xspread(motor_width+2*printer_slop) {
-								yspread(motor_width+2*printer_slop) {
-									chamfer_mask_z(l=rail_height+1, chamfer=3);
-								}
-							}
-
-							// Tabs to hold motor in
-							down(motor_length/2) {
-								yspread(motor_width+2*printer_slop) {
-									cube(size=[10, 2.5, 2], center=true);
-									cube(size=[10, 1, 8], center=true);
-								}
-							}
-						}
-					}
-
-					// Clear motor cage wiring access
-					up(groove_height/2) {
-						right(motor_width/2+printer_slop) {
-							cube(size=[10, motor_width*0.5, groove_height+1], center=true);
-						}
-					}
-
-					// Motor tray cooling holes
-					up(rail_height/2) {
-						zrot_copies([0,90]) {
-							up(2/2) {
-								cube(size=[motor_width+10, motor_width*0.5, rail_height-5-3], center=true);
-							}
-						}
-						cylinder(d=plinth_diam, h=rail_height+1, center=true);
-					}
-				}
-
-				// Motor cage supports
-				support_len = cantilever_length - motor_length/2 - platform_thick/2 - 6;
-				yspread(motor_width+2*3-5) {
-					up(rail_height/2) {
-						right(motor_width/2+3-0.05) {
-							right_half() {
-								trapezoid([(support_len+rail_height/2*sin(bridge_arch_angle))*2, 5], [(support_len-rail_height/2*sin(bridge_arch_angle))*2, 5], h=rail_height, center=true);
-							}
-						}
-					}
-				}
-
-				// Guide sliders
-				up(rail_height-slider_len/2) {
-					right(slider_width/2) {
-						yflip_copy() {
-							back(lifter_screw_diam/2+lifter_tooth_depth+printer_slop) {
-								zrot(90) yrot(90) {
-									trapezoid(size2=[slider_len, slider_width], size1=[slider_len-2*guide_h, slider_width-2*guide_h], h=guide_h, center=false);
-								}
-								back(guide_h+5/2) {
-									right((motor_width/2+support_len-slider_width)/2) {
-										cube(size=[motor_width/2+support_len+0.1, 5, slider_len], center=true);
+							// Sliders
+							right(10+groove_height/2) {
+								yspread(z_joiner_spacing) {
+									rotate([90, 0, -90]) {
+										slider(l=rail_height, base=10, slop=2*printer_slop);
 									}
 								}
+								left(5/2) cube([5, z_joiner_spacing+joiner_width, rail_height], center=true);
+							}
+						}
+						acme_threaded_rod(d=lifter_rod_diam+5*printer_slop, l=socket_h+0.1, thread_depth=thread_depth, pitch=pitch, thread_angle=lifter_rod_angle);
+						if (socket_h > 3*pitch + 2 * thread_depth) {
+							chamf_cyl(d=lifter_rod_diam+4, h=socket_h-3*pitch+2*thread_depth, chamfer=thread_depth+2, center=true);
+						}
+						zflip_copy() {
+							down(socket_h/2+0.01) {
+								cylinder(d1=lifter_rod_diam, d2=lifter_rod_diam-2*thread_depth, h=thread_depth, center=false);
 							}
 						}
 					}
 				}
 			}
 
-			// Clear space for front joiners.
-			right(cantilever_length+arch_offset-0.1) {
-				up(rail_height/2) yrot(-bridge_arch_angle) {
-					zrot(-90) joiner_pair_clear(spacing=z_joiner_spacing, h=rail_height, w=joiner_width, clearance=1, a=joiner_angle);
-					right(rail_width*1.5) {
-						cube(size=rail_width*3, center=true);
+			// Angle front of supports
+			right(cantilever_length-rail_thick/2-10) {
+				yrot(-bridge_arch_angle) {
+					right(rail_height*1.5) {
+						cube(rail_height*3, center=true);
 					}
 				}
 			}
 		}
 
 		right(cantilever_length) {
-			up(rail_height/2) {
-				right(arch_offset) {
-					difference() {
-						// Snap-tab front joiners.
-						yrot(-bridge_arch_angle) {
-							zrot(-90) {
-								xspread(z_joiner_spacing) {
-									yrot(180) joiner(h=rail_height, w=joiner_width, l=10-0.1, a=joiner_angle);
-								}
-							}
-						}
-						down(rail_height) cube(size=[rail_width*2, rail_width*2, rail_height], center=true);
+			top_half() {
+				yrot(-bridge_arch_angle) {
+					// Back
+					left(rail_thick/2+10-0.1) {
+						upcube([rail_thick, z_joiner_spacing+joiner_width, rail_height]);
+					}
+
+					// Snap-tab front joiners.
+					up(rail_height/2) {
+						zrot(-90) joiner_pair(spacing=z_joiner_spacing, h=rail_height, w=joiner_width, l=10, a=joiner_angle);
 					}
 				}
 			}
 		}
 	}
 
-	// Placeholder lifter screw
-	//#down(lifter_screw_thick/2+3) cylinder(d=lifter_screw_diam, h=lifter_screw_thick, center=true);
-
 	// Children
-	right(cantilever_length+arch_offset+explode) {
-		up(rail_height/2) {
-			yrot(-bridge_arch_angle) children();
+	right(cantilever_length) {
+		yrot(-bridge_arch_angle) {
+			right(explode) {
+				up(rail_height/2) {
+					children();
+				}
+			}
 		}
 	}
 }
@@ -197,7 +102,7 @@ module z_sled(explode=0, arrows=false)
 
 
 module z_sled_parts() { // make me
-	xrot(180) down(rail_height) z_sled();
+	z_sled();
 }
 
 

@@ -1,6 +1,6 @@
 OPENSCAD=/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD
 CONVERT=convert
-SNAPPYVER="v2.0"
+SNAPPYVER="v3.0"
 PARTFILES=$(sort $(wildcard *_parts.scad))
 TARGETS=$(patsubst %.scad,STLs/%.stl,${PARTFILES})
 ROTFILES=$(shell seq -f 'wiki/${SNAPPYVER}-snappy_rot%03g.png' 0 10 359.99)

@@ -7,7 +7,7 @@ $fs = 1.5;
 
 
 module snappy_logo() {
-	logo_text = "Snappy II";
+	logo_text = "Snappy III";
 	font = "Georgia:style=Bold";
 	up(3/2) {
 		xrot(180) {

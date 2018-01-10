@@ -1,6 +1,6 @@
-![Snappy Full Rendering](https://github.com/revarbat/snappy-reprap/wiki/v2.0-snappy_small.png)
+![Snappy Full Rendering](https://github.com/revarbat/snappy-reprap/wiki/v3.0-snappy_small.png)
 
-Snappy-Reprap 2
+Snappy-Reprap 3
 ===============
 
 A parametric design for a cheap self-replicating 3D printer (reprap) that snaps together to minimize screws and non-printed parts.
@@ -10,9 +10,9 @@ Important Links:
 What                 | URL
 -------------------- | -------------------------------------------------------
 GitHub Repository    | https://github.com/revarbat/snappy-reprap
-Project Wiki         | https://github.com/revarbat/snappy-reprap/wiki/v2.0-Home
-Bill of Materials    | https://github.com/revarbat/snappy-reprap/wiki/v2.0-BOM
-How to Assemble      | https://github.com/revarbat/snappy-reprap/wiki/v2.0-Assembly
+Project Wiki         | https://github.com/revarbat/snappy-reprap/wiki/v3.0-Home
+Bill of Materials    | https://github.com/revarbat/snappy-reprap/wiki/v3.0-BOM
+How to Assemble      | https://github.com/revarbat/snappy-reprap/wiki/v3.0-Assembly
 RepRap.org Wiki Page | http://reprap.org/wiki/Snappy
 Dev Forum            | https://groups.google.com/forum/#!forum/snappy-reprap-dev
 
