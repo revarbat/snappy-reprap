@@ -9,16 +9,16 @@ $fs=2;
 // connectby valid options: "", "fwd", "back"
 module z_base(explode=0, connectby="")
 {
+	coupler_len = 20;
 	side_joiner_len = 5;
 	wall_thick = 3;
 	l = z_base_height;
 	wall_dx = rail_spacing - (z_joiner_spacing-joiner_width);
-	wall_ang = atan2(wall_dx/2, l);
-	mid_width = (rail_spacing + joiner_width + z_joiner_spacing)/2;
+	wall_ang = atan2(wall_dx/2, l-coupler_len);
 	side_off = sin(wall_ang)*(motor_length+wall_thick);
 	cross_dx = rail_spacing/2 + (z_joiner_spacing-joiner_width)/2 + joiner_width;
-	cross_ang = atan2(cross_dx, l - 2*rail_thick);
-	cross_l = hypot(cross_dx, l - 2*rail_thick);
+	cross_ang = atan2(cross_dx, l - coupler_len - 2*rail_thick);
+	cross_l = hypot(cross_dx, l - coupler_len - 2*rail_thick);
 	motor_width = nema_motor_width(17);
 	plinth_diam = nema_motor_plinth_diam(17);
 
@@ -65,17 +65,17 @@ module z_base(explode=0, connectby="")
 						up(rail_height/2+groove_height/2) {
 							fwd(l/2) {
 								skew_xz(xang=wall_ang) {
-									back(l/2) {
+									back((l-coupler_len)/2) {
 										left((rail_spacing+joiner_width)/2) {
 											difference() {
 												union() {
 													// Wall
 													if (wall_style == "crossbeams")
-														sparse_strut(h=rail_height+groove_height, l=l-0.1, thick=joiner_width, strut=7);
+														sparse_strut(h=rail_height+groove_height, l=l-coupler_len-0.1, thick=joiner_width, strut=7);
 													if (wall_style == "thinwall")
-														thinning_wall(h=rail_height+groove_height, l=l-0.1, thick=joiner_width, strut=7);
+														thinning_wall(h=rail_height+groove_height, l=l-coupler_len-0.1, thick=joiner_width, strut=7);
 													if (wall_style == "corrugated")
-														corrugated_wall(h=rail_height+groove_height, l=l-0.1, thick=joiner_width, strut=7);
+														corrugated_wall(h=rail_height+groove_height, l=l-coupler_len-0.1, thick=joiner_width, strut=7);
 
 													// Side wiring access hole frame
 													if (wall_style == "corrugated") {
@@ -88,7 +88,7 @@ module z_base(explode=0, connectby="")
 
 													// Triangle to increase stability
 													up(rail_height/2+groove_height/2-0.05) {
-														fwd(l/2) {
+														fwd((l-coupler_len)/2) {
 															right(joiner_width/2) {
 																zrot(90) right_triangle([rail_height/2, joiner_width, groove_height]);
 															}
@@ -114,19 +114,19 @@ module z_base(explode=0, connectby="")
 					}
 
 					// Motor cage
-					back(l/2-(motor_length+wall_thick)/2-15)
+					back(l/2-(motor_length+wall_thick)/2-coupler_len)
 					difference() {
 						union() {
 							upcube([motor_width+2*wall_thick, motor_length+2*wall_thick, rail_height+groove_height/2+motor_width/2]);
 
 							// Top side supports
 							back((motor_length+wall_thick)/2) {
-								upcube([mid_width-side_off, wall_thick, rail_height+groove_height]);
+								upcube([z_joiner_spacing, wall_thick, rail_height+groove_height]);
 							}
 
 							// Bottom side supports
 							fwd((motor_length+wall_thick)/2) {
-								up(rail_thick+16) upcube([mid_width+side_off, wall_thick, rail_height+groove_height-rail_thick-16]);
+								up(rail_thick+16) upcube([z_joiner_spacing+2*side_off, wall_thick, rail_height+groove_height-rail_thick-16]);
 							}
 
 							// Motor clip
@@ -181,46 +181,34 @@ module z_base(explode=0, connectby="")
 					back(l/2-0.05) joiner_pair_clear(spacing=z_joiner_spacing, h=rail_height, w=joiner_width, clearance=4, a=joiner_angle);
 					fwd(l/2-0.05) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width, clearance=4, a=joiner_angle);
 				}
-
-				// Clear space for Side half joiners
-				up(rail_height/2/2) {
-					fwd((l-22)/2-0.05) {
-						zring(r=rail_spacing/2+joiner_width/2+side_joiner_len-0.05, n=2) {
-							zrot(-90) {
-								chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-									half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle);
-								}
-							}
-						}
-					}
-					back((l-22)/2-0.05) {
-						zring(r=z_joiner_spacing/2+joiner_width*0.75+side_joiner_len-0.05, n=2) {
-							zrot(-90) {
-								chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-									half_joiner_clear(h=rail_height/2, w=joiner_width, a=joiner_angle);
-								}
-							}
-						}
-					}
-				}
 			}
 
-			// Side half joiners
-			up(rail_height/2/2) {
-				fwd((l-22)/2+0.05) {
-					zring(r=rail_spacing/2+joiner_width/2+side_joiner_len+0.1, n=2) {
-						zrot(-90) {
-							chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-								half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
+			// Endstop clip
+			standoff = 11;
+			fwd((endstop_depth+2-l)/2) {
+				right((z_joiner_spacing+joiner_width-0.01)/2) {
+					right(endstop_thick/2+2+standoff) {
+						up(rail_height+groove_height/2) {
+							difference() {
+								left(standoff/2) cube([endstop_thick+standoff+2*2, endstop_depth+2, endstop_length+2*2], center=true);
+								back(2/2) {
+									cube([endstop_thick+2*printer_slop+0.05, endstop_depth+0.05, endstop_length+2*printer_slop], center=true);
+									cube([endstop_thick+2*printer_slop-2, endstop_depth+10, endstop_length+2*printer_slop-1], center=true);
+								}
 							}
-						}
-					}
-				}
-				back((l-22)/2+0.05) {
-					zring(r=z_joiner_spacing/2+joiner_width*0.75+side_joiner_len+0.1, n=2) {
-						zrot(-90) {
-							chamfer(chamfer=3, size=[joiner_width, 2*(side_joiner_len+joiner_width/2), rail_height/2], edges=[[0,0,0,0], [1,1,0,0], [0,0,0,0]]) {
-								half_joiner2(h=rail_height/2, w=joiner_width, l=side_joiner_len+joiner_width/2, a=joiner_angle);
+							down(endstop_length/2+2+endstop_thick*2/2+5/2-0.05) {
+								left((endstop_thick)/2+2+standoff) {
+									right_half() trapezoid([0.05, 0.05], [2*(endstop_thick+2*2+standoff), endstop_depth+2], h=endstop_thick*2+5, center=true);
+								}
+							}
+							zspread(endstop_hole_spacing) {
+								right(endstop_thick/2) {
+									back(endstop_depth/2+2/2-endstop_hole_inset) {
+										scale([0.5, 1, 1]) {
+											sphere(d=endstop_screw_size, center=true, $fn=8);
+										}
+									}
+								}
 							}
 						}
 					}
@@ -229,7 +217,8 @@ module z_base(explode=0, connectby="")
 
 			// Snap-tab joiners.
 			up(rail_height/2+0.05) {
-				back(l/2) xspread(z_joiner_spacing) yrot(180) joiner(h=rail_height, w=joiner_width, l=7, a=joiner_angle);
+				back(l/2) xspread(z_joiner_spacing) yrot(180) joiner(h=rail_height, w=joiner_width, l=coupler_len+0.1, a=joiner_angle);
+				back(l/2-coupler_len/2) xspread(z_joiner_spacing) up(rail_height/2-0.01) upcube([joiner_width, coupler_len+0.1, groove_height+0.01]);
 				fwd(l/2) zrot(180) xspread(rail_spacing+joiner_width) joiner(h=rail_height, w=joiner_width, l=7, a=joiner_angle);
 			}
 		}
@@ -258,7 +247,8 @@ module z_base(explode=0, connectby="")
 
 
 module z_base_parts() { // make me
-	zrot(90) z_base();
+	//zrot(90)
+	z_base();
 }
 
 
