@@ -40,6 +40,7 @@ lifter_rod_length   = 136; // mm. Must be a multiple of lifter_rod_pitch
 lifter_rod_angle    =  50; // degrees tooth face angle
 lifter_tang_length  =  12; // mm
 lifter_tang_width   =   5; // mm
+lifter_coupler_len  =  20; // mm
 
 adjust_screw_diam   =  8.0; // mm
 adjust_screw_pitch  =  3.0; // mm

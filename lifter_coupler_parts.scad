@@ -11,7 +11,7 @@ $fs=1.5;
 // Child 1: Nut slot
 // Child 2: Bolt hole
 module lifter_coupler() {
-	h = 10;
+	h = lifter_coupler_len;
 	d = lifter_rod_diam;
 	shaft = motor_shaft_size;
 	thread_depth = lifter_rod_pitch/3.2;

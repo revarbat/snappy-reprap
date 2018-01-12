@@ -9,7 +9,7 @@ $fs=2;
 // connectby valid options: "", "fwd", "back"
 module z_base(explode=0, connectby="")
 {
-	coupler_len = 20;
+	coupler_len = lifter_coupler_len;
 	side_joiner_len = 5;
 	wall_thick = 3;
 	l = z_base_height;
@@ -184,7 +184,7 @@ module z_base(explode=0, connectby="")
 			}
 
 			// Endstop clip
-			standoff = 11;
+			standoff = 10 - endstop_thick/2;
 			fwd((endstop_depth+2-l)/2) {
 				right((z_joiner_spacing+joiner_width-0.01)/2) {
 					right(endstop_thick/2+2+standoff) {
