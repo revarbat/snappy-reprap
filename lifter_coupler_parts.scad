@@ -28,11 +28,11 @@ module lifter_coupler() {
 			difference() {
 				union() {
 					// Shaft hole
-					cylinder(h=2*h+0.02, d=shaft, center=false, $fn=18);
+					cylinder(h=2*h+0.02, d=shaft+2*printer_slop, center=false, $fn=18);
 
 					// chamfer bottom of shaft hole.
 					down(0.01) {
-						cylinder(h=2, d1=shaft+2, d2=shaft, center=false, $fn=18);
+						cylinder(h=2, d1=shaft+2*printer_slop+2, d2=shaft+2*printer_slop, center=false, $fn=18);
 					}
 				}
 

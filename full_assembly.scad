@@ -1006,7 +1006,7 @@ module z_tower_assembly_4(slidepos=0, explode=0, arrows=false)
 // Child 2: Left Z tower motherboard mount point.
 module z_tower_assembly_5(slidepos=0, explode=0, arrows=false)
 {
-	// view: [-55, 0, 285] [70, 0, 65] 1700
+	// view: [35, 0, 245] [60, 0, 40] 1700
 	// desc: Slide the lifter assembly (motor and lifter rods) into the motor mount on the Z base segment of the topwer assembly.
 	z_tower_assembly_4(slidepos=slidepos) {
 		union() {if ($children > 0) children(0);}
@@ -1444,12 +1444,36 @@ module bridge_assembly_2(explode=0, arrows=false)
 
 module bridge_assembly_3(explode=0, arrows=false)
 {
+	// view: [0, 0, 55] [55, 0, 105] 550
+	// desc: Thread an adjustment screw into the limit switch adjuster socket of a Z sled part.  Do this again for another Z sled.
+	zrot(180) z_sled();
+	up(explode*1.0+22) {
+		fwd(z_joiner_spacing/2+18) {
+			xrot(180) adjustment_screw();
+		}
+	}
+
+	// Construction arrows.
+	if(arrows && explode>50) {
+		up(explode/2) {
+			fwd(z_joiner_spacing/2+18) {
+				yrot(-90) arrow(size=explode/4);
+			}
+		}
+	}
+}
+//!bridge_assembly_3(explode=100, arrows=true);
+//!bridge_assembly_3();
+
+
+module bridge_assembly_4(explode=0, arrows=false)
+{
 	// view: [0, 0, 18] [55, 0, 25] 2100
 	// desc: Attach Z sled segments to either end of the extruder bridge assembly.  Superglue these on if the attachments are in any way wobbly.
 	arch_offset = rail_length*sin(bridge_arch_angle);
 	up(arch_offset) bridge_assembly_2();
 	zring(r=(extruder_length+2*rail_length+2*cantilever_length+3*explode)/2, n=2) {
-		zrot(180) z_sled();
+		bridge_assembly_3();
 	}
 
 	// Construction arrows.
@@ -1461,8 +1485,8 @@ module bridge_assembly_3(explode=0, arrows=false)
 		}
 	}
 }
-//!bridge_assembly_3(explode=100, arrows=true);
-//!bridge_assembly_3();
+//!bridge_assembly_4(explode=100, arrows=true);
+//!bridge_assembly_4();
 
 
 // Borosilicate Glass.  Render last to allow transparency to work.
@@ -1653,7 +1677,7 @@ module final_assembly_3(xslidepos=0, yslidepos=0, zslidepos=0, explode=0, arrows
 	final_assembly_2(xslidepos=xslidepos, yslidepos=yslidepos, zslidepos=zslidepos) {
 		up(explode*4) {
 			right((extruder_length+rail_length*2+cantilever_length*2)/2) {
-				bridge_assembly_3(slidepos=zslidepos);
+				bridge_assembly_4(slidepos=zslidepos);
 			}
 
 			// Construction arrows.

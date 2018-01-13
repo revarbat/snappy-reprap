@@ -116,7 +116,7 @@ class GenAssemblyIndex(object):
             f.write('<h2>{0}</h2>\n'.format("Marlin Firmware for RAMPS"))
             f.write('<div class="desc">\n')
             f.write('You can find Marlin firmware pre-configured for the Snappy with a RAMPS 1.4 controller at\n')
-            f.write('<a href="https://github.com/revarbat/snappy-reprap/tree/v2.0/firmware">https://github.com/revarbat/snappy-reprap/tree/v2.0/firmware</a>\n')
+            f.write('<a href="https://github.com/revarbat/snappy-reprap/tree/v3.0/firmware">https://github.com/revarbat/snappy-reprap/tree/v3.0/firmware</a>\n')
             f.write('</div>\n')
             f.write('</li>\n')
 
