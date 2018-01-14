@@ -40,10 +40,23 @@ module z_sled(explode=0, arrows=false)
 							right(10+groove_height/2) {
 								yspread(z_joiner_spacing) {
 									rotate([90, 0, -90]) {
-										slider(l=rail_height, base=10, slop=2*printer_slop);
+										slider(l=rail_height, base=10, slop=3*printer_slop);
 									}
 								}
 								left(5/2) cube([5, z_joiner_spacing+joiner_width, rail_height], center=true);
+							}
+
+							// Limit switch adjuster screw socket
+							down(rail_height/2) {
+								back(z_joiner_spacing/2+joiner_width/2+12) {
+									difference() {
+										union() {
+											cylinder(d=1.5*adjust_screw_diam, h=adjust_screw_pitch*3, center=false);
+											fwd((12-1)/2) upcube([adjust_screw_diam, 12-1, adjust_screw_pitch*3]);
+										}
+										acme_threaded_rod(d=adjust_screw_diam+3*printer_slop, l=adjust_screw_pitch*7, thread_depth=adjust_thread_depth, pitch=adjust_screw_pitch, thread_angle=adjust_screw_angle);
+									}
+								}
 							}
 						}
 						acme_threaded_rod(d=lifter_rod_diam+5*printer_slop, l=socket_h+0.1, thread_depth=thread_depth, pitch=pitch, thread_angle=lifter_rod_angle);

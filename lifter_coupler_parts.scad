@@ -11,7 +11,7 @@ $fs=1.5;
 // Child 1: Nut slot
 // Child 2: Bolt hole
 module lifter_coupler() {
-	h = 10;
+	h = lifter_coupler_len;
 	d = lifter_rod_diam;
 	shaft = motor_shaft_size;
 	thread_depth = lifter_rod_pitch/3.2;
@@ -28,11 +28,11 @@ module lifter_coupler() {
 			difference() {
 				union() {
 					// Shaft hole
-					cylinder(h=2*h+0.02, d=shaft, center=false, $fn=18);
+					cylinder(h=2*h+0.02, d=shaft+2*printer_slop, center=false, $fn=18);
 
 					// chamfer bottom of shaft hole.
 					down(0.01) {
-						cylinder(h=2, d1=shaft+2, d2=shaft, center=false, $fn=18);
+						cylinder(h=2, d1=shaft+2*printer_slop+2, d2=shaft+2*printer_slop, center=false, $fn=18);
 					}
 				}
 
