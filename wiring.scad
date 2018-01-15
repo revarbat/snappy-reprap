@@ -1,9 +1,8 @@
 use <GDMUtils.scad>
 
 
-function normalize(v) = v/norm(v);
-
-
+// Generate bezier curve to fillet 2 line segments between 3 points.
+// Returns two path points with surrounding cubic bezier control points.
 function fillet3pts(p0, p1, p2, r) = let(
 		v0 = normalize(p0-p1),
 		v1 = normalize(p2-p1),
@@ -19,10 +18,10 @@ function fillet3pts(p0, p1, p2, r) = let(
 	) [tp0, tp0, cp0, cp1, tp1, tp1];
 
 
-// Must be passed at least 3 points.
+// Takes a 3D polyline path and fillets it into a 3d cubic bezier path.
 function fillet_path(pts, fillet) = concat(
 	[pts[0], pts[0]],
-	[
+	(len(pts) < 3)? [] : [
 		for (
 			p = [1 : len(pts)-2],
 			pt = fillet3pts(pts[p-1], pts[p], pts[p+1], fillet)
@@ -32,29 +31,47 @@ function fillet_path(pts, fillet) = concat(
 );
 
 
+
+
+// Returns an array of 1 or 6 points that form a ring, based on wire diam and ring level.
+// Level 0 returns a single point at 0,0.  All greater levels return 6 points.
 function hex_offset_ring(wirediam, lev=0) =
-    (lev == 0)? [[0,0,0]] : [
-        for (
-            sideang = [0:60:359.999],
-            sidewire = [1:lev]
-        ) [
-            lev*wirediam*cos(sideang)+sidewire*wirediam*cos(sideang+120),
-            lev*wirediam*sin(sideang)+sidewire*wirediam*sin(sideang+120)
-        ]
-    ];
+	(lev == 0)? [[0,0]] : [
+		for (
+			sideang = [0:60:359.999],
+			sidewire = [1:lev]
+		) [
+			lev*wirediam*cos(sideang)+sidewire*wirediam*cos(sideang+120),
+			lev*wirediam*sin(sideang)+sidewire*wirediam*sin(sideang+120)
+		]
+	];
 
 
+// Returns an array of 2D centerpoints for each of a bundle of wires of given diameter.
+// The lev and arr variables are used for internal recursion.
 function hex_offsets(wires, wirediam, lev=0, arr=[]) =
-    (len(arr) >= wires)? arr :
-        hex_offsets(
-            wires=wires,
-            wirediam=wirediam,
-            lev=lev+1,
-            arr=concat(arr, hex_offset_ring(wirediam, lev=lev))
-        );
+	(len(arr) >= wires)? arr :
+		hex_offsets(
+			wires=wires,
+			wirediam=wirediam,
+			lev=lev+1,
+			arr=concat(arr, hex_offset_ring(wirediam, lev=lev))
+		);
 
 
-module wiring(path, wires, wirediam=2, fillet=10, wirenum=0, bezsteps=12) {
+// Returns a 3D object representing a bundle of wires that follow a given path,
+// with the corners filleted to a given radius.  There are 17 base wire colors.
+// If you have more than 17 wires, colors will get re-used.
+// Arguments:
+//   path:     The 3D polyline path that the wire bundle should follow.
+//   wires:    The number of wires in the wiring bundle.
+//   wirediam: The diameter of each wire in the bundle.
+//   fillet:   The radius that the path corners will be filleted to.
+//   wirenum:  The first wire's offset into the color table.
+//   bezsteps: The corner fillets in the path will be converted into this number of segments.
+// Usage:
+//   wiring([[50,0,-50], [50,50,-50], [0,50,-50], [0,0,-50], [0,0,0]], fillet=10, wires=13);
+module wiring(path, wires, wirediam=2, fillet=10, wirenum=0, bezsteps=3) {
 	vect = path[1]-path[0];
 	theta = atan2(vect[1], vect[0]);
 	xydist = hypot(vect[1], vect[0]);
@@ -64,14 +81,15 @@ module wiring(path, wires, wirediam=2, fillet=10, wirenum=0, bezsteps=12) {
 		[0.3, 0.3, 1.0], [1.0, 1.0, 1.0], [0.7, 0.5, 0.0], [0.5, 0.5, 0.5],
 		[0.2, 0.9, 0.9], [0.8, 0.0, 0.8], [0.0, 0.6, 0.6], [1.0, 0.7, 0.7],
 		[1.0, 0.5, 1.0], [0.5, 0.6, 0.0], [1.0, 0.7, 0.0], [0.7, 1.0, 0.5],
-        [0.6, 0.6, 1.0],
+		[0.6, 0.6, 1.0],
 	];
 	offsets = hex_offsets(wires, wirediam);
 	bezpath = fillet_path(path, fillet);
 	poly = simplify3d_path(path3d(bezier_polyline(bezpath, bezsteps)));
 	n = max(segs(wirediam), 8);
+	r = wirediam/2;
 	for (i = [0:wires-1]) {
-		extpath = [for (a = [0:(360.0/n):360]) [0.5*wirediam*cos(a), 0.5*wirediam*sin(a)]+offsets[i]];
+		extpath = [for (a = [0:(360.0/n):360]) [r*cos(a), r*sin(a)] + offsets[i]];
 		roty = matrix3_yrot(90-phi);
 		rotz = matrix3_zrot(theta);
 		color(colors[(i+wirenum)%len(colors)]) {
@@ -79,7 +97,7 @@ module wiring(path, wires, wirediam=2, fillet=10, wirenum=0, bezsteps=12) {
 		}
 	}
 }
-// wiring([[50,0,-50], [50,50,-50], [0,50,-50], [0,0.01,-50], [0, 0, 0]], fillet=10, wires=32);
+
 
 
 // vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 nowrap
