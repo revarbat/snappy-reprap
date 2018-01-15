@@ -2028,6 +2028,8 @@ module extrude_2d_hollow(wall=2, height=50, twist=90, slices=60)
 
 function vector2d_angle(v1,v2) = atan2(v1[1],v1[0]) - atan2(v2[1],v2[0]);
 function vector3d_angle(v1,v2) = acos((v1*v2)/(norm(v1)*norm(v2)));
+function normalize(v) = v/norm(v);
+
 
 function slice(arr,st,end) = let(
 		s=st<0?(len(arr)+st):st,
@@ -2261,6 +2263,87 @@ module extrude_2dpath_along_spiral(polyline, h, r, twist=360) {
 }
 
 
+// Quaternions are stored internally as a 4-value vector:
+//  [X, Y, Z, W]  =  W + Xi + Yj + Zk
+function _Quat(a,s,w) = [a[0]*s, a[1]*s, a[2]*s, w];
+function Quat(ax, ang) = _Quat(ax/norm(ax), sin(ang/2), cos(ang/2));
+
+function Q_Ident() = [0, 0, 0, 1];
+
+function Q_Add_S(q, s) = [q[0], q[1], q[2], q[3]+s];
+function Q_Sub_S(q, s) = [q[0], q[1], q[2], q[3]-s];
+function Q_Mul_S(q, s) = [q[0]*s, q[1]*s, q[2]*s, q[3]*s];
+function Q_Div_S(q, s) = [q[0]/s, q[1]/s, q[2]/s, q[3]/s];
+
+function Q_Add(a, b) = [a[0]+b[0], a[1]+b[1], a[2]+b[2], a[3]+b[3]];
+function Q_Sub(a, b) = [a[0]-b[0], a[1]-b[1], a[2]-b[2], a[3]-b[3]];
+function Q_Mul(a, b) = [
+	a[3]*b[0] + a[0]*b[3] + a[1]*b[2] - a[2]*b[1],
+	a[3]*b[1] - a[0]*b[2] + a[1]*b[3] + a[2]*b[0],
+	a[3]*b[2] + a[0]*b[1] - a[1]*b[0] + a[2]*b[3],
+	a[3]*b[3] - a[0]*b[0] - a[1]*b[1] - a[2]*b[2],
+];
+function Q_Dot(a, b) = a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3];
+
+function Q_Neg(q) = [-q[0], -q[1], -q[2], -q[3]];
+function Q_Conj(q) = [-q[0], -q[1], -q[2], q[3]];
+function Q_Norm(q) = sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3]);
+function Q_Normalize(q) = q/Q_Norm(q);
+function Q_Dist(q1, q2) = Q_Norm(Q_Sub(q1-q2));
+
+
+// Returns the 3x3 rotation matrix for the given normalized quaternion q.
+function Q_Matrix3(q) = [
+	[1-2*q[1]*q[1]-2*q[2]*q[2],   2*q[0]*q[1]-2*q[2]*q[3],   2*q[0]*q[2]+2*q[1]*q[3]],
+	[  2*q[0]*q[1]+2*q[2]*q[3], 1-2*q[0]*q[0]-2*q[2]*q[2],   2*q[1]*q[2]-2*q[0]*q[3]],
+	[  2*q[0]*q[2]-2*q[1]*q[3],   2*q[1]*q[2]+2*q[0]*q[3], 1-2*q[0]*q[0]-2*q[1]*q[1]]
+];
+
+
+// Returns the 4x4 rotation matrix for the given normalized quaternion q.
+function Q_Matrix4(q) = [
+	[1-2*q[1]*q[1]-2*q[2]*q[2],   2*q[0]*q[1]-2*q[2]*q[3],   2*q[0]*q[2]+2*q[1]*q[3], 0],
+	[  2*q[0]*q[1]+2*q[2]*q[3], 1-2*q[0]*q[0]-2*q[2]*q[2],   2*q[1]*q[2]-2*q[0]*q[3], 0],
+	[  2*q[0]*q[2]-2*q[1]*q[3],   2*q[1]*q[2]+2*q[0]*q[3], 1-2*q[0]*q[0]-2*q[1]*q[1], 0],
+	[                        0,                         0,                         0, 1]
+];
+
+
+// Returns the vector v after rotating it by the quaternion q.
+function Q_Rot_Vector(v,q) = Q_Mul(Q_Mul(q,concat(v,0)),Q_Conj(q));
+
+
+// Rotates all children by the given quaternion q.
+module Qrot(q) {
+	multmatrix(Q_Matrix4(q)) {
+		children();
+	}
+}
+
+
+function points_along_path3d(
+	polyline,  // The 2D polyline to drag along the 3D path.
+	path,  // The 3D polyline path to follow.
+	q=Q_Ident(),  // Used in recursion
+	n=0  // Used in recursion
+) = let(
+	end = len(path)-1,
+	v1 = (n == 0)?  [0, 0, 1] : normalize(path[n]-path[n-1]),
+	v2 = (n == end)? normalize(path[n]-path[n-1]) : normalize(path[n+1]-path[n]),
+	crs = cross(v1, v2),
+	axis = norm(crs) <= 0.001? [0, 0, 1] : crs,
+	ang = vector3d_angle(v1, v2),
+	hang = ang * (n==0? 1.0 : 0.5),
+	hrot = Quat(axis, hang),
+	arot = Quat(axis, ang),
+	roth = Q_Mul(hrot, q),
+	rotm = Q_Mul(arot, q)
+) concat(
+	[for (i = [0:len(polyline)-1]) Q_Rot_Vector(point3d(polyline[i]),roth) + path[n]],
+	(n == end)? [] : points_along_path3d(polyline, path, rotm, n+1)
+);
+
+
 // Takes a closed 2D polyline path, centered on the XY plane, and
 // extrudes it perpendicularly along a 3D polyline path, forming a solid.
 //   polyline = Array of points of a polyline path, to be extruded.
@@ -2275,20 +2358,7 @@ module extrude_2dpath_along_3dpath(polyline, path, tilt=true, convexity=10) {
 	pline_count = len(polyline);
 	path_count = len(path);
 
-	poly_points = [
-		for (p = [0:path_count-1]) let (
-			ppt1 = path[p],
-			ppt0 = (p==0)? ppt1 : path[p-1],
-			ppt2 = (p==(path_count-1))? ppt1 : path[p+1],
-			v = ppt2 - ppt0,
-			xyr = hypot(v[1], v[0]),
-			az = atan2(v[1], v[0]),
-			alt = atan2(v[2], xyr),
-			rotx = matrix3_xrot(90+(tilt?alt:0)),
-			rotz = matrix3_zrot(az-90),
-			rotm = rotz * rotx
-		) for (b = [0:pline_count-1]) rotm*point3d(polyline[b])+ppt1
-	];
+	poly_points = points_along_path3d(polyline, path);
 
 	poly_faces = concat(
 		[[for (b = [0:pline_count-1]) b]],
