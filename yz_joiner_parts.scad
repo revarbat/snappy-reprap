@@ -61,11 +61,22 @@ module yz_joiner()
 						}
 					}
 
-					// Wiring access hole frame
+					// Back wiring access hole frame
 					if (wall_style == "corrugated") {
 						up(rail_thick+rail_height/4/2) {
 							back(rail_thick/2) {
 								cube([16+4, rail_thick, rail_height/4+4], center=true);
+							}
+						}
+					}
+
+					// Side wiring access hole frames
+					if (wall_style == "corrugated") {
+						up(rail_thick+rail_height/4/2) {
+							back(platform_length/3) {
+								xspread(rail_spacing+joiner_width) {
+									cube([joiner_width, 16+4, rail_height/4+4], center=true);
+								}
 							}
 						}
 					}
@@ -94,7 +105,7 @@ module yz_joiner()
 				}
 
 				// Clear space for side joiners.
-				translate([0, platform_length/2+0.05, rail_height/2]) {
+				translate([0, platform_length/3+0.05, rail_height/2]) {
 					zrot(90) joiner_quad_clear(xspacing=platform_length/2, yspacing=rail_width+2*6, h=rail_height+0.001, w=joiner_width, a=joiner_angle);
 				}
 
@@ -103,10 +114,21 @@ module yz_joiner()
 					xrot(90) joiner_pair_clear(spacing=rail_spacing+joiner_width, h=rail_height, w=joiner_width+0.001, clearance=5, a=joiner_angle);
 				}
 
-				// Wiring access hole
+				// Back wiring access hole
 				if (wall_style != "crossbeams") {
 					up(rail_thick+rail_height/4/2) {
 						cube([16, joiner_width*3, rail_height/4], center=true);
+					}
+				}
+
+				// Side wiring access hole
+				if (wall_style != "crossbeams") {
+					up(rail_thick+rail_height/4/2) {
+						back(platform_length/3) {
+							xspread(rail_spacing+joiner_width) {
+								cube([joiner_width*3, 16, rail_height/4], center=true);
+							}
+						}
 					}
 				}
 			}
@@ -149,12 +171,12 @@ module yz_joiner()
 		}
 	}
 }
-//yz_joiner();
+yz_joiner();
 
 
 
 module yz_joiner_parts() { // make me
-	zrot(-90) fwd(platform_length/2) yz_joiner();
+	//zrot(-90) fwd(platform_length/2) yz_joiner();
 }
 
 
