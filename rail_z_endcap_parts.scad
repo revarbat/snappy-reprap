@@ -5,7 +5,7 @@ use <joiners.scad>
 
 module rail_z_endcap()
 {
-	joiner_length=40;
+	joiner_length = 55;
 	w = z_joiner_spacing + joiner_width;
 	l = rail_height;
 
