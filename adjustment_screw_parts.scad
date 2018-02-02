@@ -33,10 +33,8 @@ module adjustment_screw(slop=0) {
 		down(h/2-knob_h/2) {
 			difference() {
 				cylinder(h=knob_h, d=knob_d, center=true);
-				down(25/2) {
-					xrot(90) cylinder(d=25, h=slot_w, center=true);
-					yrot(90) cylinder(d=25, h=slot_w, center=true);
-				}
+				down(knob_h/2) cube([knob_d+1, slot_w, knob_h], center=true);
+				//down(3) cylinder(h=knob_h, d=floor(knob_d*0.5)/cos(360/6/2), center=true, $fn=6);
 			}
 		}
 	}
