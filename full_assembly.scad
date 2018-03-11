@@ -18,9 +18,9 @@ use <cooling_fan_shroud_parts.scad>
 use <drive_gear_parts.scad>
 use <extruder_fan_clip_parts.scad>
 use <extruder_fan_shroud_parts.scad>
-use <extruder_idler_parts.scad>
+use <jhead_idler_parts.scad>
 use <extruder_motor_clip_parts.scad>
-use <jhead_platform_parts.scad>
+use <jhead_single_platform_parts.scad>
 use <lifter_coupler_parts.scad>
 use <lifter_rod_parts.scad>
 use <glass_bed_support_parts.scad>
@@ -1116,7 +1116,7 @@ module extruder_assembly_1(explode=0, arrows=false)
 {
 	// view: [0, -40, 0] [75, 0, 45] 1000
 	// desc: Insert the 686 bearing into the extruder idler arm.
-	extruder_idler();
+	jhead_idler();
 	back(extruder_idler_diam/2-explode) {
 		idler_bearing();
 	}
@@ -1140,10 +1140,10 @@ module extruder_assembly_2(explode=0, arrows=false)
 	left(printer_slop) {
 		back(extruder_idler_diam/2) {
 			left(extruder_shaft_len/2/2+1+explode*0.75) {
-				xrot(90) yrot(90) extruder_idler_axle();
+				xrot(90) yrot(90) jhead_idler_axle();
 			}
 			right(extruder_shaft_len/2/2+1/2+explode*0.75) {
-				xrot(90) yrot(90) extruder_idler_axle_clip();
+				xrot(90) yrot(90) jhead_idler_axle_clip();
 			}
 		}
 	}
@@ -1194,7 +1194,7 @@ module extruder_assembly_4(explode=0, arrows=false)
 {
 	// view: [0, 0, 0] [50, 0, 80] 900
 	// desc: Slide the JHead extruder hot end into the slot in the bottom of the JHead platform.  Route the wiring up through the wiring access slot, and along the back of the extruder platform.
-	jhead_platform();
+	jhead_single_platform();
 	down(explode) jhead_hotend();
 
 	// Construction arrows.
@@ -1213,9 +1213,10 @@ module extruder_assembly_5(explode=0, arrows=false)
 	// view: [10, 85, 230] [55, 0, 55] 1600
 	// desc: Clip the extruder motor with drive gear to the jhead platform using the extruder motor clip.
 	motor_width = nema_motor_width(17);
+	motor_z = jhead_groove_thick + jhead_shelf_thick + motor_width/2;
 
 	extruder_assembly_4();
-	up(jhead_groove_thick+jhead_shelf_thick+motor_width/2+explode*2) {
+	up(motor_z+explode*2) {
 		fwd(extruder_drive_diam/2-0.5) {
 			left(extruder_shaft_len/2-0.05) {
 				extruder_assembly_3();
@@ -1230,7 +1231,7 @@ module extruder_assembly_5(explode=0, arrows=false)
 
 	// Construction arrows.
 	if (arrows && explode>50) {
-		up(jhead_groove_thick+jhead_shelf_thick+motor_width/2+explode) {
+		up(motor_z+explode) {
 			fwd(extruder_drive_diam/2-0.5) {
 				left(extruder_shaft_len/2-0.05+motor_length/2) {
 					yrot(-90) arrow(size=explode/3);
@@ -1251,9 +1252,10 @@ module extruder_assembly_6(explode=0, arrows=false)
 	// view: [70, 0, 60] [55, 0, 55] 1000
 	// desc: Insert the idler arm into the idler hinge hole on the JHead platform.
 	motor_width = nema_motor_width(17);
+	motor_z = jhead_groove_thick + jhead_shelf_thick + motor_width/2;
 
 	extruder_assembly_5();
-	up(jhead_groove_thick+jhead_shelf_thick+motor_width/2) {
+	up(motor_z) {
 		right(explode*2) {
 			extruder_assembly_2();
 		}
@@ -1277,8 +1279,10 @@ module extruder_assembly_7(explode=0, arrows=false)
 	// view: [70, 0, 60] [55, 0, 55] 1000
 	// desc: Insert the idler latch arm into the latch hinge hole on the JHead platform.
 	motor_width = nema_motor_width(17);
+	motor_z = jhead_groove_thick + jhead_shelf_thick + motor_width/2;
+
 	extruder_assembly_6();
-	up(jhead_groove_thick+jhead_shelf_thick+motor_width/2) {
+	up(motor_z) {
 		back(30+20.1+explode*1.5) {
 			xrot(90) compression_screw();
 		}
@@ -1288,7 +1292,7 @@ module extruder_assembly_7(explode=0, arrows=false)
 	if (arrows && explode>50) {
 		back(explode*1.25) {
 			fwd(motor_width/2) {
-				up(jhead_groove_thick+jhead_shelf_thick+motor_width/2) {
+				up(motor_z) {
 					zrot(90) arrow(size=explode/3);
 				}
 			}

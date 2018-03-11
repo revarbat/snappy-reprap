@@ -10,19 +10,21 @@ $fs = 2;
 module bridge_brace_center(explode=0, arrows=false)
 {
 	l = motor_rail_length;
-	hole_diam = 10;
+	hole_diam = 5;
 	difference() {
 		union() {
 			right(l/2) zrot(-90) yrot(90) joiner(h=rail_height, w=joiner_width, l=10, a=joiner_angle);
+			xrot(90) zrot(90) sparse_strut(h=rail_height, l=l-2*8+0.1, thick=joiner_width, strut=5);
 			left(l/2) zrot(90) yrot(90) joiner(h=rail_height, w=joiner_width, l=10, a=joiner_angle);
-			cylinder(d=hole_diam+joiner_width*1.5, h=joiner_width, center=true);
-			cube([hole_diam*1.5, hole_diam+joiner_width*1.5, joiner_width], center=true);
-			xrot(90) zrot(90) sparse_strut(h=rail_height, l=l-2*8+0.1, thick=joiner_width, strut=5, max_bridge=2*hole_diam);
+			xspread(15,n=3) cylinder(d=hole_diam+joiner_width*1.5, h=joiner_width, center=true);
+			cube([hole_diam+joiner_width*1.5+30, hole_diam+joiner_width*1.5, joiner_width], center=true);
 		}
-		cylinder(d=hole_diam, h=joiner_width+0.1, center=true);
-		zflip_copy() {
-			up(joiner_width/2+0.01) {
-				fillet_hole_mask(r=hole_diam/2, fillet=joiner_width/2, $fn=24);
+		xspread(15, n=3) {
+			cylinder(d=hole_diam, h=joiner_width+0.1, center=true);
+			zflip_copy() {
+				up(joiner_width/2) {
+					fillet_hole_mask(r=hole_diam/2, fillet=joiner_width/2+0.01, $fn=24);
+				}
 			}
 		}
 	}

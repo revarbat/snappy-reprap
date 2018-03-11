@@ -8,18 +8,20 @@ use <joiners.scad>
 $fa = 2;
 $fs = 1;
 
+
 width = extruder_shaft_len/2;
 thick = 3.5;
 topthick = 5;
-motor_width = nema_motor_width(17);
-frontside = 0*(jhead_barrel_diam+8)/2+4;
-backside = (jhead_barrel_diam+8)/2+8;
-topside = motor_width*0.25+topthick;
-botside = motor_width/2+jhead_shelf_thick-thick;
+frontside = 4;
+backside = 20;
 
 
 module extruder_idler()
 {
+	motor_width = nema_motor_width(17);
+	botside = motor_width/2+5-thick;
+	topside = motor_width*0.25+topthick;
+
 	color("Tan")
 	prerender(convexity=10)
 	difference() {

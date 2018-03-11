@@ -8,7 +8,6 @@ module yz_joiner()
 	joiner_length=10;
 	base_height = rail_height+groove_height;
 	endstop_delta = platform_length - base_height;
-	motor_mount_spacing=43+joiner_width+10;
 
 	color([0.5, 0.7, 1.0])
 	prerender(convexity=10)

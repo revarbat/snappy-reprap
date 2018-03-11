@@ -84,13 +84,21 @@ spool_holder_length = 140.0;  // mm
 
 bridge_arch_angle   =  10.0;  // degrees
 
-jhead_vent_span     =  20.0;  // mm
+jhead_heatsink_span =  20.0;  // mm
+jhead_heatsink_diam =  16.0;  // mm
 jhead_barrel_diam   =  16.0;  // mm
 jhead_shelf_thick   =   4.8;  // mm
 jhead_groove_thick  =   4.6;  // mm
 jhead_groove_diam   =  12.0;  // mm
 jhead_cap_height    =   8.2;  // mm
-jhead_cap_diam      =  12.0;  // mm
+
+e3dv6_heatsink_span =  30.0;  // mm
+e3dv6_heatsink_diam =  22.0;  // mm
+e3dv6_barrel_diam   =  16.0;  // mm
+e3dv6_shelf_thick   =   3.7;  // mm
+e3dv6_groove_thick  =   6.0;  // mm
+e3dv6_groove_diam   =  12.0;  // mm
+e3dv6_cap_height    =   2.4;  // mm
 
 extruder_thick       =   5.0;  // mm
 extruder_shaft_len   =  25.0;  // mm
@@ -140,7 +148,6 @@ rail_offset = shaft_clear + platform_thick + rack_height/2 + 2.0;
 rail_spacing = platform_width - joiner_width*4 - 10;
 rail_width = rail_spacing + joiner_width*2;
 rack_base = rail_offset - platform_thick + groove_height/2 - rack_height;
-motor_mount_spacing = 43 + joiner_width + 10;
 side_mount_spacing = motor_rail_length - 10*2;
 platform_z = rail_height + groove_height + rail_offset;
 cantilever_length = (motor_rail_length + 2*platform_length - 2*rail_height - extruder_length - groove_height)/2;
