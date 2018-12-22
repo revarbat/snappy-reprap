@@ -33,10 +33,10 @@ module lifter_rod() {
 				up(h/2-0.01) {
 					difference() {
 						// Top tang
-						lifter_tang(d=d-thread_depth*2-6, h=lifter_tang_length);
+						lifter_tang(d=d-thread_depth*2-6.5, h=lifter_tang_length);
 
 						// Strengthening cleavage.
-						lifter_tang(d=d-thread_depth*2-12, h=lifter_tang_length+0.01);
+						lifter_tang(d=d-thread_depth*2-12.5, h=lifter_tang_length+0.01);
 					}
 				}
 			}
