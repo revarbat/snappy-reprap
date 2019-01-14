@@ -29,7 +29,7 @@ module extruder_additive(groove_thick, groove_diam, shelf, cap, barrel, filament
 
 		// Idler compression screw socket
 		left((motor_mount_spacing+joiner_width)/2+adjust_screw_pitch*3/2) {
-			upcube([3*adjust_screw_pitch+0.01, adjust_screw_diam+2*3, motor_z+adjust_screw_diam/2+3]);
+			upcube([3*adjust_screw_pitch+0.01, adjust_screw_diam+2*5, motor_z+adjust_screw_diam/2+3]);
 		}
 
 		// Motor supports
