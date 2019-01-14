@@ -14,6 +14,7 @@ module jhead_single_platform()
 {
 	motor_width = nema_motor_width(17);
 
+	color("cornflowerblue")
 	difference() {
 		union() {
 			extruder_platform(

@@ -13,6 +13,7 @@ module compression_screw(slop=0) {
 	knob_h = adjust_screw_knob_h;
 	knob_d = 20;
 	slot_w = 2;
+	color([0.0, 0.5, 0.5])
 	up(h/2) {
 		up(knob_h) {
 			difference() {

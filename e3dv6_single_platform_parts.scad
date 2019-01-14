@@ -14,6 +14,7 @@ module e3dv6_single_platform()
 {
 	motor_width = nema_motor_width(17);
 
+	color("cornflowerblue")
 	difference() {
 		union() {
 			extruder_platform(
@@ -25,7 +26,6 @@ module e3dv6_single_platform()
 
 			// Extruder mount
 			zrot(-90)
-			render(convexity=10)
 			extruder_additive(
 				groove_thick=e3dv6_groove_thick,
 				groove_diam=e3dv6_groove_diam,
@@ -42,7 +42,6 @@ module e3dv6_single_platform()
 
 		// Subtractive extruder parts
 		zrot(-90)
-		render(convexity=10)
 		extruder_subtractive(
 			groove_thick=e3dv6_groove_thick,
 			groove_diam=e3dv6_groove_diam,

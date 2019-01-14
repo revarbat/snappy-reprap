@@ -11,6 +11,8 @@ $fs = 1;
 module e3dv6_dual_platform()
 {
 	extruder_spread = 30;
+
+	color("cornflowerblue")
 	difference() {
 		union() {
 			extruder_platform(
@@ -23,7 +25,7 @@ module e3dv6_dual_platform()
 			// Extruder mount
 			zrot_copies([0, 180])
 			left(extruder_spread/2)
-			render(convexity=10)
+			//render(convexity=10)
 			extruder_additive(
 				groove_thick=e3dv6_groove_thick,
 				groove_diam=e3dv6_groove_diam,
@@ -41,7 +43,7 @@ module e3dv6_dual_platform()
 		// Subtractive extruder parts
 		zrot_copies([0, 180])
 		left(extruder_spread/2)
-		render(convexity=10)
+		//render(convexity=10)
 		extruder_subtractive(
 			groove_thick=e3dv6_groove_thick,
 			groove_diam=e3dv6_groove_diam,

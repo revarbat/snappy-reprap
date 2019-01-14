@@ -11,6 +11,8 @@ $fs = 1;
 module jhead_dual_platform()
 {
 	extruder_spread = 30;
+
+	color("cornflowerblue")
 	difference() {
 		union() {
 			extruder_platform(

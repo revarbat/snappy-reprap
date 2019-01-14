@@ -24,7 +24,7 @@ module z_rail(explode=0, connectby="")
 		(connectby=="fwd")? l/2 :
 		0
 	) {
-		color([0.9, 0.7, 1.0])
+		color([0.4, 0.8, 0.6])
 		prerender(convexity=20)
 		union() {
 			difference() {
