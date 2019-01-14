@@ -3,7 +3,7 @@
 import re
 import sys
 
-snappy_ver = "v3.0"
+snappy_ver = "v3.1"
 
 html_header_string = """\
 <html>
