@@ -2027,7 +2027,7 @@ module extrude_2d_hollow(wall=2, height=50, twist=90, slices=60)
 
 
 function vector2d_angle(v1,v2) = atan2(v1[1],v1[0]) - atan2(v2[1],v2[0]);
-function vector3d_angle(v1,v2) = acos((v1*v2)/(norm(v1)*norm(v2)));
+function vector3d_angle(v1,v2) = acos(max(-1,min(1,(v1*v2)/(norm(v1)*norm(v2)))));
 function normalize(v) = v/norm(v);
 
 
