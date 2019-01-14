@@ -34,7 +34,7 @@ module drive_gear() {
 								hole_diameter   = shaft/2,
 								twist           = twist,
 								teeth_to_hide   = 0,
-								pressure_angle  = 20,
+								pressure_angle  = rack_pressure_angle,
 								backlash        = gear_backlash
 							);
 						}

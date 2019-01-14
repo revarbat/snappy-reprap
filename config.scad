@@ -1,4 +1,4 @@
-snappy_version = 2.000;
+snappy_version = 3.100;
 
 
 // 0 = Thinning Walls (Thin in the middle, thick at edges.  Prettier smooth solid walls.)
@@ -24,10 +24,11 @@ groove_height   =  12;   // mm
 joiner_angle    =  30;   // degrees
 joiner_width    =  10;   // mm
 
-rack_tooth_size     = 10/3;    // mm per tooth.
+rack_tooth_size     = 10/3;  // mm per tooth.
+rack_pressure_angle = 20;    // degrees
 rack_height         = 15;    // mm
-gear_base           = 10;    // mm
 gear_teeth          = 24;
+gear_base           = 10;    // mm
 set_screw_size      =  3;    // mm size of set screw in drive gears, couplers, etc
 motor_length        = 39.25; // mm length of NEMA17 motor.
 motor_shaft_size    =  5;    // mm diameter of NEMA17 motor shaft.
@@ -90,6 +91,7 @@ jhead_barrel_diam   =  16.0;  // mm
 jhead_shelf_thick   =   4.8;  // mm
 jhead_groove_thick  =   4.6;  // mm
 jhead_groove_diam   =  12.0;  // mm
+jhead_cap_diam      =  11.0;  // mm
 jhead_cap_height    =   8.2;  // mm
 
 e3dv6_heatsink_span =  30.0;  // mm
@@ -98,6 +100,7 @@ e3dv6_barrel_diam   =  16.0;  // mm
 e3dv6_shelf_thick   =   3.7;  // mm
 e3dv6_groove_thick  =   6.0;  // mm
 e3dv6_groove_diam   =  12.0;  // mm
+e3dv6_cap_diam      =  11.0;  // mm
 e3dv6_cap_height    =   2.4;  // mm
 
 extruder_thick       =   5.0;  // mm

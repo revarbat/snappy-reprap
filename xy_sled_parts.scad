@@ -21,7 +21,7 @@ module herringbone_rack(l=100, h=10, w=10, tooth_size=5, CA=30)
 								number_of_teeth=floor(l/tooth_size)+1,
 								thickness=h/2+0.005,
 								height=w,
-								pressure_angle=20,
+								pressure_angle=rack_pressure_angle,
 								backlash=gear_backlash
 							);
 						}
