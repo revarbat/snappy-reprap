@@ -23,6 +23,7 @@ Generating STL Files
 ====================
 For all platforms, you will need to have OpenSCAD installed. You can download OpenSCAD from their website at [http://www.openscad.org](http://www.openscad.org)
 
+To insure the best fit of parts, print the [https://github.com/revarbat/snappy-reprap/blob/master/STLs/slop_calibrator_parts.stl](slop calibrator STL file) on the parent printer using the desired print settings. Then update the printer_slop variable in the config.scad file on line 130. Then proceed to generating STL files.
 
 OS X:
 -----
